@@ -1,0 +1,4 @@
+glass_id_a,glass_id_b,relation,source_id,notes
+SCHOTT-N-BK7,OHARA-S-BSL7,near-equivalent,OHARA-CAT,N-BK7-class borosilicate crowns; verify melt data before substitution.
+SCHOTT-N-BK7,CDGM-H-K9L,near-equivalent,CDGM-CAT,N-BK7-class borosilicate crowns; verify melt data before substitution.
+SCHOTT-N-FK5,HOYA-FC5,near-equivalent,HOYA-CAT,Fluor crown class; verify melt data before substitution.

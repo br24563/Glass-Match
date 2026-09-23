@@ -1,0 +1,2 @@
+name,manufacturer,nd,vd,density,cte,thermal_conductivity,source
+DemoGlass,ACME,1.5200,60.0,2.50,7.0,,Example import format
