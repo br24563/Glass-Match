@@ -71,6 +71,7 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     """Parse .agf text -> (glasses, properties, sellmeier, transmission, issues)."""
     glasses, props, sell, trans, issues = [], [], [], [], []
     cur = None
+    parse_agf_text._seen = {}
 
     def flush():
         if cur is not None and cur.get("glass_name"):
@@ -158,7 +159,25 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             if nd is None or vd is None:
                 issues.append({"line": lineno, "issue": "NM missing nd/vd",
                                "text": raw[:80]})
-            gid = f"{manufacturer}-{name}".upper().replace(" ", "_")
+            # Duplicate NM names in one catalog are real (HOYA mold variants
+            # "E-FL6 ... 0 0 4" vs "... 0 0 0", Nikon E-series repeats): same
+            # name, slightly different vd/coefficients. Disambiguate with the
+            # trailing status flag when the name repeats, else -B/-C suffixes,
+            # so glass_ids stay unique and traceable instead of colliding.
+            gid_base = f"{manufacturer}-{name}".upper().replace(" ", "_")
+            status_flag = rest_tokens[-1] if rest_tokens else ""
+            _seen = parse_agf_text._seen if hasattr(parse_agf_text, "_seen") else None
+            gid = gid_base
+            if _seen is not None and gid_base in _seen:
+                n_prev = _seen[gid_base]
+                suffix = f"-MOLD{status_flag}" if status_flag not in ("", "1") else f"-B{n_prev}"
+                gid = f"{gid_base}{suffix}"
+                issues.append({"line": lineno, "glass": name,
+                               "issue": f"duplicate NM name #{n_prev + 1} -> glass_id {gid} "
+                                        f"(status flag {status_flag!r}; vd={vd})"})
+                _seen[gid_base] += 1
+            elif _seen is not None:
+                _seen[gid_base] = 1
             grows = {"glass_id": gid, "manufacturer_id": manufacturer,
                      "glass_name": name, "manufacturer_code": name,
                      "glass_family": guess_family(name),
@@ -255,6 +274,15 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     import pandas as pd
     return (pd.DataFrame(glasses), pd.DataFrame(props),
             pd.DataFrame(sell), pd.DataFrame(trans), issues)
+def is_sellmeier1_formula(formula: str | None) -> bool:
+    """True only for verified Sellmeier-1 rows — the app's dispersion gate.
+
+    Non-Sellmeier rows (Nikon polynomials, Herzberger-style legacy) carry
+    archived coefficients that must NEVER be evaluated as Sellmeier-1.
+    """
+    return str(formula or "") == "Sellmeier-1 (Zemax CD record)"
+
+
 def _flush_cd(cur: dict, source_id: str, issues: list) -> None:
     """Flush a buffered CD record (single-line or multi-line polynomial)."""
     pending = cur.pop("_cd_pending", None)
