@@ -98,7 +98,7 @@ requirements = {"nd_min": nd_min, "nd_max": nd_max, "vd_min": vd_min, "vd_max": 
                 "density_max": d_hi2 if use_density else None,
                 "cte_min": None, "cte_max": cte_max if use_cte else None}
 def n_at(db, gid, wl_um):
-    c = db.sellmeier_for(gid)
+    c = db.sellmeier_for(gid, sellmeier_only=True)
     if c is None:
         return None
     from glassmatch.spectra import sellmeier_n
@@ -138,20 +138,29 @@ tabs = st.tabs(["Matching Glasses", "Glass Detail", "Spectral Analysis",
 with tabs[0]:
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
-    show = results.copy()
+    mf_match = st.multiselect("Manufacturers in scope", sorted(results["manufacturer"].unique()),
+                              default=sorted(results["manufacturer"].unique()))
+    scoped = results[results["manufacturer"].isin(mf_match)] if mf_match else results.iloc[0:0]
+    st.caption(f"{len(scoped)} of {len(results)} glasses in scope.")
+    page_size = st.selectbox("Rows per page", [25, 50, 100, 250], index=1)
+    n_pages = max(1, (len(scoped) + page_size - 1) // page_size)
+    page = st.number_input("Page", min_value=1, max_value=n_pages, value=1)
+    show = scoped.iloc[(page - 1) * page_size: page * page_size].copy()
     show["transmission_%"] = show["glass_id"].map(
-        lambda g: None if trans[g] is None else round(trans[g], 1))
+        lambda g: None if trans.get(g) is None else round(trans[g], 1))
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
                         "cte", "transmission_%", "completeness", "missing"]],
                  use_container_width=True, hide_index=True)
-    st.download_button("Export results CSV",
-                       show.to_csv(index=False).encode(),
+    st.caption(f"Page {page} of {n_pages}.")
+    st.download_button("Export results CSV (in-scope glasses)",
+                       scoped.assign(transmission_pct=scoped["glass_id"].map(trans)).to_csv(
+                           index=False).encode(),
                        "glassmatch_results.csv", "text/csv")
     import json as _json
     st.download_button("Export requirements + results JSON",
                        _json.dumps({"requirements": requirements, "weights": w_norm,
-                                    "results": show.to_dict(orient="records")},
-                                   indent=2).encode(),
+                                    "results": scoped.to_dict(orient="records")},
+                                   indent=2, default=str).encode(),
                        "glassmatch_results.json", "application/json")
     with st.expander("How is Compatibility calculated?"):
         st.markdown(
@@ -162,7 +171,7 @@ with tabs[0]:
             "- Transmission here is a **calculated uncoated Fresnel estimate** for ranking only.")
 with tabs[1]:
     st.header("Glass detail + provenance")
-    gid = st.selectbox("Glass", results["glass_id"].tolist())
+    gid = st.selectbox("Glass", scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist())
     row = db.get_glass_row(gid)
     mfr = db.get_manufacturer_row(str(row["manufacturer_id"]))
     c1, c2, c3 = st.columns(3)
@@ -179,10 +188,17 @@ with tabs[1]:
                        f"license: {r['license']} | {r['notes']} {r['source_url']}")
     coef = db.sellmeier_for(gid)
     if coef is not None:
-        with st.expander("Sellmeier coefficients (CC0 mirror of manufacturer file)"):
+        from glassmatch.importers.agf import is_sellmeier1_formula
+        ok = is_sellmeier1_formula(coef.get("formula"))
+        with st.expander("Dispersion coefficients "
+                         + ("(verified Sellmeier-1)" if ok else "(ARCHIVED non-Sellmeier — not for curves)")):
             st.json({k: coef[k] for k in ("formula", "wavelength_um", "B1", "B2",
                                           "B3", "C1_um2", "C2_um2", "C3_um2",
                                           "source_id", "notes")})
+            if not ok:
+                st.warning("These coefficients are archived verbatim and must not be "
+                           "evaluated as Sellmeier-1 (e.g. Nikon polynomial, Herzberger "
+                           "legacy rows). No dispersion curve is drawn for this glass.")
     with st.expander("Score breakdown"):
         hit = results[results["glass_id"] == gid]
         if not hit.empty:
@@ -196,21 +212,27 @@ with tabs[1]:
         st.dataframe(eq, use_container_width=True, hide_index=True)
 with tabs[2]:
     st.header("Spectral analysis")
-    sel = st.multiselect("Glasses on plot", results["glass_id"].tolist(),
-                         default=results["glass_id"].tolist()[:3])
+    pool = scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist()
+    sel = st.multiselect("Glasses on plot (max 8 for readability)", pool,
+                         default=pool[:3], max_selections=8)
     wls = np.linspace(max(wl_min_um, 0.30), min(max(wl_max_um, 0.31), 2.5), 60)
     dcurves, tcurves = {}, {}
+    non_sell = []
     for g in sel:
-        c = db.sellmeier_for(g)
-        if c is None:
-            st.warning(f"{g}: no Sellmeier data - curve unavailable (not fabricated).")
+        status = db.dispersion_status(g)
+        if status != "sellmeier1":
+            non_sell.append(g)
             continue
+        c = db.sellmeier_for(g, sellmeier_only=True)
         df = dispersion_curve(c, list(wls))
         dcurves[g] = df
         tcurves[g] = pd.DataFrame({"wavelength_um": df["wavelength_um"],
                                    "transmission_pct": df["n"].map(
                                        lambda n: fresnel_transmission(n) * 100),
                                    "data_type": "calculated (Fresnel, uncoated)"})
+    if non_sell:
+        st.warning("Dispersion curve unavailable (coefficients archived, not Sellmeier-1 — "
+                   "never evaluated as Sellmeier): " + ", ".join(non_sell))
     if dcurves:
         st.plotly_chart(dispersion_figure(dcurves, "nm" if wl_unit == "nm" else "um"),
                         use_container_width=True)

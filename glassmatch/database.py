@@ -128,11 +128,26 @@ class GlassDatabase:
             })
         return rows
 
-    def sellmeier_for(self, glass_id: str):
+    def sellmeier_for(self, glass_id: str, sellmeier_only: bool = False):
         if self.sellmeier.empty:
             return None
         hit = self.sellmeier[self.sellmeier["glass_id"] == glass_id]
-        return hit.iloc[0].to_dict() if not hit.empty else None
+        if hit.empty:
+            return None
+        if sellmeier_only:
+            from glassmatch.importers.agf import is_sellmeier1_formula
+            hit = hit[hit["formula"].map(is_sellmeier1_formula)]
+            if hit.empty:
+                return None
+        return hit.iloc[0].to_dict()
+
+    def dispersion_status(self, glass_id: str) -> str:
+        """'sellmeier1' | 'archived-non-sellmeier' | 'none' — drives UI gating."""
+        row = self.sellmeier_for(glass_id)
+        if row is None:
+            return "none"
+        from glassmatch.importers.agf import is_sellmeier1_formula
+        return "sellmeier1" if is_sellmeier1_formula(row.get("formula")) else "archived-non-sellmeier"
 
     def equivalents_for(self, glass_id: str) -> pd.DataFrame:
         if self.equivalents.empty:
@@ -148,7 +163,6 @@ class GlassDatabase:
         for _, g in self.glasses.iterrows():
             gid = str(g["glass_id"])
             mfr = self.get_manufacturer_row(str(g.get("manufacturer_id", "")))
-            has_sell = self.sellmeier_for(gid) is not None
             has_trans = (not self.transmission.empty
                          and "glass_id" in self.transmission.columns
                          and bool((self.transmission["glass_id"] == gid).any()))
@@ -167,7 +181,8 @@ class GlassDatabase:
                 "tg": self.property_value(gid, "tg"),
                 "k_thermal": self.property_value(gid, "thermal_conductivity"),
                 "young": self.property_value(gid, "youngs_modulus"),
-                "has_sellmeier": bool(has_sell),
+                "has_sellmeier": self.dispersion_status(gid) == "sellmeier1",
+                "dispersion": self.dispersion_status(gid),
                 "has_transmission": bool(has_trans),
                 "description": str(g.get("description", "")),
             })

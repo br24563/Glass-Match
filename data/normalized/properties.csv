@@ -8256,12 +8256,12 @@ HIKARI-E-F2,glass_code,620363,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,glass cod
 HIKARI-E-F2,dPgF,0.0045,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HIKARI-E-F2,wl_min_um,0.4,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HIKARI-E-F2,wl_max_um,0.7,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HIKARI-E-F2,refractive_index_nd,1.620041,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HIKARI-E-F2,abbe_number_vd,36.258932,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HIKARI-E-F2,glass_code,620363,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HIKARI-E-F2,dPgF,0.0045,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HIKARI-E-F2,wl_min_um,0.4,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HIKARI-E-F2,wl_max_um,0.7,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HIKARI-E-F2-MOLD0,refractive_index_nd,1.620041,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HIKARI-E-F2-MOLD0,abbe_number_vd,36.258932,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HIKARI-E-F2-MOLD0,glass_code,620363,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HIKARI-E-F2-MOLD0,dPgF,0.0045,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HIKARI-E-F2-MOLD0,wl_min_um,0.4,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HIKARI-E-F2-MOLD0,wl_max_um,0.7,um,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HIKARI-E-F3,refractive_index_nd,1.61293,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HIKARI-E-F3,abbe_number_vd,36.996203,,587.6,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HIKARI-E-F3,dPgF,-0.0004,,,manufacturer,HIKARI-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
@@ -11127,12 +11127,12 @@ HOYA-CF6,glass_code,517522,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code fro
 HOYA-CF6,dPgF,0.0005,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HOYA-CF6,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HOYA-CF6,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HOYA-E-FL6,refractive_index_nd,1.56732,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HOYA-E-FL6,abbe_number_vd,42.840704,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HOYA-E-FL6,glass_code,567428,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HOYA-E-FL6,dPgF,0.0041,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HOYA-E-FL6,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HOYA-E-FL6,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HOYA-E-FL6-MOLD0,refractive_index_nd,1.56732,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HOYA-E-FL6-MOLD0,abbe_number_vd,42.840704,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HOYA-E-FL6-MOLD0,glass_code,567428,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HOYA-E-FL6-MOLD0,dPgF,0.0041,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HOYA-E-FL6-MOLD0,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HOYA-E-FL6-MOLD0,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HOYA-F1,refractive_index_nd,1.62588,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HOYA-F1,abbe_number_vd,35.744525,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HOYA-F1,glass_code,626357,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
@@ -11217,12 +11217,12 @@ HOYA-FD1,glass_code,717295,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code fro
 HOYA-FD1,dPgF,0.0034,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HOYA-FD1,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HOYA-FD1,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HOYA-FD1,refractive_index_nd,1.71736,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HOYA-FD1,abbe_number_vd,29.500288,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HOYA-FD1,glass_code,717295,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HOYA-FD1,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HOYA-FD1,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HOYA-FD1,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HOYA-FD1-MOLD0,refractive_index_nd,1.71736,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HOYA-FD1-MOLD0,abbe_number_vd,29.500288,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HOYA-FD1-MOLD0,glass_code,717295,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HOYA-FD1-MOLD0,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HOYA-FD1-MOLD0,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HOYA-FD1-MOLD0,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HOYA-FD2,refractive_index_nd,1.647693,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HOYA-FD2,abbe_number_vd,33.836872,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HOYA-FD2,glass_code,648338,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
@@ -11241,12 +11241,12 @@ HOYA-FD4,glass_code,755275,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code fro
 HOYA-FD4,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HOYA-FD4,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HOYA-FD4,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HOYA-FD4,refractive_index_nd,1.755199,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HOYA-FD4,abbe_number_vd,27.530242,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HOYA-FD4,glass_code,755275,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HOYA-FD4,dPgF,0.0042,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HOYA-FD4,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HOYA-FD4,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HOYA-FD4-MOLD0,refractive_index_nd,1.755199,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HOYA-FD4-MOLD0,abbe_number_vd,27.530242,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HOYA-FD4-MOLD0,glass_code,755275,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HOYA-FD4-MOLD0,dPgF,0.0042,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HOYA-FD4-MOLD0,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HOYA-FD4-MOLD0,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HOYA-FD5,refractive_index_nd,1.672701,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HOYA-FD5,abbe_number_vd,32.173263,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HOYA-FD5,glass_code,673322,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
@@ -11283,12 +11283,12 @@ HOYA-FD10,glass_code,728283,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code fr
 HOYA-FD10,dPgF,0.0073,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HOYA-FD10,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HOYA-FD10,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HOYA-FD10,refractive_index_nd,1.728252,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HOYA-FD10,abbe_number_vd,28.319573,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HOYA-FD10,glass_code,728283,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HOYA-FD10,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HOYA-FD10,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HOYA-FD10,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HOYA-FD10-MOLD0,refractive_index_nd,1.728252,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HOYA-FD10-MOLD0,abbe_number_vd,28.319573,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HOYA-FD10-MOLD0,glass_code,728283,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HOYA-FD10-MOLD0,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HOYA-FD10-MOLD0,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HOYA-FD10-MOLD0,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HOYA-FD11,refractive_index_nd,1.784715,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HOYA-FD11,abbe_number_vd,25.704276,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HOYA-FD11,glass_code,785257,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
@@ -11319,12 +11319,12 @@ HOYA-FD15,glass_code,699301,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code fr
 HOYA-FD15,dPgF,0.0,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 HOYA-FD15,wl_min_um,0.334,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 HOYA-FD15,wl_max_um,2.325,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-HOYA-FD15,refractive_index_nd,1.698945,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-HOYA-FD15,abbe_number_vd,30.050548,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-HOYA-FD15,glass_code,699301,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
-HOYA-FD15,dPgF,0.0052,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-HOYA-FD15,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-HOYA-FD15,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+HOYA-FD15-MOLD0,refractive_index_nd,1.698945,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+HOYA-FD15-MOLD0,abbe_number_vd,30.050548,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+HOYA-FD15-MOLD0,glass_code,699301,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
+HOYA-FD15-MOLD0,dPgF,0.0052,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+HOYA-FD15-MOLD0,wl_min_um,0.25,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+HOYA-FD15-MOLD0,wl_max_um,1.55,um,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 HOYA-FD18,refractive_index_nd,1.721507,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 HOYA-FD18,abbe_number_vd,29.243436,,587.6,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 HOYA-FD18,glass_code,722292,,,manufacturer,HOYA-AGF-NZHAGEN-MIRROR,glass code from .agf.
@@ -12981,30 +12981,30 @@ NIKON-E-BAK2,glass_code,540595,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass cod
 NIKON-E-BAK2,dPgF,-0.0004,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 NIKON-E-BAK2,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 NIKON-E-BAK2,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-NIKON-E-BAK1,refractive_index_nd,1.5725,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-NIKON-E-BAK1,abbe_number_vd,57.738955,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-NIKON-E-BAK1,glass_code,572577,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
-NIKON-E-BAK1,dPgF,0.0003,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-NIKON-E-BAK1,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-NIKON-E-BAK1,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-NIKON-E-BAK2,refractive_index_nd,1.539956,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-NIKON-E-BAK2,abbe_number_vd,59.455634,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-NIKON-E-BAK2,glass_code,540595,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
-NIKON-E-BAK2,dPgF,-0.0004,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-NIKON-E-BAK2,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-NIKON-E-BAK2,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+NIKON-E-BAK1-MOLD4,refractive_index_nd,1.5725,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+NIKON-E-BAK1-MOLD4,abbe_number_vd,57.738955,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+NIKON-E-BAK1-MOLD4,glass_code,572577,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
+NIKON-E-BAK1-MOLD4,dPgF,0.0003,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+NIKON-E-BAK1-MOLD4,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+NIKON-E-BAK1-MOLD4,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+NIKON-E-BAK2-MOLD4,refractive_index_nd,1.539956,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+NIKON-E-BAK2-MOLD4,abbe_number_vd,59.455634,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+NIKON-E-BAK2-MOLD4,glass_code,540595,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
+NIKON-E-BAK2-MOLD4,dPgF,-0.0004,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+NIKON-E-BAK2-MOLD4,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+NIKON-E-BAK2-MOLD4,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 NIKON-E-BAK4,refractive_index_nd,1.568832,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 NIKON-E-BAK4,abbe_number_vd,56.338294,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 NIKON-E-BAK4,glass_code,569563,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
 NIKON-E-BAK4,dPgF,-0.001,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 NIKON-E-BAK4,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 NIKON-E-BAK4,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-NIKON-E-BAK4,refractive_index_nd,1.568832,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-NIKON-E-BAK4,abbe_number_vd,56.338294,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-NIKON-E-BAK4,glass_code,569563,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
-NIKON-E-BAK4,dPgF,-0.001,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-NIKON-E-BAK4,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-NIKON-E-BAK4,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+NIKON-E-BAK4-MOLD3,refractive_index_nd,1.568832,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+NIKON-E-BAK4-MOLD3,abbe_number_vd,56.338294,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+NIKON-E-BAK4-MOLD3,glass_code,569563,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
+NIKON-E-BAK4-MOLD3,dPgF,-0.001,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+NIKON-E-BAK4-MOLD3,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+NIKON-E-BAK4-MOLD3,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 NIKON-E-K3,refractive_index_nd,1.518229,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 NIKON-E-K3,abbe_number_vd,58.93364,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 NIKON-E-K3,dPgF,0.0004,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
@@ -13134,12 +13134,12 @@ NIKON-E-F2,glass_code,620363,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code 
 NIKON-E-F2,dPgF,0.0045,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
 NIKON-E-F2,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
 NIKON-E-F2,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
-NIKON-E-F2,refractive_index_nd,1.620041,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
-NIKON-E-F2,abbe_number_vd,36.258932,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
-NIKON-E-F2,glass_code,620363,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
-NIKON-E-F2,dPgF,0.0045,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
-NIKON-E-F2,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
-NIKON-E-F2,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
+NIKON-E-F2-MOLD0,refractive_index_nd,1.620041,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
+NIKON-E-F2-MOLD0,abbe_number_vd,36.258932,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
+NIKON-E-F2-MOLD0,glass_code,620363,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,glass code from .agf.
+NIKON-E-F2-MOLD0,dPgF,0.0045,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
+NIKON-E-F2-MOLD0,wl_min_um,0.4,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD lower wavelength limit.
+NIKON-E-F2-MOLD0,wl_max_um,0.7,um,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf LD upper wavelength limit.
 NIKON-E-F3,refractive_index_nd,1.61293,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,nd from .agf NM record.
 NIKON-E-F3,abbe_number_vd,36.996203,,587.6,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
 NIKON-E-F3,dPgF,-0.0004,,,manufacturer,NIKON-AGF-NZHAGEN-MIRROR,.agf ED record (dPgF).
