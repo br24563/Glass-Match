@@ -15,6 +15,13 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
 - Requirement-driven matching (wavelength band, n_d, V_d, transmission,
   density, CTE) with transparent Compatibility Scores and user-adjustable weights.
   Maker-scoped, paginated results scale to thousands of glasses.
+- **Transmission modes**: Average / Minimum / Entire range, evaluated against
+  manufacturer IT rows (64k samples) with Fresnel fallback labelled as
+  calculated; Entire range refuses to score when band coverage < 90%.
+  Conflicting duplicate samples are excluded (never pick-a-winner) and disclosed.
+- **Data quality report**: range checks, duplicate detection, missing-source
+  checks and orphan source references — flags are listed for review, never
+  auto-fixed.
 - **IR mode**: for chalcogenide/IR glasses (no meaningful V_d), matching scores
   n_d + transmission band instead of penalizing the missing Abbe number.
 - Provenance-first database: every value carries source, license, and
@@ -43,6 +50,16 @@ streamlit run app.py
 
 Works offline once installed; no servers, keys, or cloud services.
 
+## Running tests
+
+```text
+pip install -r requirements-dev.txt
+python -m pytest tests -q
+```
+
+The matching algorithm and database layer are tested without Streamlit;
+`streamlit.testing.v1.AppTest` exercises the full app script end-to-end.
+
 ## Example workflow
 
 1. Pick the Visible preset (0.40-0.70 um), set n_d 1.45-1.60 and V_d 55-75
@@ -64,6 +81,12 @@ unless Require available data is on. Weights auto-normalize to 100%.
 **IR mode** (`material_class=chalcogenide` or maker INFRARED/LIGHTPATH/UMICORE):
 V_d is physically meaningless, so its weight is redistributed to n_d and
 transmission and the glass is never penalized for the missing value.
+
+Transmission requirement modes: **Average** = mean of manufacturer samples in
+band; **Minimum** = worst sample; **Entire range** = worst sample but only
+when samples span ≥90% of the band (otherwise reported missing, not guessed).
+Manufacturer IT rows are preferred; a calculated Fresnel estimate is used only
+for glasses with no manufacturer rows and is always labelled calculated.
 
 ## Database architecture
 
