@@ -1,5 +1,5 @@
 glass_id,manufacturer_id,glass_name,manufacturer_code,glass_family,description,material_class,status
-CDGM-H-ZF52,CDGM,H-ZF52,H-ZF52,Dense flint,CDGM dense flint.,,
+CDGM-H-ZF52,CDGM,H-ZF52,H-ZF52,Dense flint,CDGM dense flint.,oxide_glass,
 SCHOTT-BK7G18,SCHOTT,BK7G18,BK7G18,Borosilicate crown,Imported from SCHOTT-AGF-2025-06.,oxide_glass,standard
 SCHOTT-F2,SCHOTT,F2,F2,Optical glass,Imported from SCHOTT-AGF-2025-06.,oxide_glass,standard
 SCHOTT-F2G12,SCHOTT,F2G12,F2G12,Optical glass,Imported from SCHOTT-AGF-2025-06.,oxide_glass,standard

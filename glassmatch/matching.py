@@ -7,6 +7,11 @@ WEIGHT_KEYS = ["nd", "vd", "transmission", "density", "cte"]
 
 DEFAULT_WEIGHTS = {"nd": 30.0, "vd": 20.0, "transmission": 30.0, "density": 10.0, "cte": 10.0}
 
+# IR/chalcogenide glasses have no meaningful Abbe number: vd weight is
+# redistributed to nd + transmission and the missing value never penalizes.
+IR_MATERIAL_CLASSES = {"chalcogenide", "crystal_ir"}
+IR_MANUFACTURERS = {"INFRARED", "LIGHTPATH", "UMICORE"}
+
 
 def normalize_weights(weights: dict) -> dict:
     total = sum(max(0.0, float(weights.get(k, 0.0))) for k in WEIGHT_KEYS)
@@ -27,27 +32,46 @@ def _band_score(value, lo, hi) -> tuple[float, str]:
     v = float(value)
     if lo <= v <= hi:
         return 1.0, "met"
-    lo = -math.inf if lo is None else float(lo)
-    hi = math.inf if hi is None else float(hi)
-    v = float(value)
-    if lo <= v <= hi:
-        return 1.0, "met"
     width = max(hi - lo, 1e-9)
     if v < lo:
         return max(0.0, 1.0 - (lo - v) / (0.5 * width + abs(lo) * 0.05 + 1e-9)), "below"
     return max(0.0, 1.0 - (v - hi) / (0.5 * width + abs(hi) * 0.05 + 1e-9)), "above"
 
 
+def is_ir_glass(row) -> bool:
+    """True when V_d is physically meaningless for this glass."""
+    try:
+        mclass = str(row.get("material_class", "") or "")
+        mfr = str(row.get("manufacturer_id", "") or "")
+    except AttributeError:
+        return False
+    return mclass in IR_MATERIAL_CLASSES or mfr in IR_MANUFACTURERS
+
+
 def score_glass(props: dict, requirements: dict, weights: dict,
-                transmission_fn=None, require_data: bool = False) -> dict:
-    """Score one glass. props: nd/vd/density/cte/transmission values (or None)."""
+                transmission_fn=None, require_data: bool = False,
+                ir_mode: bool = False) -> dict:
+    """Score one glass. props: nd/vd/density/cte/transmission values (or None).
+
+    ir_mode: V_d is meaningless (chalcogenide/IR) — its weight moves to
+    nd + transmission and a missing vd never penalizes.
+    """
     w = normalize_weights(weights)
+    if ir_mode and w.get("vd", 0.0) > 0:
+        move = w["vd"]
+        w = dict(w)
+        w["vd"] = 0.0
+        w["nd"] = w.get("nd", 0.0) + 0.6 * move
+        w["transmission"] = w.get("transmission", 0.0) + 0.4 * move
     req = requirements
     out, flags, missing = {}, {}, []
     s, _ = _band_score(props.get("nd"), req.get("nd_min"), req.get("nd_max"))
     out["nd"], flags["nd"] = s, "missing" if s is None else ("met" if s == 1.0 else "partial")
-    s, _ = _band_score(props.get("vd"), req.get("vd_min"), req.get("vd_max"))
-    out["vd"], flags["vd"] = s, "missing" if s is None else ("met" if s == 1.0 else "partial")
+    if ir_mode:
+        out["vd"], flags["vd"] = 1.0, "n/a (IR material)"
+    else:
+        s, _ = _band_score(props.get("vd"), req.get("vd_min"), req.get("vd_max"))
+        out["vd"], flags["vd"] = s, "missing" if s is None else ("met" if s == 1.0 else "partial")
     s, _ = _band_score(props.get("density"), req.get("density_min"), req.get("density_max"))
     out["density"], flags["density"] = s, "missing" if s is None else ("met" if s == 1.0 else "partial")
     s, _ = _band_score(props.get("cte"), req.get("cte_min"), req.get("cte_max"))
@@ -87,11 +111,16 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
         gid = str(r["glass_id"])
         props = {"nd": r.get("nd"), "vd": r.get("vd"), "density": r.get("density"),
                  "cte": r.get("cte"), "transmission": transmissions.get(gid)}
-        sc = score_glass(props, requirements, weights, require_data=require_data)
+        ir = is_ir_glass(r)
+        sc = score_glass(props, requirements, weights, require_data=require_data,
+                         ir_mode=ir)
         rows.append({"glass_id": gid, "glass": r.get("glass"),
                      "manufacturer": r.get("manufacturer"),
                      "manufacturer_id": r.get("manufacturer_id"),
-                     "family": r.get("family"), "nd": r.get("nd"), "vd": r.get("vd"),
+                     "family": r.get("family"),
+                     "material_class": r.get("material_class", "oxide_glass"),
+                     "ir_mode": bool(ir),
+                     "nd": r.get("nd"), "vd": r.get("vd"),
                      "density": r.get("density"), "cte": r.get("cte"),
                      "compatibility": round(float(sc["overall"]) * 100, 1),
                      "completeness": round(float(sc["completeness"]) * 100, 1),

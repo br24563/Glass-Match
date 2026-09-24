@@ -148,8 +148,16 @@ with tabs[0]:
     show = scoped.iloc[(page - 1) * page_size: page * page_size].copy()
     show["transmission_%"] = show["glass_id"].map(
         lambda g: None if trans.get(g) is None else round(trans[g], 1))
+    if show["ir_mode"].astype(bool).any():
+        show.loc[show["ir_mode"].astype(bool), "vd"] = None  # V_d meaningless for IR
+        show["class"] = show.apply(
+            lambda r: "IR material" if r["ir_mode"] else str(r["material_class"]), axis=1)
+        st.caption("IR materials (shaded class): V_d not applicable — weight "
+                   "redistributed to n_d + transmission, never penalized.")
+    else:
+        show["class"] = show["material_class"]
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-                        "cte", "transmission_%", "completeness", "missing"]],
+                        "cte", "transmission_%", "completeness", "missing", "class"]],
                  use_container_width=True, hide_index=True)
     st.caption(f"Page {page} of {n_pages}.")
     st.download_button("Export results CSV (in-scope glasses)",
@@ -168,6 +176,8 @@ with tabs[0]:
             "1.0 inside the band, linear falloff outside.\n"
             "- Overall = weighted mean over **available** data x coverage factor "
             "(0.5 + 0.5 x covered weight).\n"
+            "- IR materials (chalcogenide/IR makers): V_d weight moves to "
+            "n_d (60%) + transmission (40%); V_d is shown as n/a, never scored.\n"
             "- Transmission here is a **calculated uncoated Fresnel estimate** for ranking only.")
 with tabs[1]:
     st.header("Glass detail + provenance")
