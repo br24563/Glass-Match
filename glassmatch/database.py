@@ -100,18 +100,46 @@ class GlassDatabase:
         return self.properties[self.properties["glass_id"] == glass_id].copy()
 
     def property_value(self, glass_id: str, prop: str):
-        frame = self.properties_for(glass_id)
-        frame = frame[frame["property"] == prop]
-        if frame.empty:
+        v = self._property_index().get((str(glass_id), str(prop)))
+        if v is None:
             return None
-        order = {"manufacturer": 0, "user_imported": 1, "calculated": 2, "interpolated": 3}
-        frame = frame.copy()
-        frame["_o"] = frame["data_type"].map(lambda v: order.get(str(v), 4))
-        frame = frame.sort_values("_o")
         try:
-            return float(frame.iloc[0]["value"])
+            return float(v)
         except (TypeError, ValueError):
             return None
+
+    def _property_index(self) -> dict:
+        """(glass_id, property) -> value, preserving property_value's source
+        priority (manufacturer > user_imported > calculated > interpolated >
+        other; first row wins ties). Built once — O(rows) instead of
+        O(glasses x rows) DataFrame scans."""
+        idx = getattr(self, "_prop_idx", None)
+        if idx is None:
+            order = {"manufacturer": 0, "user_imported": 1,
+                     "calculated": 2, "interpolated": 3}
+            best = {}
+            f = self.properties
+            if not f.empty and {"glass_id", "property", "value"}.issubset(f.columns):
+                dt = f["data_type"] if "data_type" in f.columns else pd.Series([""] * len(f))
+                for i, (gid, prp, val, d) in enumerate(
+                        zip(f["glass_id"], f["property"], f["value"], dt)):
+                    r = order.get(str(d), 4)
+                    key = (str(gid), str(prp))
+                    cur = best.get(key)
+                    if cur is None or r < cur[0]:
+                        best[key] = (r, i, val)
+            idx = {k: v[2] for k, v in best.items()}
+            self._prop_idx = idx
+        return idx
+
+    def _transmission_ids(self) -> set:
+        ids = getattr(self, "_t_ids", None)
+        if ids is None:
+            t = self.transmission
+            ids = (set(t["glass_id"].astype(str))
+                   if not t.empty and "glass_id" in t.columns else set())
+            self._t_ids = ids
+        return ids
 
     def property_provenance(self, glass_id: str, prop: str) -> list:
         frame = self.properties_for(glass_id)
@@ -132,17 +160,30 @@ class GlassDatabase:
         return rows
 
     def sellmeier_for(self, glass_id: str, sellmeier_only: bool = False):
-        if self.sellmeier.empty:
-            return None
-        hit = self.sellmeier[self.sellmeier["glass_id"] == glass_id]
-        if hit.empty:
+        lst = self._sellmeier_rows().get(str(glass_id))
+        if not lst:
             return None
         if sellmeier_only:
             from glassmatch.importers.agf import is_sellmeier1_formula
-            hit = hit[hit["formula"].map(is_sellmeier1_formula)]
-            if hit.empty:
-                return None
-        return hit.iloc[0].to_dict()
+            for r in lst:
+                if is_sellmeier1_formula(r.get("formula")):
+                    return r
+            return None
+        return lst[0]
+
+    def _sellmeier_rows(self) -> dict:
+        """glass_id -> [row dicts in file order]; built once. Preserves
+        sellmeier_for's first-row-wins semantics (incl. the sellmeier_only
+        filter taking the first verified row)."""
+        rows = getattr(self, "_sm_rows", None)
+        if rows is None:
+            rows = {}
+            f = self.sellmeier
+            if not f.empty and "glass_id" in f.columns:
+                for _, r in f.iterrows():
+                    rows.setdefault(str(r["glass_id"]), []).append(r.to_dict())
+            self._sm_rows = rows
+        return rows
 
     def dispersion_status(self, glass_id: str) -> str:
         """'sellmeier1' | 'archived-non-sellmeier' | 'none' — drives UI gating."""
@@ -166,9 +207,7 @@ class GlassDatabase:
         for _, g in self.glasses.iterrows():
             gid = str(g["glass_id"])
             mfr = self.get_manufacturer_row(str(g.get("manufacturer_id", "")))
-            has_trans = (not self.transmission.empty
-                         and "glass_id" in self.transmission.columns
-                         and bool((self.transmission["glass_id"] == gid).any()))
+            has_trans = gid in self._transmission_ids()
             rows.append({
                 "glass_id": gid,
                 "glass": str(g.get("glass_name", gid)),
