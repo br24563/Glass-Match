@@ -2,3 +2,6 @@ data/staging/
 *.AGF
 *.agf
 g2.log
+
+__pycache__/
+*.pyc
