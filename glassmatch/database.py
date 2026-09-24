@@ -65,6 +65,9 @@ class GlassDatabase:
         for _col in ("material_class", "status"):
             if _col not in db.glasses.columns:
                 db.glasses[_col] = "oxide_glass" if _col == "material_class" else "standard"
+            else:
+                default = "oxide_glass" if _col == "material_class" else "standard"
+                db.glasses[_col] = db.glasses[_col].fillna(default).replace("", default)
         if not db.glasses.empty:
             db.glasses["glass_id"] = db.glasses["glass_id"].astype(str)
         for frame in (db.properties, db.sellmeier):
@@ -172,8 +175,8 @@ class GlassDatabase:
                 "manufacturer": str(mfr["name"]) if mfr is not None else str(g.get("manufacturer_id", "")),
                 "manufacturer_id": str(g.get("manufacturer_id", "")),
                 "family": str(g.get("glass_family", "")),
-                "material_class": str(g.get("material_class", "oxide_glass")),
-                "status": str(g.get("status", "standard")),
+                "material_class": str(g.get("material_class", "") or "oxide_glass"),
+                "status": str(g.get("status", "") or "standard"),
                 "nd": self.property_value(gid, "refractive_index_nd"),
                 "vd": self.property_value(gid, "abbe_number_vd"),
                 "density": self.property_value(gid, "density"),
