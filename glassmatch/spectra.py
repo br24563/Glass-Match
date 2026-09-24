@@ -44,6 +44,10 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
 
     Returns dict with value_pct (0-100), label, n_points, coverage — or None
     when there is no usable manufacturer data for this mode. Never fabricates.
+
+    Conflicting duplicate samples at one wavelength (found in some raw .agf
+    files) are excluded wholesale — no winner is picked — and the exclusion
+    is disclosed in the label.
     """
     if tdf is None or len(tdf) == 0 or hi_um <= lo_um:
         return None
@@ -57,6 +61,26 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "n_points": 0, "coverage": 0.0,
                 "label": "manufacturer rows exist but none inside the band"}
     span = hi_um - lo_um
+    # Conflicting duplicate samples at the same wavelength (present in some
+    # raw .agf files): GlassMatch does not pick a winner. All rows at a
+    # disputed wavelength are excluded from the statistic and the exclusion
+    # is disclosed in the label (they remain flagged in Data Quality).
+    conflict_n = 0
+    if len(wl_b) > 1:
+        vals_by_wl: dict = {}
+        for w, v in zip(wl_b, tv_b):
+            vals_by_wl.setdefault(round(float(w), 9), []).append(float(v))
+        conflict_wls = {w for w, vs in vals_by_wl.items()
+                        if len(vs) > 1 and (max(vs) - min(vs)) > 1e-12}
+        if conflict_wls:
+            keep = np.array([round(float(w), 9) not in conflict_wls for w in wl_b])
+            conflict_n = int((~keep).sum())
+            wl_b, tv_b = wl_b[keep], tv_b[keep]
+            if len(wl_b) == 0:
+                return {"value_pct": None, "reason": "all-samples-conflict",
+                        "n_points": 0, "coverage": 0.0,
+                        "label": "every in-band sample is a conflicting duplicate "
+                                 "(see Data Quality report)"}
     coverage = float((wl_b.max() - wl_b.min()) / span) if len(wl_b) > 1 else 0.0
     if mode == "Entire range" and coverage < min_coverage:
         # cannot honestly claim the entire band meets t_min
@@ -80,5 +104,8 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     if thickness == thickness and thickness is not None:
         label += f"; {thickness:g} mm as listed"
     label += "; internal transmittance)"
+    if conflict_n:
+        label += (f"; {conflict_n} conflicting duplicate sample(s) excluded "
+                  "from the statistic (see Data Quality)")
     return {"value_pct": val * 100.0, "label": label,
             "n_points": int(len(wl_b)), "coverage": coverage}
