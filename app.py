@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS
+from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
-from glassmatch.spectra import dispersion_curve, fresnel_transmission
+from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stats
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import validate_property_frame
 from glassmatch.importers.generic_csv import import_csv
@@ -35,19 +35,31 @@ APP_PRESETS = {
 }
 
 
-@st.cache_resource
-def get_db():
-    return load_default_database()
+def _data_key() -> str:
+    """Fingerprint of the normalized CSVs — changes when data files change,
+    so edited/imported data appears without restarting the server."""
+    parts = []
+    try:
+        for f in sorted(DEFAULT_DATA_DIR.glob("*.csv")):
+            stt = f.stat()
+            parts.append(f"{f.name}:{stt.st_mtime_ns}:{stt.st_size}")
+    except OSError:
+        return "unavailable"
+    return "|".join(parts)
 
 
 @st.cache_resource
-def get_summary():
-    """Cached — summary_frame() iterates every glass + dispersion lookup."""
-    return get_db().summary_frame()
+def _load_all(_key: str):
+    db = load_default_database()
+    summary = db.summary_frame()
+    t_groups = {}
+    if not db.transmission.empty and "glass_id" in db.transmission.columns:
+        t_groups = {str(gid): sub.reset_index(drop=True)
+                    for gid, sub in db.transmission.groupby("glass_id")}
+    return db, summary, t_groups
 
 
-db = get_db()
-summary = get_summary()
+db, summary, t_groups = _load_all(_data_key())
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
@@ -129,10 +141,29 @@ def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
     return float(sum(vals) / len(vals) * 100.0), "calculated (Fresnel, uncoated)"
 
 
-trans = {}
+def band_transmission(gid, lo_um, hi_um, mode):
+    """(value_pct | None, basis label) for the selected requirement mode.
+
+    Manufacturer transmission.csv rows are preferred. If the glass HAS
+    manufacturer rows but they can't satisfy the mode (no samples in band,
+    or Entire-range coverage too sparse), the value is reported missing
+    rather than silently substituting a calculated estimate. Fresnel is
+    only the fallback when the glass has no manufacturer rows at all.
+    """
+    s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode)
+    if s is not None:
+        if s.get("value_pct") is not None:
+            return s["value_pct"], s["label"]
+        return None, f"missing ({s['label']})"
+    v, note = transmission_estimate(db, gid, lo_um, hi_um)
+    return v, note
+
+
+trans, trans_basis = {}, {}
 for gid in summary["glass_id"]:
-    v, _note = transmission_estimate(db, gid, wl_min_um, wl_max_um)
+    v, basis = band_transmission(gid, wl_min_um, wl_max_um, t_mode)
     trans[gid] = v
+    trans_basis[gid] = basis
 
 results = match_glasses(summary, requirements, w_in, transmissions=trans,
                         require_data=require_data)
@@ -164,10 +195,17 @@ with tabs[0]:
         show["class"] = show["material_class"]
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
                         "cte", "transmission_%", "completeness", "missing", "class"]],
-                 use_container_width=True, hide_index=True)
-    st.caption(f"Page {page} of {n_pages}.")
+                 width="stretch", hide_index=True)
+    n_mfr = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("manufacturer"))
+    n_calc = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("calculated"))
+    n_miss = len(scoped) - n_mfr - n_calc
+    st.caption(f"Transmission basis ({t_mode} of band): {n_mfr} manufacturer IT rows · "
+               f"{n_calc} calculated Fresnel · {n_miss} missing — full labels in the CSV export. "
+               f"Page {page} of {n_pages}.")
     st.download_button("Export results CSV (in-scope glasses)",
-                       scoped.assign(transmission_pct=scoped["glass_id"].map(trans)).to_csv(
+                       scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
+                                     transmission_basis=scoped["glass_id"].map(trans_basis)
+                                     .fillna("missing")).to_csv(
                            index=False).encode(),
                        "glassmatch_results.csv", "text/csv")
     import json as _json
@@ -184,7 +222,13 @@ with tabs[0]:
             "(0.5 + 0.5 x covered weight).\n"
             "- IR materials (chalcogenide/IR makers): V_d weight moves to "
             "n_d (60%) + transmission (40%); V_d is shown as n/a, never scored.\n"
-            "- Transmission here is a **calculated uncoated Fresnel estimate** for ranking only.")
+            f"- Transmission modes (**{t_mode}**): *Average* = mean of samples in "
+            "band; *Minimum* = worst sample; *Entire range* = worst sample but only "
+            "when manufacturer samples span >=90% of the band — otherwise the value "
+            "is reported missing, never guessed.\n"
+            "- Transmission values prefer manufacturer IT rows (transmission.csv); "
+            "a calculated uncoated Fresnel estimate is used only when a glass has no "
+            "manufacturer rows at all, and is labelled as calculated.")
 with tabs[1]:
     st.header("Glass detail + provenance")
     gid = st.selectbox("Glass", scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist())
@@ -194,6 +238,9 @@ with tabs[1]:
     c1.metric("n_d", f"{db.property_value(gid, 'refractive_index_nd')}")
     c2.metric("V_d", f"{db.property_value(gid, 'abbe_number_vd')}")
     c3.metric("Manufacturer", str(mfr["name"]) if mfr is not None else "?")
+    st.caption(f"Transmission for the current requirement ({t_mode}): "
+               f"{trans.get(gid) if trans.get(gid) is not None else 'missing'}%"
+               f" — {trans_basis.get(gid, 'missing')}")
     st.write(f"**Family:** {row['glass_family']} - {row['description']}")
     st.subheader("Properties and sources")
     for prop, label in PROPERTY_LABELS.items():
@@ -221,11 +268,11 @@ with tabs[1]:
             r0 = hit.iloc[0]
             st.plotly_chart(score_breakdown_figure(
                 {k: (None if pd.isna(r0[f"score_{k}"]) else float(r0[f"score_{k}"]) / 100)
-                 for k in WEIGHT_KEYS}), use_container_width=True)
+                 for k in WEIGHT_KEYS}), width="stretch")
     eq = db.equivalents_for(gid)
     if not eq.empty:
         st.subheader("Known near-equivalents (verify melt data before substitution)")
-        st.dataframe(eq, use_container_width=True, hide_index=True)
+        st.dataframe(eq, width="stretch", hide_index=True)
 with tabs[2]:
     st.header("Spectral analysis")
     pool = scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist()
@@ -233,38 +280,60 @@ with tabs[2]:
                          default=pool[:3], max_selections=8)
     wls = np.linspace(max(wl_min_um, 0.30), min(max(wl_max_um, 0.31), 2.5), 60)
     dcurves, tcurves = {}, {}
-    non_sell = []
+    non_sell, t_manufacturer, t_calculated, t_missing = [], [], [], []
     for g in sel:
+        # --- transmission: manufacturer rows preferred, Fresnel fallback ---
+        tdf = t_groups.get(str(g))
+        if tdf is not None and len(tdf) >= 2:
+            thick = tdf["thickness_mm"].dropna()
+            thick_s = f", {thick.iloc[0]:g} mm as listed" if len(thick) else ""
+            tcurves[g] = pd.DataFrame({
+                "wavelength_um": tdf["wavelength_um"],
+                "transmission_pct": tdf["transmission"] * 100.0,
+                "data_type": f"manufacturer IT{thick_s}"})
+            t_manufacturer.append(g)
+        elif db.dispersion_status(g) == "sellmeier1":
+            c = db.sellmeier_for(g, sellmeier_only=True)
+            df = dispersion_curve(c, list(wls))
+            tcurves[g] = pd.DataFrame({"wavelength_um": df["wavelength_um"],
+                                       "transmission_pct": df["n"].map(
+                                           lambda n: fresnel_transmission(n) * 100),
+                                       "data_type": "calculated (Fresnel, uncoated)"})
+            t_calculated.append(g)
+        else:
+            t_missing.append(g)
+        # --- dispersion: verified Sellmeier-1 only ---
         status = db.dispersion_status(g)
         if status != "sellmeier1":
             non_sell.append(g)
             continue
         c = db.sellmeier_for(g, sellmeier_only=True)
-        df = dispersion_curve(c, list(wls))
-        dcurves[g] = df
-        tcurves[g] = pd.DataFrame({"wavelength_um": df["wavelength_um"],
-                                   "transmission_pct": df["n"].map(
-                                       lambda n: fresnel_transmission(n) * 100),
-                                   "data_type": "calculated (Fresnel, uncoated)"})
+        dcurves[g] = dispersion_curve(c, list(wls))
     if non_sell:
         st.warning("Dispersion curve unavailable (coefficients archived, not Sellmeier-1 — "
                    "never evaluated as Sellmeier): " + ", ".join(non_sell))
+    if t_missing:
+        st.info("No transmission data for: " + ", ".join(t_missing))
     if dcurves:
         st.plotly_chart(dispersion_figure(dcurves, "nm" if wl_unit == "nm" else "um"),
-                        use_container_width=True)
+                        width="stretch")
         st.caption("CALCULATED from Sellmeier coefficients - not manufacturer tables.")
     if tcurves:
         st.plotly_chart(transmission_figure(tcurves, "nm" if wl_unit == "nm" else "um",
                                             band=(wl_min_um, wl_max_um)),
-                        use_container_width=True)
-        st.caption("Transmission = calculated uncoated Fresnel estimate, ranking only.")
+                        width="stretch")
+        st.caption(
+            f"Manufacturer IT rows: {len(t_manufacturer)} glass(es); "
+            f"calculated uncoated Fresnel: {len(t_calculated)} glass(es) — "
+            "each trace is labelled by basis. Thickness applies as listed; "
+            "internal transmittance is not corrected to your sample thickness.")
 with tabs[3]:
     st.header("Comparison (2-5 glasses)")
     comp = st.multiselect("Select glasses", results["glass_id"].tolist(),
                           default=results["glass_id"].tolist()[:2], max_selections=5)
     if len(comp) >= 2:
-        st.dataframe(results[results["glass_id"].isin(comp)].set_index("glass_id").T,
-                     use_container_width=True)
+        st.dataframe(results[results["glass_id"].isin(comp)].set_index("glass_id")
+                     .astype(str).T, width="stretch")
     else:
         st.info("Select at least 2 glasses.")
 
@@ -286,25 +355,25 @@ with tabs[4]:
         view = view[view["has_sellmeier"]]
     if hide_obsolete and "status" in view.columns:
         view = view[view["status"] != "obsolete"]
-    st.dataframe(view, use_container_width=True, hide_index=True)
+    st.dataframe(view, width="stretch", hide_index=True)
     st.caption(f"{len(view)} of {len(summary)} glasses shown. "
                "Coverage grows ring by ring: core catalogs -> crystals/IR -> polymers.")
     cov = summary.groupby("manufacturer_id").agg(
         glasses=("glass_id", "count"),
         with_sellmeier=("has_sellmeier", "sum")).reset_index()
     st.subheader("Catalog coverage")
-    st.dataframe(cov, use_container_width=True, hide_index=True)
+    st.dataframe(cov, width="stretch", hide_index=True)
 
 with tabs[5]:
     st.header("Data sources and licensing")
-    st.dataframe(db.sources, use_container_width=True, hide_index=True)
+    st.dataframe(db.sources, width="stretch", hide_index=True)
     st.warning("Catalog nd/Vd beyond N-BK7 are transcribed reference values: "
                "re-verify against the current manufacturer datasheet before detailed design. "
                "Sellmeier rows are CC0 mirrors via refractiveindex.info; manufacturers stay authoritative.")
     bad = validate_property_frame(db.properties)
     st.caption(f"Validation: {len(bad)} flagged record(s).")
     if bad:
-        st.dataframe(pd.DataFrame(bad), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(bad), width="stretch", hide_index=True)
 
 with tabs[6]:
     st.header("Import your data")
@@ -316,7 +385,7 @@ with tabs[6]:
         try:
             g_new, p_new = import_csv(io.BytesIO(up.getvalue()))
             st.success(f"Parsed {len(g_new)} glass(es), {len(p_new)} properties as user_imported.")
-            st.dataframe(g_new, use_container_width=True, hide_index=True)
+            st.dataframe(g_new, width="stretch", hide_index=True)
             import json as _json2
             st.download_button("Download normalized user data (JSON)",
                                _json2.dumps({"glasses": g_new.to_dict(orient="records"),
@@ -344,10 +413,10 @@ with tabs[6]:
                 cat, sid, CATALOGS[cat]["material_class"])
             st.success(f"Parsed {len(g2)} glass(es), {len(p2)} properties, "
                        f"{len(s2)} Sellmeier rows, {len(t2)} transmission rows.")
-            st.dataframe(g2, use_container_width=True, hide_index=True)
+            st.dataframe(g2, width="stretch", hide_index=True)
             if iss:
                 st.warning(f"{len(iss)} flagged record(s) — review, nothing auto-fixed.")
-                st.dataframe(pd.DataFrame(iss), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(iss), width="stretch", hide_index=True)
             import json as _json3
             st.download_button("Download normalized .agf import (JSON)",
                                _json3.dumps({"glasses": g2.to_dict(orient="records"),

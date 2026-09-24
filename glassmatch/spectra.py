@@ -26,3 +26,59 @@ def fresnel_transmission(n: float) -> float:
         return float("nan")
     R = ((n - 1.0) / (n + 1.0)) ** 2
     return (1.0 - R) ** 2
+
+
+# ---------------------------------------------------------------------------
+# Manufacturer transmission rows (transmission.csv): 0-1 fraction per sample.
+# Band statistics for the three requirement modes. Pure functions: no db.
+
+def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
+               min_coverage: float = 0.90) -> dict | None:
+    """Summarize manufacturer transmission samples inside [lo_um, hi_um].
+
+    mode:
+      "Average"       - mean of samples in band (any coverage).
+      "Minimum"       - lowest sample in band (any coverage).
+      "Entire range"  - lowest sample, but ONLY if samples span >= min_coverage
+                        of the band; otherwise None (cannot verify the claim).
+
+    Returns dict with value_pct (0-100), label, n_points, coverage — or None
+    when there is no usable manufacturer data for this mode. Never fabricates.
+    """
+    if tdf is None or len(tdf) == 0 or hi_um <= lo_um:
+        return None
+    wl = tdf["wavelength_um"].to_numpy(dtype=float)
+    tv = tdf["transmission"].to_numpy(dtype=float)
+    import numpy as np
+    ok = np.isfinite(wl) & np.isfinite(tv) & (wl >= lo_um) & (wl <= hi_um)
+    wl_b, tv_b = wl[ok], tv[ok]
+    if len(wl_b) == 0:
+        return {"value_pct": None, "reason": "no-samples-in-band",
+                "n_points": 0, "coverage": 0.0,
+                "label": "manufacturer rows exist but none inside the band"}
+    span = hi_um - lo_um
+    coverage = float((wl_b.max() - wl_b.min()) / span) if len(wl_b) > 1 else 0.0
+    if mode == "Entire range" and coverage < min_coverage:
+        # cannot honestly claim the entire band meets t_min
+        return {"value_pct": None, "reason": "insufficient-coverage",
+                "n_points": int(len(wl_b)), "coverage": coverage,
+                "label": f"manufacturer coverage {coverage:.0%} of band "
+                         f"(<{min_coverage:.0%} required for Entire range)"}
+    if mode == "Minimum":
+        val = float(tv_b.min())
+        how = "minimum sample in band"
+    elif mode == "Entire range":
+        val = float(tv_b.min())
+        how = "minimum (entire-range check)"
+    else:
+        val = float(tv_b.mean())
+        how = "mean of samples in band"
+    thickness = None
+    if "thickness_mm" in tdf.columns and len(tdf):
+        thickness = tdf["thickness_mm"].dropna().iloc[0]
+    label = f"manufacturer ({how}; {len(wl_b)} samples"
+    if thickness == thickness and thickness is not None:
+        label += f"; {thickness:g} mm as listed"
+    label += "; internal transmittance)"
+    return {"value_pct": val * 100.0, "label": label,
+            "n_points": int(len(wl_b)), "coverage": coverage}
