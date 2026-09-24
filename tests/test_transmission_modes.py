@@ -58,3 +58,30 @@ def test_none_or_empty_input():
 
 def test_inverted_band_rejected():
     assert band_stats(FULL, 0.7, 0.4, "Average") is None
+
+
+def test_conflicting_duplicates_excluded_not_pick_winner():
+    tdf = _tdf([(0.50, 0.95, 10.0),   # sane
+                (0.55, 0.96, 10.0),
+                (0.55, 1e-6, 10.0),   # conflicting duplicate at 0.55
+                (0.60, 0.97, 10.0)])
+    s = band_stats(tdf, 0.50, 0.60, "Minimum")
+    assert s is not None and s["value_pct"] is not None
+    # 0.55 row pair excluded entirely; min of remaining = 0.95
+    assert abs(s["value_pct"] - 95.0) < 1e-6
+    assert "conflicting duplicate" in s["label"] and "excluded" in s["label"]
+    assert s["n_points"] == 2
+
+
+def test_identical_duplicates_are_not_conflicts():
+    tdf = _tdf([(0.50, 0.95, 10.0), (0.50, 0.95, 10.0), (0.60, 0.97, 10.0)])
+    s = band_stats(tdf, 0.50, 0.60, "Minimum")
+    assert s is not None and "excluded" not in s["label"]
+    assert abs(s["value_pct"] - 95.0) < 1e-6
+
+
+def test_all_samples_conflicting_returns_missing_not_number():
+    tdf = _tdf([(0.50, 0.95, 10.0), (0.50, 1e-6, 10.0)])
+    s = band_stats(tdf, 0.45, 0.55, "Average")
+    assert s is not None and s["value_pct"] is None
+    assert s["reason"] == "all-samples-conflict"

@@ -9,7 +9,8 @@ from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
 from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stats
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
-from glassmatch.validation import validate_property_frame
+from glassmatch.validation import (validate_property_frame, validate_glass_frame,
+                                   validate_transmission_frame, orphan_source_ids)
 from glassmatch.importers.generic_csv import import_csv
 
 st.set_page_config(page_title="GlassMatch", page_icon="🔭", layout="wide")
@@ -56,10 +57,16 @@ def _load_all(_key: str):
     if not db.transmission.empty and "glass_id" in db.transmission.columns:
         t_groups = {str(gid): sub.reset_index(drop=True)
                     for gid, sub in db.transmission.groupby("glass_id")}
-    return db, summary, t_groups
+    quality = {
+        "properties": validate_property_frame(db.properties),
+        "glasses": validate_glass_frame(db.glasses),
+        "transmission": validate_transmission_frame(db.transmission),
+        "orphan_sources": orphan_source_ids(db.glasses, db.properties, db.sources),
+    }
+    return db, summary, t_groups, quality
 
 
-db, summary, t_groups = _load_all(_data_key())
+db, summary, t_groups, quality = _load_all(_data_key())
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
@@ -273,6 +280,8 @@ with tabs[1]:
     if not eq.empty:
         st.subheader("Known near-equivalents (verify melt data before substitution)")
         st.dataframe(eq, width="stretch", hide_index=True)
+        st.caption("Seed examples — the bulk cross-reference table has not been "
+                   "imported yet. Contribute manufacturer equivalency charts via PR.")
 with tabs[2]:
     st.header("Spectral analysis")
     pool = scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist()
@@ -370,10 +379,29 @@ with tabs[5]:
     st.warning("Catalog nd/Vd beyond N-BK7 are transcribed reference values: "
                "re-verify against the current manufacturer datasheet before detailed design. "
                "Sellmeier rows are CC0 mirrors via refractiveindex.info; manufacturers stay authoritative.")
-    bad = validate_property_frame(db.properties)
-    st.caption(f"Validation: {len(bad)} flagged record(s).")
-    if bad:
-        st.dataframe(pd.DataFrame(bad), width="stretch", hide_index=True)
+    st.subheader("Data quality report")
+    n_prop, n_glass = len(quality["properties"]), len(quality["glasses"])
+    n_trans, n_orph = len(quality["transmission"]), len(quality["orphan_sources"])
+    q1, q2, q3, q4 = st.columns(4)
+    q1.metric("Property flags", n_prop)
+    q2.metric("Glass flags", n_glass)
+    q3.metric("Transmission flags", n_trans)
+    q4.metric("Orphan source refs", n_orph)
+    total = n_prop + n_glass + n_trans + n_orph
+    if total == 0:
+        st.success("All checks pass — no flagged records. Nothing is auto-fixed; "
+                   "flags here would list questionable records for review.")
+    else:
+        st.caption("Flagged records are listed, never silently corrected. "
+                   "Review before relying on them.")
+        for title, key in [("Properties", "properties"), ("Glasses", "glasses"),
+                           ("Transmission samples", "transmission")]:
+            if quality[key]:
+                with st.expander(f"{title}: {len(quality[key])} flagged record(s)"):
+                    st.dataframe(pd.DataFrame(quality[key]), width="stretch", hide_index=True)
+        if quality["orphan_sources"]:
+            st.warning("source_ids referenced by data but missing from sources.csv: "
+                       + ", ".join(quality["orphan_sources"]))
 
 with tabs[6]:
     st.header("Import your data")
