@@ -28,6 +28,12 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
   with provenance preserved.
 ## Installation
 
+**Easiest (Windows):** double-click `start.bat`. First run creates an isolated
+`.venv` and installs dependencies (uses `uv` if available, ~1 s, else pip);
+every run after that just opens the app at `http://localhost:8501`.
+
+**Manual:**
+
 ```text
 git clone <repo-url> GlassMatch
 cd GlassMatch

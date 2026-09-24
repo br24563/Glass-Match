@@ -1,0 +1,7 @@
+# GlassMatch project Streamlit config — applied automatically when running
+# `streamlit run app.py` from this directory.
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true

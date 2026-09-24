@@ -5,3 +5,5 @@ g2.log
 
 __pycache__/
 *.pyc
+.venv/
+.streamlit/secrets.toml
