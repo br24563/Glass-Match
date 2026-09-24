@@ -40,8 +40,14 @@ def get_db():
     return load_default_database()
 
 
+@st.cache_resource
+def get_summary():
+    """Cached — summary_frame() iterates every glass + dispersion lookup."""
+    return get_db().summary_frame()
+
+
 db = get_db()
-summary = db.summary_frame()
+summary = get_summary()
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
