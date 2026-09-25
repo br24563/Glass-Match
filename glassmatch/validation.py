@@ -57,6 +57,81 @@ def validate_glass_frame(glasses: pd.DataFrame) -> list:
     return issues
 
 
+TRANSMISSION_KEY = ["glass_id", "wavelength_um", "thickness_mm"]
+
+CONFLICT_COLUMNS = ["glass_id", "wavelength_um", "thickness_mm", "n_values",
+                    "values", "spread", "source_ids", "data_types",
+                    "status", "reason", "action"]
+
+
+def find_transmission_conflicts(t: pd.DataFrame,
+                                value_col: str = "transmission",
+                                rtol: float = 1e-9) -> pd.DataFrame:
+    """Samples where one (glass, wavelength, thickness) key has >1 distinct value.
+
+    Raw manufacturer catalogs contain these: some are data-entry artifacts (a
+    stray ``1E-6`` next to a real 0.99 reading), others are genuine
+    disagreements between two catalog sections. GlassMatch does not guess which
+    value is right, so every row of a conflicting key is reported here and the
+    caller decides what to do with it. The importer quarantines them; the
+    migration script moves them to ``transmission_conflicts.csv``.
+
+    Returns one row per conflicting key, with every distinct value preserved.
+    """
+    if t is None or t.empty or not set(TRANSMISSION_KEY).issubset(t.columns):
+        return pd.DataFrame(columns=CONFLICT_COLUMNS)
+    vals = pd.to_numeric(t[value_col], errors="coerce")
+    work = t.assign(_v=vals)
+    grouped = work.groupby(TRANSMISSION_KEY, dropna=False)["_v"]
+    # Rename before reset_index: the count would otherwise inherit "_v" and
+    # collide with the value column when the keys frame is merged back in.
+    n_distinct = grouped.nunique().rename("_n_distinct").reset_index()
+    keys = n_distinct[n_distinct["_n_distinct"] > 1].drop(columns="_n_distinct")
+    if keys.empty:
+        return pd.DataFrame(columns=CONFLICT_COLUMNS)
+    hit = work.merge(keys, on=TRANSMISSION_KEY, how="inner")
+    rows = []
+    for key_vals, grp in hit.groupby(TRANSMISSION_KEY, dropna=False, sort=False):
+        glass_id, wl, thick = key_vals
+        distinct = sorted({float(v) for v in grp["_v"] if pd.notna(v)})
+        spread = (max(distinct) - min(distinct)) if len(distinct) > 1 else 0.0
+        rows.append({
+            "glass_id": glass_id,
+            "wavelength_um": wl,
+            "thickness_mm": thick,
+            "n_values": len(distinct),
+            "values": "; ".join(f"{v:g}" for v in distinct),
+            "spread": round(spread, 6),
+            "source_ids": "; ".join(sorted({str(s) for s in grp["source_id"]
+                                            if pd.notna(s)})),
+            "data_types": "; ".join(sorted({str(s) for s in grp["data_type"]
+                                            if pd.notna(s)})),
+            "status": "quarantined",
+            "reason": "duplicate samples disagree at the same wavelength; "
+                      "GlassMatch does not choose a winner",
+            "action": "excluded from band statistics; both values preserved here "
+                      "for maintainer review against the source catalog",
+        })
+    return pd.DataFrame(rows, columns=CONFLICT_COLUMNS)
+
+
+def split_transmission_conflicts(t: pd.DataFrame,
+                                 value_col: str = "transmission"):
+    """(clean, conflicts, conflict_rows) - quarantine every row of a
+    conflicting key. The clean frame keeps undisputed samples only; nothing is
+    deleted silently because all displaced rows are returned and recorded."""
+    conflicts = find_transmission_conflicts(t, value_col)
+    if conflicts.empty:
+        return t, conflicts, t.iloc[0:0]
+    # Tuple-key membership is index-safe: a merge/indicator round-trip loses the
+    # link back to the original rows whenever the frame has a non-unique index.
+    bad = {tuple(k) for k in conflicts[TRANSMISSION_KEY].itertuples(index=False, name=None)}
+    mask = pd.Series(
+        [tuple(k) in bad for k in t[TRANSMISSION_KEY].itertuples(index=False, name=None)],
+        index=t.index)
+    return t[~mask].copy(), conflicts, t[mask].copy()
+
+
 def validate_transmission_frame(t: pd.DataFrame) -> list:
     """transmission.csv stores a 0-1 fraction per wavelength sample.
     Vectorized — runs over all samples in milliseconds, not minutes."""

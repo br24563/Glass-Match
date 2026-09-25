@@ -4,6 +4,32 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.3.1] - 2026-09-25
+
+### Added
+- `find_transmission_conflicts()` / `split_transmission_conflicts()` in
+  `glassmatch/validation.py`: the single source of truth for detecting samples
+  where one (glass, wavelength, thickness) key carries more than one value.
+- `data/normalized/transmission_conflicts.csv`: quarantine ledger holding all
+  60 conflicting keys with **both** values, the spread, the source id and the
+  reason. No value is chosen or discarded.
+- `scripts/clean_transmission.py` (with `--dry-run`) migrates the shipped data.
+- Data Sources tab: "Quarantined transmission samples" metric and table. The
+  report also re-derives conflicts from the live table, so a user import that
+  reintroduces one can never hide behind a clean ledger.
+
+### Changed
+- The `.agf` importer now quarantines conflicting samples at import instead of
+  writing them to the database, and emits an issue per quarantined key.
+- `transmission.csv`: 64,033 -> 63,913 rows. Transmission quality flags in the
+  UI: 234 -> 114.
+
+### Fixed
+- Conflict counting renamed its aggregate before the key merge; it previously
+  collided with the value column and raised `KeyError: '_v'`.
+- The quarantine mask uses tuple keys instead of a merge/indicator round-trip,
+  which broke on frames with a duplicated index.
+
 ## [0.3.0] - 2026-09-25
 
 ### Added

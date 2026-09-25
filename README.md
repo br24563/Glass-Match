@@ -145,11 +145,21 @@ data_type is always shown: manufacturer-reported vs GlassMatch-calculated
 (Sellmeier evaluation, Fresnel transmission estimate) vs interpolated vs
 user_imported. Calculated values never pose as manufacturer data.
 
+**Conflicting transmission samples are quarantined, not resolved.** Some source
+catalogs list the same wavelength twice with different values - a data-entry
+artifact (`1E-6` beside a real 0.99 reading) in some, a genuine disagreement in
+others. GlassMatch does not pick a winner. Every such row is removed from
+`transmission.csv` at import and recorded in
+`data/normalized/transmission_conflicts.csv` with *both* values, the spread and
+the source id, and is excluded from band statistics until a maintainer checks
+the source catalog. The Data Sources tab reports how many are quarantined.
+
 ## Contributing / roadmap
 
 Add rows + source metadata via PR (`scripts/merge_agf.py --only <SOURCE_ID>`
 keeps merges idempotent); validation flags out-of-range values.
-Done: bulk `.agf` import, non-Sellmeier gating, IR mode, dedup suffixes.
+Done: bulk `.agf` import, non-Sellmeier gating, IR mode, dedup suffixes,
+equivalency candidates, transmission conflict quarantine.
 Future: achromatic-doublet finder, Zemax export, cost data, Sellmeier fitting.
 
 ## Expansion history

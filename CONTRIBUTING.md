@@ -93,6 +93,12 @@ SCHOTT-N-BK7,0.4,0.912,1,10,manufacturer,SCHOTT-AGF-2025-06,IT record
 Transmission is stored as a **fraction (0–1)**, with the measurement thickness
 recorded explicitly, because internal transmittance is meaningless without it.
 
+If a source lists the same wavelength twice with different values, do **not**
+choose one. The importer quarantines every row of that key and reports it in the
+flagged-issues table; keep the displaced values in
+`data/normalized/transmission_conflicts.csv` so the decision stays auditable.
+To re-check the shipped data: `python scripts/clean_transmission.py --dry-run`.
+
 ## Code changes
 
 - Matching, database, and spectra layers are importable and testable without

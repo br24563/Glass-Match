@@ -11,7 +11,8 @@ from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
 from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stats
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
-                                   validate_transmission_frame, orphan_source_ids)
+                                   validate_transmission_frame, orphan_source_ids,
+                                   find_transmission_conflicts)
 from glassmatch.importers.generic_csv import import_csv
 from glassmatch.equivalency import (EquivalencyCriteria, candidate_pairs,
                                     candidates_for, curated_equivalents)
@@ -65,8 +66,30 @@ def _load_all(_key: str):
         "glasses": validate_glass_frame(db.glasses),
         "transmission": validate_transmission_frame(db.transmission),
         "orphan_sources": orphan_source_ids(db.glasses, db.properties, db.sources),
+        "transmission_conflicts": _load_transmission_conflicts(db),
     }
     return db, summary, t_groups, quality
+
+
+def _load_transmission_conflicts(db) -> pd.DataFrame:
+    """Quarantine ledger for conflicting transmission samples.
+
+    Read from the committed CSV; re-derived from the live table if any conflict
+    ever reappears (e.g. a user import), so the report can never claim a clean
+    database while conflicting samples are present.
+    """
+    path = DEFAULT_DATA_DIR / "transmission_conflicts.csv"
+    stored = pd.read_csv(path) if path.exists() else pd.DataFrame()
+    live = find_transmission_conflicts(db.transmission)
+    if live.empty:
+        return stored
+    if stored.empty:
+        return live
+    seen = {tuple(k) for k in stored[["glass_id", "wavelength_um", "thickness_mm"]]
+            .itertuples(index=False, name=None)}
+    extra = [r for _, r in live.iterrows()
+             if (r["glass_id"], r["wavelength_um"], r["thickness_mm"]) not in seen]
+    return pd.concat([stored, pd.DataFrame(extra)], ignore_index=True) if extra else stored
 
 
 db, summary, t_groups, quality = _load_all(_data_key())
@@ -468,6 +491,22 @@ with tabs[5]:
         if quality["orphan_sources"]:
             st.warning("source_ids referenced by data but missing from sources.csv: "
                        + ", ".join(quality["orphan_sources"]))
+
+    st.subheader("Quarantined transmission samples")
+    n_conf = len(quality["transmission_conflicts"])
+    st.metric("Quarantined conflicting samples", f"{n_conf:,}")
+    if n_conf:
+        st.caption("Where one wavelength carried two different values in a source "
+                   "catalog, every row was moved out of the database into "
+                   "`data/normalized/transmission_conflicts.csv` with both values "
+                   "intact. GlassMatch never picks a winner: these samples are "
+                   "excluded from band statistics until a maintainer checks the "
+                   "source catalog.")
+        with st.expander(f"Quarantine table: {n_conf} key(s)"):
+            st.dataframe(quality["transmission_conflicts"], width="stretch",
+                         hide_index=True)
+    else:
+        st.success("No conflicting transmission samples remain in the database.")
 
 with tabs[6]:
     st.header("Import your data")

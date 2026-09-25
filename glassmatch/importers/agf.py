@@ -435,9 +435,33 @@ def read_agf_file(path) -> str:
 
 def import_agf(path, manufacturer: str, source_id: str,
                material_class: str = "oxide_glass") -> tuple:
-    """Read a user-downloaded .agf file -> normalized frames + issues."""
-    return parse_agf_text(read_agf_file(path),
-                          manufacturer, source_id, material_class)
+    """Read a user-downloaded .agf file -> normalized frames + issues.
+
+    Conflicting duplicate transmission samples (the same wavelength carrying
+    two different values) are quarantined at import rather than written to the
+    database: the clean frame keeps only undisputed samples, and each displaced
+    row is recorded in the returned issues with both values so the change is
+    auditable. Callers that persist data should write
+    ``data/normalized/transmission_conflicts.csv`` from those issue rows.
+    """
+    glasses, props, sell, trans, issues = parse_agf_text(
+        read_agf_file(path), manufacturer, source_id, material_class)
+    if trans is not None and not trans.empty:
+        from glassmatch.validation import split_transmission_conflicts
+        clean, conflicts, dropped = split_transmission_conflicts(trans)
+        for _, r in conflicts.iterrows():
+            issues.append({
+                "line": "", "glass": r["glass_id"],
+                "issue": (f"transmission conflict at {r['wavelength_um']} um "
+                          f"({r['n_values']} values: {r['values']}) - quarantined, "
+                          "not written to the database"),
+                "wavelength_um": r["wavelength_um"],
+                "thickness_mm": r["thickness_mm"],
+                "values": r["values"],
+                "source_id": r["source_ids"],
+            })
+        trans = clean
+    return glasses, props, sell, trans, issues
 
 
 
