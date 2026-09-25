@@ -33,7 +33,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run tests
-        run: pytest tests -q
+        run: python -m pytest tests -q
 
   smoke:
     name: App import smoke test

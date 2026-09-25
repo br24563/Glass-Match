@@ -4,6 +4,32 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.3.2] - 2026-09-25
+
+### Fixed
+- **CI was failing on every run** (`Interrupted: 12 errors during collection`,
+  exit code 2) while passing on Windows. Two independent causes, both fixed:
+  1. `tests/fixtures/demo.agf` was never committed: a blanket `*.agf` rule in
+     `.gitignore`, added to keep redistribution-limited manufacturer catalogs
+     out of the repo, also excluded the synthetic test fixture the suite
+     depends on. The rule is now scoped to `data/manufacturers/**`, and the
+     fixture is tracked.
+  2. `import glassmatch` only resolved when the invocation directory happened
+     to be the repo root. The `pytest` console script does not add the current
+     directory to `sys.path` (unlike `python -m pytest`), so on Linux CI every
+     test module failed to import. `pytest.ini` now pins rootdir and sets
+     `pythonpath = .`, and CI runs `python -m pytest`.
+- Smoke-test timeout raised 180 s -> 300 s to match the app's real startup cost
+  on a cold runner cache.
+
+### Added
+- `tests/test_repo_layout.py`: guards against this class of failure - asserts
+  required fixtures and committed data files exist, checks the fixture is a
+  small synthetic catalog with documented provenance, and fails if any
+  manufacturer catalog is tracked outside `tests/fixtures/`.
+- CI step enforcing the redistribution policy: no `.agf` outside
+  `tests/fixtures/` may be committed.
+
 ## [0.3.1] - 2026-09-25
 
 ### Added
