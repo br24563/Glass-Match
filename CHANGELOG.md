@@ -4,6 +4,37 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.3.0] - 2026-09-25
+
+### Added
+- `glassmatch/equivalency.py`: cross-manufacturer substitution finder. Computes
+  candidate pairs from n_d, V_d, density, CTE and T_g, with a k-d tree over
+  gate-scaled (n_d, V_d) coordinates so the search stays local as the catalog
+  grows. ~7,200 candidate pairs across the committed 2,526-glass database.
+- Database explorer: "Equivalency candidates" section with live tolerance
+  sliders (|Δn_d|, |ΔV_d|, |Δdensity|), pair counts, CSV export, and a filter
+  for pairs already present in `equivalents.csv`.
+- Glass detail: "Cross-manufacturer substitutions" showing curated pairs
+  (source-backed) and computed candidates side by side, each individually
+  labelled.
+
+### Integrity
+- Candidates are **never merged** into the database and are always labelled
+  `unverified`. Curated pairs in `equivalents.csv` are tagged `curated` and are
+  never overwritten or mutated by the engine. Every candidate row carries the
+  deltas and the count of properties actually compared.
+
+### Fixed
+- Pair de-duplication now normalizes pair orientation instead of filtering on
+  `glass_id_a < glass_id_b`, which silently discarded every pair whose catalog
+  order disagreed with alphabetical order (N-BK7 had 20 qualifying candidates
+  and showed none).
+- The per-glass candidate cap is rank-based rather than slot-count based, so a
+  crowded glass can no longer consume every slot and starve quieter glasses of
+  their best match.
+- 19 new tests covering gating, orientation, delta signs, missing data,
+  determinism, cap behaviour and curated/candidate separation.
+
 ## [0.2.0] - 2026-09-24
 
 ### Added

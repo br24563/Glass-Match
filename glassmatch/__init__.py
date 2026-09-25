@@ -2,6 +2,8 @@
 from glassmatch.database import GlassDatabase, load_default_database
 from glassmatch.matching import normalize_weights, score_glass, match_glasses
 from glassmatch.validation import validate_property_frame, validate_glass_frame
+from glassmatch.equivalency import (EquivalencyCriteria, candidate_pairs,
+                                    candidates_for, curated_equivalents)
 
 __all__ = [
     "GlassDatabase",
@@ -11,5 +13,8 @@ __all__ = [
     "match_glasses",
     "validate_property_frame",
     "validate_glass_frame",
+    "candidate_pairs",
+    "candidates_for",
+    "EquivalencyCriteria",
 ]
-__version__ = "0.2.0"
+__version__ = "0.3.0"
