@@ -1,0 +1,37 @@
+name: Bug report
+description: Something in GlassMatch behaves incorrectly
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Launch with start.bat (or streamlit run app.py)
+        2. Open the "Matching Glasses" tab
+        3. Set Visible preset, wavelength 0.40-0.70 um
+        4. Observe ...
+    validations:
+      required: true
+  - type: input
+    id: glass
+    attributes:
+      label: Glass(es) involved
+      description: e.g. N-BK7, S-BSL7 — leave blank if not glass-specific
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output
+      render: shell
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: Windows 11, Python 3.12, streamlit 1.64

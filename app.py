@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+from glassmatch import __version__
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
 from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stats
@@ -72,6 +73,9 @@ st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
 st.caption("Traceable data \u2022 transparent scores \u2022 calculated values always labelled \u2014 "
            "verify against manufacturer datasheets before detailed design.")
+st.caption(f"GlassMatch v{__version__} | {len(db.glasses):,} glasses | "
+           f"{db.glasses['manufacturer_id'].nunique()} manufacturers | "
+           f"{len(db.sources):,} sources")
 
 # ---------- Sidebar: requirements ----------
 st.sidebar.header("1 \u2022 Requirements")
