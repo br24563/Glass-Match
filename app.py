@@ -13,6 +13,8 @@ from glassmatch.plotting import dispersion_figure, transmission_figure, score_br
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
                                    validate_transmission_frame, orphan_source_ids)
 from glassmatch.importers.generic_csv import import_csv
+from glassmatch.equivalency import (EquivalencyCriteria, candidate_pairs,
+                                    candidates_for, curated_equivalents)
 
 st.set_page_config(page_title="GlassMatch", page_icon="🔭", layout="wide")
 
@@ -280,12 +282,27 @@ with tabs[1]:
             st.plotly_chart(score_breakdown_figure(
                 {k: (None if pd.isna(r0[f"score_{k}"]) else float(r0[f"score_{k}"]) / 100)
                  for k in WEIGHT_KEYS}), width="stretch")
-    eq = db.equivalents_for(gid)
-    if not eq.empty:
-        st.subheader("Known near-equivalents (verify melt data before substitution)")
-        st.dataframe(eq, width="stretch", hide_index=True)
-        st.caption("Seed examples — the bulk cross-reference table has not been "
-                   "imported yet. Contribute manufacturer equivalency charts via PR.")
+    st.subheader("Cross-manufacturer substitutions")
+    cur = curated_equivalents(db.equivalents, gid)
+    cand = candidates_for(summary, gid, EquivalencyCriteria(), max_results=8)
+    if not cur.empty:
+        st.markdown("**Curated** - from manufacturer cross-reference / maintainer review")
+        st.dataframe(cur, width="stretch", hide_index=True)
+    if not cand.empty:
+        st.markdown("**Computed candidates** - nearest glasses on shared properties, "
+                    "**not** verified equivalences")
+        show = cand[["glass", "manufacturer", "confidence", "relation_suggestion",
+                     "shared_props", "d_nd", "d_vd", "d_density", "d_cte"]]
+        st.dataframe(show, width="stretch", hide_index=True)
+        st.download_button("Download these candidates (CSV)", cand.to_csv(index=False),
+                           file_name=f"{gid}_equivalency_candidates.csv",
+                           mime="text/csv", key="dl_equiv_glass")
+    st.caption(
+        "Candidates are computed from n_d, V_d, density, CTE and T_g where both "
+        "glasses have a value (deltas are candidate minus this glass). They are "
+        "starting points for review, **not** manufacturer-stated equivalences: "
+        "check melt data, thermal history and coating/availability with the "
+        "manufacturer before substituting.")
 with tabs[2]:
     st.header("Spectral analysis")
     pool = scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist()
@@ -376,6 +393,51 @@ with tabs[4]:
         with_sellmeier=("has_sellmeier", "sum")).reset_index()
     st.subheader("Catalog coverage")
     st.dataframe(cov, width="stretch", hide_index=True)
+
+    st.subheader("Equivalency candidates (substitution finder)")
+    st.caption("Finds glasses from other manufacturers that are numerically close on "
+               "n_d, V_d, density, CTE and T_g. These are **candidates for review**, "
+               "not manufacturer-stated equivalences - nothing is merged, and every "
+               "row shows the deltas that produced it.")
+    c1, c2, c3 = st.columns(3)
+    tol_nd = c1.slider("Max |Δn_d|", 0.001, 0.05, 0.01, 0.001,
+                       help="Refractive-index tolerance at 587.6 nm. 0.01 is a typical "
+                            "'worth checking' bound; tighter finds closer matches.")
+    tol_vd = c2.slider("Max |ΔV_d|", 0.5, 15.0, 3.0, 0.5,
+                       help="Abbe-number tolerance. Larger values pull in glasses with "
+                            "somewhat different dispersion.")
+    tol_rho = c3.slider("Max |Δdensity| (g/cm³)", 0.05, 1.0, 0.15, 0.05,
+                        help="Only applies where both catalogs report density.")
+    crit = EquivalencyCriteria(
+        tolerance_overrides={"nd": tol_nd, "vd": tol_vd, "density": tol_rho})
+    with st.spinner("Computing candidates..."):
+        pairs = candidate_pairs(summary, crit)
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Candidate pairs", f"{len(pairs):,}")
+    m2.metric("Curated pairs", f"{len(db.equivalents):,}")
+    m3.metric("Glasses covered",
+              f"{pairs[['glass_id_a', 'glass_id_b']].stack().nunique():,}" if not pairs.empty else "0")
+    if not pairs.empty:
+        only_curated = st.checkbox("Show only pairs already curated in equivalents.csv")
+        view_pairs = pairs
+        if only_curated and not db.equivalents.empty:
+            known = {frozenset((r["glass_id_a"], r["glass_id_b"]))
+                     for _, r in db.equivalents.iterrows()}
+            view_pairs = pairs[pairs.apply(
+                lambda r: frozenset((r["glass_id_a"], r["glass_id_b"])) in known,
+                axis=1)]
+        st.dataframe(view_pairs[["glass_a", "manufacturer_a", "glass_b", "manufacturer_b",
+                                "confidence", "shared_props", "d_nd", "d_vd",
+                                "d_density", "d_cte", "relation_suggestion"]]
+                     .head(500), width="stretch", hide_index=True)
+        st.download_button("Download candidate pairs (CSV)", pairs.to_csv(index=False),
+                           file_name="equivalency_candidates.csv", mime="text/csv",
+                           key="dl_equiv_pairs")
+    if not db.equivalents.empty:
+        with st.expander("Curated equivalencies (reviewed, source-backed)"):
+            st.dataframe(db.equivalents, width="stretch", hide_index=True)
+            st.caption("Reviewed pairs carry a source_id. Add manufacturer "
+                       "cross-reference charts via PR - see CONTRIBUTING.md.")
 
 with tabs[5]:
     st.header("Data sources and licensing")

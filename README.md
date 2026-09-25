@@ -32,6 +32,10 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
   n_d + transmission band instead of penalizing the missing Abbe number.
 - Provenance-first database: every value carries source, license, and
   data_type (manufacturer / calculated / interpolated / user_imported).
+- **Cross-manufacturer substitution finder**: computes candidate equivalents
+  from n_d, V_d, density, CTE and T_g with adjustable tolerances. Candidates are
+  flagged for review and never auto-merged; curated (source-backed) pairs are
+  shown separately and are never overwritten.
 - Interactive Plotly dispersion + transmission plots (calculated curves labelled).
   Non-Sellmeier rows (Nikon polynomials, Herzberger legacy) are archived
   verbatim and **never** evaluated as Sellmeier — the UI says so explicitly.
