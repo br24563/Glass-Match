@@ -4,35 +4,54 @@ cd /d "%~dp0"
 title GlassMatch
 
 rem ===== Create .venv if missing (goto style: no %errorlevel% inside blocks) =====
-if exist ".venv\Scripts\python.exe" goto ensure
+if exist ".venv\Scripts\python.exe" goto check_pip
 
+:create_venv
 echo [GlassMatch] First run: creating virtual environment (.venv)...
 where uv >nul 2>nul
 if errorlevel 1 goto try_py
-uv venv .venv --python 3.11
-if exist ".venv\Scripts\python.exe" goto ensure
-uv venv .venv
-if exist ".venv\Scripts\python.exe" goto ensure
+uv venv .venv --python 3.12 --seed
+if exist ".venv\Scripts\python.exe" goto check_pip
+uv venv .venv --python 3.11 --seed
+if exist ".venv\Scripts\python.exe" goto check_pip
+uv venv .venv --seed
+if exist ".venv\Scripts\python.exe" goto check_pip
 goto try_py
 
 :try_py
 where py >nul 2>nul
 if errorlevel 1 goto try_python
+py -3.12 -m venv .venv
+if exist ".venv\Scripts\python.exe" goto check_pip
 py -3.11 -m venv .venv
-if exist ".venv\Scripts\python.exe" goto ensure
+if exist ".venv\Scripts\python.exe" goto check_pip
 py -3 -m venv .venv
-if exist ".venv\Scripts\python.exe" goto ensure
+if exist ".venv\Scripts\python.exe" goto check_pip
 goto try_python
 
 :try_python
 python -m venv .venv
-if exist ".venv\Scripts\python.exe" goto ensure
+if exist ".venv\Scripts\python.exe" goto check_pip
 
 echo [GlassMatch] ERROR: could not create a virtual environment.
 echo Install Python 3.11+ from https://www.python.org/downloads/
 echo ^(check "Add python.exe to PATH", then run this file again^)
 call :wait
 exit /b 1
+
+rem ===== Verify pip works; recreate .venv if it is corrupted =====
+:check_pip
+".venv\Scripts\python.exe" -m pip --version >nul 2>nul
+if not errorlevel 1 goto ensure
+echo [GlassMatch] .venv is damaged (pip broken) - recreating it...
+rmdir /s /q .venv
+if exist ".venv\Scripts\python.exe" (
+    echo [GlassMatch] ERROR: could not remove damaged .venv - close any programs
+    echo using it, delete the .venv folder manually, then re-run this file.
+    call :wait
+    exit /b 1
+)
+goto create_venv
 
 rem ===== Install dependencies only if missing =====
 :ensure
