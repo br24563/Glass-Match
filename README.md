@@ -4,11 +4,13 @@ Open-source optical glass selection, comparison, and material database.
 **2,526 glasses · 17 makers · 25 traceable sources** — search, rank, compare,
 and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
 
-![GlassMatch matching screenshot](docs/screenshots/matching.png)
-![GlassMatch spectral screenshot](docs/screenshots/spectral.png)
+![GlassMatch matching screenshot](docs/screenshots/01_matching.png)
+![GlassMatch spectral screenshot](docs/screenshots/02_spectral.png)
+![GlassMatch glass detail screenshot](docs/screenshots/03_detail.png)
+![GlassMatch data sources screenshot](docs/screenshots/04_sources.png)
 
-> Screenshots are placeholders until captured from a live run
-> (`streamlit run app.py` → Matching / Spectral tabs).
+> Screenshots captured from a live run (`start.bat`); regenerate with
+> `python scripts/capture_screenshots.py`.
 
 ## Features
 
