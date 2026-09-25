@@ -1,0 +1,15 @@
+; GlassMatch .agf fixture — uses REAL N-BK7 Sellmeier coefficients only
+; (CC0 mirror via refractiveindex.info; original: SCHOTT Zemax catalog).
+; Zemax NM layout: NM <name> <dispformula> <meltfreq> <glasscode> <nd> <vd>.
+; Second glass is a clearly synthetic parser-exercise record (TEST- prefix).
+; Odd-count IT line below exercises the pair-vs-triple heuristic note path.
+NM N-BK7 1 1 517642.251 1.51680 64.17 0 1
+GC 517642.251
+CD 1.03961212 0.00600069867 0.231792344 0.0200179144 1.01046945 103.560653
+LD 0.30 2.50
+ED 7.1 8.3 2.51 -0.0009 0
+IT 0.40 0.998 0.50 0.999
+IT 0.70 0.999 25.0 0.80 0.990 25.0
+NM TEST-DEMO 1 0 999999.999 1.60000 40.00 0 1
+CD 1.20000000 0.01000000000 0.30000000 0.0500000000 1.00000000 100.000000
+XX unknown record that must be flagged, not crash

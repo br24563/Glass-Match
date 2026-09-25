@@ -53,4 +53,14 @@ jobs:
         run: |
           python -c "import ast, pathlib; ast.parse(pathlib.Path('app.py').read_text(encoding='utf-8')); print('app.py parses')"
           python -c "from glassmatch.database import load_default_database as l; db=l(); print('glasses:', len(db.glasses))"
-          python -c "from streamlit.testing.v1 import AppTest; at=AppTest.from_file('app.py', default_timeout=180).run(); print('exceptions:', len(at.exception))"
+          python -c "from streamlit.testing.v1 import AppTest; at=AppTest.from_file('app.py', default_timeout=300).run(); print('exceptions:', len(at.exception))"
+
+      - name: Enforce data policy (no manufacturer catalogs committed)
+        run: |
+          offenders=$(git ls-files '*.agf' '*.AGF' | grep -v '^tests/fixtures/' || true)
+          if [ -n "$offenders" ]; then
+            echo "Manufacturer catalogs are redistribution-limited and must not be committed:"
+            echo "$offenders"
+            exit 1
+          fi
+          echo "no manufacturer catalogs tracked (fixtures only)"

@@ -1,6 +1,12 @@
 data/staging/
-*.AGF
-*.agf
+
+# Manufacturer catalogs are redistribution-limited and must never be committed.
+# Scoped deliberately: the synthetic fixtures under tests/fixtures/ are NOT
+# manufacturer data and must stay tracked (a blanket *.agf rule once silently
+# dropped tests/fixtures/demo.agf and broke CI).
+data/manufacturers/**/*.agf
+data/manufacturers/**/*.AGF
+
 g2.log
 
 __pycache__/
