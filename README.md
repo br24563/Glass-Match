@@ -1,5 +1,9 @@
 # GlassMatch
 
+[![CI](https://github.com/br24563/Glass-Match/actions/workflows/ci.yml/badge.svg)](https://github.com/br24563/Glass-Match/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Open-source optical glass selection, comparison, and material database.
 **2,526 glasses · 17 makers · 25 traceable sources** — search, rank, compare,
 and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
@@ -103,6 +107,10 @@ for glasses with no manufacturer rows and is always labelled calculated.
   then glasses + properties — or run `scripts/merge_agf.py` on a staged `.agf`.
   No matching/UI code changes.
 - Add a glass: append one `glasses.csv` row + N `properties.csv` rows.
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full workflow, including how to
+add a manufacturer without writing any Python. Release history is in
+**[CHANGELOG.md](CHANGELOG.md)**.
 
 ## Database contents (committed, 2026-09)
 

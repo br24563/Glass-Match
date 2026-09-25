@@ -1,0 +1,39 @@
+name: Data contribution
+description: Add a manufacturer catalog, glass, or property data
+labels: ["data"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What are you contributing?
+      options:
+        - New manufacturer catalog (Zemax .agf)
+        - New glasses for an existing manufacturer
+        - Spectral (transmission / refractive index) data
+        - Source or licensing correction
+        - Other data fix
+    validations:
+      required: true
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      placeholder: SCHOTT
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source document / URL
+      description: The catalog file, datasheet, or public URL the numbers come from.
+      placeholder: https://www.schott.com/... (June 2025 catalog)
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: |
+        Glass codes, melt/vintage differences, licensing constraints, or anything a
+        maintainer should know. Do not include data you cannot attribute to a source —
+        GlassMatch does not accept untraceable values.
