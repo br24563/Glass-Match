@@ -295,15 +295,23 @@ with tabs[1]:
     if coef is not None:
         from glassmatch.importers.agf import is_sellmeier1_formula
         ok = is_sellmeier1_formula(coef.get("formula"))
-        with st.expander("Dispersion coefficients "
-                         + ("(verified Sellmeier-1)" if ok else "(ARCHIVED non-Sellmeier — not for curves)")):
-            st.json({k: coef[k] for k in ("formula", "wavelength_um", "B1", "B2",
-                                          "B3", "C1_um2", "C2_um2", "C3_um2",
-                                          "source_id", "notes")})
+        terms = coef.get("n_terms")
+        label = (f"(verified {terms}-term Sellmeier)" if ok and terms
+                 else "(verified Sellmeier-1)" if ok
+                 else "(ARCHIVED - does not reproduce n(d), never evaluated)")
+        with st.expander("Dispersion coefficients " + label):
+            keys = ["formula", "wavelength_um"] + \
+                [c for c in list(coef) if c.startswith(("B", "C"))] + \
+                ["source_id", "notes"]
+            st.json({k: coef[k] for k in keys if k in coef})
             if not ok:
-                st.warning("These coefficients are archived verbatim and must not be "
-                           "evaluated as Sellmeier-1 (e.g. Nikon polynomial, Herzberger "
-                           "legacy rows). No dispersion curve is drawn for this glass.")
+                st.warning("These coefficients are archived verbatim and are "
+                           "never evaluated: the row does not reproduce the "
+                           "catalog n(d) at 587.6 nm, which is how GlassMatch "
+                           "distinguishes a usable Sellmeier fit from the "
+                           "series/polynomial forms some catalogs use (e.g. "
+                           "NIKON polynomial, OHARA/HIKARI legacy rows). No "
+                           "dispersion curve is drawn for this glass.")
     with st.expander("Score breakdown"):
         hit = results[results["glass_id"] == gid]
         if not hit.empty:
@@ -361,7 +369,7 @@ with tabs[2]:
             t_calculated.append(g)
         else:
             t_missing.append(g)
-        # --- dispersion: verified Sellmeier-1 only ---
+        # --- dispersion: verified Sellmeier fits only ---
         status = db.dispersion_status(g)
         if status != "sellmeier1":
             non_sell.append(g)
@@ -369,8 +377,10 @@ with tabs[2]:
         c = db.sellmeier_for(g, sellmeier_only=True)
         dcurves[g] = dispersion_curve(c, list(wls))
     if non_sell:
-        st.warning("Dispersion curve unavailable (coefficients archived, not Sellmeier-1 — "
-                   "never evaluated as Sellmeier): " + ", ".join(non_sell))
+        st.warning("Dispersion curve unavailable for these glasses - their "
+                   "archived CD coefficients do not reproduce the catalog "
+                   "n(d), so GlassMatch never evaluates them: "
+                   + ", ".join(non_sell))
     if t_missing:
         st.info("No transmission data for: " + ", ".join(t_missing))
     if dcurves:

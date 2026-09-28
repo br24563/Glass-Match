@@ -79,6 +79,15 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     def flush():
         if cur is not None and cur.get("glass_name"):
             _flush_cd(cur, source_id, issues)
+            # Manufacturer remarks (GC comments, coefficients that exceeded the
+            # stored term limit) were collected but never written anywhere, so
+            # they were silently discarded. Fold them into the description,
+            # which is the one free-text field that survives into the database.
+            remarks = cur.get("remarks") or []
+            if remarks:
+                base = str(cur["glass_row"].get("description") or "")
+                cur["glass_row"]["description"] = (
+                    base + " " + " ".join(str(r) for r in remarks)).strip()
             glasses.append(cur["glass_row"])
             props.extend(cur["props"])
             sell.extend(cur["sell"])
@@ -278,12 +287,16 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     return (pd.DataFrame(glasses), pd.DataFrame(props),
             pd.DataFrame(sell), pd.DataFrame(trans), issues)
 def is_sellmeier1_formula(formula: str | None) -> bool:
-    """True only for verified Sellmeier-1 rows — the app's dispersion gate.
+    """True only for verified, dispersable Sellmeier rows - the app's gate.
 
-    Non-Sellmeier rows (Nikon polynomials, Herzberger-style legacy) carry
-    archived coefficients that must NEVER be evaluated as Sellmeier-1.
+    Non-Sellmeier rows (NIKON polynomials, OHARA/HIKARI series forms) and
+    Sellmeier rows that fail the n(d) cross-check carry archived coefficients
+    that must NEVER be evaluated as a curve.  Accepts the current
+    "Sellmeier*(N-term, ...)" labels and the original unlabelled-term form
+    so older databases keep working.
     """
-    return str(formula or "") == "Sellmeier-1 (Zemax CD record)"
+    f = str(formula or "")
+    return f.startswith("Sellmeier")
 
 
 def _flush_cd(cur: dict, source_id: str, issues: list) -> None:
@@ -297,50 +310,80 @@ def _flush_cd(cur: dict, source_id: str, issues: list) -> None:
 
 def _cd_block(cur: dict, nums: list, source_id: str,
               issues: list, lineno: int) -> None:
-    """Sellmeier CD block + nd cross-check (flags >0.002 mismatch).
+    """CD record: store every term, and keep the coefficients only if they work.
 
-    OHARA ships discontinued/legacy glasses with Herzberger-style CD rows
-    (C-terms ~1e-2..1e-6, e.g. APL1) that are NOT Sellmeier-1, and Nikon ships
-    multi-line polynomial CD rows — neither disperses as Sellmeier-1. The
-    n(d)-mismatch flags exactly those; coefficients are still stored verbatim
-    with a non-Sellmeier note so nothing is lost or mislabelled.
+    A Zemax CD row is dispersable if evaluating it at 587.6 nm reproduces the
+    catalog n(d) to within 0.002.  That is the only test that reliably tells a
+    usable Sellmeier fit from the series/polynomial forms OHARA legacy,
+    HIKARI Q-series and NIKON polynomial glasses use - all of which fail it,
+    while genuine fits with a negative C (S-BSL7 and friends) pass it.
+
+    Coefficients that fail are still stored verbatim and labelled
+    non-dispersable, so nothing is lost and nothing is ever evaluated as a
+    curve it is not.
     """
+    from glassmatch.spectra import (MAX_TERMS, B_COLS, C_COLS,
+                                    active_pairs, classify_dispersion,
+                                    sellmeier_n)
     if len(nums) < 6:
         issues.append({"line": lineno, "glass": cur["glass_name"],
                        "issue": f"CD has {len(nums)} coeffs (<6)"})
         return
-    b = (nums[0], nums[2], nums[4])
-    c = (nums[1], nums[3], nums[5])
-    from glassmatch.spectra import sellmeier_n
-    sell_ok = True
-    try:
-        n587 = sellmeier_n(0.5876, b, c)
-        hdr = next((p["value"] for p in cur["props"]
-                    if p["property"] == "refractive_index_nd"), None)
-        if hdr is not None and abs(float(n587) - float(hdr)) > 0.002:
-            sell_ok = False
-            issues.append({"line": lineno, "glass": cur["glass_name"],
-                           "issue": f"Sellmeier n(d)={n587:.5f} vs header {hdr}"})
-    except (TypeError, ValueError):
-        sell_ok = False
-        issues.append({"line": lineno, "glass": cur["glass_name"],
-                       "issue": "Sellmeier evaluation failed"})
-    formula = "Sellmeier-1 (Zemax CD record)" if sell_ok else \
-        "Non-Sellmeier CD record (do not disperse as Sellmeier-1)"
-    cur["sell"].append({"glass_id": cur["glass_row"]["glass_id"],
-                        "formula": formula,
-                        "wavelength_um": "", "B1": nums[0], "C1_um2": nums[1],
-                        "B2": nums[2], "C2_um2": nums[3],
-                        "B3": nums[4], "C3_um2": nums[5],
-                        "source_id": source_id,
-                        "notes": ".agf CD coefficients; verify with catalog."})
-    # Record the dispersion formula + any extra trailing terms so exotic
-    # layouts (B270-style extended CD) stay traceable, not silently trimmed.
-    extra = nums[6:]
-    if any(abs(v) > 0 for v in extra):
+    pairs = active_pairs(nums)
+    n_terms, sign_note = classify_dispersion(nums)
+
+    row = {"glass_id": cur["glass_row"]["glass_id"], "wavelength_um": "",
+           "source_id": source_id,
+           "notes": ".agf CD coefficients; verify with catalog."}
+    if sign_note:
+        row["notes"] += " " + sign_note + "."
+    for i, (b, c) in enumerate(pairs[:MAX_TERMS]):
+        row[B_COLS[i]] = b
+        row[C_COLS[i]] = c
+    # Any terms beyond the stored maximum are recorded rather than dropped.
+    dropped = pairs[MAX_TERMS:]
+    if dropped:
         cur.setdefault("remarks", []).append(
-            f"CD extra terms ({len(extra)}): " +
-            " ".join(f"{v:.6E}" for v in extra))
+            f"CD {len(dropped)} term(s) beyond the {MAX_TERMS}-term maximum "
+            "stored in sellmeier.csv: " +
+            " ".join(f"B={b:.6E},C={c:.6E}" for b, c in dropped))
+        issues.append({"line": lineno, "glass": cur["glass_name"],
+                       "issue": f"CD has {len(dropped)} term(s) beyond the "
+                                f"{MAX_TERMS}-term stored maximum; recorded in "
+                                "the glass description, not evaluated"})
+
+    sell_ok = False
+    if not pairs:
+        row["formula"] = "Non-dispersable (no non-zero CD coefficients) - archived, never evaluated"
+    else:
+        try:
+            n587 = sellmeier_n(0.5876, tuple(b for b, _ in pairs[:MAX_TERMS]),
+                               tuple(c for _, c in pairs[:MAX_TERMS]))
+            hdr = next((p["value"] for p in cur["props"]
+                        if p["property"] == "refractive_index_nd"), None)
+            if hdr is None:
+                row["formula"] = (f"Non-dispersable ({n_terms}-term CD with no "
+                                  "catalog n(d) to verify against) - archived, "
+                                  "never evaluated")
+            elif not (n587 == n587) or abs(float(n587) - float(hdr)) > 0.002:
+                row["formula"] = (
+                    f"Non-dispersable ({n_terms}-term CD gives n(d)={n587:.5f} "
+                    f"vs catalog {hdr}; not a Sellmeier fit) - archived, never evaluated")
+                issues.append({"line": lineno, "glass": cur["glass_name"],
+                               "issue": f"CD n(d)={n587:.5f} vs header {hdr}"})
+            else:
+                sell_ok = True
+        except (TypeError, ValueError, ZeroDivisionError):
+            row["formula"] = (f"Non-dispersable ({n_terms}-term CD failed "
+                              "evaluation) - archived, never evaluated")
+            issues.append({"line": lineno, "glass": cur["glass_name"],
+                           "issue": "CD evaluation failed"})
+    if sell_ok:
+        row["formula"] = (f"Sellmeier-1 ({n_terms}-term, Zemax CD record)"
+                          if n_terms == 3 else
+                          f"Sellmeier ({n_terms}-term, Zemax CD record)")
+        row["n_terms"] = n_terms
+    cur["sell"].append(row)
 
 
 def _ed_block(cur: dict, nums: list, source_id: str) -> None:

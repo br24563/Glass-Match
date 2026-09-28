@@ -3,6 +3,14 @@ from __future__ import annotations
 import math
 import pandas as pd
 
+# Zemax CD records carry at most 5 interleaved (B, C) pairs; B4/B5 and C4/C5
+# were previously dropped, which silently truncated genuine 4- and 5-term
+# fits (e.g. NIKON NIFS-V) into a wrong 3-term curve.
+MAX_TERMS = 5
+
+B_COLS = [f"B{i}" for i in range(1, MAX_TERMS + 1)]
+C_COLS = [f"C{i}_um2" for i in range(1, MAX_TERMS + 1)]
+
 
 def sellmeier_n(wavelength_um: float, B: tuple, C: tuple) -> float:
     l2 = wavelength_um ** 2
@@ -10,12 +18,71 @@ def sellmeier_n(wavelength_um: float, B: tuple, C: tuple) -> float:
     return math.sqrt(n2) if n2 > 0 else float("nan")
 
 
+def active_pairs(values) -> list:
+    """Interleaved (B1, C1, B2, C2, ...) -> the (B, C) pairs actually used.
+
+    A pair where both members are zero is catalog padding, not a term, so it
+    is dropped.  Anything else is kept so it can be judged, not discarded.
+    """
+    v = [float(x) for x in values]
+    return [(v[i], v[i + 1]) for i in range(0, len(v) - 1, 2)
+            if v[i] != 0.0 or v[i + 1] != 0.0]
+
+
+def classify_dispersion(values) -> tuple:
+    """Return (n_terms, note) describing a raw CD coefficient list.
+
+    Deliberately does NOT decide dispersability.  An early revision rejected any
+    term with B <= 0 or C <= 0, reasoning that Sellmeier resonance terms are
+    positive.  That is wrong: OHARA ships genuine 3-term fits with a negative
+    C (S-BSL7 has C2 = -1.18e-2 um^2) that reproduce n(d) to 1e-5, and that rule
+    silently stripped dispersion from real workhorse glasses (S-BSL7, S-FPL51,
+    S-LAL, S-PHM, and the whole IR/polymer set).  The only test that reliably
+    separates a usable fit from a series/polynomial CD row is whether it
+    reproduces the catalog n(d), so that stays the sole gate; the sign pattern
+    is reported as an observation, not a verdict.
+    """
+    pairs = active_pairs(values)
+    if not pairs:
+        return 0, "no non-zero coefficients"
+    neg = [i for i, (b, c) in enumerate(pairs, 1) if b <= 0.0 or c <= 0.0]
+    if not neg:
+        return len(pairs), ""
+    return len(pairs), (f"term(s) {','.join(map(str, neg))} carry a non-positive "
+                        "B or C (permitted in multi-pole fits; the n(d) check "
+                        "is authoritative)")
+
+
+def pairs_from_row(row: dict) -> list:
+    """(B, C) pairs from a sellmeier.csv row, dropping unpopulated terms."""
+    out = []
+    for bc, cc in zip(B_COLS, C_COLS):
+        b, c = row.get(bc), row.get(cc)
+        if b is None or c is None or pd.isna(b) or pd.isna(c):
+            continue
+        b, c = float(b), float(c)
+        if b == 0.0 and c == 0.0:
+            continue
+        out.append((b, c))
+    return out
+
+
+def n_from_row(row: dict, wavelength_um: float) -> float:
+    pairs = pairs_from_row(row)
+    if not pairs:
+        return float("nan")
+    return sellmeier_n(wavelength_um, tuple(b for b, _ in pairs),
+                       tuple(c for _, c in pairs))
+
+
 def dispersion_curve(coeffs: dict, wl_um: list) -> pd.DataFrame:
-    B = (float(coeffs["B1"]), float(coeffs["B2"]), float(coeffs["B3"]))
-    C = (float(coeffs["C1_um2"]), float(coeffs["C2_um2"]), float(coeffs["C3_um2"]))
+    pairs = pairs_from_row(coeffs)
+    B = tuple(b for b, _ in pairs)
+    C = tuple(c for _, c in pairs)
     rows = [{"wavelength_um": w, "n": sellmeier_n(w, B, C),
              "data_type": "calculated",
-             "note": "Evaluated from Sellmeier coefficients; not a manufacturer table."}
+             "note": f"Evaluated from {len(pairs)}-term Sellmeier "
+                     f"coefficients; not a manufacturer table."}
             for w in wl_um]
     return pd.DataFrame(rows)
 
