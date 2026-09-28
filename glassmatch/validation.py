@@ -5,14 +5,32 @@ import pandas as pd
 RULES = {
     "refractive_index_nd": (1.3, 2.5),
     "abbe_number_vd": (10.0, 120.0),
-    "density": (1.5, 8.0),
+    # Coarse "physically possible" bound across every optical material we hold
+    # (polymer 0.95 - dense chalcogenide ~5.6). The class-aware *acceptance*
+    # gate lives in DENSITY_RANGES_BY_CLASS and is applied by the importer,
+    # which knows material_class; the validator only catches impossible values.
+    "density": (0.8, 9.0),
     "cte": (0.0, 30.0),
+    "cte_20_300": (0.0, 30.0),
     "transmission": (0.0, 100.0),
     "wl_min_um": (0.05, 50.0),
     "wl_max_um": (0.05, 50.0),
     "dPgF": (-0.1, 0.1),
     "glass_code": (20000.0, 999999.999),
 }
+
+# Plausible density window in g/cm^3 per material class. A single global range
+# is wrong in both directions: it rejects real polymer densities (TOPAS 1.02,
+# ZEON 0.95) as "not glass", while a widened global range would let nonsense
+# through for dense classes. Shared with the importer so the two can never drift.
+DENSITY_RANGES_BY_CLASS = {
+    "oxide_glass": (1.5, 9.0),
+    "chalcogenide": (2.5, 6.5),
+    "moldable": (1.5, 9.0),
+    "crystal": (1.5, 9.0),
+    "polymer": (0.8, 2.0),
+}
+DEFAULT_DENSITY_RANGE = (0.8, 9.0)
 
 
 def validate_property_frame(props: pd.DataFrame) -> list:
@@ -198,4 +216,20 @@ def orphan_source_ids(glasses: pd.DataFrame, properties: pd.DataFrame,
     for frame in (glasses, properties):
         if frame is not None and not frame.empty and "source_id" in frame.columns:
             used |= {str(s) for s in frame["source_id"].dropna().unique() if str(s)}
+    return sorted(used - known)
+
+
+def orphan_glass_ids(properties: pd.DataFrame, glasses: pd.DataFrame) -> list:
+    """glass_ids carrying properties but absent from glasses.csv.
+
+    The mirror image of orphan_source_ids. A property row pointing at a glass
+    that does not exist is invisible in the UI (no glass page to surface it)
+    and would otherwise go unnoticed indefinitely, so it is reported instead.
+    """
+    if properties is None or properties.empty or "glass_id" not in properties.columns:
+        return []
+    if glasses is None or glasses.empty or "glass_id" not in glasses.columns:
+        return []
+    known = {str(g) for g in glasses["glass_id"].dropna().unique() if str(g)}
+    used = {str(g) for g in properties["glass_id"].dropna().unique() if str(g)}
     return sorted(used - known)

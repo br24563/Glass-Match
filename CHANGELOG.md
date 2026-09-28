@@ -4,6 +4,71 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.4.0] - 2026-09-27
+
+### Fixed
+- **Density was being discarded for ~700 glasses that publish it.** The `.agf`
+  `ED` record carries CTE(-30/+70), CTE(20/+300), density and dPgF, and the
+  importer gated *density* behind the two CTE fields:
+
+  ```python
+  if 0 < nums[0] < 30 and 0 < nums[1] < 30 and 1.5 <= nums[2] <= 9.0:
+      # stored cte AND density together
+  ```
+
+  A vendor that leaves a CTE slot at `0.0` (meaning "not published") therefore
+  lost its density as well. CDGM (`ED 0.000000 8.200000 2.300000 ...`), HIKARI
+  and NIKON (`... 0.000000 4.970000 ...`) all lost valid measurements this way,
+  while their *other* CTE slot was often populated - which is why density and
+  CTE coverage had been suspiciously identical at 989 glasses each. Each field
+  is now gated on its own, so a missing CTE is reported missing instead of
+  costing an unrelated measurement.
+- **Density plausibility is now judged per material class.** A single global
+  range was wrong in both directions: it rejected real polymer densities
+  (TOPAS 1.02, ZEON 0.95, ARTOn 1.08) as "not glass", while the importer
+  allowed up to 9.0 where the validator stopped at 8.0, so a value could be
+  imported and then flagged. `DENSITY_RANGES_BY_CLASS` in `validation.py` is
+  the single source of truth shared by importer and validator.
+- **Removed dead, mislabelled TD parser.** `_td_block` mapped the Zemax `TD`
+  record to `cte`/`tg`/`k_thermal`, which is wrong — `TD` is a thermal dn/dT
+  polynomial, and both its CTE labels pointed at the *same* `cte` key, so it
+  could have written two CTE rows for one glass. It was never called: the live
+  dispatch path already records `TD` as "not parsed". Deleted rather than
+  repaired, since inventing a mapping for an unverified polynomial is exactly
+  what this project must not do.
+
+### Added
+- **`cte_20_300` property** (1,174 glasses, 46.5%). CTE(20/+300 C) is a
+  distinct quantity from CTE(-30/+70 C) and is now stored separately rather
+  than dropped or collapsed into `cte`. Vendors publish one or the other, not
+  both, which is why coverage differs.
+- **Orphan `glass_id` check** in the Data Quality report. Property rows
+  pointing at a glass absent from `glasses.csv` are invisible in the UI — no
+  glass page exists to surface them — so they are now counted and listed
+  alongside the existing orphan-`source_id` check. Verified 0 today.
+- `tests/test_agf_ed_fields.py` (14 tests) locks in the per-field gating: the
+  exact CDGM/HIKARI/NIKON record shapes, per-class density acceptance, and that
+  a glass never gets two `cte` rows.
+
+### Changed
+- **Data coverage after re-importing all 17 catalogs:**
+
+  | property | before | after | coverage |
+  |---|---|---|---|
+  | density | 989 | **2,261** | 39.2% → 89.5% |
+  | cte | 989 | **2,068** | 39.2% → 81.9% |
+  | cte_20_300 | — | 1,174 | 46.5% |
+
+- **Equivalency candidates are better founded.** 715 glasses (NIKON, HIKARI,
+  CDGM, LZOS) previously had no density or CTE to compare, so pairs qualified on
+  n_d/V_d alone. Density is now actually tested for them: 2,287 candidate
+  pairs share all four properties, and N-BK7's top matches (OHARA BSL7Y,
+  HIKARI J-BK7, NIKON J-BK7, CDGM H-K9L) now carry real Δdensity/ΔCTE
+  deltas instead of blanks. Total pairs move 7,232 → 5,828: fewer, but every
+  one is supported by more evidence.
+- All data-quality checks still report 0 flags, including the new orphan-glass
+  check and the widened density rule.
+
 ## [0.3.3] - 2026-09-25
 
 ### Fixed
