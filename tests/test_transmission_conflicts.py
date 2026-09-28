@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from glassmatch.validation import (CONFLICT_COLUMNS, TRANSMISSION_KEY,
+                                   dedupe_transmission,
                                    find_transmission_conflicts,
                                    split_transmission_conflicts)
 
@@ -139,3 +140,68 @@ def test_committed_database_has_no_live_conflicts():
                 (db.transmission["glass_id"] == r["glass_id"]) &
                 (db.transmission["wavelength_um"] == r["wavelength_um"])]
             assert hit.empty
+
+
+# --- identical duplicates: collapsible, unlike conflicts -------------------
+
+DUPLICATED = _t([
+    ("A-1", 0.50, 10.0, 0.998, "OHARA-AGF"),   # exact duplicate pair
+    ("A-1", 0.50, 10.0, 0.998, "OHARA-AGF"),
+    ("A-1", 0.60, 10.0, 0.997, "OHARA-AGF"),
+    ("A-1", 0.60, 25.0, 0.997, "OHARA-AGF"),   # different thickness: keep
+    ("A-1", 0.70, 10.0, 0.900, "OHARA-AGF"),
+    ("A-1", 0.70, 10.0, 0.950, "OHARA-AGF"),   # conflict: quarantine, not dedupe
+])
+
+
+def test_dedupe_collapses_only_byte_identical_rows():
+    clean, removed = dedupe_transmission(DUPLICATED)
+    assert len(removed) == 1
+    assert removed.iloc[0]["wavelength_um"] == 0.50
+    assert len(clean) == 5      # 6 rows in, 1 identical duplicate out
+    # the differing-value pair survives dedupe so the conflict path can see it
+    assert (clean["wavelength_um"] == 0.70).sum() == 2
+    # different thickness at the same wavelength/value is a distinct sample
+    assert (clean["wavelength_um"] == 0.60).sum() == 2
+
+
+def test_dedupe_is_a_noop_on_unique_data():
+    t = _t([("A", 0.5, 10.0, 0.9, "S"), ("A", 0.6, 10.0, 0.8, "S")])
+    clean, removed = dedupe_transmission(t)
+    assert removed.empty
+    assert len(clean) == 2
+
+
+def test_dedupe_then_split_reaches_a_consistent_database():
+    """The full hygiene pipeline: dedupe first, then quarantine what disagrees."""
+    deduped, removed = dedupe_transmission(DUPLICATED)
+    clean, conflicts, dropped = split_transmission_conflicts(deduped)
+    assert len(removed) == 1
+    assert len(conflicts) == 1
+    assert conflicts.iloc[0]["wavelength_um"] == 0.70
+    assert len(clean) == 3      # 5 after dedupe, minus the 2 conflicting rows
+    assert int(clean.duplicated(
+        subset=["glass_id", "wavelength_um", "thickness_mm", "transmission"]).sum()) == 0
+    assert find_transmission_conflicts(clean).empty
+
+
+def test_dedupe_handles_empty_and_degenerate_frames():
+    empty = pd.DataFrame(columns=["glass_id", "wavelength_um", "thickness_mm",
+                                  "transmission"])
+    clean, removed = dedupe_transmission(empty)
+    assert clean.empty and removed.empty
+    thin = pd.DataFrame([{"glass_id": "A", "wavelength_um": 0.5}])
+    clean, removed = dedupe_transmission(thin)
+    assert len(clean) == 1 and removed.empty
+
+
+def test_shipped_transmission_has_no_duplicate_samples():
+    """The committed table is deduplicated, so the quality report reads zero."""
+    from glassmatch.database import load_default_database
+    from glassmatch.validation import validate_transmission_frame
+    db = load_default_database()
+    assert validate_transmission_frame(db.transmission) == []
+    counts = db.transmission.groupby(
+        ["glass_id", "wavelength_um", "thickness_mm"]).size()
+    assert int((counts > 1).sum()) == 0
+

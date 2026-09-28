@@ -174,7 +174,7 @@ def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
     vals = [v for v in vals if v == v]
     if not vals:
         return None, "missing"
-    return float(sum(vals) / len(vals) * 100.0), "calculated (Fresnel, uncoated)"
+    return round(float(sum(vals) / len(vals) * 100.0), 1), "calculated (Fresnel, uncoated)"
 
 
 def band_transmission(gid, lo_um, hi_um, mode):
@@ -189,7 +189,10 @@ def band_transmission(gid, lo_um, hi_um, mode):
     s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode)
     if s is not None:
         if s.get("value_pct") is not None:
-            return s["value_pct"], s["label"]
+            # Round here so every consumer (table, caption, export) shows the
+            # same number; a raw mean of binary floats prints as e.g.
+            # 98.49999999999999%.
+            return round(s["value_pct"], 1), s["label"]
         return None, f"missing ({s['label']})"
     v, note = transmission_estimate(db, gid, lo_um, hi_um)
     return v, note
@@ -274,8 +277,9 @@ with tabs[1]:
     c1.metric("n_d", f"{db.property_value(gid, 'refractive_index_nd')}")
     c2.metric("V_d", f"{db.property_value(gid, 'abbe_number_vd')}")
     c3.metric("Manufacturer", str(mfr["name"]) if mfr is not None else "?")
+    _t = trans.get(gid)
     st.caption(f"Transmission for the current requirement ({t_mode}): "
-               f"{trans.get(gid) if trans.get(gid) is not None else 'missing'}%"
+               f"{'missing' if _t is None else f'{_t:.1f}'}%"
                f" — {trans_basis.get(gid, 'missing')}")
     st.write(f"**Family:** {row['glass_family']} - {row['description']}")
     st.subheader("Properties and sources")
