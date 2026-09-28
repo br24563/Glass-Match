@@ -10,6 +10,7 @@ Reading it as grouped B's then C's returns a smooth-looking but wrong curve
 (n ~ 1.258 at the d-line for CaF2 instead of 1.4338), so these assertions
 compare against the literature rather than against our own output.
 """
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -19,6 +20,7 @@ from glassmatch.database import GlassDatabase
 from glassmatch.importers.refractiveindex_yaml import (REFERENCE_UM,
                                                        n_from_rii_formula,
                                                        parse_ri_page)
+from glassmatch.spectra import band_stats_nk, transmission_from_nk
 
 
 @pytest.fixture(scope="module")
@@ -102,6 +104,111 @@ def test_unimplemented_formulas_are_reported_not_guessed(tmp_path):
 def test_reference_lines_include_d_and_ir():
     assert 0.5876 in REFERENCE_UM and 0.4861 in REFERENCE_UM
     assert any(w >= 8.0 for w in REFERENCE_UM)
+
+
+# --- transmission from tabulated n/k --------------------------------------
+# Crystals ship measured n and k rather than a manufacturer IT curve, which
+# left 195 materials outside the search entirely.
+def test_transmission_with_zero_absorption_is_exact_fresnel():
+    """k = 0 must reduce to the textbook two-surface Fresnel figure."""
+    for n in (1.434, 1.5168, 1.62, 2.0, 4.0):
+        expected = (1.0 - ((n - 1.0) / (n + 1.0)) ** 2) ** 2 * 100.0
+        got = transmission_from_nk(n, 0.0, 0.5876, 10.0)
+        assert got == pytest.approx(expected, abs=1e-9)
+
+
+def test_absorption_uses_micrometres_converted_to_millimetres():
+    """Guards a real bug: um -> mm inverted, which erased absorption.
+
+    With wl_mm = wl_um * 1000 the exponent was 1000x too small, so a strongly
+    absorbing material reported as fully transparent (k=0.001 at 5 um gave
+    92.13% instead of 0.00%).
+    """
+    n, k, t, lam_um = 1.5, 1e-3, 10.0, 5.0
+    expect = math.exp(-4.0 * math.pi * k * t / (lam_um / 1000.0))
+    assert expect < 1e-3, "this case must be strongly absorbing"
+    assert transmission_from_nk(n, k, lam_um, t) < 0.01
+
+
+def test_absorption_scales_with_thickness():
+    vals = [transmission_from_nk(1.5, 1e-4, 5.0, t) for t in (1, 5, 10, 25)]
+    assert vals == sorted(vals, reverse=True), "thicker must never transmit more"
+    assert vals[0] > vals[-1]
+
+
+def test_absorbing_material_is_not_credited_with_clear_fresnel():
+    """R must use the complex index; a transparent-looking n must not win."""
+    clear = transmission_from_nk(1.5, 0.0, 5.0, 10.0)
+    murky = transmission_from_nk(1.5, 0.01, 5.0, 10.0)
+    assert murky < clear / 100.0
+
+
+def test_band_stats_nk_needs_k_and_says_so():
+    n_only = pd.DataFrame({"wavelength_um": [1.0, 2.0, 3.0], "n": [1.43, 1.42, 1.41],
+                           "k": [None, None, None]})
+    r = band_stats_nk(n_only, 1.0, 3.0, "Average", 10.0)
+    assert r["value_pct"] is None
+    assert r["reason"] == "no-absorption-data"
+    assert "no measured k" in r["label"]
+
+
+def test_band_stats_nk_refuses_thin_film_measurements():
+    """A film's optical constants are not the material's.
+
+    The published 2 nm Ge film page reports n = 1.46 where bulk Ge is n ~ 4-5.
+    Using it as bulk data would put a fictitious low-index, low-loss material
+    into the catalogue.
+    """
+    film = pd.DataFrame({"wavelength_um": [1.0, 2.0, 3.0], "n": [1.46, 1.44, 1.43],
+                         "k": [1.23, 0.4, 0.1],
+                         "measurement_form": ["film"] * 3})
+    r = band_stats_nk(film, 1.0, 3.0, "Average", 10.0)
+    assert r["value_pct"] is None
+    assert r["reason"] == "film-measurement"
+
+
+def test_band_stats_nk_drops_film_rows_from_a_mixed_page():
+    mixed = pd.DataFrame({
+        "wavelength_um": [1.0, 2.0, 3.0, 4.0], "n": [1.46, 1.44, 1.42, 1.41],
+        "k": [1.23, 0.4, 0.0, 0.0],
+        "measurement_form": ["film", "film", "bulk", "bulk"]})
+    r = band_stats_nk(mixed, 1.0, 4.0, "Average", 10.0)
+    assert r["value_pct"] is not None
+    assert r["n_points"] == 2
+
+
+def test_band_stats_nk_reports_empty_band_rather_than_guessing():
+    df = pd.DataFrame({"wavelength_um": [1.0, 2.0], "n": [1.43, 1.42],
+                       "k": [0.0, 0.0], "measurement_form": ["bulk", "bulk"]})
+    r = band_stats_nk(df, 5.0, 8.0, "Average", 10.0)
+    assert r["value_pct"] is None
+    assert r["reason"] == "no-samples-in-band"
+
+
+def test_measurement_form_detects_film_pages():
+    from glassmatch.importers.refractiveindex_yaml import measurement_form
+    assert measurement_form("nk__Ciesielski-2nm", "") == "film"
+    assert measurement_form("nk__Ciesielski-20nm", "") == "film"
+    assert measurement_form("nk__Amotchkina-film", "") == "film"
+    assert measurement_form("nk__Foo", "2 nm-thick Ge film on SiO2") == "film"
+    assert measurement_form("nk__Foo", "Thin films of amorphous alumina") == "film"
+    assert measurement_form("nk__Li-293K", "single crystal, room temperature") == "bulk"
+    # An unlabelled page must not be silently treated as bulk.
+    assert measurement_form("nk__Malitson", "") == "unknown"
+
+
+def test_staged_2nm_germanium_film_is_never_marked_bulk():
+    """The real page, not a synthetic one: its n=1.46 is not germanium."""
+    from glassmatch.database import GlassDatabase
+    from glassmatch.importers.refractiveindex_yaml import measurement_form
+    db = GlassDatabase.load()
+    nk = db.spectral_nk
+    gid = "RII-GE-CIESIELSKI-2NM"
+    sub = nk[nk.glass_id == gid]
+    assert len(sub), "fixture page missing - did the staged data change?"
+    assert set(sub["measurement_form"].unique()) == {"film"}
+    r = band_stats_nk(sub, 0.2, 1.5, "Average", 10.0)
+    assert r["value_pct"] is None and r["reason"] == "film-measurement"
 
 
 def test_n_at_refuses_to_extrapolate_past_a_stated_range(db):

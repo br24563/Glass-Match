@@ -99,6 +99,112 @@ def fresnel_transmission(n: float) -> float:
 # Manufacturer transmission rows (transmission.csv): 0-1 fraction per sample.
 # Band statistics for the three requirement modes. Pure functions: no db.
 
+def transmission_from_nk(n: float, k: float, wl_um: float,
+                        thickness_mm: float = 10.0) -> float:
+    """Internal transmittance (%) of a blank at normal incidence, 0-100.
+
+    Combines the two physical losses a plane-parallel blank actually has:
+
+      * Fresnel reflection at each of the two surfaces, using the complex index
+        n - ik, so an absorbing material is not credited with a transparent
+        material's reflectance;
+      * Beer-Lambert absorption through the bulk, exp(-4*pi*k*t/lambda).
+
+    The multiple-reflection interference between the faces is deliberately
+    ignored: it depends on surface flatness, parallelism and AR coating, none of
+    which the database knows. n and k must come from the same source at the same
+    wavelength for this to mean anything.
+
+    CALCULATED, not measured - callers must label it as such, and must state
+    the assumed thickness, because that number changes the answer.
+    """
+    import math
+    if n is None or k is None or wl_um is None or wl_um <= 0:
+        return float("nan")
+    n, k = float(n), float(k)
+    if not (math.isfinite(n) and math.isfinite(k)) or n <= 0 or k < 0:
+        return float("nan")
+    if k == 0.0:
+        R = ((n - 1.0) / (n + 1.0)) ** 2
+    else:
+        R = ((n - 1.0) ** 2 + k ** 2) / ((n + 1.0) ** 2 + k ** 2)
+    # 1 um = 0.001 mm; getting this backwards divides the absorption path by
+    # 1000 and silently reports a strongly absorbing crystal as transparent.
+    wl_mm = wl_um / 1000.0
+    absorb = math.exp(-4.0 * math.pi * k * float(thickness_mm) / wl_mm)
+    return max(0.0, min(100.0, (1.0 - R) ** 2 * absorb * 100.0))
+
+
+def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
+                  thickness_mm: float = 10.0,
+                  min_coverage: float = 0.90) -> dict | None:
+    """Band transmission (%) for a material that has tabulated n/k, not IT rows.
+
+    Crystals published in refractiveindex.info usually ship a measured n and k
+    rather than a manufacturer transmittance curve, which left 195 materials
+    unsearchable. This computes the band value from those measured constants.
+
+    Requires k to be present: with k unknown, the result would be a
+    reflection-only figure that silently ignores absorption, which is the whole
+    reason a crystal is chosen or rejected. Samples whose k is missing are
+    dropped and the shortfall is disclosed in the label.
+    """
+    if nkdf is None or len(nkdf) == 0 or hi_um <= lo_um:
+        return None
+    if "measurement_form" in nkdf.columns:
+        forms = set(nkdf["measurement_form"].dropna().astype(str))
+        if forms == {"film"} or (forms and forms <= {"film", "unknown"} and "film" in forms):
+            return {"value_pct": None, "reason": "film-measurement",
+                    "n_points": 0, "coverage": 0.0,
+                    "label": ("source measured a deposited thin film, not bulk "
+                              "material - not usable for a blank")}
+        nkdf = nkdf[nkdf["measurement_form"].astype(str) != "film"]
+        if len(nkdf) == 0:
+            return {"value_pct": None, "reason": "film-measurement",
+                    "n_points": 0, "coverage": 0.0,
+                    "label": "every tabulated sample is a thin-film measurement"}
+    wl = nkdf["wavelength_um"].to_numpy(dtype=float)
+    nv = nkdf["n"].to_numpy(dtype=float)
+    kv = nkdf["k"].to_numpy(dtype=float)
+    import numpy as np
+    in_band = np.isfinite(wl) & (wl >= lo_um) & (wl <= hi_um)
+    if not in_band.any():
+        return {"value_pct": None, "reason": "no-samples-in-band", "n_points": 0,
+                "coverage": 0.0,
+                "label": f"tabulated n/k exist but none inside the band "
+                         f"({thickness_mm:g} mm)"}
+    wl_b = wl[in_band]
+    have_k = np.isfinite(kv[in_band]) & np.isfinite(nv[in_band])
+    if not have_k.any():
+        return {"value_pct": None, "reason": "no-absorption-data", "n_points": 0,
+                "coverage": 0.0,
+                "label": "tabulated n only - no measured k, absorption unknown"}
+    dropped = int((~have_k).sum())
+    t = np.array([transmission_from_nk(nv[in_band][i], kv[in_band][i], wl_b[i],
+                                      thickness_mm)
+                  for i in np.nonzero(have_k)[0]], dtype=float)
+    t = t[np.isfinite(t)]
+    if t.size == 0:
+        return {"value_pct": None, "reason": "not-computable", "n_points": 0,
+                "coverage": 0.0, "label": "n/k present but not computable"}
+    span = hi_um - lo_um
+    coverage = float((wl_b.max() - wl_b.min()) / span) if span > 0 else 0.0
+    if mode == "Minimum":
+        value = float(t.min())
+    elif mode == "Entire range" and coverage >= min_coverage:
+        value = float(t.min())
+    else:
+        value = float(t.mean())
+    label = (f"calculated from tabulated n/k at {thickness_mm:g} mm, "
+             f"{t.size} samples")
+    if mode == "Entire range" and coverage < min_coverage:
+        label += f"; samples cover only {coverage:.0%} of the band"
+    if dropped:
+        label += f"; {dropped} sample(s) dropped for missing k"
+    return {"value_pct": value, "label": label, "n_points": int(t.size),
+            "coverage": coverage, "thickness_mm": float(thickness_mm)}
+
+
 def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                min_coverage: float = 0.90) -> dict | None:
     """Summarize manufacturer transmission samples inside [lo_um, hi_um].

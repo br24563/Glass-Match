@@ -104,6 +104,33 @@ def _tabulated(block: dict) -> list:
     return rows
 
 
+def measurement_form(page_stem: str, comments: str) -> str:
+    """Classify a page as 'bulk', 'film' or 'unknown'.
+
+    refractiveindex.info catalogues deposited/coated films alongside bulk
+    material, and a film's optical constants are NOT the material's. The
+    published "2 nm Ge film" page reports n = 1.46 where bulk germanium is
+    n ~ 4-5, because a nanometre film is dominated by its interfaces; used
+    as bulk data it yields nonsense both for n(lambda) and for any absorption
+    or transmission figure derived from k.
+
+    The signal is textual - the page name and the COMMENTS block - because
+    there is no reliable numerical one: a film of the right thickness and
+    index looks exactly like a bulk sample in a single tabulated column.
+    """
+    text = f"{page_stem} {comments}".lower()
+    # "2nm", "20nm-thick", "nanometre", "thin film", "deposited on"
+    if re.search(r"\d+\s*-?\s*nm\b", text) or re.search(r"nano\s*-?\s*met", text):
+        return "film"
+    if "thin film" in text or "thin-film" in text or "-film" in page_stem.lower():
+        return "film"
+    if "deposited" in text or "coated" in text or "coating" in text:
+        return "film"
+    if "substrate" in text or "bulk" in text or "single crystal" in text:
+        return "bulk"
+    return "unknown"
+
+
 def parse_ri_page(path: Path) -> dict | None:
     """One YAML page -> its citation, conditions and classified data blocks."""
     try:
@@ -135,8 +162,10 @@ def parse_ri_page(path: Path) -> dict | None:
         else:
             blocks["skipped"].append(
                 (kind, UNSUPPORTED.get(kind, "unrecognised data type")))
+    comments = str(doc.get("COMMENTS") or "").strip()
     return {"references": str(doc.get("REFERENCES") or "").strip(),
-            "comments": str(doc.get("COMMENTS") or "").strip(),
+            "comments": comments,
+            "form": measurement_form(Path(path).stem, comments),
             "conditions": doc.get("CONDITIONS") or {},
             "blocks": blocks}
 
@@ -246,7 +275,7 @@ def _page_formulas(blocks: dict, box: dict) -> list:
     return rows, props
 
 
-def _page_spectral(blocks: dict, box: dict) -> tuple:
+def _page_spectral(blocks: dict, box: dict, form: str = "unknown") -> tuple:
     """Tabulated pages -> verbatim spectral n/k rows plus reference n."""
     gid, source_id = box["gid"], box["src"]
     spec, table = [], []
@@ -254,18 +283,21 @@ def _page_spectral(blocks: dict, box: dict) -> tuple:
         for wl, n, k in rows:
             spec.append({"glass_id": gid, "wavelength_um": wl, "n": n, "k": k,
                          "data_type": "literature (tabulated n,k)",
+                         "measurement_form": form,
                          "source_id": source_id})
             table.append((wl, n, None))
     for rows in blocks["n"]:
         for wl, n, _k in rows:
             spec.append({"glass_id": gid, "wavelength_um": wl, "n": n, "k": None,
                          "data_type": "literature (tabulated n)",
+                         "measurement_form": form,
                          "source_id": source_id})
             table.append((wl, n, None))
     for rows in blocks["k"]:
         for wl, k, _x in rows:
             spec.append({"glass_id": gid, "wavelength_um": wl, "n": None, "k": k,
                          "data_type": "literature (tabulated k)",
+                         "measurement_form": form,
                          "source_id": source_id})
     return spec, table
 
@@ -330,7 +362,7 @@ def import_refractiveindex(root: Path, materials: dict,
         sell_rows, form_props = _page_formulas(b, box)
         sell.extend(sell_rows)
         props.extend(form_props)
-        spec_rows, table = _page_spectral(b, box)
+        spec_rows, table = _page_spectral(b, box, form=parsed.get("form", "unknown"))
         spec.extend(spec_rows)
         if table:
             lo, hi = _interp(0.0, table)[1]

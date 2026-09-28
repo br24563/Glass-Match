@@ -7,10 +7,13 @@ WEIGHT_KEYS = ["nd", "vd", "transmission", "density", "cte"]
 
 DEFAULT_WEIGHTS = {"nd": 30.0, "vd": 20.0, "transmission": 30.0, "density": 10.0, "cte": 10.0}
 
-# IR/chalcogenide glasses have no meaningful Abbe number: vd weight is
-# redistributed to nd + transmission and the missing value never penalizes.
-IR_MATERIAL_CLASSES = {"chalcogenide", "crystal_ir"}
-IR_MANUFACTURERS = {"INFRARED", "LIGHTPATH", "UMICORE"}
+# Materials with no meaningful Abbe number: IR/chalcogenide glasses (V_d is
+# defined for the visible and says nothing about them) and crystals, which were
+# never catalogued as optical glasses and have no d-line entry at all. Their
+# V_d weight is redistributed to index + transmission, and the missing V_d
+# never penalizes.
+IR_MATERIAL_CLASSES = {"chalcogenide", "crystal_ir", "crystal"}
+IR_MANUFACTURERS = {"INFRARED", "LIGHTPATH", "UMICORE", "RII"}
 
 
 def normalize_weights(weights: dict) -> dict:
@@ -129,12 +132,26 @@ def score_glass(props: dict, requirements: dict, weights: dict,
 
 def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                   transmissions: dict | None = None,
-                  require_data: bool = False) -> pd.DataFrame:
+                  require_data: bool = False,
+                  nd_override: dict | None = None) -> pd.DataFrame:
+    """Rank materials against a requirement set.
+
+    `nd_override` supplies the index each material is judged on, for materials
+    that have no catalog n_d. Crystals are the motivating case: CaF2 has no
+    d-line catalog entry because it was never sold as an optical glass, but it
+    has a perfectly well-defined index at any wavelength, so refusing to judge
+    it on n at all left 195 real materials permanently outside the search. The
+    caller passes n at whatever reference wavelength the user is working at and
+    the UI must label the column accordingly - it is not the same quantity as a
+    catalog n_d and must never be presented as one.
+    """
     rows = []
     transmissions = transmissions or {}
+    nd_override = nd_override or {}
     for _, r in summary.iterrows():
         gid = str(r["glass_id"])
-        props = {"nd": r.get("nd"), "vd": r.get("vd"), "density": r.get("density"),
+        nd_used = nd_override.get(gid, r.get("nd"))
+        props = {"nd": nd_used, "vd": r.get("vd"), "density": r.get("density"),
                  "cte": r.get("cte"), "transmission": transmissions.get(gid)}
         ir = is_ir_glass(r)
         sc = score_glass(props, requirements, weights, require_data=require_data,
@@ -145,7 +162,9 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                      "family": r.get("family"),
                      "material_class": r.get("material_class", "oxide_glass"),
                      "ir_mode": bool(ir),
-                     "nd": r.get("nd"), "vd": r.get("vd"),
+                     "nd": nd_used, "vd": r.get("vd"),
+                     "nd_basis": ("n at reference wavelength" if gid in nd_override
+                                  else "catalog n_d"),
                      "density": r.get("density"), "cte": r.get("cte"),
                      "compatibility": round(float(sc["overall"]) * 100, 1),
                      "completeness": round(float(sc["completeness"]) * 100, 1),

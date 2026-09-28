@@ -8,7 +8,8 @@ import streamlit as st
 from glassmatch import __version__
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
-from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stats
+from glassmatch.spectra import (dispersion_curve, fresnel_transmission, band_stats,
+                                 band_stats_nk)
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
                                    validate_transmission_frame, orphan_source_ids,
@@ -62,6 +63,10 @@ def _load_all(_key: str):
     if not db.transmission.empty and "glass_id" in db.transmission.columns:
         t_groups = {str(gid): sub.reset_index(drop=True)
                     for gid, sub in db.transmission.groupby("glass_id")}
+    nk_groups = {}
+    if not db.spectral_nk.empty and "glass_id" in db.spectral_nk.columns:
+        nk_groups = {str(gid): sub.reset_index(drop=True)
+                     for gid, sub in db.spectral_nk.groupby("glass_id")}
     quality = {
         "properties": validate_property_frame(db.properties),
         "glasses": validate_glass_frame(db.glasses),
@@ -70,7 +75,7 @@ def _load_all(_key: str):
         "orphan_glasses": orphan_glass_ids(db.properties, db.glasses),
         "transmission_conflicts": _load_transmission_conflicts(db),
     }
-    return db, summary, t_groups, quality
+    return db, summary, t_groups, nk_groups, quality
 
 
 def _load_transmission_conflicts(db) -> pd.DataFrame:
@@ -94,7 +99,7 @@ def _load_transmission_conflicts(db) -> pd.DataFrame:
     return pd.concat([stored, pd.DataFrame(extra)], ignore_index=True) if extra else stored
 
 
-db, summary, t_groups, quality = _load_all(_data_key())
+db, summary, t_groups, nk_groups, quality = _load_all(_data_key())
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
@@ -126,10 +131,31 @@ if wl_min_um >= wl_max_um:
     st.sidebar.error("Minimum wavelength must be < maximum wavelength.")
 
 nd_min, nd_max = st.sidebar.slider("Refractive index n_d range", 1.30, 2.10, (1.45, 1.85), 0.005)
+with st.sidebar.expander("Crystals & materials without n_d / V_d"):
+    st.caption(
+        "Crystals were never sold as optical glasses, so they have no catalog "
+        "n_d and no Abbe number. To let them be searched rather than merely "
+        "browsed, GlassMatch judges them on **n at the reference wavelength "
+        "below** and on transmission, and marks V_d as not applicable.")
+    n_ref_nm = st.number_input("Index reference wavelength (nm)", min_value=200.0,
+                               max_value=25000.0, value=587.6, step=0.1,
+                               help="Applied to crystals and other materials with "
+                                    "no catalog n_d. Glasses keep their own n_d.")
 vd_min, vd_max = st.sidebar.slider("Abbe number V_d range", 15.0, 95.0, (20.0, 85.0), 0.5)
 t_min = st.sidebar.slider("Minimum transmission (%)", 0.0, 99.0, float(p.get("tmin", 85.0)), 0.5)
 t_mode = st.sidebar.radio("Transmission requirement applies to", ["Average", "Minimum", "Entire range"],
                           horizontal=True)
+with st.sidebar.expander("Crystal / n-k based transmission"):
+    st.caption(
+        "Crystals and semiconductors publish measured n and k rather than a "
+        "manufacturer transmittance curve. For those, GlassMatch computes "
+        "transmission from Fresnel reflection plus Beer-Lambert absorption. "
+        "It is **calculated**, and it depends on the assumed thickness.")
+    nk_thickness_mm = st.number_input("Assumed blank thickness (mm)", min_value=0.1,
+                                      max_value=100.0, value=10.0, step=0.5,
+                                      help="Absorption scales with thickness. "
+                                           "10 mm matches the .agf catalog "
+                                           "IT records.")
 d_lo2, d_hi2 = st.sidebar.slider("Density range (g/cm^3, optional filter)", 1.5, 6.0, (1.5, 6.0), 0.05)
 use_density = st.sidebar.checkbox("Filter by density", value=False)
 cte_max = st.sidebar.slider("Max CTE (1e-6/K, optional filter)", 0.0, 20.0, 20.0, 0.1)
@@ -196,6 +222,15 @@ def band_transmission(gid, lo_um, hi_um, mode):
             # 98.49999999999999%.
             return round(s["value_pct"], 1), s["label"]
         return None, f"missing ({s['label']})"
+    # Crystals and semiconductors publish measured n and k rather than a
+    # manufacturer transmittance curve, which left 195 materials unsearchable.
+    # Derive it from the optical constants instead - clearly labelled, and only
+    # from bulk measurements.
+    nk = band_stats_nk(nk_groups.get(str(gid)), lo_um, hi_um, mode, nk_thickness_mm)
+    if nk is not None:
+        if nk.get("value_pct") is not None:
+            return round(nk["value_pct"], 1), nk["label"]
+        return None, f"missing ({nk['label']})"
     v, note = transmission_estimate(db, gid, lo_um, hi_um)
     return v, note
 
@@ -206,8 +241,20 @@ for gid in summary["glass_id"]:
     trans[gid] = v
     trans_basis[gid] = basis
 
+# Materials with no catalog n_d (crystals) are judged on n at the chosen
+# reference wavelength instead. Their V_d stays not-applicable, so the Abbe
+# weight moves to index + transmission the same way it already does for IR
+# glasses.
+nd_override = {}
+for _, _r in summary.iterrows():
+    if _r.get("nd") is not None and _r.get("nd") == _r.get("nd"):
+        continue
+    _v, _kind = db.n_at(str(_r["glass_id"]), n_ref_nm)
+    if _v is not None:
+        nd_override[str(_r["glass_id"])] = _v
+
 results = match_glasses(summary, requirements, w_in, transmissions=trans,
-                        require_data=require_data)
+                        require_data=require_data, nd_override=nd_override)
 n_excluded = int(results.attrs.get("excluded_count", 0))
 excluded_examples = results.attrs.get("excluded_examples", [])
 
@@ -237,16 +284,31 @@ with tabs[0]:
     show["transmission_%"] = show["glass_id"].map(
         lambda g: None if trans.get(g) is None else round(trans[g], 1))
     if show["ir_mode"].astype(bool).any():
-        show.loc[show["ir_mode"].astype(bool), "vd"] = None  # V_d meaningless for IR
+        show.loc[show["ir_mode"].astype(bool), "vd"] = None  # V_d undefined here
+        # "IR material" is a label, not a judgement: CaF2 and fused silica are
+        # crystals that happen to have no Abbe number, and calling them IR
+        # materials misdescribes them. Only the genuinely IR classes get it.
+        _ir_classes = {"chalcogenide", "crystal_ir"}
         show["class"] = show.apply(
-            lambda r: "IR material" if r["ir_mode"] else str(r["material_class"]), axis=1)
-        st.caption("IR materials (shaded class): V_d not applicable — weight "
-                   "redistributed to n_d + transmission, never penalized.")
+            lambda r: "IR material"
+            if (r["ir_mode"] and str(r["material_class"]) in _ir_classes)
+            else str(r["material_class"]), axis=1)
+        st.caption("IR materials and crystals: V_d not applicable — the Abbe "
+                   "weight is redistributed to index + transmission, never "
+                   "penalized. Crystals are scored on n at the reference "
+                   "wavelength, not on a catalog n_d.")
     else:
         show["class"] = show["material_class"]
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
                         "cte", "transmission_%", "completeness", "missing", "class"]],
                  width="stretch", hide_index=True)
+    if nd_override and (scoped["nd_basis"] == "n at reference wavelength").any():
+        n_ov = int((scoped["nd_basis"] == "n at reference wavelength").sum())
+        st.caption(
+            f"The **n** column is a catalog n_d for {len(scoped) - n_ov} of these "
+            f"results, and n at {n_ref_nm:g} nm for {n_ov} material(s) that have "
+            f"no d-line entry (crystals). V_d is shown blank for those because "
+            f"the Abbe number is not defined for them.")
     n_mfr = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("manufacturer"))
     n_calc = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("calculated"))
     n_miss = len(scoped) - n_mfr - n_calc
@@ -271,8 +333,9 @@ with tabs[0]:
             "1.0 inside the band, linear falloff outside.\n"
             "- Overall = weighted mean over **available** data x coverage factor "
             "(0.5 + 0.5 x covered weight).\n"
-            "- IR materials (chalcogenide/IR makers): V_d weight moves to "
-            "n_d (60%) + transmission (40%); V_d is shown as n/a, never scored.\n"
+            "- IR materials and crystals: V_d weight moves to index (60%) + "
+            "transmission (40%); V_d is shown as n/a, never scored. Crystals "
+            "are judged on n at the reference wavelength.\n"
             f"- Transmission modes (**{t_mode}**): *Average* = mean of samples in "
             "band; *Minimum* = worst sample; *Entire range* = worst sample but only "
             "when manufacturer samples span >=90% of the band — otherwise the value "
