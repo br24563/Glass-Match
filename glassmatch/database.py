@@ -240,11 +240,18 @@ class GlassDatabase:
     def n_at(self, glass_id: str, wavelength_nm: float):
         """n at a reference wavelength, plus how it was obtained.
 
-        Returns (value, data_type) or (None, None).  Crystals carry
-        `n_at_reference` rows at the standard lines; for an arbitrary
-        wavelength the tabulated spectral curve is interpolated when present,
-        and the value is labelled `interpolated` rather than presented as a
-        source measurement.
+        Returns (value, data_type) or (None, None).  This is the property that
+        makes glasses and crystals comparable: it resolves, in order,
+
+          1. a stored `n_at_reference` row (crystals from the literature
+             pages; also any imported page that supplied one),
+          2. interpolation over tabulated `spectral_nk` samples,
+          3. evaluation of the glass's own verified Sellmeier coefficients -
+             which is how a glass answers for an arbitrary wavelength such as
+             10 um, where it has no tabulated n_d and no catalogue entry.
+
+        Every branch reports its own basis, and nothing is extrapolated
+        outside a source's stated range.
         """
         gid = str(glass_id)
         tol = wavelength_nm * 1e-4
@@ -263,20 +270,58 @@ class GlassDatabase:
                 row = hit.iloc[0]
                 return float(row["value"]), str(row.get("data_type", ""))
         df = self.spectral_nk_for(gid)
-        if df is None or df.empty:
-            return None, None
-        pts = df.dropna(subset=["n"])
-        if len(pts) < 2:
-            return None, None
-        w_um = wavelength_nm / 1000.0
-        lo, hi = float(pts["wavelength_um"].min()), float(pts["wavelength_um"].max())
-        if not (lo <= w_um <= hi):
-            return None, None
-        from glassmatch.importers.refractiveindex_yaml import _interp
-        val, _rng = _interp(w_um, list(zip(pts["wavelength_um"], pts["n"], None)))
-        if val is None or val != val:
-            return None, None
-        return float(val), "interpolated"
+        if df is not None and len(df):
+            pts = df.dropna(subset=["n"])
+            if len(pts) >= 2:
+                w_um = wavelength_nm / 1000.0
+                lo, hi = (float(pts["wavelength_um"].min()),
+                          float(pts["wavelength_um"].max()))
+                if lo <= w_um <= hi:
+                    from glassmatch.importers.refractiveindex_yaml import _interp
+                    val, _rng = _interp(
+                        w_um, list(zip(pts["wavelength_um"], pts["n"], None)))
+                    if val is not None and val == val:
+                        return float(val), "interpolated"
+        coef = self.sellmeier_for(gid, sellmeier_only=True)
+        if coef is not None:
+            lo, hi = self._sellmeier_range(gid, coef)
+            w_um = wavelength_nm / 1000.0
+            if lo is None or hi is None or (lo <= w_um <= hi):
+                from glassmatch.spectra import n_from_row
+                val = n_from_row(coef, w_um)
+                if val == val and val > 0:
+                    return float(val), "calculated"
+        return None, None
+
+    def _sellmeier_range(self, glass_id: str, coef: dict):
+        """Validity range (um) for a dispersion curve, or (None, None).
+
+        A fit evaluated outside the range its source states is an
+        extrapolation, not a measurement, and GlassMatch does not report one:
+        the Malitson CaF2 fit is declared valid to 9.7 um, so a request at
+        10 um returns "unavailable" rather than a smooth invented number.
+        refractiveindex rows carry their own "lo-hi"; for the manufacturer
+        .agf rows the catalog's own LD wavelength limits are used instead.
+        """
+        rng = str(coef.get("wavelength_um", "") or "").strip()
+        if "-" in rng:
+            parts = rng.split("-", 1)
+            try:
+                return float(parts[0]), float(parts[1])
+            except ValueError:
+                pass
+        f = self.properties
+        if not f.empty:
+            vals = {}
+            for prop, key in (("wl_min_um", "lo"), ("wl_max_um", "hi")):
+                hit = f[(f["glass_id"] == glass_id) & (f["property"] == prop)]
+                if not hit.empty:
+                    v = pd.to_numeric(hit.iloc[0]["value"], errors="coerce")
+                    if v == v and v > 0:
+                        vals[key] = float(v)
+            if "lo" in vals and "hi" in vals:
+                return vals["lo"], vals["hi"]
+        return None, None
 
     def summary_frame(self) -> pd.DataFrame:
         import pandas as pd  # local import keeps module light

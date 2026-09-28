@@ -15,9 +15,15 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from glassmatch.database import GlassDatabase
 from glassmatch.importers.refractiveindex_yaml import (REFERENCE_UM,
                                                        n_from_rii_formula,
                                                        parse_ri_page)
+
+
+@pytest.fixture(scope="module")
+def db():
+    return GlassDatabase.load()
 
 # Malitson (1963) CaF2, exactly as it appears on the upstream page:
 # n^2-1 = 0.5675888 l^2/(l^2-0.050263605^2)
@@ -81,8 +87,9 @@ def test_nonlinear_index_is_never_read_as_n_squared(tmp_path):
     assert [k for k, _ in parsed["blocks"]["skipped"]] == ["tabulated n2"]
 
 
-def test_unsupported_formulas_are_reported_not_guessed(tmp_path):
-    for kind in ("formula 2", "formula 4", "formula 5", "formula 7"):
+def test_unimplemented_formulas_are_reported_not_guessed(tmp_path):
+    """formula 2 is implemented; 4/5/7 are not, and must say so."""
+    for kind in ("formula 4", "formula 5", "formula 7"):
         f = tmp_path / "x.yml"
         f.write_text(
             f"DATA:\n  - type: {kind}\n    coefficients: 1 2 3 4 5\n",
@@ -95,6 +102,86 @@ def test_unsupported_formulas_are_reported_not_guessed(tmp_path):
 def test_reference_lines_include_d_and_ir():
     assert 0.5876 in REFERENCE_UM and 0.4861 in REFERENCE_UM
     assert any(w >= 8.0 for w in REFERENCE_UM)
+
+
+def test_n_at_refuses_to_extrapolate_past_a_stated_range(db):
+    """Malitson's CaF2 fit is declared valid to 9.7 um. 10 um must be 'unknown'.
+
+    The fit happily produces a smooth 1.2996 at 10 um, which is exactly the
+    kind of plausible-looking number GlassMatch must not invent.
+    """
+    inside, _ = db.n_at("RII-CAF2-MALITSON", 9700.0)
+    outside, kind = db.n_at("RII-CAF2-MALITSON", 10000.0)
+    assert inside is not None and inside > 1.0
+    assert outside is None and kind is None
+
+
+def test_sellmeier_range_prefers_the_source_then_the_catalog(db):
+    rii_range = db._sellmeier_range("RII-CAF2-MALITSON",
+                                   db.sellmeier_for("RII-CAF2-MALITSON"))
+    # Malitson's page declares 0.23-9.7 um; the guard must use the source's own
+    # numbers, so this is pinned to the staged YAML, not to a remembered value.
+    assert rii_range == (0.23, 9.7)
+    # N-BK7's .agf row carries no "lo-hi", so the catalog LD limits are used.
+    agf_range = db._sellmeier_range("SCHOTT-N-BK7",
+                                   db.sellmeier_for("SCHOTT-N-BK7"))
+    assert agf_range is not None and agf_range[0] < agf_range[1]
+    assert db.n_at("SCHOTT-N-BK7", 587.6)[0] is not None
+    # and outside the catalog's own limit it declines to answer
+    assert db.n_at("SCHOTT-N-BK7", 50_000.0)[0] is None
+
+
+# --- formula 2 -------------------------------------------------------------
+# From specs/schott/optical/N-BK7.yml. Same interleaved layout as formula 1,
+# but C is already in um^2 rather than a resonance wavelength. These are N-BK7's
+# published spectral-line indices, so the fit must reproduce all three.
+N_BK7_F2 = [0.0, 1.03961212, 0.00600069867, 0.231792344, 0.0200179144,
+            1.01046945, 103.560653]
+N_BK7_LINES = {0.4861: 1.52238, 0.5876: 1.51680, 0.6563: 1.51432}
+
+
+def test_formula_2_does_not_square_c():
+    """Squaring formula-2 C values gives 1.50723 at the d-line, not 1.51680."""
+    for lam, expected in N_BK7_LINES.items():
+        got = n_from_rii_formula(N_BK7_F2, lam, square_c=False)
+        assert got == pytest.approx(expected, abs=1e-4), (
+            f"formula 2 n({lam} um) = {got:.5f}, expected {expected:.5f}")
+    wrong = n_from_rii_formula(N_BK7_F2, 0.5876, square_c=True)
+    assert abs(wrong - 1.51680) > 1e-3, "the squared reading should NOT match"
+
+
+def test_formula_1_and_2_differ_only_in_c_scaling():
+    a = n_from_rii_formula(CAF2_COEFFS, 0.5876, square_c=True)
+    b = n_from_rii_formula(CAF2_COEFFS, 0.5876, square_c=False)
+    assert a == pytest.approx(CAF2_ND_PUBLISHED, abs=3e-4)
+    assert abs(a - b) > 0.01
+
+
+def test_formula_2_is_supported_not_skipped():
+    from glassmatch.importers import refractiveindex_yaml as rii
+    assert "formula 2" in rii.SUPPORTED_FORMULAS
+    assert rii.SQUARES_C == {"formula 1": True, "formula 2": False}
+    assert "formula 2" not in rii.UNSUPPORTED
+
+
+def test_formula_2_page_imports(tmp_path):
+    from glassmatch.importers.refractiveindex_yaml import import_refractiveindex
+    d = tmp_path / "N-BK7"
+    d.mkdir()
+    (d / "nk__N-BK7.yml").write_text(
+        "REFERENCES: |\n    SCHOTT Zemax catalog\n"
+        "DATA:\n  - type: formula 2\n"
+        "    wavelength_range: 0.3 2.5\n"
+        "    coefficients: " + " ".join(str(c) for c in N_BK7_F2) + "\n",
+        encoding="utf-8")
+    out = import_refractiveindex(tmp_path, {"N-BK7": ("NBK7", "t", "crystal")})
+    assert len(out["sellmeier"]) == 1
+    assert "formula 2" in out["sellmeier"].iloc[0]["formula"]
+    # C stored as the source states it - not squared
+    assert float(out["sellmeier"].iloc[0]["C1_um2"]) == pytest.approx(0.00600069867)
+    nd = out["properties"][(out["properties"].property == "n_at_reference")
+                           & (out["properties"].reference_wavelength_nm == 587.6)]
+    assert float(nd.iloc[0]["value"]) == pytest.approx(1.51680, abs=1e-4)
 
 
 def test_staged_pages_import_and_are_cc0(tmp_path):

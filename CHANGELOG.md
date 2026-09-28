@@ -4,6 +4,29 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.6.1] - 2026-09-28
+
+### Added
+- **`formula 2` dispersion fits are now evaluated** (16 more materials, 16 more
+  crystal pages, 179 -> 195). Like `formula 1` the coefficient list is
+  interleaved, but each C is already in um^2 and must **not** be squared.
+  Pinned against N-BK7's published spectral-line indices, where squaring
+  returns 1.50723 at the d-line instead of 1.51680.
+- **`GlassDatabase.n_at()` no longer extrapolates a fit past the range its
+  source declares.** A refractiveindex page states its own `wavelength_range`
+  and the `.agf` catalogs carry their LD wavelength limits; a request outside
+  that window now returns "unavailable". Concretely: Malitson's CaF2 fit
+  answers 9.7 um (its stated limit) and declines 10 um, where the formula
+  would otherwise have produced a perfectly smooth, entirely invented 1.2996.
+
+### Changed
+- `tests/test_refractiveindex.py` gains a module-scoped `db` fixture, matching
+  `tests/test_crystals.py`, so the 2,705-material database is loaded once per
+  module instead of once per test.
+
+### Fixed
+- The `0.6.0` changelog entry listed `formula 2` as unimplemented; it is not.
+
 ## [0.6.0] - 2026-09-27
 
 ### Added
@@ -55,7 +78,7 @@ the patch version, schema/format changes bump the minor version.
   1.43385 against a published 1.43376. Pinned by
   `test_rii_formula_is_interleaved_and_squares_c`.
 - `tabulated n2` is **non-linear** index (~1e-20), not n squared; 88 such blocks
-  are skipped rather than misread. `formula 2/4/5/7` (30 blocks) are not
+  are skipped rather than misread. `formula 4/5/7` (30 blocks) are not
   implemented - the equations are not in the data files, and guessing them
   would be fabrication, so those materials report no index rather than a
   wrong one.

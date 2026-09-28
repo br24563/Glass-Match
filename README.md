@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,705 materials · 18 source collections · 204 traceable sources** — search,
+**2,721 materials · 18 source collections · 220 traceable sources** — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
 materials, polymers, and moldables.
 
@@ -41,11 +41,13 @@ materials, polymers, and moldables.
   shown separately and are never overwritten.
 - Interactive Plotly dispersion + transmission plots (calculated curves labelled).
   Dispersion is drawn **only** where the archived coefficients reproduce the
-  catalog n_d at 587.6 nm (653 of 2,526 glasses; 2-, 3-, 4- and 5-term fits
-  are all evaluated). The other 1,872 rows are series/polynomial forms that
+  catalog n_d at 587.6 nm (710 glasses; 1- through 5-term fits are all
+  evaluated, including refractiveindex.info `formula 2`, whose C coefficients
+  are already in um² and must not be squared). The other 1,872 rows are
+  series/polynomial forms that
   fail that check — they are stored verbatim and **never** evaluated, and the
   UI says so on the glass page.
-- **Crystal materials** — 179 pages covering CaF₂, MgF₂, BaF₂, SrF₂, LiF, LaF₃,
+- **Crystal materials** — 195 pages covering CaF₂, MgF₂, BaF₂, SrF₂, LiF, LaF₃,
   sapphire, fused silica/quartz, spinel, YAG, ZnSe, ZnS, Ge, Si, CdTe, GaAs and
   Te, from [refractiveindex.info](https://refractiveindex.info) (public domain,
   **CC0 1.0**, so unlike the manufacturer catalogs it ships with the repo). Each
@@ -53,7 +55,7 @@ materials, polymers, and moldables.
   gives you a **reference-wavelength control** and tells you whether the number
   is a source measurement, an interpolation between samples, or an evaluation
   of a published dispersion fit — and says "unavailable" rather than
-  extrapolating when no source covers your wavelength.
+  extrapolating when the request falls outside the range the source states.
 - Glass detail pages, 2-5 glass comparison, database + source explorers
   (material-class filter, obsolete toggle, per-maker coverage table).
 - User CSV + manufacturer `.agf` import with validation; CSV/JSON export
@@ -144,7 +146,7 @@ add a manufacturer without writing any Python. Release history is in
 | HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,657 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,705** | 653 verified Sellmeier curves (4 two-term, 641 three-term, 8 four-term) · 1,872 archived non-dispersable · 179 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
+| **Total** | **2,721** | 710 verified Sellmeier curves · 1,872 archived non-dispersable · 139 with no curve · 195 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
@@ -157,7 +159,7 @@ are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
 - N-BK7 anchor values: SCHOTT datasheet (verify at schott.com).
 - No scraping behind access controls.
 
-**Crystals and tabulated optical constants are a different case.** The 179
+**Crystals and tabulated optical constants are a different case.** The 195
 crystal pages under `data/spectral/refractiveindex_info/` come from the
 [refractiveindex.info](https://refractiveindex.info) database, which its
 maintainer placed in the **public domain under CC0 1.0** ("you may copy,
@@ -207,7 +209,7 @@ Future: achromatic-doublet finder, Zemax export, cost data, Sellmeier fitting.
   adding a maker = add an entry, not code.
 - `data/manufacturers/<MFR>/README.md`: per-maker download instructions.
 - 2026-09 merge: 17 staged `.agf` → 2,526 normalized glasses (see table above).
-- 2026-09 merge: 179 refractiveindex.info pages (CC0 1.0) → crystal materials
+- 2026-09 merge: 195 refractiveindex.info pages (CC0 1.0) → crystal materials
   covering 17 compounds, the first non-glass material class.
 
 
