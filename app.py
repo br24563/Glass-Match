@@ -292,6 +292,24 @@ with tabs[1]:
             st.caption(f"Source: {r['source_name']} ({r['source_id']}) | "
                        f"license: {r['license']} | {r['notes']} {r['source_url']}")
     coef = db.sellmeier_for(gid)
+    n_ref_wl = st.number_input("Reference wavelength for n (nm)", 100.0, 20000.0,
+                               587.6, 1.0, key=f"nref_{gid}")
+    n_val, n_dtype = db.n_at(gid, n_ref_wl)
+    if n_val is not None:
+        st.markdown(f"**Refractive index at {n_ref_wl:g} nm**: `{n_val:.5f}` "
+                    f"- *{n_dtype}*")
+    else:
+        st.info(f"No refractive index available for this material at "
+                f"{n_ref_wl:g} nm (outside the range the cited reference "
+                "covers, or the page's dispersion formula is not implemented). "
+                "Nothing is extrapolated.")
+    tab = db.spectral_nk_for(gid)
+    if tab is not None and len(tab):
+        with st.expander(f"Tabulated optical constants ({len(tab)} samples, "
+                         "literature values)"):
+            st.dataframe(tab.head(400), width="stretch")
+            st.caption("Verbatim from the cited reference via refractiveindex.info "
+                       "(CC0 1.0). No smoothing or fitting applied.")
     if coef is not None:
         from glassmatch.importers.agf import is_sellmeier1_formula
         ok = is_sellmeier1_formula(coef.get("formula"))
@@ -348,6 +366,7 @@ with tabs[2]:
     wls = np.linspace(max(wl_min_um, 0.30), min(max(wl_max_um, 0.31), 2.5), 60)
     dcurves, tcurves = {}, {}
     non_sell, t_manufacturer, t_calculated, t_missing = [], [], [], []
+    tabulated = []
     for g in sel:
         # --- transmission: manufacturer rows preferred, Fresnel fallback ---
         tdf = t_groups.get(str(g))
@@ -369,8 +388,25 @@ with tabs[2]:
             t_calculated.append(g)
         else:
             t_missing.append(g)
-        # --- dispersion: verified Sellmeier fits only ---
+        # --- dispersion: verified Sellmeier fits, or tabulated crystal n ---
         status = db.dispersion_status(g)
+        tab = db.spectral_nk_for(g)
+        if tab is not None and len(tab.dropna(subset=["n"])) >= 2:
+            # Crystal page with a measured table: plot the source samples
+            # themselves rather than a fit, and label them as such.
+            npts = tab.dropna(subset=["n"]).copy()
+            dcurves[g] = pd.DataFrame({
+                "wavelength_um": npts["wavelength_um"], "n": npts["n"]})
+            if g in t_missing:
+                tcurves[g] = pd.DataFrame({
+                    "wavelength_um": npts["wavelength_um"],
+                    "transmission_pct": npts["n"].map(
+                        lambda n: fresnel_transmission(n) * 100),
+                    "data_type": "calculated (Fresnel, uncoated, from tabulated n)"})
+                t_calculated.append(g)
+                t_missing.remove(g)
+            tabulated.append(g)
+            continue
         if status != "sellmeier1":
             non_sell.append(g)
             continue
@@ -386,7 +422,18 @@ with tabs[2]:
     if dcurves:
         st.plotly_chart(dispersion_figure(dcurves, "nm" if wl_unit == "nm" else "um"),
                         width="stretch")
-        st.caption("CALCULATED from Sellmeier coefficients - not manufacturer tables.")
+        if tabulated:
+            st.caption(
+                f"Tabulated source measurements: {len(tabulated)} material(s) - "
+                "plotted verbatim, no fit. Remaining traces are CALCULATED from "
+                "Sellmeier coefficients, not manufacturer tables.")
+        else:
+            st.caption("CALCULATED from Sellmeier coefficients - not "
+                       "manufacturer tables.")
+        if tabulated:
+            st.info("Tabulated n(λ) samples span a wider range than the glass "
+                    "window above; the plot uses each material's own measured "
+                    "wavelengths.")
     if tcurves:
         st.plotly_chart(transmission_figure(tcurves, "nm" if wl_unit == "nm" else "um",
                                             band=(wl_min_um, wl_max_um)),

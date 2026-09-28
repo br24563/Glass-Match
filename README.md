@@ -5,8 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,526 glasses · 17 makers · 25 traceable sources** — search, rank, compare,
-and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
+**2,705 materials · 18 source collections · 204 traceable sources** — search,
+rank, compare, and inspect provenance for oxide glasses, crystals, IR
+materials, polymers, and moldables.
 
 ![GlassMatch matching screenshot](docs/screenshots/01_matching.png)
 ![GlassMatch spectral screenshot](docs/screenshots/02_spectral.png)
@@ -44,6 +45,15 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
   are all evaluated). The other 1,872 rows are series/polynomial forms that
   fail that check — they are stored verbatim and **never** evaluated, and the
   UI says so on the glass page.
+- **Crystal materials** — 179 pages covering CaF₂, MgF₂, BaF₂, SrF₂, LiF, LaF₃,
+  sapphire, fused silica/quartz, spinel, YAG, ZnSe, ZnS, Ge, Si, CdTe, GaAs and
+  Te, from [refractiveindex.info](https://refractiveindex.info) (public domain,
+  **CC0 1.0**, so unlike the manufacturer catalogs it ships with the repo). Each
+  cites the paper it came from. Crystals have no n_d/V_d, so the detail page
+  gives you a **reference-wavelength control** and tells you whether the number
+  is a source measurement, an interpolation between samples, or an evaluation
+  of a published dispersion fit — and says "unavailable" rather than
+  extrapolating when no source covers your wavelength.
 - Glass detail pages, 2-5 glass comparison, database + source explorers
   (material-class filter, obsolete toggle, per-maker coverage table).
 - User CSV + manufacturer `.agf` import with validation; CSV/JSON export
@@ -108,8 +118,10 @@ for glasses with no manufacturer rows and is always labelled calculated.
 - `manufacturers.csv`, `glasses.csv`, `properties.csv` (long format with
   source_id + data_type), `sources.csv`, `sellmeier.csv` (+`transmission.csv`,
   `equivalents.csv`).
-- `material_class` ∈ {oxide_glass, chalcogenide, polymer, moldable},
+- `material_class` ∈ {oxide_glass, crystal, chalcogenide, polymer, moldable},
   `status` ∈ {standard, obsolete}; both default safely on legacy files.
+- `spectral_nk.csv` holds tabulated optical constants (wavelength, n, k) for
+  crystal pages, verbatim with a per-row `source_id`.
 - Dispersion gate: a `formula` beginning `Sellmeier` means plottable; the
   importer earns that label only by reproducing the catalog n_d within 0.002.
   Everything else is stored verbatim as `Non-dispersable (...) - archived,
@@ -132,7 +144,7 @@ add a manufacturer without writing any Python. Release history is in
 | HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,657 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,526** | 653 verified Sellmeier curves (4 two-term, 641 three-term, 8 four-term) · 1,872 archived non-dispersable · 64k transmission rows |
+| **Total** | **2,705** | 653 verified Sellmeier curves (4 two-term, 641 three-term, 8 four-term) · 1,872 archived non-dispersable · 179 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
@@ -143,14 +155,30 @@ are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
   stay in untracked `data/staging/`; only normalized rows ship.
 - Mirror `.agf` files: `mirror-vintage-unknown; verify vs manufacturer catalog`.
 - N-BK7 anchor values: SCHOTT datasheet (verify at schott.com).
-- Sellmeier CC0 mirror via refractiveindex.info where noted. No scraping
-  behind access controls.
+- No scraping behind access controls.
+
+**Crystals and tabulated optical constants are a different case.** The 179
+crystal pages under `data/spectral/refractiveindex_info/` come from the
+[refractiveindex.info](https://refractiveindex.info) database, which its
+maintainer placed in the **public domain under CC0 1.0** ("you may copy,
+modify, and distribute ... even for commercial purposes, without asking
+permission"). Those files are therefore *committed here* — they are the
+provenance for every crystal number, and the licence permits it. Each page
+records the paper it was taken from, and GlassMatch carries that citation
+through to `sources.csv` (e.g. CaF2 n_d <- Malitson, *Appl. Opt.* **2**, 1103
+(1963), DOI `10.1364/AO.2.001103`). The underlying papers remain the property of
+their authors; GlassMatch redistributes the compiled constants, not the
+publications. Refresh with `python scripts/fetch_refractiveindex.py`, which
+pins a manifest with a SHA-256 per file.
 
 ## Data integrity
 
 data_type is always shown: manufacturer-reported vs GlassMatch-calculated
 (Sellmeier evaluation, Fresnel transmission estimate) vs interpolated vs
-user_imported. Calculated values never pose as manufacturer data.
+literature (a value read straight out of a cited table) vs user_imported.
+Calculated values never pose as manufacturer data. Where no source covers a
+requested wavelength or formula, GlassMatch reports the value as unavailable
+rather than extrapolating one.
 
 **Conflicting transmission samples are quarantined, not resolved.** Some source
 catalogs list the same wavelength twice with different values - a data-entry
@@ -179,5 +207,7 @@ Future: achromatic-doublet finder, Zemax export, cost data, Sellmeier fitting.
   adding a maker = add an entry, not code.
 - `data/manufacturers/<MFR>/README.md`: per-maker download instructions.
 - 2026-09 merge: 17 staged `.agf` → 2,526 normalized glasses (see table above).
+- 2026-09 merge: 179 refractiveindex.info pages (CC0 1.0) → crystal materials
+  covering 17 compounds, the first non-glass material class.
 
 

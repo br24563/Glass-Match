@@ -7,6 +7,14 @@ data/staging/
 data/manufacturers/**/*.agf
 data/manufacturers/**/*.AGF
 
+# The refractiveindex.info pages under data/spectral/ are CC0 1.0 public-domain
+# optical constants, so they ARE committed: they are the provenance for every
+# crystal row in the database, and unlike the .agf catalogs above they may be
+# redistributed. Un-ignore explicitly so this stays intentional rather than
+# depending on the absence of some other rule.
+!data/spectral/refractiveindex_info/
+!data/spectral/refractiveindex_info/**
+
 g2.log
 
 __pycache__/

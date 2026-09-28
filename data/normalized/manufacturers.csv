@@ -1,18 +1,19 @@
 manufacturer_id,name,website,notes
-SCHOTT,SCHOTT AG,https://www.schott.com/en-us/products/optical-glass-p1000267,German specialty-glass manufacturer; optical glass catalog
-OHARA,OHARA Corporation,https://oharacorp.com/,Japanese optical glass manufacturer
-HOYA,HOYA Corporation Optics Division,https://www.hoya.co.jp/english/,Japanese optical glass manufacturer
+ARCHER,Archer OpTx,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+ARTON,JSR Arton,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
 CDGM,CDGM Glass Co. Ltd.,http://www.cdgmgd.com/,Chinese optical glass manufacturer (China Daheng / CDGM)
-SUMITA,SUMITA Optical Glass Inc.,https://www.sumita-optical.co.jp/en/,Japanese optical glass manufacturer
 CORNING,Corning Incorporated,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
 HIKARI,HIKARI Glass,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
-LZOS,LZOS / Shvabe,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
-NIKON,Nikon Corporation,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+HOYA,HOYA Corporation Optics Division,https://www.hoya.co.jp/english/,Japanese optical glass manufacturer
 INFRARED,Infrared glass (generic),https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
 LIGHTPATH,LightPath Technologies,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+LZOS,LZOS / Shvabe,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+NIKON,Nikon Corporation,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+OHARA,OHARA Corporation,https://oharacorp.com/,Japanese optical glass manufacturer
+RII,refractiveindex.info,https://refractiveindex.info,"Public-domain (CC0 1.0) compilation of literature optical constants. Not a manufacturer: each row is one published measurement of one material, cited individually."
 RPO,Rochester Precision Optics,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
+SCHOTT,SCHOTT AG,https://www.schott.com/en-us/products/optical-glass-p1000267,German specialty-glass manufacturer; optical glass catalog
+SUMITA,SUMITA Optical Glass Inc.,https://www.sumita-optical.co.jp/en/,Japanese optical glass manufacturer
+TOPAS,TOPAS COC,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
 UMICORE,Umicore,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
 ZEON,Zeon Corporation,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
-ARTON,JSR Arton,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
-TOPAS,TOPAS COC,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.
-ARCHER,Archer OpTx,https://github.com/nzhagen/zemaxglass/tree/master/src/ZemaxGlass/AGF_files,Third-party mirror via nzhagen/zemaxglass; vintage unknown.

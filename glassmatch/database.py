@@ -41,6 +41,7 @@ class GlassDatabase:
     sources: pd.DataFrame = field(default_factory=pd.DataFrame)
     sellmeier: pd.DataFrame = field(default_factory=pd.DataFrame)
     transmission: pd.DataFrame = field(default_factory=pd.DataFrame)
+    spectral_nk: pd.DataFrame = field(default_factory=pd.DataFrame)
     equivalents: pd.DataFrame = field(default_factory=pd.DataFrame)
     @classmethod
     def load(cls, data_dir: Path | str = DEFAULT_DATA_DIR) -> "GlassDatabase":
@@ -65,6 +66,7 @@ class GlassDatabase:
             sources=_read("sources.csv"),
             sellmeier=_read("sellmeier.csv", required=False),
             transmission=_read("transmission.csv", required=False),
+            spectral_nk=_read("spectral_nk.csv", required=False),
             equivalents=_read("equivalents.csv", required=False),
         )
         for _col in ("material_class", "status"):
@@ -75,7 +77,7 @@ class GlassDatabase:
                 db.glasses[_col] = db.glasses[_col].fillna(default).replace("", default)
         if not db.glasses.empty:
             db.glasses["glass_id"] = db.glasses["glass_id"].astype(str)
-        for frame in (db.properties, db.sellmeier):
+        for frame in (db.properties, db.sellmeier, db.spectral_nk):
             if not frame.empty and "glass_id" in frame.columns:
                 frame["glass_id"] = frame["glass_id"].astype(str)
         return db
@@ -203,6 +205,78 @@ class GlassDatabase:
             return self.equivalents
         return self.equivalents[(self.equivalents["glass_id_a"] == glass_id) |
                                 (self.equivalents["glass_id_b"] == glass_id)].copy()
+
+    def _spectral_nk_index(self) -> dict:
+        """glass_id -> {wavelength_um: (n, k, data_type)}, built once.
+
+        spectral_nk.csv is the largest table in the database (~135k rows), so
+        the per-glass slice is memoized rather than rescanned per plot.
+        """
+        idx = getattr(self, "_nk_idx", None)
+        if idx is None:
+            idx = {}
+            f = self.spectral_nk
+            if not f.empty and "glass_id" in f.columns:
+                for gid, grp in f.groupby("glass_id", sort=False):
+                    idx[str(gid)] = {
+                        float(w): (None if pd.isna(n) else float(n),
+                                   None if pd.isna(k) else float(k),
+                                   str(dt))
+                        for w, n, k, dt in zip(grp["wavelength_um"],
+                                               grp.get("n"), grp.get("k"),
+                                               grp.get("data_type", "literature"))}
+            self._nk_idx = idx
+        return idx
+
+    def spectral_nk_for(self, glass_id: str) -> pd.DataFrame | None:
+        """Tabulated n/k for a crystal, or None when the page had no table."""
+        pts = self._spectral_nk_index().get(str(glass_id))
+        if not pts:
+            return None
+        rows = [{"wavelength_um": w, "n": n, "k": k, "data_type": dt}
+                for w, (n, k, dt) in sorted(pts.items())]
+        return pd.DataFrame(rows)
+
+    def n_at(self, glass_id: str, wavelength_nm: float):
+        """n at a reference wavelength, plus how it was obtained.
+
+        Returns (value, data_type) or (None, None).  Crystals carry
+        `n_at_reference` rows at the standard lines; for an arbitrary
+        wavelength the tabulated spectral curve is interpolated when present,
+        and the value is labelled `interpolated` rather than presented as a
+        source measurement.
+        """
+        gid = str(glass_id)
+        tol = wavelength_nm * 1e-4
+        f = self.properties
+        if not f.empty:
+            # Each clause is parenthesised deliberately. In Python `&` binds
+            # tighter than `<`, so `a & b & c < tol` parses as `(a & b & c) < tol`
+            # - comparing a boolean Series to a float, which silently matched
+            # 21,264 of 21,272 rows instead of the single one intended.
+            near = ((pd.to_numeric(f["reference_wavelength_nm"],
+                                   errors="coerce") - wavelength_nm).abs() < tol)
+            hit = f[(f["glass_id"] == gid)
+                    & (f["property"] == "n_at_reference")
+                    & near]
+            if not hit.empty:
+                row = hit.iloc[0]
+                return float(row["value"]), str(row.get("data_type", ""))
+        df = self.spectral_nk_for(gid)
+        if df is None or df.empty:
+            return None, None
+        pts = df.dropna(subset=["n"])
+        if len(pts) < 2:
+            return None, None
+        w_um = wavelength_nm / 1000.0
+        lo, hi = float(pts["wavelength_um"].min()), float(pts["wavelength_um"].max())
+        if not (lo <= w_um <= hi):
+            return None, None
+        from glassmatch.importers.refractiveindex_yaml import _interp
+        val, _rng = _interp(w_um, list(zip(pts["wavelength_um"], pts["n"], None)))
+        if val is None or val != val:
+            return None, None
+        return float(val), "interpolated"
 
     def summary_frame(self) -> pd.DataFrame:
         import pandas as pd  # local import keeps module light

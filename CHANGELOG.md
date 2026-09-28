@@ -4,6 +4,65 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.6.0] - 2026-09-27
+
+### Added
+- **Crystal materials** (179 pages, 17 compounds) via the refractiveindex.info
+  database, which is public domain under **CC0 1.0** and therefore - unlike the
+  manufacturer `.agf` catalogs - committed to the repository with the
+  normalized rows derived from it. Covers the transmissive crystals and
+  semiconductors that UV/mid-IR/far-IR systems are actually built from and
+  that the glass catalogs omit entirely: CaF2, MgF2, BaF2, SrF2, LiF, LaF3,
+  sapphire (Al2O3), fused silica / quartz (SiO2), spinel (MgAl2O4), YAG, ZnSe,
+  ZnS, Ge, Si, CdTe, GaAs, Te.
+- `data/normalized/spectral_nk.csv` - 135,347 tabulated optical-constant samples
+  (wavelength, n, k) stored verbatim with per-row source. The largest table in
+  the database.
+- `n_at_reference` properties at the standard lines (0.4861 / 0.5876 / 0.6563 /
+  1 / 2 / 3 / 4 / 5 / 8 / 10 / 12 um), each labelled `calculated` when it came
+  from a dispersion fit and `interpolated` when it came from a table.
+- `GlassDatabase.n_at(glass_id, wavelength_nm)` and `spectral_nk_for()`.
+  Crystals have no n_d/V_d, so the Glass Detail page now offers a reference
+  wavelength control and reports the basis of the number; where no source
+  covers the wavelength it says so and extrapolates nothing.
+- Spectral tab plots tabulated n(λ) verbatim for crystals, labelled as source
+  measurements rather than fits.
+- `scripts/fetch_refractiveindex.py` (pinned manifest with SHA-256 per file)
+  and `scripts/merge_refractiveindex.py --dry-run`.
+- 19 new tests.
+
+### Fixed
+- **A merge helper destroyed 19,904 property values.** Filtering with
+  `old[~old[list_of_cols].astype(str).isin(keys)]` builds a boolean *DataFrame*,
+  and `frame[boolean_frame]` selects **columns**, not rows. The result had no
+  columns, so concatenating it left the correct row count with every value
+  null. Caught by the existing provenance tests, recovered from git, and now
+  covered by `test_upsert_preserves_existing_rows`.
+- **Operator-precedence bug in the new `n_at` lookup.** `&` binds tighter than
+  `<` in Python, so `a & b & (c - w).abs() < tol` parsed as
+  `(a & b & (c - w).abs()) < tol` - comparing a boolean Series against a float -
+  and matched 21,264 of 21,272 rows instead of one, returning NaN indices.
+  Clauses are now parenthesised explicitly and `test_n_at_returns_exactly_one_
+  reference_row` guards it.
+
+### Notes
+- The upstream `formula 1` coefficient layout is **`[T, B1, C1, B2, C2, ...]` -
+  interleaved, with each C a resonance *wavelength* that must be squared.**
+  Reading it as grouped B's then C's returns a smooth, plausible-looking curve
+  that is simply not the material (CaF2 came out at 1.258 instead of 1.434).
+  Verified against the published Malitson constants: the squared C values are
+  0.00252643 / 0.01007833 / 1200.55597 and the fit returns n(587.6 nm) =
+  1.43385 against a published 1.43376. Pinned by
+  `test_rii_formula_is_interleaved_and_squares_c`.
+- `tabulated n2` is **non-linear** index (~1e-20), not n squared; 88 such blocks
+  are skipped rather than misread. `formula 2/4/5/7` (30 blocks) are not
+  implemented - the equations are not in the data files, and guessing them
+  would be fabrication, so those materials report no index rather than a
+  wrong one.
+- Every crystal row cites the specific paper it came from (e.g. CaF2
+  n_d = 1.43385 <- Malitson, *Appl. Opt.* 2, 1103 (1963), DOI
+  10.1364/AO.2.001103), carried through `sources.csv`.
+
 ## [0.5.0] - 2026-09-27
 
 ### Added
