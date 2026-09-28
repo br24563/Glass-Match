@@ -1,0 +1,21 @@
+# Normalize line endings in the repository; convert on checkout per platform.
+# Without this, Windows checkouts rewrite every file as CRLF and produce
+# whole-file diffs against the Linux CI checkout.
+* text=auto eol=lf
+
+# Batch files must stay CRLF or cmd.exe mis-parses them on Windows.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Data and docs.
+*.csv text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.ico binary

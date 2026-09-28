@@ -447,7 +447,18 @@ def import_agf(path, manufacturer: str, source_id: str,
     glasses, props, sell, trans, issues = parse_agf_text(
         read_agf_file(path), manufacturer, source_id, material_class)
     if trans is not None and not trans.empty:
-        from glassmatch.validation import split_transmission_conflicts
+        from glassmatch.validation import (dedupe_transmission,
+                                           split_transmission_conflicts)
+        # Identical duplicates first (no information lost), then conflicts
+        # (never collapsed - quarantined with both values recorded).
+        trans, dupes = dedupe_transmission(trans)
+        if not dupes.empty:
+            issues.append({
+                "line": "", "glass": f"{len(dupes)} duplicate sample(s)",
+                "issue": (f"{len(dupes)} byte-identical transmission sample(s) "
+                          "collapsed (same glass, wavelength, thickness and "
+                          "value) - no information lost"),
+            })
         clean, conflicts, dropped = split_transmission_conflicts(trans)
         for _, r in conflicts.iterrows():
             issues.append({

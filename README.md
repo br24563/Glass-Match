@@ -11,10 +11,12 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
 ![GlassMatch matching screenshot](docs/screenshots/01_matching.png)
 ![GlassMatch spectral screenshot](docs/screenshots/02_spectral.png)
 ![GlassMatch glass detail screenshot](docs/screenshots/03_detail.png)
+![GlassMatch equivalency finder screenshot](docs/screenshots/05_equivalency.png)
 ![GlassMatch data sources screenshot](docs/screenshots/04_sources.png)
 
 > Screenshots captured from a live run (`start.bat`); regenerate with
-> `python scripts/capture_screenshots.py`.
+> `python scripts/capture_screenshots.py` (needs `pip install playwright` and a
+> local Microsoft Edge install).
 
 ## Features
 

@@ -115,6 +115,27 @@ def find_transmission_conflicts(t: pd.DataFrame,
     return pd.DataFrame(rows, columns=CONFLICT_COLUMNS)
 
 
+def dedupe_transmission(t: pd.DataFrame, value_col: str = "transmission"):
+    """(clean, removed) - collapse byte-identical duplicate samples.
+
+    A duplicate is only "identical" when glass, wavelength, thickness *and*
+    value all match, so collapsing one loses no information. This is distinct
+    from :func:`find_transmission_conflicts`, which handles the same key
+    carrying *different* values - those are quarantined, never collapsed.
+
+    The removed rows are returned so the caller can record them; nothing is
+    dropped silently.
+    """
+    if t is None or t.empty:
+        return (t, t.iloc[0:0]) if t is not None else (pd.DataFrame(), pd.DataFrame())
+    key = [c for c in ("glass_id", "wavelength_um", "thickness_mm", value_col)
+           if c in t.columns]
+    if len(key) < 4:
+        return t, t.iloc[0:0]
+    keep_mask = ~t.duplicated(subset=key, keep="first")
+    return t[keep_mask].copy(), t[~keep_mask].copy()
+
+
 def split_transmission_conflicts(t: pd.DataFrame,
                                  value_col: str = "transmission"):
     """(clean, conflicts, conflict_rows) - quarantine every row of a

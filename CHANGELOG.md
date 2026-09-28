@@ -4,6 +4,38 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.3.3] - 2026-09-25
+
+### Fixed
+- **Displayed transmission carried binary-float noise.** The Glass Detail
+  caption rendered `98.49999999999999%`, because a band mean of binary floats
+  was interpolated straight into an f-string. Percentages are now rounded to
+  one decimal where they are produced, so the results table, the detail caption
+  and the CSV/JSON exports can no longer disagree. Covered by
+  `tests/test_display_rounding.py`, which first reproduces the noise and then
+  asserts the rounded value, checks that provenance labels are unaffected, and
+  checks that a mode which cannot be satisfied still reports missing rather
+  than a rounded zero.
+
+### Changed
+- **Transmission quality report: 114 flags to 0.** All were byte-identical
+  duplicate rows (same glass, wavelength, thickness *and* value), so collapsing
+  them loses no information. Deduplication now happens in the importer and is
+  recorded per source in `data/normalized/transmission_dedup.csv`. The two
+  mechanisms stay deliberately separate: dedupe removes rows that say the
+  *same* thing twice, while conflict quarantine keeps rows that *disagree* and
+  records the disagreement for review.
+- Screenshots regenerated against the current UI, including a fifth shot of the
+  equivalency finder. `scripts/capture_screenshots.py` gained per-shot scroll
+  anchors and a taller viewport, so each frame shows real ranked results rather
+  than a section header. Reviewing those frames is what exposed the float-noise
+  bug above.
+
+### Added
+- `.gitattributes` normalising line endings in the repository (LF) while
+  checking out `.bat` launchers as CRLF, so Windows/macOS/Linux checkouts do not
+  produce whole-file diffs or disagree about line endings.
+
 ## [0.3.2] - 2026-09-25
 
 ### Fixed
