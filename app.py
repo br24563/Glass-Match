@@ -208,6 +208,8 @@ for gid in summary["glass_id"]:
 
 results = match_glasses(summary, requirements, w_in, transmissions=trans,
                         require_data=require_data)
+n_excluded = int(results.attrs.get("excluded_count", 0))
+excluded_examples = results.attrs.get("excluded_examples", [])
 
 tabs = st.tabs(["Matching Glasses", "Glass Detail", "Spectral Analysis",
                 "Comparison", "Database Explorer", "Data Sources",
@@ -216,6 +218,14 @@ tabs = st.tabs(["Matching Glasses", "Glass Detail", "Spectral Analysis",
 with tabs[0]:
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    if n_excluded:
+        detail = ", ".join(f"{r['glass_id']} (no {r['blocking_missing']})"
+                           for r in excluded_examples[:3])
+        st.info(
+            f"**{n_excluded:,} material(s) excluded** by \u201cRequire available "
+            f"data\u201d \u2014 they have no value for a property you set a "
+            f"requirement on. Example: {detail}. Clear the checkbox to see them "
+            f"anyway, flagged as missing rather than failed.")
     mf_match = st.multiselect("Manufacturers in scope", sorted(results["manufacturer"].unique()),
                               default=sorted(results["manufacturer"].unique()))
     scoped = results[results["manufacturer"].isin(mf_match)] if mf_match else results.iloc[0:0]

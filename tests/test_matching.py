@@ -32,11 +32,33 @@ def test_missing_data_flagged_not_failed():
 
 
 def test_require_data_zeroes_incomplete():
+    """A glass with no value for a property the user *asked about* fails.
+
+    The requirement here is on transmission and the glass has none, so it is
+    excluded and scored 0. This test used to pass a glass that was missing
+    density/CTE/transmission while only constraining n_d, and asserted 0.0 -
+    which is the bug: the glass answered the only question that was asked and
+    was being thrown away for properties nobody mentioned.
+    """
+    props = {"nd": 1.517, "vd": 64.0, "density": None, "cte": None, "transmission": None}
+    req = {"nd_min": 1.5, "nd_max": 1.55, "transmission_min": 90.0}
+    sc = score_glass(props, req, {"nd": 1, "vd": 1, "transmission": 1, "density": 1, "cte": 1},
+                     require_data=True)
+    assert sc["excluded"] is True
+    assert sc["blocking_missing"] == ["transmission"]
+    assert sc["overall"] == 0.0
+
+
+def test_require_data_ignores_properties_that_were_not_constrained():
+    """Missing density cannot fail a query that only asked about n_d."""
     props = {"nd": 1.517, "vd": 64.0, "density": None, "cte": None, "transmission": None}
     req = {"nd_min": 1.5, "nd_max": 1.55}
     sc = score_glass(props, req, {"nd": 1, "vd": 1, "transmission": 1, "density": 1, "cte": 1},
                      require_data=True)
-    assert sc["overall"] == 0.0
+    assert sc["excluded"] is False
+    assert sc["blocking_missing"] == []
+    assert "density" in sc["missing"]          # still flagged...
+    assert sc["overall"] > 0                    # ...and still discounted by coverage
 
 
 def test_match_sorts_descending():

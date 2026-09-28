@@ -38,6 +38,25 @@ def _band_score(value, lo, hi) -> tuple[float, str]:
     return max(0.0, 1.0 - (v - hi) / (0.5 * width + abs(hi) * 0.05 + 1e-9)), "above"
 
 
+def constrained_keys(requirements: dict) -> set:
+    """Properties the user actually put a requirement on.
+
+    "Require available data" must mean *this* glass has the data needed to
+    answer the question that was asked. A glass with a perfect n_d, V_d and
+    transmission but no published density satisfies a query about n_d, V_d and
+    transmission; excluding it would be a bug, and dropping it on any missing
+    property is how "require data" silently became "require everything".
+    """
+    req = requirements or {}
+    keys = set()
+    for prop in ("nd", "vd", "density", "cte"):
+        if req.get(f"{prop}_min") is not None or req.get(f"{prop}_max") is not None:
+            keys.add(prop)
+    if req.get("transmission_min") is not None:
+        keys.add("transmission")
+    return keys
+
+
 def is_ir_glass(row) -> bool:
     """True when V_d is physically meaningless for this glass."""
     try:
@@ -89,13 +108,19 @@ def score_glass(props: dict, requirements: dict, weights: dict,
     for k, v in out.items():
         if v is None:
             missing.append(k)
-    if require_data and missing:
+    # "Require available data" fails a glass only when a property the user
+    # actually asked about has no value to judge it by.
+    blocking = [k for k in missing if k in constrained_keys(req)]
+    out["blocking_missing"] = blocking
+    out["excluded"] = bool(require_data and blocking)
+    num = sum(w[k] * (out[k] if out[k] is not None else 0.0) for k in WEIGHT_KEYS)
+    den = sum(w[k] for k in WEIGHT_KEYS if out[k] is not None) or 1.0
+    coverage = sum(w[k] for k in WEIGHT_KEYS if out[k] is not None)
+    out["overall"] = (num / den) * (0.5 + 0.5 * coverage)
+    if out["excluded"]:
+        # Zero the headline number too, so an excluded row can never be mistaken
+        # for a poor match if it is ever shown.
         out["overall"] = 0.0
-    else:
-        num = sum(w[k] * (out[k] if out[k] is not None else 0.0) for k in WEIGHT_KEYS)
-        den = sum(w[k] for k in WEIGHT_KEYS if out[k] is not None) or 1.0
-        coverage = sum(w[k] for k in WEIGHT_KEYS if out[k] is not None)
-        out["overall"] = (num / den) * (0.5 + 0.5 * coverage)
     out["flags"] = flags
     out["missing"] = missing
     out["completeness"] = 1.0 - len(missing) / len(WEIGHT_KEYS)
@@ -125,8 +150,21 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                      "compatibility": round(float(sc["overall"]) * 100, 1),
                      "completeness": round(float(sc["completeness"]) * 100, 1),
                      "missing": ", ".join(sc["missing"]) if sc["missing"] else "complete",
+                     "excluded": bool(sc["excluded"]),
+                     "blocking_missing": ", ".join(sc["blocking_missing"]),
                      **{f"score_{k}": (None if sc[k] is None else round(float(sc[k]) * 100, 1))
                         for k in WEIGHT_KEYS}})
     out = pd.DataFrame(rows)
-    return out.sort_values("compatibility", ascending=False).reset_index(drop=True)
+    out = out.sort_values("compatibility", ascending=False).reset_index(drop=True)
+    # Drop the rows "require data" rejected, and record how many went so the UI
+    # can say so rather than silently shrinking the result set.
+    excluded = out[out["excluded"]] if "excluded" in out else out.iloc[0:0]
+    kept = out[~out["excluded"]].drop(columns=["excluded", "blocking_missing"]) \
+        if "excluded" in out else out
+    kept = kept.reset_index(drop=True)
+    kept.attrs["excluded_count"] = int(len(excluded))
+    kept.attrs["excluded_examples"] = (
+        excluded.head(5)[["glass_id", "blocking_missing"]].to_dict("records")
+        if len(excluded) else [])
+    return kept
 
