@@ -4,6 +4,30 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.6.2] - 2026-09-28
+
+### Fixed
+- **`PyYAML` is now declared in `requirements.txt`.** It was never in the
+  requirements, and it is not only an importer-time dependency:
+  `GlassDatabase.n_at()` imports `refractiveindex_yaml` *inside the function* to
+  interpolate crystal n, so a fresh clone raised `ModuleNotFoundError: No module
+  named 'yaml'` the moment a user opened a crystal glass and asked for its index
+  at a wavelength. The gap was invisible in development because the local venv
+  had acquired PyYAML as a side effect of the screenshot-capture tooling -
+  `pip show pyyaml` reported `Required-by:` (empty), i.e. a stray top-level
+  install. CI caught it; a clean `git clone` + `pip install -r requirements.txt`
+  reproduces it exactly.
+
+### Added
+- **Dependency guard** (`tests/test_repo_layout.py`): AST-walks the repository,
+  builds the transitive import graph reachable from `app.py` — including
+  function-local imports, which is how PyYAML hid — and asserts every
+  third-party module reached is declared in `requirements*.txt`. The analysis
+  is itself tested, because the first version of it could not fail: it skipped
+  every token containing `=` (discarding all pinned requirements) and matched
+  comment prose, since a bare `-` normalises to `""` and `""` is a substring of
+  every string.
+
 ## [0.6.1] - 2026-09-28
 
 ### Added
