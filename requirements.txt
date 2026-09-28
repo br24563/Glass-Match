@@ -4,3 +4,8 @@ numpy>=1.26
 scipy>=1.11
 plotly>=5.18
 openpyxl>=3.1
+# Parses the refractiveindex.info (CC0) source pages in
+# glassmatch/importers/refractiveindex_yaml.py. GlassDatabase.n_at() imports
+# that module lazily to interpolate crystal n, so the running app needs this
+# too - it is not only an importer-time dependency.
+PyYAML>=6.0
