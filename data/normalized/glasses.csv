@@ -1943,6 +1943,8 @@ RII-CAF2-BOSOMWORTH-200K,RII,Bosomworth-200K,Bosomworth-200K,Calcium fluoride (f
 RII-CAF2-BOSOMWORTH-300K,RII,Bosomworth-300K,Bosomworth-300K,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Bosomworth-300K'.,crystal,standard
 RII-CAF2-BOSOMWORTH-5K,RII,Bosomworth-5K,Bosomworth-5K,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Bosomworth-5K'.,crystal,standard
 RII-CAF2-BOSOMWORTH-80K,RII,Bosomworth-80K,Bosomworth-80K,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Bosomworth-80K'.,crystal,standard
+RII-CAF2-DAIMON-20,RII,Daimon-20,Daimon-20,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Daimon-20'.,crystal,standard
+RII-CAF2-DAIMON-25,RII,Daimon-25,Daimon-25,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Daimon-25'.,crystal,standard
 RII-CAF2-KAISER,RII,Kaiser,Kaiser,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Kaiser'.,crystal,standard
 RII-CAF2-LI,RII,Li,Li,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Li'.,crystal,standard
 RII-CAF2-MALITSON,RII,Malitson,Malitson,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Malitson'.,crystal,standard
@@ -1950,6 +1952,10 @@ RII-CAF2-ZHENG-186C,RII,Zheng-186C,Zheng-186C,Calcium fluoride (fluorite),Calciu
 RII-CAF2-ZHENG-21C,RII,Zheng-21C,Zheng-21C,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Zheng-21C'.,crystal,standard
 RII-CAF2-ZHENG-368C,RII,Zheng-368C,Zheng-368C,Calcium fluoride (fluorite),Calcium fluoride (fluorite) (CaF2). refractiveindex.info page 'Zheng-368C'.,crystal,standard
 RII-CDTE-ADACHI,RII,Adachi,Adachi,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'Adachi'.,crystal,standard
+RII-CDTE-DEBELL-20K,RII,DeBell-20K,DeBell-20K,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'DeBell-20K'.,crystal,standard
+RII-CDTE-DEBELL-300K,RII,DeBell-300K,DeBell-300K,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'DeBell-300K'.,crystal,standard
+RII-CDTE-DEBELL-80K,RII,DeBell-80K,DeBell-80K,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'DeBell-80K'.,crystal,standard
+RII-CDTE-MARPLE,RII,Marple,Marple,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'Marple'.,crystal,standard
 RII-CDTE-TREHARNE,RII,Treharne,Treharne,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'Treharne'.,crystal,standard
 RII-GAAS-ADACHI,RII,Adachi,Adachi,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Adachi'.,crystal,standard
 RII-GAAS-ASPNES,RII,Aspnes,Aspnes,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Aspnes'.,crystal,standard
@@ -1967,8 +1973,10 @@ RII-GAAS-SKAULI,RII,Skauli,Skauli,Gallium arsenide,Gallium arsenide (GaAs). refr
 RII-GE-AMOTCHKINA,RII,Amotchkina,Amotchkina,Germanium,Germanium (Ge). refractiveindex.info page 'Amotchkina'.,crystal,standard
 RII-GE-AMOTCHKINA-FILM,RII,Amotchkina-film,Amotchkina-film,Germanium,Germanium (Ge). refractiveindex.info page 'Amotchkina-film'.,crystal,standard
 RII-GE-ASPNES,RII,Aspnes,Aspnes,Germanium,Germanium (Ge). refractiveindex.info page 'Aspnes'.,crystal,standard
+RII-GE-BURNETT,RII,Burnett,Burnett,Germanium,Germanium (Ge). refractiveindex.info page 'Burnett'.,crystal,standard
 RII-GE-CIESIELSKI-20NM,RII,Ciesielski-20nm,Ciesielski-20nm,Germanium,Germanium (Ge). refractiveindex.info page 'Ciesielski-20nm'.,crystal,standard
 RII-GE-CIESIELSKI-2NM,RII,Ciesielski-2nm,Ciesielski-2nm,Germanium,Germanium (Ge). refractiveindex.info page 'Ciesielski-2nm'.,crystal,standard
+RII-GE-ICENOGLE,RII,Icenogle,Icenogle,Germanium,Germanium (Ge). refractiveindex.info page 'Icenogle'.,crystal,standard
 RII-GE-JELLISON,RII,Jellison,Jellison,Germanium,Germanium (Ge). refractiveindex.info page 'Jellison'.,crystal,standard
 RII-GE-LI-100K,RII,Li-100K,Li-100K,Germanium,Germanium (Ge). refractiveindex.info page 'Li-100K'.,crystal,standard
 RII-GE-LI-150K,RII,Li-150K,Li-150K,Germanium,Germanium (Ge). refractiveindex.info page 'Li-150K'.,crystal,standard
@@ -2067,6 +2075,8 @@ RII-SIO2-FRANTA,RII,Franta,Franta,Silicon dioxide (fused silica / quartz),Silico
 RII-SIO2-FRANTA-25C,RII,Franta-25C,Franta-25C,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Franta-25C'.,crystal,standard
 RII-SIO2-FRANTA-300C,RII,Franta-300C,Franta-300C,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Franta-300C'.,crystal,standard
 RII-SIO2-GAO,RII,Gao,Gao,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Gao'.,crystal,standard
+RII-SIO2-GHOSH-E,RII,Ghosh-e,Ghosh-e,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Ghosh-e'.,crystal,standard
+RII-SIO2-GHOSH-O,RII,Ghosh-o,Ghosh-o,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Ghosh-o'.,crystal,standard
 RII-SIO2-KISCHKAT,RII,Kischkat,Kischkat,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Kischkat'.,crystal,standard
 RII-SIO2-LEMARCHAND,RII,Lemarchand,Lemarchand,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Lemarchand'.,crystal,standard
 RII-SIO2-MALITSON,RII,Malitson,Malitson,Silicon dioxide (fused silica / quartz),Silicon dioxide (fused silica / quartz) (SiO2). refractiveindex.info page 'Malitson'.,crystal,standard
@@ -2082,11 +2092,16 @@ RII-SRF2-FELDMAN,RII,Feldman,Feldman,Strontium fluoride,Strontium fluoride (SrF2
 RII-SRF2-KAISER,RII,Kaiser,Kaiser,Strontium fluoride,Strontium fluoride (SrF2). refractiveindex.info page 'Kaiser'.,crystal,standard
 RII-SRF2-LI,RII,Li,Li,Strontium fluoride,Strontium fluoride (SrF2). refractiveindex.info page 'Li'.,crystal,standard
 RII-SRF2-RODRIGUEZ-DEMARCOS,RII,Rodriguez-de Marcos,Rodriguez-de Marcos,Strontium fluoride,Strontium fluoride (SrF2). refractiveindex.info page 'Rodriguez-de Marcos'.,crystal,standard
+RII-TE-CALDWELL-E,RII,Caldwell-e,Caldwell-e,Tellurium,Tellurium (Te). refractiveindex.info page 'Caldwell-e'.,crystal,standard
+RII-TE-CALDWELL-O,RII,Caldwell-o,Caldwell-o,Tellurium,Tellurium (Te). refractiveindex.info page 'Caldwell-o'.,crystal,standard
 RII-TE-CIESIELSKI,RII,Ciesielski,Ciesielski,Tellurium,Tellurium (Te). refractiveindex.info page 'Ciesielski'.,crystal,standard
 RII-TE-GUO-E,RII,Guo-e,Guo-e,Tellurium,Tellurium (Te). refractiveindex.info page 'Guo-e'.,crystal,standard
 RII-TE-GUO-O,RII,Guo-o,Guo-o,Tellurium,Tellurium (Te). refractiveindex.info page 'Guo-o'.,crystal,standard
+RII-TE-SHERMAN-E,RII,Sherman-e,Sherman-e,Tellurium,Tellurium (Te). refractiveindex.info page 'Sherman-e'.,crystal,standard
+RII-TE-SHERMAN-O,RII,Sherman-o,Sherman-o,Tellurium,Tellurium (Te). refractiveindex.info page 'Sherman-o'.,crystal,standard
 RII-Y3AL5O12-BOND,RII,Bond,Bond,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Bond'.,crystal,standard
 RII-Y3AL5O12-FRANTA,RII,Franta,Franta,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Franta'.,crystal,standard
+RII-Y3AL5O12-ZELMON,RII,Zelmon,Zelmon,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Zelmon'.,crystal,standard
 RII-ZNS-AMOTCHKINA,RII,Amotchkina,Amotchkina,Zinc sulfide,Zinc sulfide (ZnS). refractiveindex.info page 'Amotchkina'.,crystal,standard
 RII-ZNS-BOND,RII,Bond,Bond,Zinc sulfide,Zinc sulfide (ZnS). refractiveindex.info page 'Bond'.,crystal,standard
 RII-ZNS-OZAKI,RII,Ozaki,Ozaki,Zinc sulfide,Zinc sulfide (ZnS). refractiveindex.info page 'Ozaki'.,crystal,standard
@@ -2094,6 +2109,7 @@ RII-ZNS-QUERRY,RII,Querry,Querry,Zinc sulfide,Zinc sulfide (ZnS). refractiveinde
 RII-ZNSE-ADACHI,RII,Adachi,Adachi,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Adachi'.,crystal,standard
 RII-ZNSE-AMOTCHKINA,RII,Amotchkina,Amotchkina,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Amotchkina'.,crystal,standard
 RII-ZNSE-CONNOLLY,RII,Connolly,Connolly,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Connolly'.,crystal,standard
+RII-ZNSE-MARPLE,RII,Marple,Marple,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Marple'.,crystal,standard
 RII-ZNSE-QUERRY,RII,Querry,Querry,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Querry'.,crystal,standard
 RPO-BACD14_MOLD,RPO,BACD14_MOLD,BACD14_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-BSM16C_MOLD,RPO,BSM16C_MOLD,BSM16C_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard

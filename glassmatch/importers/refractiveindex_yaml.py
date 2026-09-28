@@ -50,11 +50,16 @@ from glassmatch.spectra import MAX_TERMS, sellmeier_n
 REFERENCE_UM = (0.4861, 0.5876, 0.6563, 1.0, 2.0, 3.0, 4.0, 5.0,
                 8.0, 10.0, 12.0)
 
-SUPPORTED_FORMULAS = ("formula 1",)
+SUPPORTED_FORMULAS = ("formula 1", "formula 2")
 TABULATED_TYPES = {"tabulated n": "n", "tabulated nk": "nk", "tabulated k": "k"}
+# Upstream uses two Sellmeier spellings that differ only in the units of C:
+#   formula 1 - C is a resonance WAVELENGTH in um, so it is squared on use
+#   formula 2 - C is already in um^2, used directly
+# Both are interleaved [T, B1, C1, B2, C2, ...].  Getting this wrong returns a
+# smooth curve for the wrong material, so the distinction is explicit here.
+SQUARES_C = {"formula 1": True, "formula 2": False}
 UNSUPPORTED = {
     "tabulated n2": "non-linear index n2, not n^2",
-    "formula 2": "formula 2 equation not implemented",
     "formula 4": "formula 4 equation not implemented",
     "formula 5": "formula 5 equation not implemented",
     "formula 7": "formula 7 equation not implemented",
@@ -118,7 +123,8 @@ def parse_ri_page(path: Path) -> dict | None:
             n = (len(coeffs) - 1) // 2 if coeffs else 0
             if coeffs and (len(coeffs) - 1) % 2 == 0 and 0 < n <= MAX_TERMS:
                 blocks["formula"].append({"coefficients": coeffs,
-                                          "range": rng[:2], "n_terms": n})
+                                          "range": rng[:2], "n_terms": n,
+                                          "kind": kind})
             else:
                 blocks["skipped"].append(
                     (kind, f"unsupported coefficient count ({len(coeffs)})"))
@@ -135,18 +141,20 @@ def parse_ri_page(path: Path) -> dict | None:
             "blocks": blocks}
 
 
-def n_from_rii_formula(coeffs: list, lam_um: float, n_terms: int | None = None) -> float:
-    """Upstream formula 1 -> n.
+def n_from_rii_formula(coeffs: list, lam_um: float, n_terms: int | None = None,
+                       square_c: bool = True) -> float:
+    """Upstream formula 1 / formula 2 -> n.
 
-    The upstream layout is ``[T, B1, C1, B2, C2, ...]`` - interleaved pairs
-    after a leading temperature term, with n = (len-1)/2 terms - and each C
-    is a resonance **wavelength** in um that must be squared.  Reading the
-    list as grouped B's followed by C's silently pairs every B with the wrong
-    C and returns a curve that is not the material's.
+    The layout is ``[T, B1, C1, B2, C2, ...]`` - interleaved pairs after a
+    leading temperature term, n = (len-1)/2 terms.  ``formula 1`` stores C as a
+    resonance **wavelength** in um and must be squared; ``formula 2`` already
+    stores C in um^2.  Reading the list as grouped B's then C's silently pairs
+    every B with the wrong C and returns a curve that is not the material's.
     """
     n = (len(coeffs) - 1) // 2 if n_terms is None else n_terms
     B = tuple(coeffs[1 + 2 * i] for i in range(n))
-    C_um2 = tuple(coeffs[2 + 2 * i] ** 2 for i in range(n))
+    raw = [coeffs[2 + 2 * i] for i in range(n)]
+    C_um2 = tuple(c * c for c in raw) if square_c else tuple(raw)
     return sellmeier_n(lam_um, B, C_um2)
 
 
@@ -195,23 +203,28 @@ def _prop(gid, source_id, name, value, unit, wl_um, dtype, note) -> dict:
 
 
 def _page_formulas(blocks: dict, box: dict) -> list:
-    """Formula-1 pages -> sellmeier rows, plus n at each covered reference."""
+    """Formula pages -> sellmeier rows, plus n at each covered reference."""
     gid, source_id = box["gid"], box["src"]
     rows, props = [], []
     for f in blocks["formula"]:
         coeffs, nterms = f["coefficients"], f["n_terms"]
+        kind = f.get("kind", "formula 1")
+        square_c = SQUARES_C[kind]
         lo, hi = (list(f["range"]) + [None, None])[:2]
+        c_note = ("its C coefficients are resonance wavelengths in um and are "
+                  "squared on evaluation" if square_c else
+                  "its C coefficients are already in um^2 and are used directly")
         row = {"glass_id": gid,
-               "formula": (f"Sellmeier-1 ({nterms}-term, "
-                           "refractiveindex.info formula 1)"),
+               "formula": (f"Sellmeier-1 ({nterms}-term, refractiveindex.info "
+                           f"{kind})"),
                "wavelength_um": (f"{lo}-{hi}" if lo and hi else ""),
                "source_id": source_id, "n_terms": nterms,
-               "notes": ("refractiveindex.info formula 1; its C coefficients are "
-                         "resonance wavelengths in um and are squared on "
-                         "evaluation. Verify against the cited reference.")}
+               "notes": (f"refractiveindex.info {kind}; {c_note}. "
+                         "Verify against the cited reference.")}
         for i in range(nterms):
+            c = coeffs[2 + 2 * i]
             row[f"B{i+1}"] = coeffs[1 + 2 * i]
-            row[f"C{i+1}_um2"] = coeffs[2 + 2 * i] ** 2
+            row[f"C{i+1}_um2"] = c * c if square_c else c
         rows.append(row)
         if lo and hi:
             for nm, v, note in (
@@ -224,9 +237,9 @@ def _page_formulas(blocks: dict, box: dict) -> list:
             if lo and hi and not (lo <= wl <= hi):
                 continue
             r = _prop(gid, source_id, "n_at_reference",
-                      n_from_rii_formula(coeffs, wl, nterms), "", wl,
+                      n_from_rii_formula(coeffs, wl, nterms, square_c), "", wl,
                       "calculated",
-                      f"Evaluated from the refractiveindex.info formula 1 "
+                      f"Evaluated from the refractiveindex.info {kind} "
                       f"{nterms}-term Sellmeier fit; not a tabulated value.")
             if r:
                 props.append(r)
