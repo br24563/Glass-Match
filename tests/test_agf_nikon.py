@@ -1,4 +1,4 @@
-"""Tests: Nikon multi-line polynomial CD rows stay verbatim, flagged non-Sellmeier."""
+"""Tests: Nikon multi-line polynomial CD rows stay verbatim, flagged non-dispersable."""
 from glassmatch.importers.agf import parse_agf_text
 
 NIKON_JFK5 = (
@@ -16,8 +16,12 @@ def test_nikon_polynomial_kept_verbatim_flagged():
     g, p, s, t, issues = parse_agf_text(NIKON_JFK5, "NIKON", "NIKON-TEST")
     assert len(g) == 1 and len(s) == 1
     row = s.iloc[0]
-    assert row["formula"].startswith("Non-Sellmeier")
+    # Labeled non-dispersable, and the label states the measured discrepancy
+    # rather than a bare verdict.
+    assert row["formula"].startswith("Non-dispersable")
+    assert "never evaluated" in row["formula"]
+    assert "1.76960" in row["formula"] and "1.48749" in row["formula"]
     assert abs(float(row["B1"]) - 2.188268550) < 1e-9  # verbatim, never "fixed"
     nd = float(p[p["property"] == "refractive_index_nd"].iloc[0]["value"])
     assert abs(nd - 1.487490) < 1e-9  # NM header still parses
-    assert any("Sellmeier" in i.get("issue", "") for i in issues)
+    assert any("n(d)" in i.get("issue", "") for i in issues)

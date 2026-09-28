@@ -52,7 +52,10 @@ class GlassDatabase:
                 if required:
                     raise FileNotFoundError(f"Missing database file: {path}")
                 return pd.DataFrame()
-            return pd.read_csv(path)
+            # Encoding is explicit: manufacturer comments preserved in the
+            # glass description are UTF-8, and a Windows locale default
+            # (cp1252) would fail to decode them.
+            return pd.read_csv(path, encoding="utf-8")
 
         db = cls(
             data_dir=data_dir,

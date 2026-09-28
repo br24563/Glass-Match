@@ -39,8 +39,11 @@ and inspect provenance for oxide glasses, IR materials, polymers, and moldables.
   flagged for review and never auto-merged; curated (source-backed) pairs are
   shown separately and are never overwritten.
 - Interactive Plotly dispersion + transmission plots (calculated curves labelled).
-  Non-Sellmeier rows (Nikon polynomials, Herzberger legacy) are archived
-  verbatim and **never** evaluated as Sellmeier — the UI says so explicitly.
+  Dispersion is drawn **only** where the archived coefficients reproduce the
+  catalog n_d at 587.6 nm (653 of 2,526 glasses; 2-, 3-, 4- and 5-term fits
+  are all evaluated). The other 1,872 rows are series/polynomial forms that
+  fail that check — they are stored verbatim and **never** evaluated, and the
+  UI says so on the glass page.
 - Glass detail pages, 2-5 glass comparison, database + source explorers
   (material-class filter, obsolete toggle, per-maker coverage table).
 - User CSV + manufacturer `.agf` import with validation; CSV/JSON export
@@ -107,8 +110,10 @@ for glasses with no manufacturer rows and is always labelled calculated.
   `equivalents.csv`).
 - `material_class` ∈ {oxide_glass, chalcogenide, polymer, moldable},
   `status` ∈ {standard, obsolete}; both default safely on legacy files.
-- Dispersion gate: `formula == "Sellmeier-1 (Zemax CD record)"` means plottable;
-  anything else is archived verbatim, never evaluated as Sellmeier.
+- Dispersion gate: a `formula` beginning `Sellmeier` means plottable; the
+  importer earns that label only by reproducing the catalog n_d within 0.002.
+  Everything else is stored verbatim as `Non-dispersable (...) - archived,
+  never evaluated`, with the measured discrepancy in the label.
 - Add a manufacturer: append rows to `manufacturers.csv`/`sources.csv`,
   then glasses + properties — or run `scripts/merge_agf.py` on a staged `.agf`.
   No matching/UI code changes.
@@ -127,7 +132,7 @@ add a manufacturer without writing any Python. Release history is in
 | HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,657 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,526** | 672 verified Sellmeier-1 · 64k transmission rows |
+| **Total** | **2,526** | 653 verified Sellmeier curves (4 two-term, 641 three-term, 8 four-term) · 1,872 archived non-dispersable · 64k transmission rows |
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.

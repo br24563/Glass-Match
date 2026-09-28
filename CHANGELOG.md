@@ -4,6 +4,43 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [0.5.0] - 2026-09-27
+
+### Added
+- **N-term Sellmeier support.** `sellmeier.csv` now carries `B1..B5` /
+  `C1_um2..C5_um2` and `n_terms`. Previously only the first three (B, C) pairs
+  were stored, so a genuine 4-term fit (NIKON NIFS-V) was silently truncated
+  into a wrong 3-term curve. 2-, 3-, 4- and 5-term fits are all evaluated now.
+- Manufacturer `GC` comments and any coefficients beyond the stored term limit
+  are folded into the glass `description` instead of being collected and thrown
+  away — **1,037 glasses regained their catalog comment**.
+- `tests/test_dispersion_terms.py` (10 tests) covering term storage, the n_d
+  gate, negative-C fits, and that surplus coefficients are recorded.
+
+### Changed
+- The dispersability gate is now stated in terms of what it measures: a `CD`
+  row is dispersable **iff it reproduces the catalog n_d at 587.6 nm to within
+  0.002**. Rows that fail are labelled
+  `Non-dispersable (...) - archived, never evaluated` with the measured
+  discrepancy in the label. 653 of 2,526 glasses are dispersable.
+- An intermediate revision of this work added a second gate rejecting any term
+  with `B <= 0` or `C <= 0`, on the theory that Sellmeier resonance terms are
+  positive. **That was wrong and was reverted**: OHARA ships genuine 3-term
+  fits with a negative C (S-BSL7 has `C2 = -1.18e-2 um^2`) that reproduce n_d to
+  1e-5. The rule silently stripped dispersion from S-BSL7, S-FPL51/52/55,
+  S-LAL14/18, S-PHM52/53 and the entire IR and polymer sets. The sign pattern is
+  now recorded as an observation, never used as a verdict.
+
+### Notes
+- 1,853 glasses carry `CD` rows in a series/polynomial form rather than a
+  Sellmeier fit. They are stored verbatim and never evaluated. Identifying those
+  forms would need vendor formula documentation; guessing one would be
+  fabrication, so GlassMatch reports them as unavailable instead.
+- Seven IR materials (AgCl, CdTe, Silicon, ZbLA, ZbLAN, ZnSe, LightPath
+  ECO550-E) have valid Sellmeier coefficients but a placeholder `n_d = 2.0` in
+  their catalog, so the gate correctly refuses them. Their curves are available
+  in the source catalogs.
+
 ## [0.4.0] - 2026-09-27
 
 ### Fixed
