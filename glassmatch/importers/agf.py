@@ -24,6 +24,9 @@ from __future__ import annotations
 import math
 import pandas as pd
 
+from glassmatch.validation import (DEFAULT_DENSITY_RANGE,
+                                   DENSITY_RANGES_BY_CLASS)
+
 FAMILY_GUESS = (
     ("FLUOR", "Fluor crown"), ("FK", "Fluor crown"), ("FPL", "Fluor crown"),
     ("FCD", "Fluor crown"), ("PFK", "Fluor crown"), ("FC", "Fluor crown"),
@@ -341,38 +344,36 @@ def _cd_block(cur: dict, nums: list, source_id: str,
 
 
 def _ed_block(cur: dict, nums: list, source_id: str) -> None:
-    """SCHOTT-style ED = environmental data: CTE(-30/+70) CTE(20/300) density dPgF.
+    """ED record: CTE(-30/+70) CTE(20/+300) density dPgF.
 
-    Observed: "ED 7.100000 8.300000 2.510000 -0.000900 0" for N-BK7 — CTEs in
-    1e-6/K, density in g/cm3, dPgF dimensionless. OHARA-style ED carries
-    different semantics, so only values passing tight plausibility gates are
-    stored; anything else is ignored (never guessed).
+    Observed SCHOTT/NIKON form: "ED 7.100000 8.300000 2.510000 -0.000900 0",
+    CTEs in 1e-6/K, density in g/cm3, dPgF dimensionless.
+
+    Each field is gated INDEPENDENTLY. A vendor that leaves one slot at 0.0
+    (meaning "not published") must not cost us the others: CDGM publishes
+    density but not CTE(-30/+70), while HIKARI and NIKON publish density but
+    not CTE(20/+300). Gating density on the CTE fields - as an earlier revision
+    did - silently discarded valid density for ~700 glasses. A missing CTE is
+    reported missing, never inferred from the other one: CTE(-30/+70) and
+    CTE(20/+300) are different quantities and are stored as separate
+    properties rather than collapsed into one.
     """
     gid = cur["glass_row"]["glass_id"]
-    if len(nums) >= 3 and 0 < nums[0] < 30 and 0 < nums[1] < 30 \
-            and 1.5 <= nums[2] <= 9.0:
+    mclass = str(cur["glass_row"].get("material_class") or "oxide_glass")
+    if len(nums) >= 1 and 0 < nums[0] < 30:
         cur["props"].append(_prop(gid, "cte", nums[0], "1e-6/K", "",
                                   source_id, ".agf ED record (CTE -30/+70)."))
-        cur["props"].append(_prop(gid, "density", nums[2], "g/cm3", "",
-                                  source_id, ".agf ED record (density)."))
+    if len(nums) >= 2 and 0 < nums[1] < 30:
+        cur["props"].append(_prop(gid, "cte_20_300", nums[1], "1e-6/K", "",
+                                  source_id, ".agf ED record (CTE 20/+300)."))
+    if len(nums) >= 3:
+        lo, hi = DENSITY_RANGES_BY_CLASS.get(mclass, DEFAULT_DENSITY_RANGE)
+        if lo <= nums[2] <= hi:
+            cur["props"].append(_prop(gid, "density", nums[2], "g/cm3", "",
+                                      source_id, ".agf ED record (density)."))
     if len(nums) >= 4 and -0.05 <= nums[3] <= 0.05:
         cur["props"].append(_prop(gid, "dPgF", nums[3], "", "",
                                   source_id, ".agf ED record (dPgF)."))
-
-
-def _td_block(cur: dict, nums: list, source_id: str) -> None:
-    labels = ["cte_-30_70", "cte_20_300", "tg", "k_thermal"]
-    pmap = {"cte_-30_70": ("cte", "1e-6/K"), "cte_20_300": ("cte", "1e-6/K"),
-            "tg": ("tg", "degC"), "k_thermal": ("thermal_conductivity", "W/(m K)")}
-    gid = cur["glass_row"]["glass_id"]
-    for label, val in zip(labels, nums):
-        prop, unit = pmap[label]
-        ok = (prop == "cte" and 0 < val < 30) or \
-             (prop == "tg" and 200 < val < 900) or \
-             (prop == "thermal_conductivity" and 0.2 < val < 3.0)
-        if ok:
-            cur["props"].append(_prop(gid, prop, val, unit, "",
-                                      source_id, f".agf TD ({label})."))
 
 
 def _it_block(cur: dict, nums: list, source_id: str,

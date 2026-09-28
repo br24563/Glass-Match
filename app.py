@@ -12,6 +12,7 @@ from glassmatch.spectra import dispersion_curve, fresnel_transmission, band_stat
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
                                    validate_transmission_frame, orphan_source_ids,
+                                   orphan_glass_ids,
                                    find_transmission_conflicts)
 from glassmatch.importers.generic_csv import import_csv
 from glassmatch.equivalency import (EquivalencyCriteria, candidate_pairs,
@@ -66,6 +67,7 @@ def _load_all(_key: str):
         "glasses": validate_glass_frame(db.glasses),
         "transmission": validate_transmission_frame(db.transmission),
         "orphan_sources": orphan_source_ids(db.glasses, db.properties, db.sources),
+        "orphan_glasses": orphan_glass_ids(db.properties, db.glasses),
         "transmission_conflicts": _load_transmission_conflicts(db),
     }
     return db, summary, t_groups, quality
@@ -475,12 +477,14 @@ with tabs[5]:
     st.subheader("Data quality report")
     n_prop, n_glass = len(quality["properties"]), len(quality["glasses"])
     n_trans, n_orph = len(quality["transmission"]), len(quality["orphan_sources"])
-    q1, q2, q3, q4 = st.columns(4)
+    n_orph_g = len(quality["orphan_glasses"])
+    q1, q2, q3, q4, q5 = st.columns(5)
     q1.metric("Property flags", n_prop)
     q2.metric("Glass flags", n_glass)
     q3.metric("Transmission flags", n_trans)
     q4.metric("Orphan source refs", n_orph)
-    total = n_prop + n_glass + n_trans + n_orph
+    q5.metric("Orphan glass refs", n_orph_g)
+    total = n_prop + n_glass + n_trans + n_orph + n_orph_g
     if total == 0:
         st.success("All checks pass — no flagged records. Nothing is auto-fixed; "
                    "flags here would list questionable records for review.")
@@ -495,6 +499,11 @@ with tabs[5]:
         if quality["orphan_sources"]:
             st.warning("source_ids referenced by data but missing from sources.csv: "
                        + ", ".join(quality["orphan_sources"]))
+        if quality["orphan_glasses"]:
+            st.warning("glass_ids carrying properties but missing from glasses.csv "
+                       "(these rows are invisible in the UI): "
+                       + ", ".join(quality["orphan_glasses"][:20])
+                       + (" ..." if len(quality["orphan_glasses"]) > 20 else ""))
 
     st.subheader("Quarantined transmission samples")
     n_conf = len(quality["transmission_conflicts"])
