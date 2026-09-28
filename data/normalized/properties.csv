@@ -14577,6 +14577,8 @@ RII-AL2O3-BOIDIN,n_at_reference,0.7948722077922078,,10000.0,interpolated,RII-AL2
 RII-AL2O3-BOIDIN,n_at_reference,0.9228659999999997,,12000.0,interpolated,RII-AL2O3-BOIDIN,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-BOIDIN,wl_max_um,18.003,um,,literature,RII-AL2O3-BOIDIN,Highest tabulated wavelength.
 RII-AL2O3-BOIDIN,wl_max_um,18.003,um,,literature,RII-AL2O3-BOIDIN,Highest tabulated wavelength.
+RII-AL2O3-BOIDIN,wl_max_um,18.003,um,,literature,RII-AL2O3-BOIDIN,Highest tabulated wavelength.
+RII-AL2O3-BOIDIN,wl_min_um,0.3,um,,literature,RII-AL2O3-BOIDIN,Lowest tabulated wavelength.
 RII-AL2O3-BOIDIN,wl_min_um,0.3,um,,literature,RII-AL2O3-BOIDIN,Lowest tabulated wavelength.
 RII-AL2O3-BOIDIN,wl_min_um,0.3,um,,literature,RII-AL2O3-BOIDIN,Lowest tabulated wavelength.
 RII-AL2O3-FRANTA,n_at_reference,1.6613478954868486,,486.1,interpolated,RII-AL2O3-FRANTA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14592,10 +14594,14 @@ RII-AL2O3-FRANTA,n_at_reference,0.8330798079715545,,10000.0,interpolated,RII-AL2
 RII-AL2O3-FRANTA,n_at_reference,0.9377666189812862,,12000.0,interpolated,RII-AL2O3-FRANTA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-FRANTA,wl_max_um,125.124,um,,literature,RII-AL2O3-FRANTA,Highest tabulated wavelength.
 RII-AL2O3-FRANTA,wl_max_um,125.124,um,,literature,RII-AL2O3-FRANTA,Highest tabulated wavelength.
+RII-AL2O3-FRANTA,wl_max_um,125.124,um,,literature,RII-AL2O3-FRANTA,Highest tabulated wavelength.
+RII-AL2O3-FRANTA,wl_min_um,0.114114,um,,literature,RII-AL2O3-FRANTA,Lowest tabulated wavelength.
 RII-AL2O3-FRANTA,wl_min_um,0.114114,um,,literature,RII-AL2O3-FRANTA,Lowest tabulated wavelength.
 RII-AL2O3-FRANTA,wl_min_um,0.114114,um,,literature,RII-AL2O3-FRANTA,Lowest tabulated wavelength.
 RII-AL2O3-HAGEMANN,wl_max_um,0.2066,um,,literature,RII-AL2O3-HAGEMANN,Highest tabulated wavelength.
 RII-AL2O3-HAGEMANN,wl_max_um,0.2066,um,,literature,RII-AL2O3-HAGEMANN,Highest tabulated wavelength.
+RII-AL2O3-HAGEMANN,wl_max_um,0.2066,um,,literature,RII-AL2O3-HAGEMANN,Highest tabulated wavelength.
+RII-AL2O3-HAGEMANN,wl_min_um,0.0007749,um,,literature,RII-AL2O3-HAGEMANN,Lowest tabulated wavelength.
 RII-AL2O3-HAGEMANN,wl_min_um,0.0007749,um,,literature,RII-AL2O3-HAGEMANN,Lowest tabulated wavelength.
 RII-AL2O3-HAGEMANN,wl_min_um,0.0007749,um,,literature,RII-AL2O3-HAGEMANN,Lowest tabulated wavelength.
 RII-AL2O3-KISCHKAT,n_at_reference,1.6152,,2000.0,interpolated,RII-AL2O3-KISCHKAT,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -14607,6 +14613,8 @@ RII-AL2O3-KISCHKAT,n_at_reference,0.88168,,10000.0,interpolated,RII-AL2O3-KISCHK
 RII-AL2O3-KISCHKAT,n_at_reference,0.9729959415753782,,12000.0,interpolated,RII-AL2O3-KISCHKAT,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-AL2O3-KISCHKAT,Highest tabulated wavelength.
 RII-AL2O3-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-AL2O3-KISCHKAT,Highest tabulated wavelength.
+RII-AL2O3-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-AL2O3-KISCHKAT,Highest tabulated wavelength.
+RII-AL2O3-KISCHKAT,wl_min_um,1.53941,um,,literature,RII-AL2O3-KISCHKAT,Lowest tabulated wavelength.
 RII-AL2O3-KISCHKAT,wl_min_um,1.53941,um,,literature,RII-AL2O3-KISCHKAT,Lowest tabulated wavelength.
 RII-AL2O3-KISCHKAT,wl_min_um,1.53941,um,,literature,RII-AL2O3-KISCHKAT,Lowest tabulated wavelength.
 RII-AL2O3-MALITSON,n_at_reference,1.7755806186506244,,486.1,calculated,RII-AL2O3-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14619,6 +14627,8 @@ RII-AL2O3-MALITSON,n_at_reference,1.6752365986926334,,4000.0,calculated,RII-AL2O
 RII-AL2O3-MALITSON,n_at_reference,1.6239664190803347,,5000.0,calculated,RII-AL2O3-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-AL2O3-MALITSON,wl_max_um,5.577,um,,literature,RII-AL2O3-MALITSON,Highest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON,wl_max_um,5.577,um,,literature,RII-AL2O3-MALITSON,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON,wl_max_um,5.577,um,,literature,RII-AL2O3-MALITSON,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON,wl_min_um,0.2652,um,,literature,RII-AL2O3-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON,wl_min_um,0.2652,um,,literature,RII-AL2O3-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON,wl_min_um,0.2652,um,,literature,RII-AL2O3-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-E,n_at_reference,1.7672869287628266,,486.1,calculated,RII-AL2O3-MALITSON-E,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14631,6 +14641,8 @@ RII-AL2O3-MALITSON-E,n_at_reference,1.6682477679076737,,4000.0,calculated,RII-AL
 RII-AL2O3-MALITSON-E,n_at_reference,1.6183864277243265,,5000.0,calculated,RII-AL2O3-MALITSON-E,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-AL2O3-MALITSON-E,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-E,Highest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-E,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-E,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON-E,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-E,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON-E,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-E,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-E,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-E,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-E,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-E,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-O,n_at_reference,1.7755106068823143,,486.1,calculated,RII-AL2O3-MALITSON-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14643,6 +14655,8 @@ RII-AL2O3-MALITSON-O,n_at_reference,1.675227406502141,,4000.0,calculated,RII-AL2
 RII-AL2O3-MALITSON-O,n_at_reference,1.624031750266286,,5000.0,calculated,RII-AL2O3-MALITSON-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-AL2O3-MALITSON-O,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-O,Highest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-O,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-O,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON-O,wl_max_um,5.0,um,,literature,RII-AL2O3-MALITSON-O,Highest wavelength the cited fit is valid over.
+RII-AL2O3-MALITSON-O,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-O,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-O,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-O,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-MALITSON-O,wl_min_um,0.2,um,,literature,RII-AL2O3-MALITSON-O,Lowest wavelength the cited fit is valid over.
 RII-AL2O3-QUERRY,n_at_reference,0.62847,,486.1,interpolated,RII-AL2O3-QUERRY,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14658,6 +14672,8 @@ RII-AL2O3-QUERRY,n_at_reference,39.791,,10000.0,interpolated,RII-AL2O3-QUERRY,Li
 RII-AL2O3-QUERRY,n_at_reference,49.19719246861925,,12000.0,interpolated,RII-AL2O3-QUERRY,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-QUERRY,wl_max_um,12.5,um,,literature,RII-AL2O3-QUERRY,Highest tabulated wavelength.
 RII-AL2O3-QUERRY,wl_max_um,12.5,um,,literature,RII-AL2O3-QUERRY,Highest tabulated wavelength.
+RII-AL2O3-QUERRY,wl_max_um,12.5,um,,literature,RII-AL2O3-QUERRY,Highest tabulated wavelength.
+RII-AL2O3-QUERRY,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-E,n_at_reference,1.729,,486.1,interpolated,RII-AL2O3-QUERRY-E,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14673,6 +14689,8 @@ RII-AL2O3-QUERRY-E,n_at_reference,0.963,,10000.0,interpolated,RII-AL2O3-QUERRY-E
 RII-AL2O3-QUERRY-E,n_at_reference,0.09566387726638773,,12000.0,interpolated,RII-AL2O3-QUERRY-E,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-QUERRY-E,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-E,Highest tabulated wavelength.
 RII-AL2O3-QUERRY-E,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-E,Highest tabulated wavelength.
+RII-AL2O3-QUERRY-E,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-E,Highest tabulated wavelength.
+RII-AL2O3-QUERRY-E,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-E,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-E,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-E,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-E,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-E,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-O,n_at_reference,1.754,,486.1,interpolated,RII-AL2O3-QUERRY-O,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14688,6 +14706,8 @@ RII-AL2O3-QUERRY-O,n_at_reference,0.89,,10000.0,interpolated,RII-AL2O3-QUERRY-O,
 RII-AL2O3-QUERRY-O,n_at_reference,0.07833612273361228,,12000.0,interpolated,RII-AL2O3-QUERRY-O,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-QUERRY-O,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-O,Highest tabulated wavelength.
 RII-AL2O3-QUERRY-O,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-O,Highest tabulated wavelength.
+RII-AL2O3-QUERRY-O,wl_max_um,55.5556,um,,literature,RII-AL2O3-QUERRY-O,Highest tabulated wavelength.
+RII-AL2O3-QUERRY-O,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-O,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-O,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-O,Lowest tabulated wavelength.
 RII-AL2O3-QUERRY-O,wl_min_um,0.21,um,,literature,RII-AL2O3-QUERRY-O,Lowest tabulated wavelength.
 RII-AL2O3-RODRIGUEZDEMARCOS,n_at_reference,1.6777504043886073,,486.1,interpolated,RII-AL2O3-RODRIGUEZDEMARCOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14703,6 +14723,8 @@ RII-AL2O3-RODRIGUEZDEMARCOS,n_at_reference,0.5755189241746561,,10000.0,interpola
 RII-AL2O3-RODRIGUEZDEMARCOS,n_at_reference,0.8576846634221438,,12000.0,interpolated,RII-AL2O3-RODRIGUEZDEMARCOS,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-AL2O3-RODRIGUEZDEMARCOS,wl_max_um,993.324,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Highest tabulated wavelength.
 RII-AL2O3-RODRIGUEZDEMARCOS,wl_max_um,993.324,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Highest tabulated wavelength.
+RII-AL2O3-RODRIGUEZDEMARCOS,wl_max_um,993.324,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Highest tabulated wavelength.
+RII-AL2O3-RODRIGUEZDEMARCOS,wl_min_um,3.10152e-06,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Lowest tabulated wavelength.
 RII-AL2O3-RODRIGUEZDEMARCOS,wl_min_um,3.10152e-06,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Lowest tabulated wavelength.
 RII-AL2O3-RODRIGUEZDEMARCOS,wl_min_um,3.10152e-06,um,,literature,RII-AL2O3-RODRIGUEZDEMARCOS,Lowest tabulated wavelength.
 RII-AL2O3-ZHUKOVSKY,n_at_reference,1.6350925316055627,,486.1,interpolated,RII-AL2O3-ZHUKOVSKY,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14711,12 +14733,16 @@ RII-AL2O3-ZHUKOVSKY,n_at_reference,1.6243027518987343,,656.3,interpolated,RII-AL
 RII-AL2O3-ZHUKOVSKY,n_at_reference,1.6171448952095808,,1000.0,interpolated,RII-AL2O3-ZHUKOVSKY,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-AL2O3-ZHUKOVSKY,wl_max_um,1.689842,um,,literature,RII-AL2O3-ZHUKOVSKY,Highest tabulated wavelength.
 RII-AL2O3-ZHUKOVSKY,wl_max_um,1.689842,um,,literature,RII-AL2O3-ZHUKOVSKY,Highest tabulated wavelength.
+RII-AL2O3-ZHUKOVSKY,wl_max_um,1.689842,um,,literature,RII-AL2O3-ZHUKOVSKY,Highest tabulated wavelength.
+RII-AL2O3-ZHUKOVSKY,wl_min_um,0.211002,um,,literature,RII-AL2O3-ZHUKOVSKY,Lowest tabulated wavelength.
 RII-AL2O3-ZHUKOVSKY,wl_min_um,0.211002,um,,literature,RII-AL2O3-ZHUKOVSKY,Lowest tabulated wavelength.
 RII-AL2O3-ZHUKOVSKY,wl_min_um,0.211002,um,,literature,RII-AL2O3-ZHUKOVSKY,Lowest tabulated wavelength.
 RII-BAF2-KAISER,n_at_reference,1.41297,,10000.0,interpolated,RII-BAF2-KAISER,Linear interpolation between tabulated samples near 10.0 um from the cited reference.
 RII-BAF2-KAISER,n_at_reference,1.3859,,12000.0,interpolated,RII-BAF2-KAISER,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-BAF2-KAISER,wl_max_um,80.0,um,,literature,RII-BAF2-KAISER,Highest tabulated wavelength.
 RII-BAF2-KAISER,wl_max_um,80.0,um,,literature,RII-BAF2-KAISER,Highest tabulated wavelength.
+RII-BAF2-KAISER,wl_max_um,80.0,um,,literature,RII-BAF2-KAISER,Highest tabulated wavelength.
+RII-BAF2-KAISER,wl_min_um,10.0,um,,literature,RII-BAF2-KAISER,Lowest tabulated wavelength.
 RII-BAF2-KAISER,wl_min_um,10.0,um,,literature,RII-BAF2-KAISER,Lowest tabulated wavelength.
 RII-BAF2-KAISER,wl_min_um,10.0,um,,literature,RII-BAF2-KAISER,Lowest tabulated wavelength.
 RII-BAF2-LI,n_at_reference,1.3588937320895813,,486.1,calculated,RII-BAF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14732,6 +14758,8 @@ RII-BAF2-LI,n_at_reference,1.274434315458955,,10000.0,calculated,RII-BAF2-LI,Eva
 RII-BAF2-LI,n_at_reference,1.2394471331054244,,12000.0,calculated,RII-BAF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-BAF2-LI,wl_max_um,15.0,um,,literature,RII-BAF2-LI,Highest wavelength the cited fit is valid over.
 RII-BAF2-LI,wl_max_um,15.0,um,,literature,RII-BAF2-LI,Highest wavelength the cited fit is valid over.
+RII-BAF2-LI,wl_max_um,15.0,um,,literature,RII-BAF2-LI,Highest wavelength the cited fit is valid over.
+RII-BAF2-LI,wl_min_um,0.15,um,,literature,RII-BAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-BAF2-LI,wl_min_um,0.15,um,,literature,RII-BAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-BAF2-LI,wl_min_um,0.15,um,,literature,RII-BAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-BAF2-MALITSON,n_at_reference,1.478547924861353,,486.1,calculated,RII-BAF2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14746,6 +14774,8 @@ RII-BAF2-MALITSON,n_at_reference,1.425817235476435,,8000.0,calculated,RII-BAF2-M
 RII-BAF2-MALITSON,n_at_reference,1.401326480258536,,10000.0,calculated,RII-BAF2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-BAF2-MALITSON,wl_max_um,10.346,um,,literature,RII-BAF2-MALITSON,Highest wavelength the cited fit is valid over.
 RII-BAF2-MALITSON,wl_max_um,10.346,um,,literature,RII-BAF2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-BAF2-MALITSON,wl_max_um,10.346,um,,literature,RII-BAF2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-BAF2-MALITSON,wl_min_um,0.2652,um,,literature,RII-BAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-BAF2-MALITSON,wl_min_um,0.2652,um,,literature,RII-BAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-BAF2-MALITSON,wl_min_um,0.2652,um,,literature,RII-BAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-BAF2-QUERRY,n_at_reference,1.485695,,486.1,interpolated,RII-BAF2-QUERRY,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14761,6 +14791,8 @@ RII-BAF2-QUERRY,n_at_reference,1.419,,10000.0,interpolated,RII-BAF2-QUERRY,Linea
 RII-BAF2-QUERRY,n_at_reference,1.3723765070616603,,12000.0,interpolated,RII-BAF2-QUERRY,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-BAF2-QUERRY,wl_max_um,166.6667,um,,literature,RII-BAF2-QUERRY,Highest tabulated wavelength.
 RII-BAF2-QUERRY,wl_max_um,166.6667,um,,literature,RII-BAF2-QUERRY,Highest tabulated wavelength.
+RII-BAF2-QUERRY,wl_max_um,166.6667,um,,literature,RII-BAF2-QUERRY,Highest tabulated wavelength.
+RII-BAF2-QUERRY,wl_min_um,0.22,um,,literature,RII-BAF2-QUERRY,Lowest tabulated wavelength.
 RII-BAF2-QUERRY,wl_min_um,0.22,um,,literature,RII-BAF2-QUERRY,Lowest tabulated wavelength.
 RII-BAF2-QUERRY,wl_min_um,0.22,um,,literature,RII-BAF2-QUERRY,Lowest tabulated wavelength.
 RII-BAF2-ZHENG-186C,n_at_reference,1.4749515167934464,,486.1,calculated,RII-BAF2-ZHENG-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14769,6 +14801,8 @@ RII-BAF2-ZHENG-186C,n_at_reference,1.4694521751834777,,656.3,calculated,RII-BAF2
 RII-BAF2-ZHENG-186C,n_at_reference,1.4654843234751278,,1000.0,calculated,RII-BAF2-ZHENG-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-BAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-21C,n_at_reference,1.4783190671569943,,486.1,calculated,RII-BAF2-ZHENG-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14777,6 +14811,8 @@ RII-BAF2-ZHENG-21C,n_at_reference,1.4727478006204886,,656.3,calculated,RII-BAF2-
 RII-BAF2-ZHENG-21C,n_at_reference,1.468732644995688,,1000.0,calculated,RII-BAF2-ZHENG-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-BAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-368C,n_at_reference,1.4723589077065822,,486.1,calculated,RII-BAF2-ZHENG-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14785,6 +14821,8 @@ RII-BAF2-ZHENG-368C,n_at_reference,1.4669507153789743,,656.3,calculated,RII-BAF2
 RII-BAF2-ZHENG-368C,n_at_reference,1.463042377684726,,1000.0,calculated,RII-BAF2-ZHENG-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-BAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-BAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
+RII-BAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-BAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-BAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-DAIMON-20,n_at_reference,1.4370478038228194,,486.1,calculated,RII-CAF2-DAIMON-20,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
@@ -14793,6 +14831,8 @@ RII-CAF2-DAIMON-20,n_at_reference,1.432488007241207,,656.3,calculated,RII-CAF2-D
 RII-CAF2-DAIMON-20,n_at_reference,1.4289194559167169,,1000.0,calculated,RII-CAF2-DAIMON-20,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
 RII-CAF2-DAIMON-20,n_at_reference,1.4238933827490092,,2000.0,calculated,RII-CAF2-DAIMON-20,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
 RII-CAF2-DAIMON-20,wl_max_um,2.326,um,,literature,RII-CAF2-DAIMON-20,Highest wavelength the cited fit is valid over.
+RII-CAF2-DAIMON-20,wl_max_um,2.326,um,,literature,RII-CAF2-DAIMON-20,Highest wavelength the cited fit is valid over.
+RII-CAF2-DAIMON-20,wl_min_um,0.138,um,,literature,RII-CAF2-DAIMON-20,Lowest wavelength the cited fit is valid over.
 RII-CAF2-DAIMON-20,wl_min_um,0.138,um,,literature,RII-CAF2-DAIMON-20,Lowest wavelength the cited fit is valid over.
 RII-CAF2-DAIMON-25,n_at_reference,1.4369990250328575,,486.1,calculated,RII-CAF2-DAIMON-25,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
 RII-CAF2-DAIMON-25,n_at_reference,1.4338262022204278,,587.6,calculated,RII-CAF2-DAIMON-25,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
@@ -14800,11 +14840,15 @@ RII-CAF2-DAIMON-25,n_at_reference,1.4324378343539066,,656.3,calculated,RII-CAF2-
 RII-CAF2-DAIMON-25,n_at_reference,1.4288682031590045,,1000.0,calculated,RII-CAF2-DAIMON-25,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
 RII-CAF2-DAIMON-25,n_at_reference,1.4238416135642393,,2000.0,calculated,RII-CAF2-DAIMON-25,Evaluated from the refractiveindex.info formula 2 4-term Sellmeier fit; not a tabulated value.
 RII-CAF2-DAIMON-25,wl_max_um,2.326,um,,literature,RII-CAF2-DAIMON-25,Highest wavelength the cited fit is valid over.
+RII-CAF2-DAIMON-25,wl_max_um,2.326,um,,literature,RII-CAF2-DAIMON-25,Highest wavelength the cited fit is valid over.
+RII-CAF2-DAIMON-25,wl_min_um,0.138,um,,literature,RII-CAF2-DAIMON-25,Lowest wavelength the cited fit is valid over.
 RII-CAF2-DAIMON-25,wl_min_um,0.138,um,,literature,RII-CAF2-DAIMON-25,Lowest wavelength the cited fit is valid over.
 RII-CAF2-KAISER,n_at_reference,1.30405,,10000.0,interpolated,RII-CAF2-KAISER,Linear interpolation between tabulated samples near 10.0 um from the cited reference.
 RII-CAF2-KAISER,n_at_reference,1.23781,,12000.0,interpolated,RII-CAF2-KAISER,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-CAF2-KAISER,wl_max_um,80.0,um,,literature,RII-CAF2-KAISER,Highest tabulated wavelength.
 RII-CAF2-KAISER,wl_max_um,80.0,um,,literature,RII-CAF2-KAISER,Highest tabulated wavelength.
+RII-CAF2-KAISER,wl_max_um,80.0,um,,literature,RII-CAF2-KAISER,Highest tabulated wavelength.
+RII-CAF2-KAISER,wl_min_um,10.0,um,,literature,RII-CAF2-KAISER,Lowest tabulated wavelength.
 RII-CAF2-KAISER,wl_min_um,10.0,um,,literature,RII-CAF2-KAISER,Lowest tabulated wavelength.
 RII-CAF2-KAISER,wl_min_um,10.0,um,,literature,RII-CAF2-KAISER,Lowest tabulated wavelength.
 RII-CAF2-LI,n_at_reference,1.3135351807911197,,486.1,calculated,RII-CAF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14820,6 +14864,8 @@ RII-CAF2-LI,n_at_reference,1.1615707158685502,,10000.0,calculated,RII-CAF2-LI,Ev
 RII-CAF2-LI,n_at_reference,1.0831071452214716,,12000.0,calculated,RII-CAF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-CAF2-LI,wl_max_um,12.0,um,,literature,RII-CAF2-LI,Highest wavelength the cited fit is valid over.
 RII-CAF2-LI,wl_max_um,12.0,um,,literature,RII-CAF2-LI,Highest wavelength the cited fit is valid over.
+RII-CAF2-LI,wl_max_um,12.0,um,,literature,RII-CAF2-LI,Highest wavelength the cited fit is valid over.
+RII-CAF2-LI,wl_min_um,0.15,um,,literature,RII-CAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-CAF2-LI,wl_min_um,0.15,um,,literature,RII-CAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-CAF2-LI,wl_min_um,0.15,um,,literature,RII-CAF2-LI,Lowest wavelength the cited fit is valid over.
 RII-CAF2-MALITSON,n_at_reference,1.4370264020512116,,486.1,calculated,RII-CAF2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14833,6 +14879,8 @@ RII-CAF2-MALITSON,n_at_reference,1.398958144633464,,5000.0,calculated,RII-CAF2-M
 RII-CAF2-MALITSON,n_at_reference,1.3498398136345537,,8000.0,calculated,RII-CAF2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-CAF2-MALITSON,wl_max_um,9.7,um,,literature,RII-CAF2-MALITSON,Highest wavelength the cited fit is valid over.
 RII-CAF2-MALITSON,wl_max_um,9.7,um,,literature,RII-CAF2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-CAF2-MALITSON,wl_max_um,9.7,um,,literature,RII-CAF2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-CAF2-MALITSON,wl_min_um,0.23,um,,literature,RII-CAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-CAF2-MALITSON,wl_min_um,0.23,um,,literature,RII-CAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-CAF2-MALITSON,wl_min_um,0.23,um,,literature,RII-CAF2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-186C,n_at_reference,1.434638834325757,,486.1,calculated,RII-CAF2-ZHENG-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14841,6 +14889,8 @@ RII-CAF2-ZHENG-186C,n_at_reference,1.430075447669759,,656.3,calculated,RII-CAF2-
 RII-CAF2-ZHENG-186C,n_at_reference,1.426504178690228,,1000.0,calculated,RII-CAF2-ZHENG-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-CAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-186C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-186C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-186C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-186C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-21C,n_at_reference,1.4370973180359732,,486.1,calculated,RII-CAF2-ZHENG-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14849,6 +14899,8 @@ RII-CAF2-ZHENG-21C,n_at_reference,1.4325363073471793,,656.3,calculated,RII-CAF2-
 RII-CAF2-ZHENG-21C,n_at_reference,1.4289665511970313,,1000.0,calculated,RII-CAF2-ZHENG-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-CAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-21C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-21C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-21C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-21C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-368C,n_at_reference,1.4320406569066726,,486.1,calculated,RII-CAF2-ZHENG-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -14857,6 +14909,8 @@ RII-CAF2-ZHENG-368C,n_at_reference,1.4274856345384792,,656.3,calculated,RII-CAF2
 RII-CAF2-ZHENG-368C,n_at_reference,1.4239198582276402,,1000.0,calculated,RII-CAF2-ZHENG-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-CAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-368C,wl_max_um,1.7,um,,literature,RII-CAF2-ZHENG-368C,Highest wavelength the cited fit is valid over.
+RII-CAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-CAF2-ZHENG-368C,wl_min_um,0.22,um,,literature,RII-CAF2-ZHENG-368C,Lowest wavelength the cited fit is valid over.
 RII-CDTE-ADACHI,n_at_reference,3.1636151162790696,,486.1,interpolated,RII-CDTE-ADACHI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14865,26 +14919,36 @@ RII-CDTE-ADACHI,n_at_reference,3.0199920127795528,,656.3,interpolated,RII-CDTE-A
 RII-CDTE-ADACHI,n_at_reference,2.8388268225584596,,1000.0,interpolated,RII-CDTE-ADACHI,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-CDTE-ADACHI,wl_max_um,1.1271,um,,literature,RII-CDTE-ADACHI,Highest tabulated wavelength.
 RII-CDTE-ADACHI,wl_max_um,1.1271,um,,literature,RII-CDTE-ADACHI,Highest tabulated wavelength.
+RII-CDTE-ADACHI,wl_max_um,1.1271,um,,literature,RII-CDTE-ADACHI,Highest tabulated wavelength.
+RII-CDTE-ADACHI,wl_min_um,0.2214,um,,literature,RII-CDTE-ADACHI,Lowest tabulated wavelength.
 RII-CDTE-ADACHI,wl_min_um,0.2214,um,,literature,RII-CDTE-ADACHI,Lowest tabulated wavelength.
 RII-CDTE-ADACHI,wl_min_um,0.2214,um,,literature,RII-CDTE-ADACHI,Lowest tabulated wavelength.
 RII-CDTE-DEBELL-20K,n_at_reference,2.6514027715630584,,8000.0,calculated,RII-CDTE-DEBELL-20K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-20K,n_at_reference,2.646483467443695,,10000.0,calculated,RII-CDTE-DEBELL-20K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-20K,n_at_reference,2.640830225132019,,12000.0,calculated,RII-CDTE-DEBELL-20K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-20K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-20K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-20K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-20K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-20K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-20K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-DEBELL-20K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-20K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-DEBELL-300K,n_at_reference,2.677307082227511,,8000.0,calculated,RII-CDTE-DEBELL-300K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-300K,n_at_reference,2.672409664948798,,10000.0,calculated,RII-CDTE-DEBELL-300K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-300K,n_at_reference,2.666778420654206,,12000.0,calculated,RII-CDTE-DEBELL-300K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-300K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-300K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-300K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-300K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-300K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-300K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-DEBELL-300K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-300K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-DEBELL-80K,n_at_reference,2.6545487108028896,,8000.0,calculated,RII-CDTE-DEBELL-80K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-80K,n_at_reference,2.649637235095048,,10000.0,calculated,RII-CDTE-DEBELL-80K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-80K,n_at_reference,2.643996439350255,,12000.0,calculated,RII-CDTE-DEBELL-80K,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-CDTE-DEBELL-80K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-80K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-80K,wl_max_um,22.0,um,,literature,RII-CDTE-DEBELL-80K,Highest wavelength the cited fit is valid over.
+RII-CDTE-DEBELL-80K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-80K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-DEBELL-80K,wl_min_um,6.0,um,,literature,RII-CDTE-DEBELL-80K,Lowest wavelength the cited fit is valid over.
 RII-CDTE-MARPLE,n_at_reference,1.8474980950887248,,1000.0,calculated,RII-CDTE-MARPLE,Evaluated from the refractiveindex.info formula 2 1-term Sellmeier fit; not a tabulated value.
 RII-CDTE-MARPLE,n_at_reference,1.63832068336147,,2000.0,calculated,RII-CDTE-MARPLE,Evaluated from the refractiveindex.info formula 2 1-term Sellmeier fit; not a tabulated value.
 RII-CDTE-MARPLE,wl_max_um,2.5,um,,literature,RII-CDTE-MARPLE,Highest wavelength the cited fit is valid over.
+RII-CDTE-MARPLE,wl_max_um,2.5,um,,literature,RII-CDTE-MARPLE,Highest wavelength the cited fit is valid over.
+RII-CDTE-MARPLE,wl_min_um,0.86,um,,literature,RII-CDTE-MARPLE,Lowest wavelength the cited fit is valid over.
 RII-CDTE-MARPLE,wl_min_um,0.86,um,,literature,RII-CDTE-MARPLE,Lowest wavelength the cited fit is valid over.
 RII-CDTE-TREHARNE,n_at_reference,3.0057695961561337,,486.1,interpolated,RII-CDTE-TREHARNE,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-CDTE-TREHARNE,n_at_reference,2.9589390901664414,,587.6,interpolated,RII-CDTE-TREHARNE,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
@@ -14892,6 +14956,8 @@ RII-CDTE-TREHARNE,n_at_reference,2.9492419602393993,,656.3,interpolated,RII-CDTE
 RII-CDTE-TREHARNE,n_at_reference,2.7691646428100194,,1000.0,interpolated,RII-CDTE-TREHARNE,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-CDTE-TREHARNE,wl_max_um,1.4979382,um,,literature,RII-CDTE-TREHARNE,Highest tabulated wavelength.
 RII-CDTE-TREHARNE,wl_max_um,1.4979382,um,,literature,RII-CDTE-TREHARNE,Highest tabulated wavelength.
+RII-CDTE-TREHARNE,wl_max_um,1.4979382,um,,literature,RII-CDTE-TREHARNE,Highest tabulated wavelength.
+RII-CDTE-TREHARNE,wl_min_um,0.30141754,um,,literature,RII-CDTE-TREHARNE,Lowest tabulated wavelength.
 RII-CDTE-TREHARNE,wl_min_um,0.30141754,um,,literature,RII-CDTE-TREHARNE,Lowest tabulated wavelength.
 RII-CDTE-TREHARNE,wl_min_um,0.30141754,um,,literature,RII-CDTE-TREHARNE,Lowest tabulated wavelength.
 RII-GAAS-ADACHI,n_at_reference,4.185892768959436,,486.1,interpolated,RII-GAAS-ADACHI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14907,6 +14973,8 @@ RII-GAAS-ADACHI,n_at_reference,3.3254075311298457,,10000.0,interpolated,RII-GAAS
 RII-GAAS-ADACHI,n_at_reference,3.324984235775512,,12000.0,interpolated,RII-GAAS-ADACHI,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GAAS-ADACHI,wl_max_um,12.398,um,,literature,RII-GAAS-ADACHI,Highest tabulated wavelength.
 RII-GAAS-ADACHI,wl_max_um,12.398,um,,literature,RII-GAAS-ADACHI,Highest tabulated wavelength.
+RII-GAAS-ADACHI,wl_max_um,12.398,um,,literature,RII-GAAS-ADACHI,Highest tabulated wavelength.
+RII-GAAS-ADACHI,wl_min_um,0.20664,um,,literature,RII-GAAS-ADACHI,Lowest tabulated wavelength.
 RII-GAAS-ADACHI,wl_min_um,0.20664,um,,literature,RII-GAAS-ADACHI,Lowest tabulated wavelength.
 RII-GAAS-ADACHI,wl_min_um,0.20664,um,,literature,RII-GAAS-ADACHI,Lowest tabulated wavelength.
 RII-GAAS-ASPNES,n_at_reference,4.41501052631579,,486.1,interpolated,RII-GAAS-ASPNES,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14914,6 +14982,8 @@ RII-GAAS-ASPNES,n_at_reference,3.9476268656716416,,587.6,interpolated,RII-GAAS-A
 RII-GAAS-ASPNES,n_at_reference,3.8217079889807164,,656.3,interpolated,RII-GAAS-ASPNES,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-GAAS-ASPNES,wl_max_um,0.8266,um,,literature,RII-GAAS-ASPNES,Highest tabulated wavelength.
 RII-GAAS-ASPNES,wl_max_um,0.8266,um,,literature,RII-GAAS-ASPNES,Highest tabulated wavelength.
+RII-GAAS-ASPNES,wl_max_um,0.8266,um,,literature,RII-GAAS-ASPNES,Highest tabulated wavelength.
+RII-GAAS-ASPNES,wl_min_um,0.2066,um,,literature,RII-GAAS-ASPNES,Lowest tabulated wavelength.
 RII-GAAS-ASPNES,wl_min_um,0.2066,um,,literature,RII-GAAS-ASPNES,Lowest tabulated wavelength.
 RII-GAAS-ASPNES,wl_min_um,0.2066,um,,literature,RII-GAAS-ASPNES,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-300K,n_at_reference,3.505619984068288,,1000.0,interpolated,RII-GAAS-FRANTA-300K,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
@@ -14926,6 +14996,8 @@ RII-GAAS-FRANTA-300K,n_at_reference,3.2756581300677996,,10000.0,interpolated,RII
 RII-GAAS-FRANTA-300K,n_at_reference,3.263564587834174,,12000.0,interpolated,RII-GAAS-FRANTA-300K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GAAS-FRANTA-300K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-300K,Highest tabulated wavelength.
 RII-GAAS-FRANTA-300K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-300K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-300K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-300K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-300K,wl_min_um,0.895234,um,,literature,RII-GAAS-FRANTA-300K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-300K,wl_min_um,0.895234,um,,literature,RII-GAAS-FRANTA-300K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-300K,wl_min_um,0.895234,um,,literature,RII-GAAS-FRANTA-300K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-370K,n_at_reference,3.529402972936827,,1000.0,interpolated,RII-GAAS-FRANTA-370K,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
@@ -14938,6 +15010,8 @@ RII-GAAS-FRANTA-370K,n_at_reference,3.288465969401898,,10000.0,interpolated,RII-
 RII-GAAS-FRANTA-370K,n_at_reference,3.2762981382973044,,12000.0,interpolated,RII-GAAS-FRANTA-370K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GAAS-FRANTA-370K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-370K,Highest tabulated wavelength.
 RII-GAAS-FRANTA-370K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-370K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-370K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-370K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-370K,wl_min_um,0.922322,um,,literature,RII-GAAS-FRANTA-370K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-370K,wl_min_um,0.922322,um,,literature,RII-GAAS-FRANTA-370K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-370K,wl_min_um,0.922322,um,,literature,RII-GAAS-FRANTA-370K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-440K,n_at_reference,3.5559230728263045,,1000.0,interpolated,RII-GAAS-FRANTA-440K,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
@@ -14950,6 +15024,8 @@ RII-GAAS-FRANTA-440K,n_at_reference,3.301891154524077,,10000.0,interpolated,RII-
 RII-GAAS-FRANTA-440K,n_at_reference,3.2896462567774782,,12000.0,interpolated,RII-GAAS-FRANTA-440K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GAAS-FRANTA-440K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-440K,Highest tabulated wavelength.
 RII-GAAS-FRANTA-440K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-440K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-440K,wl_max_um,399.638,um,,literature,RII-GAAS-FRANTA-440K,Highest tabulated wavelength.
+RII-GAAS-FRANTA-440K,wl_min_um,0.952058,um,,literature,RII-GAAS-FRANTA-440K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-440K,wl_min_um,0.952058,um,,literature,RII-GAAS-FRANTA-440K,Lowest tabulated wavelength.
 RII-GAAS-FRANTA-440K,wl_min_um,0.952058,um,,literature,RII-GAAS-FRANTA-440K,Lowest tabulated wavelength.
 RII-GAAS-GADRAS,n_at_reference,4.5802904804960995,,486.1,interpolated,RII-GAAS-GADRAS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14958,6 +15034,8 @@ RII-GAAS-GADRAS,n_at_reference,4.0632530452,,656.3,interpolated,RII-GAAS-GADRAS,
 RII-GAAS-GADRAS,n_at_reference,3.7754877565947242,,1000.0,interpolated,RII-GAAS-GADRAS,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-GAAS-GADRAS,wl_max_um,1.399642,um,,literature,RII-GAAS-GADRAS,Highest tabulated wavelength.
 RII-GAAS-GADRAS,wl_max_um,1.399642,um,,literature,RII-GAAS-GADRAS,Highest tabulated wavelength.
+RII-GAAS-GADRAS,wl_max_um,1.399642,um,,literature,RII-GAAS-GADRAS,Highest tabulated wavelength.
+RII-GAAS-GADRAS,wl_min_um,0.4502291,um,,literature,RII-GAAS-GADRAS,Lowest tabulated wavelength.
 RII-GAAS-GADRAS,wl_min_um,0.4502291,um,,literature,RII-GAAS-GADRAS,Lowest tabulated wavelength.
 RII-GAAS-GADRAS,wl_min_um,0.4502291,um,,literature,RII-GAAS-GADRAS,Lowest tabulated wavelength.
 RII-GAAS-JELLISON,n_at_reference,4.4103200000000005,,486.1,interpolated,RII-GAAS-JELLISON,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14965,6 +15043,8 @@ RII-GAAS-JELLISON,n_at_reference,3.93976,,587.6,interpolated,RII-GAAS-JELLISON,L
 RII-GAAS-JELLISON,n_at_reference,3.81344,,656.3,interpolated,RII-GAAS-JELLISON,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-GAAS-JELLISON,wl_max_um,0.84,um,,literature,RII-GAAS-JELLISON,Highest tabulated wavelength.
 RII-GAAS-JELLISON,wl_max_um,0.84,um,,literature,RII-GAAS-JELLISON,Highest tabulated wavelength.
+RII-GAAS-JELLISON,wl_max_um,0.84,um,,literature,RII-GAAS-JELLISON,Highest tabulated wavelength.
+RII-GAAS-JELLISON,wl_min_um,0.234,um,,literature,RII-GAAS-JELLISON,Lowest tabulated wavelength.
 RII-GAAS-JELLISON,wl_min_um,0.234,um,,literature,RII-GAAS-JELLISON,Lowest tabulated wavelength.
 RII-GAAS-JELLISON,wl_min_um,0.234,um,,literature,RII-GAAS-JELLISON,Lowest tabulated wavelength.
 RII-GAAS-KACHARE,n_at_reference,2.9693693194816375,,2000.0,calculated,RII-GAAS-KACHARE,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
@@ -14975,6 +15055,8 @@ RII-GAAS-KACHARE,n_at_reference,2.9021536218064314,,8000.0,calculated,RII-GAAS-K
 RII-GAAS-KACHARE,n_at_reference,2.89109910547252,,10000.0,calculated,RII-GAAS-KACHARE,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
 RII-GAAS-KACHARE,wl_max_um,11.0,um,,literature,RII-GAAS-KACHARE,Highest wavelength the cited fit is valid over.
 RII-GAAS-KACHARE,wl_max_um,11.0,um,,literature,RII-GAAS-KACHARE,Highest wavelength the cited fit is valid over.
+RII-GAAS-KACHARE,wl_max_um,11.0,um,,literature,RII-GAAS-KACHARE,Highest wavelength the cited fit is valid over.
+RII-GAAS-KACHARE,wl_min_um,1.4,um,,literature,RII-GAAS-KACHARE,Lowest wavelength the cited fit is valid over.
 RII-GAAS-KACHARE,wl_min_um,1.4,um,,literature,RII-GAAS-KACHARE,Lowest wavelength the cited fit is valid over.
 RII-GAAS-KACHARE,wl_min_um,1.4,um,,literature,RII-GAAS-KACHARE,Lowest wavelength the cited fit is valid over.
 RII-GAAS-OZAKI,n_at_reference,4.340534131736527,,486.1,interpolated,RII-GAAS-OZAKI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14983,6 +15065,8 @@ RII-GAAS-OZAKI,n_at_reference,3.7473698360655736,,656.3,interpolated,RII-GAAS-OZ
 RII-GAAS-OZAKI,n_at_reference,3.493093811533052,,1000.0,interpolated,RII-GAAS-OZAKI,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-GAAS-OZAKI,wl_max_um,1.0332,um,,literature,RII-GAAS-OZAKI,Highest tabulated wavelength.
 RII-GAAS-OZAKI,wl_max_um,1.0332,um,,literature,RII-GAAS-OZAKI,Highest tabulated wavelength.
+RII-GAAS-OZAKI,wl_max_um,1.0332,um,,literature,RII-GAAS-OZAKI,Highest tabulated wavelength.
+RII-GAAS-OZAKI,wl_min_um,0.2214,um,,literature,RII-GAAS-OZAKI,Lowest tabulated wavelength.
 RII-GAAS-OZAKI,wl_min_um,0.2214,um,,literature,RII-GAAS-OZAKI,Lowest tabulated wavelength.
 RII-GAAS-OZAKI,wl_min_um,0.2214,um,,literature,RII-GAAS-OZAKI,Lowest tabulated wavelength.
 RII-GAAS-PAPATRYFONOS,n_at_reference,4.314754173228347,,486.1,interpolated,RII-GAAS-PAPATRYFONOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -14991,6 +15075,8 @@ RII-GAAS-PAPATRYFONOS,n_at_reference,3.7858025899280574,,656.3,interpolated,RII-
 RII-GAAS-PAPATRYFONOS,n_at_reference,3.4734056558877366,,1000.0,interpolated,RII-GAAS-PAPATRYFONOS,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-GAAS-PAPATRYFONOS,wl_max_um,1.87868,um,,literature,RII-GAAS-PAPATRYFONOS,Highest tabulated wavelength.
 RII-GAAS-PAPATRYFONOS,wl_max_um,1.87868,um,,literature,RII-GAAS-PAPATRYFONOS,Highest tabulated wavelength.
+RII-GAAS-PAPATRYFONOS,wl_max_um,1.87868,um,,literature,RII-GAAS-PAPATRYFONOS,Highest tabulated wavelength.
+RII-GAAS-PAPATRYFONOS,wl_min_um,0.26049,um,,literature,RII-GAAS-PAPATRYFONOS,Lowest tabulated wavelength.
 RII-GAAS-PAPATRYFONOS,wl_min_um,0.26049,um,,literature,RII-GAAS-PAPATRYFONOS,Lowest tabulated wavelength.
 RII-GAAS-PAPATRYFONOS,wl_min_um,0.26049,um,,literature,RII-GAAS-PAPATRYFONOS,Lowest tabulated wavelength.
 RII-GAAS-PERNER,n_at_reference,3.328723191454776,,2000.0,calculated,RII-GAAS-PERNER,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
@@ -14999,6 +15085,8 @@ RII-GAAS-PERNER,n_at_reference,3.2857789798632453,,4000.0,calculated,RII-GAAS-PE
 RII-GAAS-PERNER,n_at_reference,3.2807513032212685,,5000.0,calculated,RII-GAAS-PERNER,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
 RII-GAAS-PERNER,wl_max_um,7.1,um,,literature,RII-GAAS-PERNER,Highest wavelength the cited fit is valid over.
 RII-GAAS-PERNER,wl_max_um,7.1,um,,literature,RII-GAAS-PERNER,Highest wavelength the cited fit is valid over.
+RII-GAAS-PERNER,wl_max_um,7.1,um,,literature,RII-GAAS-PERNER,Highest wavelength the cited fit is valid over.
+RII-GAAS-PERNER,wl_min_um,2.0,um,,literature,RII-GAAS-PERNER,Lowest wavelength the cited fit is valid over.
 RII-GAAS-PERNER,wl_min_um,2.0,um,,literature,RII-GAAS-PERNER,Lowest wavelength the cited fit is valid over.
 RII-GAAS-PERNER,wl_min_um,2.0,um,,literature,RII-GAAS-PERNER,Lowest wavelength the cited fit is valid over.
 RII-GAAS-RAKIC,n_at_reference,4.4140395061728395,,486.1,interpolated,RII-GAAS-RAKIC,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15014,6 +15102,8 @@ RII-GAAS-RAKIC,n_at_reference,3.2649380048678966,,10000.0,interpolated,RII-GAAS-
 RII-GAAS-RAKIC,n_at_reference,3.2637386680306184,,12000.0,interpolated,RII-GAAS-RAKIC,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GAAS-RAKIC,wl_max_um,12.398,um,,literature,RII-GAAS-RAKIC,Highest tabulated wavelength.
 RII-GAAS-RAKIC,wl_max_um,12.398,um,,literature,RII-GAAS-RAKIC,Highest tabulated wavelength.
+RII-GAAS-RAKIC,wl_max_um,12.398,um,,literature,RII-GAAS-RAKIC,Highest tabulated wavelength.
+RII-GAAS-RAKIC,wl_min_um,0.20664,um,,literature,RII-GAAS-RAKIC,Lowest tabulated wavelength.
 RII-GAAS-RAKIC,wl_min_um,0.20664,um,,literature,RII-GAAS-RAKIC,Lowest tabulated wavelength.
 RII-GAAS-RAKIC,wl_min_um,0.20664,um,,literature,RII-GAAS-RAKIC,Lowest tabulated wavelength.
 RII-GAAS-SKAULI,n_at_reference,2.8114914342237136,,1000.0,calculated,RII-GAAS-SKAULI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15026,6 +15116,8 @@ RII-GAAS-SKAULI,n_at_reference,2.5193202917215047,,10000.0,calculated,RII-GAAS-S
 RII-GAAS-SKAULI,n_at_reference,2.5034703310211723,,12000.0,calculated,RII-GAAS-SKAULI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-GAAS-SKAULI,wl_max_um,17.0,um,,literature,RII-GAAS-SKAULI,Highest wavelength the cited fit is valid over.
 RII-GAAS-SKAULI,wl_max_um,17.0,um,,literature,RII-GAAS-SKAULI,Highest wavelength the cited fit is valid over.
+RII-GAAS-SKAULI,wl_max_um,17.0,um,,literature,RII-GAAS-SKAULI,Highest wavelength the cited fit is valid over.
+RII-GAAS-SKAULI,wl_min_um,0.97,um,,literature,RII-GAAS-SKAULI,Lowest wavelength the cited fit is valid over.
 RII-GAAS-SKAULI,wl_min_um,0.97,um,,literature,RII-GAAS-SKAULI,Lowest wavelength the cited fit is valid over.
 RII-GAAS-SKAULI,wl_min_um,0.97,um,,literature,RII-GAAS-SKAULI,Lowest wavelength the cited fit is valid over.
 RII-GE-AMOTCHKINA,n_at_reference,3.0,,486.1,interpolated,RII-GE-AMOTCHKINA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15040,6 +15132,8 @@ RII-GE-AMOTCHKINA,n_at_reference,3.96203,,8000.0,interpolated,RII-GE-AMOTCHKINA,
 RII-GE-AMOTCHKINA,n_at_reference,3.95967,,10000.0,interpolated,RII-GE-AMOTCHKINA,Linear interpolation between tabulated samples near 10.0 um from the cited reference.
 RII-GE-AMOTCHKINA,wl_max_um,11.0,um,,literature,RII-GE-AMOTCHKINA,Highest tabulated wavelength.
 RII-GE-AMOTCHKINA,wl_max_um,11.0,um,,literature,RII-GE-AMOTCHKINA,Highest tabulated wavelength.
+RII-GE-AMOTCHKINA,wl_max_um,11.0,um,,literature,RII-GE-AMOTCHKINA,Highest tabulated wavelength.
+RII-GE-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA,Lowest tabulated wavelength.
 RII-GE-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA,Lowest tabulated wavelength.
 RII-GE-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA,Lowest tabulated wavelength.
 RII-GE-AMOTCHKINA-FILM,n_at_reference,3.3092835,,486.1,interpolated,RII-GE-AMOTCHKINA-FILM,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15055,6 +15149,8 @@ RII-GE-AMOTCHKINA-FILM,n_at_reference,4.16415,,10000.0,interpolated,RII-GE-AMOTC
 RII-GE-AMOTCHKINA-FILM,n_at_reference,4.16234,,12000.0,interpolated,RII-GE-AMOTCHKINA-FILM,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-AMOTCHKINA-FILM,wl_max_um,15.0,um,,literature,RII-GE-AMOTCHKINA-FILM,Highest tabulated wavelength.
 RII-GE-AMOTCHKINA-FILM,wl_max_um,15.0,um,,literature,RII-GE-AMOTCHKINA-FILM,Highest tabulated wavelength.
+RII-GE-AMOTCHKINA-FILM,wl_max_um,15.0,um,,literature,RII-GE-AMOTCHKINA-FILM,Highest tabulated wavelength.
+RII-GE-AMOTCHKINA-FILM,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA-FILM,Lowest tabulated wavelength.
 RII-GE-AMOTCHKINA-FILM,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA-FILM,Lowest tabulated wavelength.
 RII-GE-AMOTCHKINA-FILM,wl_min_um,0.4,um,,literature,RII-GE-AMOTCHKINA-FILM,Lowest tabulated wavelength.
 RII-GE-ASPNES,n_at_reference,4.257473684210526,,486.1,interpolated,RII-GE-ASPNES,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15062,6 +15158,8 @@ RII-GE-ASPNES,n_at_reference,5.699417910447761,,587.6,interpolated,RII-GE-ASPNES
 RII-GE-ASPNES,n_at_reference,5.2702369146005505,,656.3,interpolated,RII-GE-ASPNES,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-GE-ASPNES,wl_max_um,0.8266,um,,literature,RII-GE-ASPNES,Highest tabulated wavelength.
 RII-GE-ASPNES,wl_max_um,0.8266,um,,literature,RII-GE-ASPNES,Highest tabulated wavelength.
+RII-GE-ASPNES,wl_max_um,0.8266,um,,literature,RII-GE-ASPNES,Highest tabulated wavelength.
+RII-GE-ASPNES,wl_min_um,0.2066,um,,literature,RII-GE-ASPNES,Lowest tabulated wavelength.
 RII-GE-ASPNES,wl_min_um,0.2066,um,,literature,RII-GE-ASPNES,Lowest tabulated wavelength.
 RII-GE-ASPNES,wl_min_um,0.2066,um,,literature,RII-GE-ASPNES,Lowest tabulated wavelength.
 RII-GE-BURNETT,n_at_reference,4.108452025218496,,2000.0,calculated,RII-GE-BURNETT,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
@@ -15072,6 +15170,8 @@ RII-GE-BURNETT,n_at_reference,4.006232253035364,,8000.0,calculated,RII-GE-BURNET
 RII-GE-BURNETT,n_at_reference,4.004003038402875,,10000.0,calculated,RII-GE-BURNETT,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-GE-BURNETT,n_at_reference,4.002738424532997,,12000.0,calculated,RII-GE-BURNETT,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-GE-BURNETT,wl_max_um,14.0,um,,literature,RII-GE-BURNETT,Highest wavelength the cited fit is valid over.
+RII-GE-BURNETT,wl_max_um,14.0,um,,literature,RII-GE-BURNETT,Highest wavelength the cited fit is valid over.
+RII-GE-BURNETT,wl_min_um,2.0,um,,literature,RII-GE-BURNETT,Lowest wavelength the cited fit is valid over.
 RII-GE-BURNETT,wl_min_um,2.0,um,,literature,RII-GE-BURNETT,Lowest wavelength the cited fit is valid over.
 RII-GE-CIESIELSKI-20NM,n_at_reference,4.170543307086614,,486.1,interpolated,RII-GE-CIESIELSKI-20NM,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-GE-CIESIELSKI-20NM,n_at_reference,4.7166929982046675,,587.6,interpolated,RII-GE-CIESIELSKI-20NM,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
@@ -15080,6 +15180,8 @@ RII-GE-CIESIELSKI-20NM,n_at_reference,4.773,,1000.0,interpolated,RII-GE-CIESIELS
 RII-GE-CIESIELSKI-20NM,n_at_reference,4.169,,2000.0,interpolated,RII-GE-CIESIELSKI-20NM,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-GE-CIESIELSKI-20NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-20NM,Highest tabulated wavelength.
 RII-GE-CIESIELSKI-20NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-20NM,Highest tabulated wavelength.
+RII-GE-CIESIELSKI-20NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-20NM,Highest tabulated wavelength.
+RII-GE-CIESIELSKI-20NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-20NM,Lowest tabulated wavelength.
 RII-GE-CIESIELSKI-20NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-20NM,Lowest tabulated wavelength.
 RII-GE-CIESIELSKI-20NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-20NM,Lowest tabulated wavelength.
 RII-GE-CIESIELSKI-2NM,n_at_reference,3.2246115485564304,,486.1,interpolated,RII-GE-CIESIELSKI-2NM,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15089,6 +15191,8 @@ RII-GE-CIESIELSKI-2NM,n_at_reference,2.924,,1000.0,interpolated,RII-GE-CIESIELSK
 RII-GE-CIESIELSKI-2NM,n_at_reference,2.765,,2000.0,interpolated,RII-GE-CIESIELSKI-2NM,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-GE-CIESIELSKI-2NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-2NM,Highest tabulated wavelength.
 RII-GE-CIESIELSKI-2NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-2NM,Highest tabulated wavelength.
+RII-GE-CIESIELSKI-2NM,wl_max_um,2.0,um,,literature,RII-GE-CIESIELSKI-2NM,Highest tabulated wavelength.
+RII-GE-CIESIELSKI-2NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-2NM,Lowest tabulated wavelength.
 RII-GE-CIESIELSKI-2NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-2NM,Lowest tabulated wavelength.
 RII-GE-CIESIELSKI-2NM,wl_min_um,0.2,um,,literature,RII-GE-CIESIELSKI-2NM,Lowest tabulated wavelength.
 RII-GE-ICENOGLE,n_at_reference,2.8416622167943464,,3000.0,calculated,RII-GE-ICENOGLE,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -15098,12 +15202,16 @@ RII-GE-ICENOGLE,n_at_reference,2.787814534095212,,8000.0,calculated,RII-GE-ICENO
 RII-GE-ICENOGLE,n_at_reference,2.7844132721417307,,10000.0,calculated,RII-GE-ICENOGLE,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-GE-ICENOGLE,n_at_reference,2.7823080769462596,,12000.0,calculated,RII-GE-ICENOGLE,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-GE-ICENOGLE,wl_max_um,12.0,um,,literature,RII-GE-ICENOGLE,Highest wavelength the cited fit is valid over.
+RII-GE-ICENOGLE,wl_max_um,12.0,um,,literature,RII-GE-ICENOGLE,Highest wavelength the cited fit is valid over.
+RII-GE-ICENOGLE,wl_min_um,2.5,um,,literature,RII-GE-ICENOGLE,Lowest wavelength the cited fit is valid over.
 RII-GE-ICENOGLE,wl_min_um,2.5,um,,literature,RII-GE-ICENOGLE,Lowest wavelength the cited fit is valid over.
 RII-GE-JELLISON,n_at_reference,4.327019999999999,,486.1,interpolated,RII-GE-JELLISON,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-GE-JELLISON,n_at_reference,5.766240000000001,,587.6,interpolated,RII-GE-JELLISON,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-GE-JELLISON,n_at_reference,5.26942,,656.3,interpolated,RII-GE-JELLISON,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-GE-JELLISON,wl_max_um,0.84,um,,literature,RII-GE-JELLISON,Highest tabulated wavelength.
 RII-GE-JELLISON,wl_max_um,0.84,um,,literature,RII-GE-JELLISON,Highest tabulated wavelength.
+RII-GE-JELLISON,wl_max_um,0.84,um,,literature,RII-GE-JELLISON,Highest tabulated wavelength.
+RII-GE-JELLISON,wl_min_um,0.234,um,,literature,RII-GE-JELLISON,Lowest tabulated wavelength.
 RII-GE-JELLISON,wl_min_um,0.234,um,,literature,RII-GE-JELLISON,Lowest tabulated wavelength.
 RII-GE-JELLISON,wl_min_um,0.234,um,,literature,RII-GE-JELLISON,Lowest tabulated wavelength.
 RII-GE-LI-100K,n_at_reference,4.0197,,2000.0,interpolated,RII-GE-LI-100K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15115,6 +15223,8 @@ RII-GE-LI-100K,n_at_reference,3.9365,,10000.0,interpolated,RII-GE-LI-100K,Linear
 RII-GE-LI-100K,n_at_reference,3.9355,,12000.0,interpolated,RII-GE-LI-100K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-100K,wl_max_um,18.0,um,,literature,RII-GE-LI-100K,Highest tabulated wavelength.
 RII-GE-LI-100K,wl_max_um,18.0,um,,literature,RII-GE-LI-100K,Highest tabulated wavelength.
+RII-GE-LI-100K,wl_max_um,18.0,um,,literature,RII-GE-LI-100K,Highest tabulated wavelength.
+RII-GE-LI-100K,wl_min_um,1.9,um,,literature,RII-GE-LI-100K,Lowest tabulated wavelength.
 RII-GE-LI-100K,wl_min_um,1.9,um,,literature,RII-GE-LI-100K,Lowest tabulated wavelength.
 RII-GE-LI-100K,wl_min_um,1.9,um,,literature,RII-GE-LI-100K,Lowest tabulated wavelength.
 RII-GE-LI-150K,n_at_reference,4.0377,,2000.0,interpolated,RII-GE-LI-150K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15126,6 +15236,8 @@ RII-GE-LI-150K,n_at_reference,3.9511,,10000.0,interpolated,RII-GE-LI-150K,Linear
 RII-GE-LI-150K,n_at_reference,3.95,,12000.0,interpolated,RII-GE-LI-150K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-150K,wl_max_um,18.0,um,,literature,RII-GE-LI-150K,Highest tabulated wavelength.
 RII-GE-LI-150K,wl_max_um,18.0,um,,literature,RII-GE-LI-150K,Highest tabulated wavelength.
+RII-GE-LI-150K,wl_max_um,18.0,um,,literature,RII-GE-LI-150K,Highest tabulated wavelength.
+RII-GE-LI-150K,wl_min_um,1.9,um,,literature,RII-GE-LI-150K,Lowest tabulated wavelength.
 RII-GE-LI-150K,wl_min_um,1.9,um,,literature,RII-GE-LI-150K,Lowest tabulated wavelength.
 RII-GE-LI-150K,wl_min_um,1.9,um,,literature,RII-GE-LI-150K,Lowest tabulated wavelength.
 RII-GE-LI-200K,n_at_reference,4.0579,,2000.0,interpolated,RII-GE-LI-200K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15137,6 +15249,8 @@ RII-GE-LI-200K,n_at_reference,3.9675,,10000.0,interpolated,RII-GE-LI-200K,Linear
 RII-GE-LI-200K,n_at_reference,3.9664,,12000.0,interpolated,RII-GE-LI-200K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-200K,wl_max_um,18.0,um,,literature,RII-GE-LI-200K,Highest tabulated wavelength.
 RII-GE-LI-200K,wl_max_um,18.0,um,,literature,RII-GE-LI-200K,Highest tabulated wavelength.
+RII-GE-LI-200K,wl_max_um,18.0,um,,literature,RII-GE-LI-200K,Highest tabulated wavelength.
+RII-GE-LI-200K,wl_min_um,1.9,um,,literature,RII-GE-LI-200K,Lowest tabulated wavelength.
 RII-GE-LI-200K,wl_min_um,1.9,um,,literature,RII-GE-LI-200K,Lowest tabulated wavelength.
 RII-GE-LI-200K,wl_min_um,1.9,um,,literature,RII-GE-LI-200K,Lowest tabulated wavelength.
 RII-GE-LI-250K,n_at_reference,4.0802,,2000.0,interpolated,RII-GE-LI-250K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15148,6 +15262,8 @@ RII-GE-LI-250K,n_at_reference,3.9856,,10000.0,interpolated,RII-GE-LI-250K,Linear
 RII-GE-LI-250K,n_at_reference,3.9844,,12000.0,interpolated,RII-GE-LI-250K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-250K,wl_max_um,18.0,um,,literature,RII-GE-LI-250K,Highest tabulated wavelength.
 RII-GE-LI-250K,wl_max_um,18.0,um,,literature,RII-GE-LI-250K,Highest tabulated wavelength.
+RII-GE-LI-250K,wl_max_um,18.0,um,,literature,RII-GE-LI-250K,Highest tabulated wavelength.
+RII-GE-LI-250K,wl_min_um,1.9,um,,literature,RII-GE-LI-250K,Lowest tabulated wavelength.
 RII-GE-LI-250K,wl_min_um,1.9,um,,literature,RII-GE-LI-250K,Lowest tabulated wavelength.
 RII-GE-LI-250K,wl_min_um,1.9,um,,literature,RII-GE-LI-250K,Lowest tabulated wavelength.
 RII-GE-LI-293K,n_at_reference,4.1008,,2000.0,interpolated,RII-GE-LI-293K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15159,6 +15275,8 @@ RII-GE-LI-293K,n_at_reference,4.0025,,10000.0,interpolated,RII-GE-LI-293K,Linear
 RII-GE-LI-293K,n_at_reference,4.0012,,12000.0,interpolated,RII-GE-LI-293K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-293K,wl_max_um,18.0,um,,literature,RII-GE-LI-293K,Highest tabulated wavelength.
 RII-GE-LI-293K,wl_max_um,18.0,um,,literature,RII-GE-LI-293K,Highest tabulated wavelength.
+RII-GE-LI-293K,wl_max_um,18.0,um,,literature,RII-GE-LI-293K,Highest tabulated wavelength.
+RII-GE-LI-293K,wl_min_um,1.9,um,,literature,RII-GE-LI-293K,Lowest tabulated wavelength.
 RII-GE-LI-293K,wl_min_um,1.9,um,,literature,RII-GE-LI-293K,Lowest tabulated wavelength.
 RII-GE-LI-293K,wl_min_um,1.9,um,,literature,RII-GE-LI-293K,Lowest tabulated wavelength.
 RII-GE-LI-350K,n_at_reference,4.1302,,2000.0,interpolated,RII-GE-LI-350K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15170,6 +15288,8 @@ RII-GE-LI-350K,n_at_reference,4.0264,,10000.0,interpolated,RII-GE-LI-350K,Linear
 RII-GE-LI-350K,n_at_reference,4.025,,12000.0,interpolated,RII-GE-LI-350K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-350K,wl_max_um,18.0,um,,literature,RII-GE-LI-350K,Highest tabulated wavelength.
 RII-GE-LI-350K,wl_max_um,18.0,um,,literature,RII-GE-LI-350K,Highest tabulated wavelength.
+RII-GE-LI-350K,wl_max_um,18.0,um,,literature,RII-GE-LI-350K,Highest tabulated wavelength.
+RII-GE-LI-350K,wl_min_um,1.9,um,,literature,RII-GE-LI-350K,Lowest tabulated wavelength.
 RII-GE-LI-350K,wl_min_um,1.9,um,,literature,RII-GE-LI-350K,Lowest tabulated wavelength.
 RII-GE-LI-350K,wl_min_um,1.9,um,,literature,RII-GE-LI-350K,Lowest tabulated wavelength.
 RII-GE-LI-400K,n_at_reference,4.1577,,2000.0,interpolated,RII-GE-LI-400K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15181,6 +15301,8 @@ RII-GE-LI-400K,n_at_reference,4.0488,,10000.0,interpolated,RII-GE-LI-400K,Linear
 RII-GE-LI-400K,n_at_reference,4.0474,,12000.0,interpolated,RII-GE-LI-400K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-400K,wl_max_um,18.0,um,,literature,RII-GE-LI-400K,Highest tabulated wavelength.
 RII-GE-LI-400K,wl_max_um,18.0,um,,literature,RII-GE-LI-400K,Highest tabulated wavelength.
+RII-GE-LI-400K,wl_max_um,18.0,um,,literature,RII-GE-LI-400K,Highest tabulated wavelength.
+RII-GE-LI-400K,wl_min_um,1.9,um,,literature,RII-GE-LI-400K,Lowest tabulated wavelength.
 RII-GE-LI-400K,wl_min_um,1.9,um,,literature,RII-GE-LI-400K,Lowest tabulated wavelength.
 RII-GE-LI-400K,wl_min_um,1.9,um,,literature,RII-GE-LI-400K,Lowest tabulated wavelength.
 RII-GE-LI-450K,n_at_reference,4.1866,,2000.0,interpolated,RII-GE-LI-450K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15192,6 +15314,8 @@ RII-GE-LI-450K,n_at_reference,4.0723,,10000.0,interpolated,RII-GE-LI-450K,Linear
 RII-GE-LI-450K,n_at_reference,4.0708,,12000.0,interpolated,RII-GE-LI-450K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-450K,wl_max_um,18.0,um,,literature,RII-GE-LI-450K,Highest tabulated wavelength.
 RII-GE-LI-450K,wl_max_um,18.0,um,,literature,RII-GE-LI-450K,Highest tabulated wavelength.
+RII-GE-LI-450K,wl_max_um,18.0,um,,literature,RII-GE-LI-450K,Highest tabulated wavelength.
+RII-GE-LI-450K,wl_min_um,1.9,um,,literature,RII-GE-LI-450K,Lowest tabulated wavelength.
 RII-GE-LI-450K,wl_min_um,1.9,um,,literature,RII-GE-LI-450K,Lowest tabulated wavelength.
 RII-GE-LI-450K,wl_min_um,1.9,um,,literature,RII-GE-LI-450K,Lowest tabulated wavelength.
 RII-GE-LI-500K,n_at_reference,4.2169,,2000.0,interpolated,RII-GE-LI-500K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15203,6 +15327,8 @@ RII-GE-LI-500K,n_at_reference,4.0969,,10000.0,interpolated,RII-GE-LI-500K,Linear
 RII-GE-LI-500K,n_at_reference,4.0953,,12000.0,interpolated,RII-GE-LI-500K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-500K,wl_max_um,18.0,um,,literature,RII-GE-LI-500K,Highest tabulated wavelength.
 RII-GE-LI-500K,wl_max_um,18.0,um,,literature,RII-GE-LI-500K,Highest tabulated wavelength.
+RII-GE-LI-500K,wl_max_um,18.0,um,,literature,RII-GE-LI-500K,Highest tabulated wavelength.
+RII-GE-LI-500K,wl_min_um,1.9,um,,literature,RII-GE-LI-500K,Lowest tabulated wavelength.
 RII-GE-LI-500K,wl_min_um,1.9,um,,literature,RII-GE-LI-500K,Lowest tabulated wavelength.
 RII-GE-LI-500K,wl_min_um,1.9,um,,literature,RII-GE-LI-500K,Lowest tabulated wavelength.
 RII-GE-LI-550K,n_at_reference,4.2484,,2000.0,interpolated,RII-GE-LI-550K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15214,6 +15340,8 @@ RII-GE-LI-550K,n_at_reference,4.1223,,10000.0,interpolated,RII-GE-LI-550K,Linear
 RII-GE-LI-550K,n_at_reference,4.1207,,12000.0,interpolated,RII-GE-LI-550K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-GE-LI-550K,wl_max_um,18.0,um,,literature,RII-GE-LI-550K,Highest tabulated wavelength.
 RII-GE-LI-550K,wl_max_um,18.0,um,,literature,RII-GE-LI-550K,Highest tabulated wavelength.
+RII-GE-LI-550K,wl_max_um,18.0,um,,literature,RII-GE-LI-550K,Highest tabulated wavelength.
+RII-GE-LI-550K,wl_min_um,1.9,um,,literature,RII-GE-LI-550K,Lowest tabulated wavelength.
 RII-GE-LI-550K,wl_min_um,1.9,um,,literature,RII-GE-LI-550K,Lowest tabulated wavelength.
 RII-GE-LI-550K,wl_min_um,1.9,um,,literature,RII-GE-LI-550K,Lowest tabulated wavelength.
 RII-GE-NUNLEY,n_at_reference,4.2892631578947364,,486.1,interpolated,RII-GE-NUNLEY,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15223,6 +15351,8 @@ RII-GE-NUNLEY,n_at_reference,4.4259259259259265,,1000.0,interpolated,RII-GE-NUNL
 RII-GE-NUNLEY,n_at_reference,4.113,,2000.0,interpolated,RII-GE-NUNLEY,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-GE-NUNLEY,wl_max_um,2.48,um,,literature,RII-GE-NUNLEY,Highest tabulated wavelength.
 RII-GE-NUNLEY,wl_max_um,2.48,um,,literature,RII-GE-NUNLEY,Highest tabulated wavelength.
+RII-GE-NUNLEY,wl_max_um,2.48,um,,literature,RII-GE-NUNLEY,Highest tabulated wavelength.
+RII-GE-NUNLEY,wl_min_um,0.1879,um,,literature,RII-GE-NUNLEY,Lowest tabulated wavelength.
 RII-GE-NUNLEY,wl_min_um,0.1879,um,,literature,RII-GE-NUNLEY,Lowest tabulated wavelength.
 RII-GE-NUNLEY,wl_min_um,0.1879,um,,literature,RII-GE-NUNLEY,Lowest tabulated wavelength.
 RII-LAF3-AMOTCHKINA,n_at_reference,1.769332024507955,,486.1,calculated,RII-LAF3-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
@@ -15237,12 +15367,16 @@ RII-LAF3-AMOTCHKINA,n_at_reference,1.669628587664221,,8000.0,calculated,RII-LAF3
 RII-LAF3-AMOTCHKINA,n_at_reference,1.6194619108190378,,10000.0,calculated,RII-LAF3-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-LAF3-AMOTCHKINA,n_at_reference,1.5507916341412133,,12000.0,calculated,RII-LAF3-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-LAF3-AMOTCHKINA,wl_max_um,12.0,um,,literature,RII-LAF3-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-LAF3-AMOTCHKINA,wl_max_um,12.0,um,,literature,RII-LAF3-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-LAF3-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-LAF3-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-LAF3-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-LAF3-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-E,n_at_reference,1.601870434810011,,486.1,calculated,RII-LAF3-LAIHOA-E,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
 RII-LAF3-LAIHOA-E,n_at_reference,1.5967138715327056,,587.6,calculated,RII-LAF3-LAIHOA-E,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
 RII-LAF3-LAIHOA-E,n_at_reference,1.594523907632298,,656.3,calculated,RII-LAF3-LAIHOA-E,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
 RII-LAF3-LAIHOA-E,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-E,Highest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-E,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-E,Highest wavelength the cited fit is valid over.
+RII-LAF3-LAIHOA-E,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-E,Highest wavelength the cited fit is valid over.
+RII-LAF3-LAIHOA-E,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-E,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-E,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-E,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-E,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-E,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-O,n_at_reference,1.6092922202190851,,486.1,calculated,RII-LAF3-LAIHOA-O,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
@@ -15250,6 +15384,8 @@ RII-LAF3-LAIHOA-O,n_at_reference,1.6040447226779082,,587.6,calculated,RII-LAF3-L
 RII-LAF3-LAIHOA-O,n_at_reference,1.6018163096229463,,656.3,calculated,RII-LAF3-LAIHOA-O,Evaluated from the refractiveindex.info formula 1 1-term Sellmeier fit; not a tabulated value.
 RII-LAF3-LAIHOA-O,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-O,Highest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-O,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-O,Highest wavelength the cited fit is valid over.
+RII-LAF3-LAIHOA-O,wl_max_um,0.7,um,,literature,RII-LAF3-LAIHOA-O,Highest wavelength the cited fit is valid over.
+RII-LAF3-LAIHOA-O,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-O,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-O,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-O,Lowest wavelength the cited fit is valid over.
 RII-LAF3-LAIHOA-O,wl_min_um,0.35,um,,literature,RII-LAF3-LAIHOA-O,Lowest wavelength the cited fit is valid over.
 RII-LAF3-RODRIGUEZ-DEMARCOS,n_at_reference,1.5897450186422792,,486.1,interpolated,RII-LAF3-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15259,6 +15395,8 @@ RII-LAF3-RODRIGUEZ-DEMARCOS,n_at_reference,1.5786192984562608,,1000.0,interpolat
 RII-LAF3-RODRIGUEZ-DEMARCOS,n_at_reference,1.5761271043627032,,2000.0,interpolated,RII-LAF3-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-LAF3-RODRIGUEZ-DEMARCOS,wl_max_um,2.00663,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
 RII-LAF3-RODRIGUEZ-DEMARCOS,wl_max_um,2.00663,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-LAF3-RODRIGUEZ-DEMARCOS,wl_max_um,2.00663,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-LAF3-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299274,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-LAF3-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299274,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-LAF3-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299274,um,,literature,RII-LAF3-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-LIF-LI,n_at_reference,1.3949084472909141,,486.1,calculated,RII-LIF-LI,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
@@ -15273,6 +15411,8 @@ RII-LIF-LI,n_at_reference,1.218434500977156,,8000.0,calculated,RII-LIF-LI,Evalua
 RII-LIF-LI,n_at_reference,1.1004830551479134,,10000.0,calculated,RII-LIF-LI,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
 RII-LIF-LI,wl_max_um,11.0,um,,literature,RII-LIF-LI,Highest wavelength the cited fit is valid over.
 RII-LIF-LI,wl_max_um,11.0,um,,literature,RII-LIF-LI,Highest wavelength the cited fit is valid over.
+RII-LIF-LI,wl_max_um,11.0,um,,literature,RII-LIF-LI,Highest wavelength the cited fit is valid over.
+RII-LIF-LI,wl_min_um,0.1,um,,literature,RII-LIF-LI,Lowest wavelength the cited fit is valid over.
 RII-LIF-LI,wl_min_um,0.1,um,,literature,RII-LIF-LI,Lowest wavelength the cited fit is valid over.
 RII-LIF-LI,wl_min_um,0.1,um,,literature,RII-LIF-LI,Lowest wavelength the cited fit is valid over.
 RII-MGAL2O4-CHERNOVA,n_at_reference,1.721192136304063,,486.1,interpolated,RII-MGAL2O4-CHERNOVA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15281,6 +15421,8 @@ RII-MGAL2O4-CHERNOVA,n_at_reference,1.7100428780131482,,656.3,interpolated,RII-M
 RII-MGAL2O4-CHERNOVA,n_at_reference,1.7027027440970006,,1000.0,interpolated,RII-MGAL2O4-CHERNOVA,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-MGAL2O4-CHERNOVA,wl_max_um,1.6755,um,,literature,RII-MGAL2O4-CHERNOVA,Highest tabulated wavelength.
 RII-MGAL2O4-CHERNOVA,wl_max_um,1.6755,um,,literature,RII-MGAL2O4-CHERNOVA,Highest tabulated wavelength.
+RII-MGAL2O4-CHERNOVA,wl_max_um,1.6755,um,,literature,RII-MGAL2O4-CHERNOVA,Highest tabulated wavelength.
+RII-MGAL2O4-CHERNOVA,wl_min_um,0.14089,um,,literature,RII-MGAL2O4-CHERNOVA,Lowest tabulated wavelength.
 RII-MGAL2O4-CHERNOVA,wl_min_um,0.14089,um,,literature,RII-MGAL2O4-CHERNOVA,Lowest tabulated wavelength.
 RII-MGAL2O4-CHERNOVA,wl_min_um,0.14089,um,,literature,RII-MGAL2O4-CHERNOVA,Lowest tabulated wavelength.
 RII-MGAL2O4-TROPF,n_at_reference,1.7244052331023974,,486.1,calculated,RII-MGAL2O4-TROPF,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
@@ -15293,6 +15435,8 @@ RII-MGAL2O4-TROPF,n_at_reference,1.6386258504448765,,4000.0,calculated,RII-MGAL2
 RII-MGAL2O4-TROPF,n_at_reference,1.5979760578518936,,5000.0,calculated,RII-MGAL2O4-TROPF,Evaluated from the refractiveindex.info formula 1 2-term Sellmeier fit; not a tabulated value.
 RII-MGAL2O4-TROPF,wl_max_um,5.5,um,,literature,RII-MGAL2O4-TROPF,Highest wavelength the cited fit is valid over.
 RII-MGAL2O4-TROPF,wl_max_um,5.5,um,,literature,RII-MGAL2O4-TROPF,Highest wavelength the cited fit is valid over.
+RII-MGAL2O4-TROPF,wl_max_um,5.5,um,,literature,RII-MGAL2O4-TROPF,Highest wavelength the cited fit is valid over.
+RII-MGAL2O4-TROPF,wl_min_um,0.35,um,,literature,RII-MGAL2O4-TROPF,Lowest wavelength the cited fit is valid over.
 RII-MGAL2O4-TROPF,wl_min_um,0.35,um,,literature,RII-MGAL2O4-TROPF,Lowest wavelength the cited fit is valid over.
 RII-MGAL2O4-TROPF,wl_min_um,0.35,um,,literature,RII-MGAL2O4-TROPF,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-E,n_at_reference,1.3921215844301913,,486.1,calculated,RII-MGF2-DODGE-E,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15305,6 +15449,8 @@ RII-MGF2-DODGE-E,n_at_reference,1.3587281503770041,,4000.0,calculated,RII-MGF2-D
 RII-MGF2-DODGE-E,n_at_reference,1.3428800508033667,,5000.0,calculated,RII-MGF2-DODGE-E,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-DODGE-E,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-E,Highest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-E,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-E,Highest wavelength the cited fit is valid over.
+RII-MGF2-DODGE-E,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-E,Highest wavelength the cited fit is valid over.
+RII-MGF2-DODGE-E,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-E,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-E,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-O,n_at_reference,1.3802000191030876,,486.1,calculated,RII-MGF2-DODGE-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15317,6 +15463,8 @@ RII-MGF2-DODGE-O,n_at_reference,1.3488288779031428,,4000.0,calculated,RII-MGF2-D
 RII-MGF2-DODGE-O,n_at_reference,1.3340415607974783,,5000.0,calculated,RII-MGF2-DODGE-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-DODGE-O,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-O,Highest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-O,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-O,Highest wavelength the cited fit is valid over.
+RII-MGF2-DODGE-O,wl_max_um,7.0,um,,literature,RII-MGF2-DODGE-O,Highest wavelength the cited fit is valid over.
+RII-MGF2-DODGE-O,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-O,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-DODGE-O,wl_min_um,0.2,um,,literature,RII-MGF2-DODGE-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-FRANTA,n_at_reference,1.3856738091551832,,486.1,interpolated,RII-MGF2-FRANTA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15332,6 +15480,8 @@ RII-MGF2-FRANTA,n_at_reference,1.1939976472103304,,10000.0,interpolated,RII-MGF2
 RII-MGF2-FRANTA,n_at_reference,1.07498460175,,12000.0,interpolated,RII-MGF2-FRANTA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-MGF2-FRANTA,wl_max_um,125.141,um,,literature,RII-MGF2-FRANTA,Highest tabulated wavelength.
 RII-MGF2-FRANTA,wl_max_um,125.141,um,,literature,RII-MGF2-FRANTA,Highest tabulated wavelength.
+RII-MGF2-FRANTA,wl_max_um,125.141,um,,literature,RII-MGF2-FRANTA,Highest tabulated wavelength.
+RII-MGF2-FRANTA,wl_min_um,0.0275043,um,,literature,RII-MGF2-FRANTA,Lowest tabulated wavelength.
 RII-MGF2-FRANTA,wl_min_um,0.0275043,um,,literature,RII-MGF2-FRANTA,Lowest tabulated wavelength.
 RII-MGF2-FRANTA,wl_min_um,0.0275043,um,,literature,RII-MGF2-FRANTA,Lowest tabulated wavelength.
 RII-MGF2-LI-E,n_at_reference,1.2977348651836556,,486.1,calculated,RII-MGF2-LI-E,Evaluated from the refractiveindex.info formula 1 4-term Sellmeier fit; not a tabulated value.
@@ -15344,6 +15494,8 @@ RII-MGF2-LI-E,n_at_reference,1.265684848891995,,4000.0,calculated,RII-MGF2-LI-E,
 RII-MGF2-LI-E,n_at_reference,1.2511399928248015,,5000.0,calculated,RII-MGF2-LI-E,Evaluated from the refractiveindex.info formula 1 4-term Sellmeier fit; not a tabulated value.
 RII-MGF2-LI-E,wl_max_um,7.5,um,,literature,RII-MGF2-LI-E,Highest wavelength the cited fit is valid over.
 RII-MGF2-LI-E,wl_max_um,7.5,um,,literature,RII-MGF2-LI-E,Highest wavelength the cited fit is valid over.
+RII-MGF2-LI-E,wl_max_um,7.5,um,,literature,RII-MGF2-LI-E,Highest wavelength the cited fit is valid over.
+RII-MGF2-LI-E,wl_min_um,0.14,um,,literature,RII-MGF2-LI-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-LI-E,wl_min_um,0.14,um,,literature,RII-MGF2-LI-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-LI-E,wl_min_um,0.14,um,,literature,RII-MGF2-LI-E,Lowest wavelength the cited fit is valid over.
 RII-MGF2-LI-O,n_at_reference,1.2762135727175794,,486.1,calculated,RII-MGF2-LI-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15356,6 +15508,8 @@ RII-MGF2-LI-O,n_at_reference,1.2462181925065667,,4000.0,calculated,RII-MGF2-LI-O
 RII-MGF2-LI-O,n_at_reference,1.2327250109347048,,5000.0,calculated,RII-MGF2-LI-O,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-LI-O,wl_max_um,7.5,um,,literature,RII-MGF2-LI-O,Highest wavelength the cited fit is valid over.
 RII-MGF2-LI-O,wl_max_um,7.5,um,,literature,RII-MGF2-LI-O,Highest wavelength the cited fit is valid over.
+RII-MGF2-LI-O,wl_max_um,7.5,um,,literature,RII-MGF2-LI-O,Highest wavelength the cited fit is valid over.
+RII-MGF2-LI-O,wl_min_um,0.14,um,,literature,RII-MGF2-LI-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-LI-O,wl_min_um,0.14,um,,literature,RII-MGF2-LI-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-LI-O,wl_min_um,0.14,um,,literature,RII-MGF2-LI-O,Lowest wavelength the cited fit is valid over.
 RII-MGF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.4246325089369707,,486.1,interpolated,RII-MGF2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15365,6 +15519,8 @@ RII-MGF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.4182689554285715,,1000.0,interpolat
 RII-MGF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.4168336681922196,,2000.0,interpolated,RII-MGF2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-MGF2-RODRIGUEZ-DEMARCOS,wl_max_um,2.00146,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
 RII-MGF2-RODRIGUEZ-DEMARCOS,wl_max_um,2.00146,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-MGF2-RODRIGUEZ-DEMARCOS,wl_max_um,2.00146,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-MGF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299919,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-MGF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299919,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-MGF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299919,um,,literature,RII-MGF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-MGF2-ZHENG-E-186C,n_at_reference,1.3913343931244115,,486.1,calculated,RII-MGF2-ZHENG-E-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15373,6 +15529,8 @@ RII-MGF2-ZHENG-E-186C,n_at_reference,1.3876282755765579,,656.3,calculated,RII-MG
 RII-MGF2-ZHENG-E-186C,n_at_reference,1.384421879922694,,1000.0,calculated,RII-MGF2-ZHENG-E-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-E-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-186C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-186C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-186C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-21C,n_at_reference,1.392294720006119,,486.1,calculated,RII-MGF2-ZHENG-E-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15381,6 +15539,8 @@ RII-MGF2-ZHENG-E-21C,n_at_reference,1.3885757220888162,,656.3,calculated,RII-MGF
 RII-MGF2-ZHENG-E-21C,n_at_reference,1.3853610978779307,,1000.0,calculated,RII-MGF2-ZHENG-E-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-E-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-21C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-21C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-21C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-368C,n_at_reference,1.390407046160373,,486.1,calculated,RII-MGF2-ZHENG-E-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15389,6 +15549,8 @@ RII-MGF2-ZHENG-E-368C,n_at_reference,1.3867133245805248,,656.3,calculated,RII-MG
 RII-MGF2-ZHENG-E-368C,n_at_reference,1.3835148458646103,,1000.0,calculated,RII-MGF2-ZHENG-E-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-E-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-368C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-368C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-E-368C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-E-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-368C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-368C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-E-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-E-368C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-186C,n_at_reference,1.3788389515756079,,486.1,calculated,RII-MGF2-ZHENG-O-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15397,6 +15559,8 @@ RII-MGF2-ZHENG-O-186C,n_at_reference,1.3753018250248885,,656.3,calculated,RII-MG
 RII-MGF2-ZHENG-O-186C,n_at_reference,1.3722562723148948,,1000.0,calculated,RII-MGF2-ZHENG-O-186C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-O-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-186C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-186C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-186C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-186C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-186C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-186C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-21C,n_at_reference,1.3801536013683073,,486.1,calculated,RII-MGF2-ZHENG-O-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15405,6 +15569,8 @@ RII-MGF2-ZHENG-O-21C,n_at_reference,1.376596895712995,,656.3,calculated,RII-MGF2
 RII-MGF2-ZHENG-O-21C,n_at_reference,1.3735387615383905,,1000.0,calculated,RII-MGF2-ZHENG-O-21C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-O-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-21C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-21C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-21C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-21C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-21C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-21C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-368C,n_at_reference,1.3776813745831076,,486.1,calculated,RII-MGF2-ZHENG-O-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15413,6 +15579,8 @@ RII-MGF2-ZHENG-O-368C,n_at_reference,1.3741615451872338,,656.3,calculated,RII-MG
 RII-MGF2-ZHENG-O-368C,n_at_reference,1.3711271081186072,,1000.0,calculated,RII-MGF2-ZHENG-O-368C,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-MGF2-ZHENG-O-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-368C,Highest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-368C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-368C,wl_max_um,1.7,um,,literature,RII-MGF2-ZHENG-O-368C,Highest wavelength the cited fit is valid over.
+RII-MGF2-ZHENG-O-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-368C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-368C,Lowest wavelength the cited fit is valid over.
 RII-MGF2-ZHENG-O-368C,wl_min_um,0.22,um,,literature,RII-MGF2-ZHENG-O-368C,Lowest wavelength the cited fit is valid over.
 RII-SI-ASPNES,n_at_reference,4.382926315789474,,486.1,interpolated,RII-SI-ASPNES,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15420,6 +15588,8 @@ RII-SI-ASPNES,n_at_reference,3.9766268656716415,,587.6,interpolated,RII-SI-ASPNE
 RII-SI-ASPNES,n_at_reference,3.8416611570247934,,656.3,interpolated,RII-SI-ASPNES,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-ASPNES,wl_max_um,0.8266,um,,literature,RII-SI-ASPNES,Highest tabulated wavelength.
 RII-SI-ASPNES,wl_max_um,0.8266,um,,literature,RII-SI-ASPNES,Highest tabulated wavelength.
+RII-SI-ASPNES,wl_max_um,0.8266,um,,literature,RII-SI-ASPNES,Highest tabulated wavelength.
+RII-SI-ASPNES,wl_min_um,0.2066,um,,literature,RII-SI-ASPNES,Lowest tabulated wavelength.
 RII-SI-ASPNES,wl_min_um,0.2066,um,,literature,RII-SI-ASPNES,Lowest tabulated wavelength.
 RII-SI-ASPNES,wl_min_um,0.2066,um,,literature,RII-SI-ASPNES,Lowest tabulated wavelength.
 RII-SI-FRANTA,n_at_reference,4.9157177013185045,,486.1,interpolated,RII-SI-FRANTA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15435,6 +15605,8 @@ RII-SI-FRANTA,n_at_reference,3.521881,,10000.0,interpolated,RII-SI-FRANTA,Linear
 RII-SI-FRANTA,n_at_reference,3.504680448099415,,12000.0,interpolated,RII-SI-FRANTA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA,wl_max_um,26.9153,um,,literature,RII-SI-FRANTA,Highest tabulated wavelength.
 RII-SI-FRANTA,wl_max_um,26.9153,um,,literature,RII-SI-FRANTA,Highest tabulated wavelength.
+RII-SI-FRANTA,wl_max_um,26.9153,um,,literature,RII-SI-FRANTA,Highest tabulated wavelength.
+RII-SI-FRANTA,wl_min_um,0.138038,um,,literature,RII-SI-FRANTA,Lowest tabulated wavelength.
 RII-SI-FRANTA,wl_min_um,0.138038,um,,literature,RII-SI-FRANTA,Lowest tabulated wavelength.
 RII-SI-FRANTA,wl_min_um,0.138038,um,,literature,RII-SI-FRANTA,Lowest tabulated wavelength.
 RII-SI-FRANTA-100K,n_at_reference,4.292404808681475,,486.1,interpolated,RII-SI-FRANTA-100K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15450,6 +15622,8 @@ RII-SI-FRANTA-100K,n_at_reference,3.3941574600456397,,10000.0,interpolated,RII-S
 RII-SI-FRANTA-100K,n_at_reference,3.393800042164946,,12000.0,interpolated,RII-SI-FRANTA-100K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-100K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-100K,Highest tabulated wavelength.
 RII-SI-FRANTA-100K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-100K,Highest tabulated wavelength.
+RII-SI-FRANTA-100K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-100K,Highest tabulated wavelength.
+RII-SI-FRANTA-100K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-100K,Lowest tabulated wavelength.
 RII-SI-FRANTA-100K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-100K,Lowest tabulated wavelength.
 RII-SI-FRANTA-100K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-100K,Lowest tabulated wavelength.
 RII-SI-FRANTA-10K,n_at_reference,4.288946098855765,,486.1,interpolated,RII-SI-FRANTA-10K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15465,6 +15639,8 @@ RII-SI-FRANTA-10K,n_at_reference,3.3913590604532113,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-10K,n_at_reference,3.391006219880036,,12000.0,interpolated,RII-SI-FRANTA-10K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-10K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-10K,Highest tabulated wavelength.
 RII-SI-FRANTA-10K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-10K,Highest tabulated wavelength.
+RII-SI-FRANTA-10K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-10K,Highest tabulated wavelength.
+RII-SI-FRANTA-10K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-10K,Lowest tabulated wavelength.
 RII-SI-FRANTA-10K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-10K,Lowest tabulated wavelength.
 RII-SI-FRANTA-10K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-10K,Lowest tabulated wavelength.
 RII-SI-FRANTA-150K,n_at_reference,4.306300372921207,,486.1,interpolated,RII-SI-FRANTA-150K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15480,6 +15656,8 @@ RII-SI-FRANTA-150K,n_at_reference,3.398583061093777,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-150K,n_at_reference,3.3982172018136465,,12000.0,interpolated,RII-SI-FRANTA-150K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-150K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-150K,Highest tabulated wavelength.
 RII-SI-FRANTA-150K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-150K,Highest tabulated wavelength.
+RII-SI-FRANTA-150K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-150K,Highest tabulated wavelength.
+RII-SI-FRANTA-150K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-150K,Lowest tabulated wavelength.
 RII-SI-FRANTA-150K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-150K,Lowest tabulated wavelength.
 RII-SI-FRANTA-150K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-150K,Lowest tabulated wavelength.
 RII-SI-FRANTA-200K,n_at_reference,4.324924406239652,,486.1,interpolated,RII-SI-FRANTA-200K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15495,6 +15673,8 @@ RII-SI-FRANTA-200K,n_at_reference,3.404575253943342,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-200K,n_at_reference,3.4042011307230684,,12000.0,interpolated,RII-SI-FRANTA-200K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-200K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-200K,Highest tabulated wavelength.
 RII-SI-FRANTA-200K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-200K,Highest tabulated wavelength.
+RII-SI-FRANTA-200K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-200K,Highest tabulated wavelength.
+RII-SI-FRANTA-200K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-200K,Lowest tabulated wavelength.
 RII-SI-FRANTA-200K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-200K,Lowest tabulated wavelength.
 RII-SI-FRANTA-200K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-200K,Lowest tabulated wavelength.
 RII-SI-FRANTA-20C,n_at_reference,4.375528718216997,,486.1,interpolated,RII-SI-FRANTA-20C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15510,6 +15690,8 @@ RII-SI-FRANTA-20C,n_at_reference,3.41825313655738,,10000.0,interpolated,RII-SI-F
 RII-SI-FRANTA-20C,n_at_reference,3.417863326496498,,12000.0,interpolated,RII-SI-FRANTA-20C,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-20C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-20C,Highest tabulated wavelength.
 RII-SI-FRANTA-20C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-20C,Highest tabulated wavelength.
+RII-SI-FRANTA-20C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-20C,Highest tabulated wavelength.
+RII-SI-FRANTA-20C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-20C,Lowest tabulated wavelength.
 RII-SI-FRANTA-20C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-20C,Lowest tabulated wavelength.
 RII-SI-FRANTA-20C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-20C,Lowest tabulated wavelength.
 RII-SI-FRANTA-250K,n_at_reference,4.351131369629303,,486.1,interpolated,RII-SI-FRANTA-250K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15525,6 +15707,8 @@ RII-SI-FRANTA-250K,n_at_reference,3.411614822724639,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-250K,n_at_reference,3.411232565732527,,12000.0,interpolated,RII-SI-FRANTA-250K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-250K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-250K,Highest tabulated wavelength.
 RII-SI-FRANTA-250K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-250K,Highest tabulated wavelength.
+RII-SI-FRANTA-250K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-250K,Highest tabulated wavelength.
+RII-SI-FRANTA-250K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-250K,Lowest tabulated wavelength.
 RII-SI-FRANTA-250K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-250K,Lowest tabulated wavelength.
 RII-SI-FRANTA-250K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-250K,Lowest tabulated wavelength.
 RII-SI-FRANTA-25C,n_at_reference,4.37883618254362,,486.1,interpolated,RII-SI-FRANTA-25C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15540,6 +15724,8 @@ RII-SI-FRANTA-25C,n_at_reference,3.419044602112524,,10000.0,interpolated,RII-SI-
 RII-SI-FRANTA-25C,n_at_reference,3.4186540595011192,,12000.0,interpolated,RII-SI-FRANTA-25C,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-25C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-25C,Highest tabulated wavelength.
 RII-SI-FRANTA-25C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-25C,Highest tabulated wavelength.
+RII-SI-FRANTA-25C,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-25C,Highest tabulated wavelength.
+RII-SI-FRANTA-25C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-25C,Lowest tabulated wavelength.
 RII-SI-FRANTA-25C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-25C,Lowest tabulated wavelength.
 RII-SI-FRANTA-25C,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-25C,Lowest tabulated wavelength.
 RII-SI-FRANTA-300K,n_at_reference,4.380043266970778,,486.1,interpolated,RII-SI-FRANTA-300K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15555,6 +15741,8 @@ RII-SI-FRANTA-300K,n_at_reference,3.419337318908616,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-300K,n_at_reference,3.4189465014973646,,12000.0,interpolated,RII-SI-FRANTA-300K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-300K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-300K,Highest tabulated wavelength.
 RII-SI-FRANTA-300K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-300K,Highest tabulated wavelength.
+RII-SI-FRANTA-300K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-300K,Highest tabulated wavelength.
+RII-SI-FRANTA-300K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-300K,Lowest tabulated wavelength.
 RII-SI-FRANTA-300K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-300K,Lowest tabulated wavelength.
 RII-SI-FRANTA-300K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-300K,Lowest tabulated wavelength.
 RII-SI-FRANTA-350K,n_at_reference,4.4022185265606435,,486.1,interpolated,RII-SI-FRANTA-350K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15570,6 +15758,8 @@ RII-SI-FRANTA-350K,n_at_reference,3.4277190479800694,,10000.0,interpolated,RII-S
 RII-SI-FRANTA-350K,n_at_reference,3.4273221341677256,,12000.0,interpolated,RII-SI-FRANTA-350K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-350K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-350K,Highest tabulated wavelength.
 RII-SI-FRANTA-350K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-350K,Highest tabulated wavelength.
+RII-SI-FRANTA-350K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-350K,Highest tabulated wavelength.
+RII-SI-FRANTA-350K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-350K,Lowest tabulated wavelength.
 RII-SI-FRANTA-350K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-350K,Lowest tabulated wavelength.
 RII-SI-FRANTA-350K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-350K,Lowest tabulated wavelength.
 RII-SI-FRANTA-400K,n_at_reference,4.420316580435657,,486.1,interpolated,RII-SI-FRANTA-400K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15585,6 +15775,8 @@ RII-SI-FRANTA-400K,n_at_reference,3.4366438666547867,,10000.0,interpolated,RII-S
 RII-SI-FRANTA-400K,n_at_reference,3.436242005317509,,12000.0,interpolated,RII-SI-FRANTA-400K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-400K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-400K,Highest tabulated wavelength.
 RII-SI-FRANTA-400K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-400K,Highest tabulated wavelength.
+RII-SI-FRANTA-400K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-400K,Highest tabulated wavelength.
+RII-SI-FRANTA-400K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-400K,Lowest tabulated wavelength.
 RII-SI-FRANTA-400K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-400K,Lowest tabulated wavelength.
 RII-SI-FRANTA-400K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-400K,Lowest tabulated wavelength.
 RII-SI-FRANTA-450K,n_at_reference,4.447257781437587,,486.1,interpolated,RII-SI-FRANTA-450K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15600,6 +15792,8 @@ RII-SI-FRANTA-450K,n_at_reference,3.4458062899838815,,10000.0,interpolated,RII-S
 RII-SI-FRANTA-450K,n_at_reference,3.4453966765427437,,12000.0,interpolated,RII-SI-FRANTA-450K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-450K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-450K,Highest tabulated wavelength.
 RII-SI-FRANTA-450K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-450K,Highest tabulated wavelength.
+RII-SI-FRANTA-450K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-450K,Highest tabulated wavelength.
+RII-SI-FRANTA-450K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-450K,Lowest tabulated wavelength.
 RII-SI-FRANTA-450K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-450K,Lowest tabulated wavelength.
 RII-SI-FRANTA-450K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-450K,Lowest tabulated wavelength.
 RII-SI-FRANTA-500K,n_at_reference,4.482187511894746,,486.1,interpolated,RII-SI-FRANTA-500K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15615,6 +15809,8 @@ RII-SI-FRANTA-500K,n_at_reference,3.4551674036370583,,10000.0,interpolated,RII-S
 RII-SI-FRANTA-500K,n_at_reference,3.454741257096859,,12000.0,interpolated,RII-SI-FRANTA-500K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-500K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-500K,Highest tabulated wavelength.
 RII-SI-FRANTA-500K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-500K,Highest tabulated wavelength.
+RII-SI-FRANTA-500K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-500K,Highest tabulated wavelength.
+RII-SI-FRANTA-500K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-500K,Lowest tabulated wavelength.
 RII-SI-FRANTA-500K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-500K,Lowest tabulated wavelength.
 RII-SI-FRANTA-500K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-500K,Lowest tabulated wavelength.
 RII-SI-FRANTA-50K,n_at_reference,4.286688148681073,,486.1,interpolated,RII-SI-FRANTA-50K,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15630,6 +15826,8 @@ RII-SI-FRANTA-50K,n_at_reference,3.3916845477897475,,10000.0,interpolated,RII-SI
 RII-SI-FRANTA-50K,n_at_reference,3.391331680727509,,12000.0,interpolated,RII-SI-FRANTA-50K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-FRANTA-50K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-50K,Highest tabulated wavelength.
 RII-SI-FRANTA-50K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-50K,Highest tabulated wavelength.
+RII-SI-FRANTA-50K,wl_max_um,309.963,um,,literature,RII-SI-FRANTA-50K,Highest tabulated wavelength.
+RII-SI-FRANTA-50K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-50K,Lowest tabulated wavelength.
 RII-SI-FRANTA-50K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-50K,Lowest tabulated wavelength.
 RII-SI-FRANTA-50K,wl_min_um,0.0309963,um,,literature,RII-SI-FRANTA-50K,Lowest tabulated wavelength.
 RII-SI-GREEN-1995,n_at_reference,4.37452,,486.1,interpolated,RII-SI-GREEN-1995,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15638,6 +15836,8 @@ RII-SI-GREEN-1995,n_at_reference,3.8351800000000003,,656.3,interpolated,RII-SI-G
 RII-SI-GREEN-1995,n_at_reference,3.57,,1000.0,interpolated,RII-SI-GREEN-1995,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-GREEN-1995,wl_max_um,1.45,um,,literature,RII-SI-GREEN-1995,Highest tabulated wavelength.
 RII-SI-GREEN-1995,wl_max_um,1.45,um,,literature,RII-SI-GREEN-1995,Highest tabulated wavelength.
+RII-SI-GREEN-1995,wl_max_um,1.45,um,,literature,RII-SI-GREEN-1995,Highest tabulated wavelength.
+RII-SI-GREEN-1995,wl_min_um,0.25,um,,literature,RII-SI-GREEN-1995,Lowest tabulated wavelength.
 RII-SI-GREEN-1995,wl_min_um,0.25,um,,literature,RII-SI-GREEN-1995,Lowest tabulated wavelength.
 RII-SI-GREEN-1995,wl_min_um,0.25,um,,literature,RII-SI-GREEN-1995,Lowest tabulated wavelength.
 RII-SI-GREEN-2008,n_at_reference,4.37691,,486.1,interpolated,RII-SI-GREEN-2008,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15646,6 +15846,8 @@ RII-SI-GREEN-2008,n_at_reference,3.83392,,656.3,interpolated,RII-SI-GREEN-2008,L
 RII-SI-GREEN-2008,n_at_reference,3.572,,1000.0,interpolated,RII-SI-GREEN-2008,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-GREEN-2008,wl_max_um,1.45,um,,literature,RII-SI-GREEN-2008,Highest tabulated wavelength.
 RII-SI-GREEN-2008,wl_max_um,1.45,um,,literature,RII-SI-GREEN-2008,Highest tabulated wavelength.
+RII-SI-GREEN-2008,wl_max_um,1.45,um,,literature,RII-SI-GREEN-2008,Highest tabulated wavelength.
+RII-SI-GREEN-2008,wl_min_um,0.25,um,,literature,RII-SI-GREEN-2008,Lowest tabulated wavelength.
 RII-SI-GREEN-2008,wl_min_um,0.25,um,,literature,RII-SI-GREEN-2008,Lowest tabulated wavelength.
 RII-SI-GREEN-2008,wl_min_um,0.25,um,,literature,RII-SI-GREEN-2008,Lowest tabulated wavelength.
 RII-SI-JELLISON,n_at_reference,4.371519999999999,,486.1,interpolated,RII-SI-JELLISON,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15653,6 +15855,8 @@ RII-SI-JELLISON,n_at_reference,3.96528,,587.6,interpolated,RII-SI-JELLISON,Linea
 RII-SI-JELLISON,n_at_reference,3.83244,,656.3,interpolated,RII-SI-JELLISON,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-JELLISON,wl_max_um,0.84,um,,literature,RII-SI-JELLISON,Highest tabulated wavelength.
 RII-SI-JELLISON,wl_max_um,0.84,um,,literature,RII-SI-JELLISON,Highest tabulated wavelength.
+RII-SI-JELLISON,wl_max_um,0.84,um,,literature,RII-SI-JELLISON,Highest tabulated wavelength.
+RII-SI-JELLISON,wl_min_um,0.234,um,,literature,RII-SI-JELLISON,Lowest tabulated wavelength.
 RII-SI-JELLISON,wl_min_um,0.234,um,,literature,RII-SI-JELLISON,Lowest tabulated wavelength.
 RII-SI-JELLISON,wl_min_um,0.234,um,,literature,RII-SI-JELLISON,Lowest tabulated wavelength.
 RII-SI-KARAMAN-120C,n_at_reference,5.0724585,,486.1,interpolated,RII-SI-KARAMAN-120C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15662,6 +15866,8 @@ RII-SI-KARAMAN-120C,n_at_reference,3.958727,,1000.0,interpolated,RII-SI-KARAMAN-
 RII-SI-KARAMAN-120C,n_at_reference,3.7534056666666666,,2000.0,interpolated,RII-SI-KARAMAN-120C,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-KARAMAN-120C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-120C,Highest tabulated wavelength.
 RII-SI-KARAMAN-120C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-120C,Highest tabulated wavelength.
+RII-SI-KARAMAN-120C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-120C,Highest tabulated wavelength.
+RII-SI-KARAMAN-120C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-120C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-120C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-120C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-120C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-120C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-170C,n_at_reference,5.0749223,,486.1,interpolated,RII-SI-KARAMAN-170C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15671,6 +15877,8 @@ RII-SI-KARAMAN-170C,n_at_reference,3.974464,,1000.0,interpolated,RII-SI-KARAMAN-
 RII-SI-KARAMAN-170C,n_at_reference,3.765846,,2000.0,interpolated,RII-SI-KARAMAN-170C,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-KARAMAN-170C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-170C,Highest tabulated wavelength.
 RII-SI-KARAMAN-170C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-170C,Highest tabulated wavelength.
+RII-SI-KARAMAN-170C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-170C,Highest tabulated wavelength.
+RII-SI-KARAMAN-170C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-170C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-170C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-170C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-170C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-170C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-20C,n_at_reference,5.0685559,,486.1,interpolated,RII-SI-KARAMAN-20C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15680,6 +15888,8 @@ RII-SI-KARAMAN-20C,n_at_reference,3.936823,,1000.0,interpolated,RII-SI-KARAMAN-2
 RII-SI-KARAMAN-20C,n_at_reference,3.7375956666666665,,2000.0,interpolated,RII-SI-KARAMAN-20C,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-KARAMAN-20C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-20C,Highest tabulated wavelength.
 RII-SI-KARAMAN-20C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-20C,Highest tabulated wavelength.
+RII-SI-KARAMAN-20C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-20C,Highest tabulated wavelength.
+RII-SI-KARAMAN-20C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-20C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-20C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-20C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-20C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-20C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-220C,n_at_reference,5.080357500000001,,486.1,interpolated,RII-SI-KARAMAN-220C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15689,6 +15899,8 @@ RII-SI-KARAMAN-220C,n_at_reference,3.992052,,1000.0,interpolated,RII-SI-KARAMAN-
 RII-SI-KARAMAN-220C,n_at_reference,3.7781903333333333,,2000.0,interpolated,RII-SI-KARAMAN-220C,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-KARAMAN-220C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-220C,Highest tabulated wavelength.
 RII-SI-KARAMAN-220C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-220C,Highest tabulated wavelength.
+RII-SI-KARAMAN-220C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-220C,Highest tabulated wavelength.
+RII-SI-KARAMAN-220C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-220C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-220C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-220C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-220C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-220C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-70C,n_at_reference,5.0674612,,486.1,interpolated,RII-SI-KARAMAN-70C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15698,6 +15910,8 @@ RII-SI-KARAMAN-70C,n_at_reference,3.9452,,1000.0,interpolated,RII-SI-KARAMAN-70C
 RII-SI-KARAMAN-70C,n_at_reference,3.7436496666666668,,2000.0,interpolated,RII-SI-KARAMAN-70C,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-KARAMAN-70C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-70C,Highest tabulated wavelength.
 RII-SI-KARAMAN-70C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-70C,Highest tabulated wavelength.
+RII-SI-KARAMAN-70C,wl_max_um,2.5,um,,literature,RII-SI-KARAMAN-70C,Highest tabulated wavelength.
+RII-SI-KARAMAN-70C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-70C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-70C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-70C,Lowest tabulated wavelength.
 RII-SI-KARAMAN-70C,wl_min_um,0.21,um,,literature,RII-SI-KARAMAN-70C,Lowest tabulated wavelength.
 RII-SI-LI-100K,n_at_reference,3.424,,2000.0,interpolated,RII-SI-LI-100K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15709,6 +15923,8 @@ RII-SI-LI-100K,n_at_reference,3.3909,,10000.0,interpolated,RII-SI-LI-100K,Linear
 RII-SI-LI-100K,n_at_reference,3.3904,,12000.0,interpolated,RII-SI-LI-100K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-100K,wl_max_um,14.0,um,,literature,RII-SI-LI-100K,Highest tabulated wavelength.
 RII-SI-LI-100K,wl_max_um,14.0,um,,literature,RII-SI-LI-100K,Highest tabulated wavelength.
+RII-SI-LI-100K,wl_max_um,14.0,um,,literature,RII-SI-LI-100K,Highest tabulated wavelength.
+RII-SI-LI-100K,wl_min_um,1.2,um,,literature,RII-SI-LI-100K,Lowest tabulated wavelength.
 RII-SI-LI-100K,wl_min_um,1.2,um,,literature,RII-SI-LI-100K,Lowest tabulated wavelength.
 RII-SI-LI-100K,wl_min_um,1.2,um,,literature,RII-SI-LI-100K,Lowest tabulated wavelength.
 RII-SI-LI-150K,n_at_reference,3.4297,,2000.0,interpolated,RII-SI-LI-150K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15720,6 +15936,8 @@ RII-SI-LI-150K,n_at_reference,3.3958,,10000.0,interpolated,RII-SI-LI-150K,Linear
 RII-SI-LI-150K,n_at_reference,3.3954,,12000.0,interpolated,RII-SI-LI-150K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-150K,wl_max_um,14.0,um,,literature,RII-SI-LI-150K,Highest tabulated wavelength.
 RII-SI-LI-150K,wl_max_um,14.0,um,,literature,RII-SI-LI-150K,Highest tabulated wavelength.
+RII-SI-LI-150K,wl_max_um,14.0,um,,literature,RII-SI-LI-150K,Highest tabulated wavelength.
+RII-SI-LI-150K,wl_min_um,1.2,um,,literature,RII-SI-LI-150K,Lowest tabulated wavelength.
 RII-SI-LI-150K,wl_min_um,1.2,um,,literature,RII-SI-LI-150K,Lowest tabulated wavelength.
 RII-SI-LI-150K,wl_min_um,1.2,um,,literature,RII-SI-LI-150K,Lowest tabulated wavelength.
 RII-SI-LI-200K,n_at_reference,3.4363,,2000.0,interpolated,RII-SI-LI-200K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15731,6 +15949,8 @@ RII-SI-LI-200K,n_at_reference,3.4017,,10000.0,interpolated,RII-SI-LI-200K,Linear
 RII-SI-LI-200K,n_at_reference,3.4013,,12000.0,interpolated,RII-SI-LI-200K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-200K,wl_max_um,14.0,um,,literature,RII-SI-LI-200K,Highest tabulated wavelength.
 RII-SI-LI-200K,wl_max_um,14.0,um,,literature,RII-SI-LI-200K,Highest tabulated wavelength.
+RII-SI-LI-200K,wl_max_um,14.0,um,,literature,RII-SI-LI-200K,Highest tabulated wavelength.
+RII-SI-LI-200K,wl_min_um,1.2,um,,literature,RII-SI-LI-200K,Lowest tabulated wavelength.
 RII-SI-LI-200K,wl_min_um,1.2,um,,literature,RII-SI-LI-200K,Lowest tabulated wavelength.
 RII-SI-LI-200K,wl_min_um,1.2,um,,literature,RII-SI-LI-200K,Lowest tabulated wavelength.
 RII-SI-LI-250K,n_at_reference,3.4439,,2000.0,interpolated,RII-SI-LI-250K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15742,6 +15962,8 @@ RII-SI-LI-250K,n_at_reference,3.4085,,10000.0,interpolated,RII-SI-LI-250K,Linear
 RII-SI-LI-250K,n_at_reference,3.408,,12000.0,interpolated,RII-SI-LI-250K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-250K,wl_max_um,14.0,um,,literature,RII-SI-LI-250K,Highest tabulated wavelength.
 RII-SI-LI-250K,wl_max_um,14.0,um,,literature,RII-SI-LI-250K,Highest tabulated wavelength.
+RII-SI-LI-250K,wl_max_um,14.0,um,,literature,RII-SI-LI-250K,Highest tabulated wavelength.
+RII-SI-LI-250K,wl_min_um,1.2,um,,literature,RII-SI-LI-250K,Lowest tabulated wavelength.
 RII-SI-LI-250K,wl_min_um,1.2,um,,literature,RII-SI-LI-250K,Lowest tabulated wavelength.
 RII-SI-LI-250K,wl_min_um,1.2,um,,literature,RII-SI-LI-250K,Lowest tabulated wavelength.
 RII-SI-LI-293K,n_at_reference,3.451,,2000.0,interpolated,RII-SI-LI-293K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15753,6 +15975,8 @@ RII-SI-LI-293K,n_at_reference,3.415,,10000.0,interpolated,RII-SI-LI-293K,Linear 
 RII-SI-LI-293K,n_at_reference,3.4145,,12000.0,interpolated,RII-SI-LI-293K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-293K,wl_max_um,14.0,um,,literature,RII-SI-LI-293K,Highest tabulated wavelength.
 RII-SI-LI-293K,wl_max_um,14.0,um,,literature,RII-SI-LI-293K,Highest tabulated wavelength.
+RII-SI-LI-293K,wl_max_um,14.0,um,,literature,RII-SI-LI-293K,Highest tabulated wavelength.
+RII-SI-LI-293K,wl_min_um,1.2,um,,literature,RII-SI-LI-293K,Lowest tabulated wavelength.
 RII-SI-LI-293K,wl_min_um,1.2,um,,literature,RII-SI-LI-293K,Lowest tabulated wavelength.
 RII-SI-LI-293K,wl_min_um,1.2,um,,literature,RII-SI-LI-293K,Lowest tabulated wavelength.
 RII-SI-LI-350K,n_at_reference,3.4612,,2000.0,interpolated,RII-SI-LI-350K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15764,6 +15988,8 @@ RII-SI-LI-350K,n_at_reference,3.4244,,10000.0,interpolated,RII-SI-LI-350K,Linear
 RII-SI-LI-350K,n_at_reference,3.4239,,12000.0,interpolated,RII-SI-LI-350K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-350K,wl_max_um,14.0,um,,literature,RII-SI-LI-350K,Highest tabulated wavelength.
 RII-SI-LI-350K,wl_max_um,14.0,um,,literature,RII-SI-LI-350K,Highest tabulated wavelength.
+RII-SI-LI-350K,wl_max_um,14.0,um,,literature,RII-SI-LI-350K,Highest tabulated wavelength.
+RII-SI-LI-350K,wl_min_um,1.2,um,,literature,RII-SI-LI-350K,Lowest tabulated wavelength.
 RII-SI-LI-350K,wl_min_um,1.2,um,,literature,RII-SI-LI-350K,Lowest tabulated wavelength.
 RII-SI-LI-350K,wl_min_um,1.2,um,,literature,RII-SI-LI-350K,Lowest tabulated wavelength.
 RII-SI-LI-400K,n_at_reference,3.4708,,2000.0,interpolated,RII-SI-LI-400K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15775,6 +16001,8 @@ RII-SI-LI-400K,n_at_reference,3.4332,,10000.0,interpolated,RII-SI-LI-400K,Linear
 RII-SI-LI-400K,n_at_reference,3.4328,,12000.0,interpolated,RII-SI-LI-400K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-400K,wl_max_um,14.0,um,,literature,RII-SI-LI-400K,Highest tabulated wavelength.
 RII-SI-LI-400K,wl_max_um,14.0,um,,literature,RII-SI-LI-400K,Highest tabulated wavelength.
+RII-SI-LI-400K,wl_max_um,14.0,um,,literature,RII-SI-LI-400K,Highest tabulated wavelength.
+RII-SI-LI-400K,wl_min_um,1.2,um,,literature,RII-SI-LI-400K,Lowest tabulated wavelength.
 RII-SI-LI-400K,wl_min_um,1.2,um,,literature,RII-SI-LI-400K,Lowest tabulated wavelength.
 RII-SI-LI-400K,wl_min_um,1.2,um,,literature,RII-SI-LI-400K,Lowest tabulated wavelength.
 RII-SI-LI-450K,n_at_reference,3.4809,,2000.0,interpolated,RII-SI-LI-450K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15786,6 +16014,8 @@ RII-SI-LI-450K,n_at_reference,3.4426,,10000.0,interpolated,RII-SI-LI-450K,Linear
 RII-SI-LI-450K,n_at_reference,3.4421,,12000.0,interpolated,RII-SI-LI-450K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-450K,wl_max_um,14.0,um,,literature,RII-SI-LI-450K,Highest tabulated wavelength.
 RII-SI-LI-450K,wl_max_um,14.0,um,,literature,RII-SI-LI-450K,Highest tabulated wavelength.
+RII-SI-LI-450K,wl_max_um,14.0,um,,literature,RII-SI-LI-450K,Highest tabulated wavelength.
+RII-SI-LI-450K,wl_min_um,1.2,um,,literature,RII-SI-LI-450K,Lowest tabulated wavelength.
 RII-SI-LI-450K,wl_min_um,1.2,um,,literature,RII-SI-LI-450K,Lowest tabulated wavelength.
 RII-SI-LI-450K,wl_min_um,1.2,um,,literature,RII-SI-LI-450K,Lowest tabulated wavelength.
 RII-SI-LI-500K,n_at_reference,3.4915,,2000.0,interpolated,RII-SI-LI-500K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15797,6 +16027,8 @@ RII-SI-LI-500K,n_at_reference,3.4524,,10000.0,interpolated,RII-SI-LI-500K,Linear
 RII-SI-LI-500K,n_at_reference,3.4519,,12000.0,interpolated,RII-SI-LI-500K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-500K,wl_max_um,14.0,um,,literature,RII-SI-LI-500K,Highest tabulated wavelength.
 RII-SI-LI-500K,wl_max_um,14.0,um,,literature,RII-SI-LI-500K,Highest tabulated wavelength.
+RII-SI-LI-500K,wl_max_um,14.0,um,,literature,RII-SI-LI-500K,Highest tabulated wavelength.
+RII-SI-LI-500K,wl_min_um,1.2,um,,literature,RII-SI-LI-500K,Lowest tabulated wavelength.
 RII-SI-LI-500K,wl_min_um,1.2,um,,literature,RII-SI-LI-500K,Lowest tabulated wavelength.
 RII-SI-LI-500K,wl_min_um,1.2,um,,literature,RII-SI-LI-500K,Lowest tabulated wavelength.
 RII-SI-LI-550K,n_at_reference,3.5023,,2000.0,interpolated,RII-SI-LI-550K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15808,6 +16040,8 @@ RII-SI-LI-550K,n_at_reference,3.4625,,10000.0,interpolated,RII-SI-LI-550K,Linear
 RII-SI-LI-550K,n_at_reference,3.462,,12000.0,interpolated,RII-SI-LI-550K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-550K,wl_max_um,14.0,um,,literature,RII-SI-LI-550K,Highest tabulated wavelength.
 RII-SI-LI-550K,wl_max_um,14.0,um,,literature,RII-SI-LI-550K,Highest tabulated wavelength.
+RII-SI-LI-550K,wl_max_um,14.0,um,,literature,RII-SI-LI-550K,Highest tabulated wavelength.
+RII-SI-LI-550K,wl_min_um,1.2,um,,literature,RII-SI-LI-550K,Lowest tabulated wavelength.
 RII-SI-LI-550K,wl_min_um,1.2,um,,literature,RII-SI-LI-550K,Lowest tabulated wavelength.
 RII-SI-LI-550K,wl_min_um,1.2,um,,literature,RII-SI-LI-550K,Lowest tabulated wavelength.
 RII-SI-LI-600K,n_at_reference,3.5135,,2000.0,interpolated,RII-SI-LI-600K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15819,6 +16053,8 @@ RII-SI-LI-600K,n_at_reference,3.4729,,10000.0,interpolated,RII-SI-LI-600K,Linear
 RII-SI-LI-600K,n_at_reference,3.4724,,12000.0,interpolated,RII-SI-LI-600K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-600K,wl_max_um,14.0,um,,literature,RII-SI-LI-600K,Highest tabulated wavelength.
 RII-SI-LI-600K,wl_max_um,14.0,um,,literature,RII-SI-LI-600K,Highest tabulated wavelength.
+RII-SI-LI-600K,wl_max_um,14.0,um,,literature,RII-SI-LI-600K,Highest tabulated wavelength.
+RII-SI-LI-600K,wl_min_um,1.2,um,,literature,RII-SI-LI-600K,Lowest tabulated wavelength.
 RII-SI-LI-600K,wl_min_um,1.2,um,,literature,RII-SI-LI-600K,Lowest tabulated wavelength.
 RII-SI-LI-600K,wl_min_um,1.2,um,,literature,RII-SI-LI-600K,Lowest tabulated wavelength.
 RII-SI-LI-650K,n_at_reference,3.5247,,2000.0,interpolated,RII-SI-LI-650K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15830,6 +16066,8 @@ RII-SI-LI-650K,n_at_reference,3.4834,,10000.0,interpolated,RII-SI-LI-650K,Linear
 RII-SI-LI-650K,n_at_reference,3.4829,,12000.0,interpolated,RII-SI-LI-650K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-650K,wl_max_um,14.0,um,,literature,RII-SI-LI-650K,Highest tabulated wavelength.
 RII-SI-LI-650K,wl_max_um,14.0,um,,literature,RII-SI-LI-650K,Highest tabulated wavelength.
+RII-SI-LI-650K,wl_max_um,14.0,um,,literature,RII-SI-LI-650K,Highest tabulated wavelength.
+RII-SI-LI-650K,wl_min_um,1.2,um,,literature,RII-SI-LI-650K,Lowest tabulated wavelength.
 RII-SI-LI-650K,wl_min_um,1.2,um,,literature,RII-SI-LI-650K,Lowest tabulated wavelength.
 RII-SI-LI-650K,wl_min_um,1.2,um,,literature,RII-SI-LI-650K,Lowest tabulated wavelength.
 RII-SI-LI-700K,n_at_reference,3.536,,2000.0,interpolated,RII-SI-LI-700K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15841,6 +16079,8 @@ RII-SI-LI-700K,n_at_reference,3.494,,10000.0,interpolated,RII-SI-LI-700K,Linear 
 RII-SI-LI-700K,n_at_reference,3.4934,,12000.0,interpolated,RII-SI-LI-700K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-700K,wl_max_um,14.0,um,,literature,RII-SI-LI-700K,Highest tabulated wavelength.
 RII-SI-LI-700K,wl_max_um,14.0,um,,literature,RII-SI-LI-700K,Highest tabulated wavelength.
+RII-SI-LI-700K,wl_max_um,14.0,um,,literature,RII-SI-LI-700K,Highest tabulated wavelength.
+RII-SI-LI-700K,wl_min_um,1.2,um,,literature,RII-SI-LI-700K,Lowest tabulated wavelength.
 RII-SI-LI-700K,wl_min_um,1.2,um,,literature,RII-SI-LI-700K,Lowest tabulated wavelength.
 RII-SI-LI-700K,wl_min_um,1.2,um,,literature,RII-SI-LI-700K,Lowest tabulated wavelength.
 RII-SI-LI-750K,n_at_reference,3.5473,,2000.0,interpolated,RII-SI-LI-750K,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15852,6 +16092,8 @@ RII-SI-LI-750K,n_at_reference,3.5045,,10000.0,interpolated,RII-SI-LI-750K,Linear
 RII-SI-LI-750K,n_at_reference,3.5039,,12000.0,interpolated,RII-SI-LI-750K,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-LI-750K,wl_max_um,14.0,um,,literature,RII-SI-LI-750K,Highest tabulated wavelength.
 RII-SI-LI-750K,wl_max_um,14.0,um,,literature,RII-SI-LI-750K,Highest tabulated wavelength.
+RII-SI-LI-750K,wl_max_um,14.0,um,,literature,RII-SI-LI-750K,Highest tabulated wavelength.
+RII-SI-LI-750K,wl_min_um,1.2,um,,literature,RII-SI-LI-750K,Lowest tabulated wavelength.
 RII-SI-LI-750K,wl_min_um,1.2,um,,literature,RII-SI-LI-750K,Lowest tabulated wavelength.
 RII-SI-LI-750K,wl_min_um,1.2,um,,literature,RII-SI-LI-750K,Lowest tabulated wavelength.
 RII-SI-PIERCE,n_at_reference,4.480366492146596,,486.1,interpolated,RII-SI-PIERCE,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15861,6 +16103,8 @@ RII-SI-PIERCE,n_at_reference,3.6391666666666667,,1000.0,interpolated,RII-SI-PIER
 RII-SI-PIERCE,n_at_reference,3.442237288135593,,2000.0,interpolated,RII-SI-PIERCE,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SI-PIERCE,wl_max_um,2.066,um,,literature,RII-SI-PIERCE,Highest tabulated wavelength.
 RII-SI-PIERCE,wl_max_um,2.066,um,,literature,RII-SI-PIERCE,Highest tabulated wavelength.
+RII-SI-PIERCE,wl_max_um,2.066,um,,literature,RII-SI-PIERCE,Highest tabulated wavelength.
+RII-SI-PIERCE,wl_min_um,0.1033,um,,literature,RII-SI-PIERCE,Lowest tabulated wavelength.
 RII-SI-PIERCE,wl_min_um,0.1033,um,,literature,RII-SI-PIERCE,Lowest tabulated wavelength.
 RII-SI-PIERCE,wl_min_um,0.1033,um,,literature,RII-SI-PIERCE,Lowest tabulated wavelength.
 RII-SI-SALZBERG,n_at_reference,3.4526836292268754,,2000.0,calculated,RII-SI-SALZBERG,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -15871,6 +16115,8 @@ RII-SI-SALZBERG,n_at_reference,3.4185714003810808,,8000.0,calculated,RII-SI-SALZ
 RII-SI-SALZBERG,n_at_reference,3.417761508935376,,10000.0,calculated,RII-SI-SALZBERG,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-SI-SALZBERG,wl_max_um,11.04,um,,literature,RII-SI-SALZBERG,Highest wavelength the cited fit is valid over.
 RII-SI-SALZBERG,wl_max_um,11.04,um,,literature,RII-SI-SALZBERG,Highest wavelength the cited fit is valid over.
+RII-SI-SALZBERG,wl_max_um,11.04,um,,literature,RII-SI-SALZBERG,Highest wavelength the cited fit is valid over.
+RII-SI-SALZBERG,wl_min_um,1.357,um,,literature,RII-SI-SALZBERG,Lowest wavelength the cited fit is valid over.
 RII-SI-SALZBERG,wl_min_um,1.357,um,,literature,RII-SI-SALZBERG,Lowest wavelength the cited fit is valid over.
 RII-SI-SALZBERG,wl_min_um,1.357,um,,literature,RII-SI-SALZBERG,Lowest wavelength the cited fit is valid over.
 RII-SI-SCHINKE,n_at_reference,4.37357,,486.1,interpolated,RII-SI-SCHINKE,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15879,6 +16125,8 @@ RII-SI-SCHINKE,n_at_reference,3.8236600000000003,,656.3,interpolated,RII-SI-SCHI
 RII-SI-SCHINKE,n_at_reference,3.575,,1000.0,interpolated,RII-SI-SCHINKE,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-SCHINKE,wl_max_um,1.45,um,,literature,RII-SI-SCHINKE,Highest tabulated wavelength.
 RII-SI-SCHINKE,wl_max_um,1.45,um,,literature,RII-SI-SCHINKE,Highest tabulated wavelength.
+RII-SI-SCHINKE,wl_max_um,1.45,um,,literature,RII-SI-SCHINKE,Highest tabulated wavelength.
+RII-SI-SCHINKE,wl_min_um,0.25,um,,literature,RII-SI-SCHINKE,Lowest tabulated wavelength.
 RII-SI-SCHINKE,wl_min_um,0.25,um,,literature,RII-SI-SCHINKE,Lowest tabulated wavelength.
 RII-SI-SCHINKE,wl_min_um,0.25,um,,literature,RII-SI-SCHINKE,Lowest tabulated wavelength.
 RII-SI-SHKONDIN,n_at_reference,3.4698672176,,2000.0,interpolated,RII-SI-SHKONDIN,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
@@ -15890,36 +16138,48 @@ RII-SI-SHKONDIN,n_at_reference,3.4697414778,,10000.0,interpolated,RII-SI-SHKONDI
 RII-SI-SHKONDIN,n_at_reference,3.4697853618,,12000.0,interpolated,RII-SI-SHKONDIN,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SI-SHKONDIN,wl_max_um,20.0,um,,literature,RII-SI-SHKONDIN,Highest tabulated wavelength.
 RII-SI-SHKONDIN,wl_max_um,20.0,um,,literature,RII-SI-SHKONDIN,Highest tabulated wavelength.
+RII-SI-SHKONDIN,wl_max_um,20.0,um,,literature,RII-SI-SHKONDIN,Highest tabulated wavelength.
+RII-SI-SHKONDIN,wl_min_um,2.0,um,,literature,RII-SI-SHKONDIN,Lowest tabulated wavelength.
 RII-SI-SHKONDIN,wl_min_um,2.0,um,,literature,RII-SI-SHKONDIN,Lowest tabulated wavelength.
 RII-SI-SHKONDIN,wl_min_um,2.0,um,,literature,RII-SI-SHKONDIN,Lowest tabulated wavelength.
 RII-SI-SIK-250C,n_at_reference,4.546056989247313,,486.1,interpolated,RII-SI-SIK-250C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-SI-SIK-250C,n_at_reference,4.0809868613138685,,587.6,interpolated,RII-SI-SIK-250C,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-SI-SIK-250C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-250C,Highest tabulated wavelength.
 RII-SI-SIK-250C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-250C,Highest tabulated wavelength.
+RII-SI-SIK-250C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-250C,Highest tabulated wavelength.
+RII-SI-SIK-250C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-250C,Lowest tabulated wavelength.
 RII-SI-SIK-250C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-250C,Lowest tabulated wavelength.
 RII-SI-SIK-250C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-250C,Lowest tabulated wavelength.
 RII-SI-SIK-25C,n_at_reference,4.404180645161291,,486.1,interpolated,RII-SI-SIK-25C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-SI-SIK-25C,n_at_reference,3.98541897810219,,587.6,interpolated,RII-SI-SIK-25C,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-SI-SIK-25C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-25C,Highest tabulated wavelength.
 RII-SI-SIK-25C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-25C,Highest tabulated wavelength.
+RII-SI-SIK-25C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-25C,Highest tabulated wavelength.
+RII-SI-SIK-25C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-25C,Lowest tabulated wavelength.
 RII-SI-SIK-25C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-25C,Lowest tabulated wavelength.
 RII-SI-SIK-25C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-25C,Lowest tabulated wavelength.
 RII-SI-SIK-500C,n_at_reference,4.711567741935484,,486.1,interpolated,RII-SI-SIK-500C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-SI-SIK-500C,n_at_reference,4.18965401459854,,587.6,interpolated,RII-SI-SIK-500C,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-SI-SIK-500C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-500C,Highest tabulated wavelength.
 RII-SI-SIK-500C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-500C,Highest tabulated wavelength.
+RII-SI-SIK-500C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-500C,Highest tabulated wavelength.
+RII-SI-SIK-500C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-500C,Lowest tabulated wavelength.
 RII-SI-SIK-500C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-500C,Lowest tabulated wavelength.
 RII-SI-SIK-500C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-500C,Lowest tabulated wavelength.
 RII-SI-SIK-700C,n_at_reference,4.831209677419356,,486.1,interpolated,RII-SI-SIK-700C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-SI-SIK-700C,n_at_reference,4.2805014598540145,,587.6,interpolated,RII-SI-SIK-700C,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-SI-SIK-700C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-700C,Highest tabulated wavelength.
 RII-SI-SIK-700C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-700C,Highest tabulated wavelength.
+RII-SI-SIK-700C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-700C,Highest tabulated wavelength.
+RII-SI-SIK-700C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-700C,Lowest tabulated wavelength.
 RII-SI-SIK-700C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-700C,Lowest tabulated wavelength.
 RII-SI-SIK-700C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-700C,Lowest tabulated wavelength.
 RII-SI-SIK-850C,n_at_reference,4.9302827956989255,,486.1,interpolated,RII-SI-SIK-850C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-SI-SIK-850C,n_at_reference,4.384748905109489,,587.6,interpolated,RII-SI-SIK-850C,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-SI-SIK-850C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-850C,Highest tabulated wavelength.
 RII-SI-SIK-850C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-850C,Highest tabulated wavelength.
+RII-SI-SIK-850C,wl_max_um,0.6199,um,,literature,RII-SI-SIK-850C,Highest tabulated wavelength.
+RII-SI-SIK-850C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-850C,Lowest tabulated wavelength.
 RII-SI-SIK-850C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-850C,Lowest tabulated wavelength.
 RII-SI-SIK-850C,wl_min_um,0.2883,um,,literature,RII-SI-SIK-850C,Lowest tabulated wavelength.
 RII-SI-VUYE-100C,n_at_reference,4.422744680851064,,486.1,interpolated,RII-SI-VUYE-100C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15927,6 +16187,8 @@ RII-SI-VUYE-100C,n_at_reference,3.9984927536231885,,587.6,interpolated,RII-SI-VU
 RII-SI-VUYE-100C,n_at_reference,3.8611954022988506,,656.3,interpolated,RII-SI-VUYE-100C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-100C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-100C,Highest tabulated wavelength.
 RII-SI-VUYE-100C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-100C,Highest tabulated wavelength.
+RII-SI-VUYE-100C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-100C,Highest tabulated wavelength.
+RII-SI-VUYE-100C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-100C,Lowest tabulated wavelength.
 RII-SI-VUYE-100C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-100C,Lowest tabulated wavelength.
 RII-SI-VUYE-100C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-100C,Lowest tabulated wavelength.
 RII-SI-VUYE-150C,n_at_reference,4.4527446808510645,,486.1,interpolated,RII-SI-VUYE-150C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15934,6 +16196,8 @@ RII-SI-VUYE-150C,n_at_reference,4.017304347826086,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-150C,n_at_reference,3.877885057471264,,656.3,interpolated,RII-SI-VUYE-150C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-150C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-150C,Highest tabulated wavelength.
 RII-SI-VUYE-150C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-150C,Highest tabulated wavelength.
+RII-SI-VUYE-150C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-150C,Highest tabulated wavelength.
+RII-SI-VUYE-150C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-150C,Lowest tabulated wavelength.
 RII-SI-VUYE-150C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-150C,Lowest tabulated wavelength.
 RII-SI-VUYE-150C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-150C,Lowest tabulated wavelength.
 RII-SI-VUYE-200C,n_at_reference,4.473787234042553,,486.1,interpolated,RII-SI-VUYE-200C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15941,6 +16205,8 @@ RII-SI-VUYE-200C,n_at_reference,4.030304347826087,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-200C,n_at_reference,3.8915310344827585,,656.3,interpolated,RII-SI-VUYE-200C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-200C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-200C,Highest tabulated wavelength.
 RII-SI-VUYE-200C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-200C,Highest tabulated wavelength.
+RII-SI-VUYE-200C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-200C,Highest tabulated wavelength.
+RII-SI-VUYE-200C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-200C,Lowest tabulated wavelength.
 RII-SI-VUYE-200C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-200C,Lowest tabulated wavelength.
 RII-SI-VUYE-200C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-200C,Lowest tabulated wavelength.
 RII-SI-VUYE-20C,n_at_reference,4.36872340425532,,486.1,interpolated,RII-SI-VUYE-20C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15948,6 +16214,8 @@ RII-SI-VUYE-20C,n_at_reference,3.9668985507246375,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-20C,n_at_reference,3.8397586206896555,,656.3,interpolated,RII-SI-VUYE-20C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-20C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-20C,Highest tabulated wavelength.
 RII-SI-VUYE-20C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-20C,Highest tabulated wavelength.
+RII-SI-VUYE-20C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-20C,Highest tabulated wavelength.
+RII-SI-VUYE-20C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-20C,Lowest tabulated wavelength.
 RII-SI-VUYE-20C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-20C,Lowest tabulated wavelength.
 RII-SI-VUYE-20C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-20C,Lowest tabulated wavelength.
 RII-SI-VUYE-250C,n_at_reference,4.497808510638298,,486.1,interpolated,RII-SI-VUYE-250C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15955,6 +16223,8 @@ RII-SI-VUYE-250C,n_at_reference,4.045710144927536,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-250C,n_at_reference,3.903701149425287,,656.3,interpolated,RII-SI-VUYE-250C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-250C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-250C,Highest tabulated wavelength.
 RII-SI-VUYE-250C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-250C,Highest tabulated wavelength.
+RII-SI-VUYE-250C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-250C,Highest tabulated wavelength.
+RII-SI-VUYE-250C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-250C,Lowest tabulated wavelength.
 RII-SI-VUYE-250C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-250C,Lowest tabulated wavelength.
 RII-SI-VUYE-250C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-250C,Lowest tabulated wavelength.
 RII-SI-VUYE-300C,n_at_reference,4.516829787234043,,486.1,interpolated,RII-SI-VUYE-300C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15962,6 +16232,8 @@ RII-SI-VUYE-300C,n_at_reference,4.058115942028985,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-300C,n_at_reference,3.9160114942528734,,656.3,interpolated,RII-SI-VUYE-300C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-300C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-300C,Highest tabulated wavelength.
 RII-SI-VUYE-300C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-300C,Highest tabulated wavelength.
+RII-SI-VUYE-300C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-300C,Highest tabulated wavelength.
+RII-SI-VUYE-300C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-300C,Lowest tabulated wavelength.
 RII-SI-VUYE-300C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-300C,Lowest tabulated wavelength.
 RII-SI-VUYE-300C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-300C,Lowest tabulated wavelength.
 RII-SI-VUYE-350C,n_at_reference,4.533936170212766,,486.1,interpolated,RII-SI-VUYE-350C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15969,6 +16241,8 @@ RII-SI-VUYE-350C,n_at_reference,4.071304347826087,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-350C,n_at_reference,3.9271379310344825,,656.3,interpolated,RII-SI-VUYE-350C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-350C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-350C,Highest tabulated wavelength.
 RII-SI-VUYE-350C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-350C,Highest tabulated wavelength.
+RII-SI-VUYE-350C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-350C,Highest tabulated wavelength.
+RII-SI-VUYE-350C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-350C,Lowest tabulated wavelength.
 RII-SI-VUYE-350C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-350C,Lowest tabulated wavelength.
 RII-SI-VUYE-350C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-350C,Lowest tabulated wavelength.
 RII-SI-VUYE-400C,n_at_reference,4.569829787234043,,486.1,interpolated,RII-SI-VUYE-400C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15976,6 +16250,8 @@ RII-SI-VUYE-400C,n_at_reference,4.091710144927536,,587.6,interpolated,RII-SI-VUY
 RII-SI-VUYE-400C,n_at_reference,3.944137931034483,,656.3,interpolated,RII-SI-VUYE-400C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-400C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-400C,Highest tabulated wavelength.
 RII-SI-VUYE-400C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-400C,Highest tabulated wavelength.
+RII-SI-VUYE-400C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-400C,Highest tabulated wavelength.
+RII-SI-VUYE-400C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-400C,Lowest tabulated wavelength.
 RII-SI-VUYE-400C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-400C,Lowest tabulated wavelength.
 RII-SI-VUYE-400C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-400C,Lowest tabulated wavelength.
 RII-SI-VUYE-450C,n_at_reference,4.615851063829788,,486.1,interpolated,RII-SI-VUYE-450C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15983,6 +16259,8 @@ RII-SI-VUYE-450C,n_at_reference,4.1207101449275365,,587.6,interpolated,RII-SI-VU
 RII-SI-VUYE-450C,n_at_reference,3.969574712643678,,656.3,interpolated,RII-SI-VUYE-450C,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-SI-VUYE-450C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-450C,Highest tabulated wavelength.
 RII-SI-VUYE-450C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-450C,Highest tabulated wavelength.
+RII-SI-VUYE-450C,wl_max_um,0.8266,um,,literature,RII-SI-VUYE-450C,Highest tabulated wavelength.
+RII-SI-VUYE-450C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-450C,Lowest tabulated wavelength.
 RII-SI-VUYE-450C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-450C,Lowest tabulated wavelength.
 RII-SI-VUYE-450C,wl_min_um,0.2638,um,,literature,RII-SI-VUYE-450C,Lowest tabulated wavelength.
 RII-SI-WANG-25C,n_at_reference,4.372273514761905,,486.1,interpolated,RII-SI-WANG-25C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15991,6 +16269,8 @@ RII-SI-WANG-25C,n_at_reference,3.83042194008596,,656.3,interpolated,RII-SI-WANG-
 RII-SI-WANG-25C,n_at_reference,3.56983496,,1000.0,interpolated,RII-SI-WANG-25C,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-WANG-25C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-25C,Highest tabulated wavelength.
 RII-SI-WANG-25C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-25C,Highest tabulated wavelength.
+RII-SI-WANG-25C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-25C,Highest tabulated wavelength.
+RII-SI-WANG-25C,wl_min_um,0.4,um,,literature,RII-SI-WANG-25C,Lowest tabulated wavelength.
 RII-SI-WANG-25C,wl_min_um,0.4,um,,literature,RII-SI-WANG-25C,Lowest tabulated wavelength.
 RII-SI-WANG-25C,wl_min_um,0.4,um,,literature,RII-SI-WANG-25C,Lowest tabulated wavelength.
 RII-SI-WANG-35C,n_at_reference,4.377984114021164,,486.1,interpolated,RII-SI-WANG-35C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -15999,6 +16279,8 @@ RII-SI-WANG-35C,n_at_reference,3.8340169115759313,,656.3,interpolated,RII-SI-WAN
 RII-SI-WANG-35C,n_at_reference,3.57244432,,1000.0,interpolated,RII-SI-WANG-35C,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-WANG-35C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-35C,Highest tabulated wavelength.
 RII-SI-WANG-35C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-35C,Highest tabulated wavelength.
+RII-SI-WANG-35C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-35C,Highest tabulated wavelength.
+RII-SI-WANG-35C,wl_min_um,0.4,um,,literature,RII-SI-WANG-35C,Lowest tabulated wavelength.
 RII-SI-WANG-35C,wl_min_um,0.4,um,,literature,RII-SI-WANG-35C,Lowest tabulated wavelength.
 RII-SI-WANG-35C,wl_min_um,0.4,um,,literature,RII-SI-WANG-35C,Lowest tabulated wavelength.
 RII-SI-WANG-45C,n_at_reference,4.3838501159259256,,486.1,interpolated,RII-SI-WANG-45C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16007,6 +16289,8 @@ RII-SI-WANG-45C,n_at_reference,3.838142291060172,,656.3,interpolated,RII-SI-WANG
 RII-SI-WANG-45C,n_at_reference,3.57566438,,1000.0,interpolated,RII-SI-WANG-45C,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-WANG-45C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-45C,Highest tabulated wavelength.
 RII-SI-WANG-45C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-45C,Highest tabulated wavelength.
+RII-SI-WANG-45C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-45C,Highest tabulated wavelength.
+RII-SI-WANG-45C,wl_min_um,0.4,um,,literature,RII-SI-WANG-45C,Lowest tabulated wavelength.
 RII-SI-WANG-45C,wl_min_um,0.4,um,,literature,RII-SI-WANG-45C,Lowest tabulated wavelength.
 RII-SI-WANG-45C,wl_min_um,0.4,um,,literature,RII-SI-WANG-45C,Lowest tabulated wavelength.
 RII-SI-WANG-55C,n_at_reference,4.388002434179894,,486.1,interpolated,RII-SI-WANG-55C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16015,6 +16299,8 @@ RII-SI-WANG-55C,n_at_reference,3.840426413037249,,656.3,interpolated,RII-SI-WANG
 RII-SI-WANG-55C,n_at_reference,3.57667879,,1000.0,interpolated,RII-SI-WANG-55C,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-WANG-55C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-55C,Highest tabulated wavelength.
 RII-SI-WANG-55C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-55C,Highest tabulated wavelength.
+RII-SI-WANG-55C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-55C,Highest tabulated wavelength.
+RII-SI-WANG-55C,wl_min_um,0.4,um,,literature,RII-SI-WANG-55C,Lowest tabulated wavelength.
 RII-SI-WANG-55C,wl_min_um,0.4,um,,literature,RII-SI-WANG-55C,Lowest tabulated wavelength.
 RII-SI-WANG-55C,wl_min_um,0.4,um,,literature,RII-SI-WANG-55C,Lowest tabulated wavelength.
 RII-SI-WANG-65C,n_at_reference,4.393633704708995,,486.1,interpolated,RII-SI-WANG-65C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16023,6 +16309,8 @@ RII-SI-WANG-65C,n_at_reference,3.8446375800859602,,656.3,interpolated,RII-SI-WAN
 RII-SI-WANG-65C,n_at_reference,3.58023408,,1000.0,interpolated,RII-SI-WANG-65C,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SI-WANG-65C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-65C,Highest tabulated wavelength.
 RII-SI-WANG-65C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-65C,Highest tabulated wavelength.
+RII-SI-WANG-65C,wl_max_um,1.3053,um,,literature,RII-SI-WANG-65C,Highest tabulated wavelength.
+RII-SI-WANG-65C,wl_min_um,0.4,um,,literature,RII-SI-WANG-65C,Lowest tabulated wavelength.
 RII-SI-WANG-65C,wl_min_um,0.4,um,,literature,RII-SI-WANG-65C,Lowest tabulated wavelength.
 RII-SI-WANG-65C,wl_min_um,0.4,um,,literature,RII-SI-WANG-65C,Lowest tabulated wavelength.
 RII-SIO2-AROSA,n_at_reference,1.463173475690534,,486.1,calculated,RII-SIO2-AROSA,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -16031,6 +16319,8 @@ RII-SIO2-AROSA,n_at_reference,1.456426285423548,,656.3,calculated,RII-SIO2-AROSA
 RII-SIO2-AROSA,n_at_reference,1.4504468233198622,,1000.0,calculated,RII-SIO2-AROSA,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-SIO2-AROSA,wl_max_um,1.7,um,,literature,RII-SIO2-AROSA,Highest wavelength the cited fit is valid over.
 RII-SIO2-AROSA,wl_max_um,1.7,um,,literature,RII-SIO2-AROSA,Highest wavelength the cited fit is valid over.
+RII-SIO2-AROSA,wl_max_um,1.7,um,,literature,RII-SIO2-AROSA,Highest wavelength the cited fit is valid over.
+RII-SIO2-AROSA,wl_min_um,0.26,um,,literature,RII-SIO2-AROSA,Lowest wavelength the cited fit is valid over.
 RII-SIO2-AROSA,wl_min_um,0.26,um,,literature,RII-SIO2-AROSA,Lowest wavelength the cited fit is valid over.
 RII-SIO2-AROSA,wl_min_um,0.26,um,,literature,RII-SIO2-AROSA,Lowest wavelength the cited fit is valid over.
 RII-SIO2-FRANTA,n_at_reference,1.4632697121195442,,486.1,interpolated,RII-SIO2-FRANTA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16046,6 +16336,8 @@ RII-SIO2-FRANTA,n_at_reference,2.526835344041113,,10000.0,interpolated,RII-SIO2-
 RII-SIO2-FRANTA,n_at_reference,1.5955951158269566,,12000.0,interpolated,RII-SIO2-FRANTA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SIO2-FRANTA,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA,Highest tabulated wavelength.
 RII-SIO2-FRANTA,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA,Highest tabulated wavelength.
+RII-SIO2-FRANTA,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA,Highest tabulated wavelength.
+RII-SIO2-FRANTA,wl_min_um,0.024797,um,,literature,RII-SIO2-FRANTA,Lowest tabulated wavelength.
 RII-SIO2-FRANTA,wl_min_um,0.024797,um,,literature,RII-SIO2-FRANTA,Lowest tabulated wavelength.
 RII-SIO2-FRANTA,wl_min_um,0.024797,um,,literature,RII-SIO2-FRANTA,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-25C,n_at_reference,1.4800136244406756,,486.1,interpolated,RII-SIO2-FRANTA-25C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16061,6 +16353,8 @@ RII-SIO2-FRANTA-25C,n_at_reference,2.6054498434545597,,10000.0,interpolated,RII-
 RII-SIO2-FRANTA-25C,n_at_reference,1.656981106177739,,12000.0,interpolated,RII-SIO2-FRANTA-25C,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SIO2-FRANTA-25C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-25C,Highest tabulated wavelength.
 RII-SIO2-FRANTA-25C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-25C,Highest tabulated wavelength.
+RII-SIO2-FRANTA-25C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-25C,Highest tabulated wavelength.
+RII-SIO2-FRANTA-25C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-25C,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-25C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-25C,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-25C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-25C,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-300C,n_at_reference,1.4763723549747336,,486.1,interpolated,RII-SIO2-FRANTA-300C,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16076,6 +16370,8 @@ RII-SIO2-FRANTA-300C,n_at_reference,2.804766513037429,,10000.0,interpolated,RII-
 RII-SIO2-FRANTA-300C,n_at_reference,1.7035007979663912,,12000.0,interpolated,RII-SIO2-FRANTA-300C,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SIO2-FRANTA-300C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-300C,Highest tabulated wavelength.
 RII-SIO2-FRANTA-300C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-300C,Highest tabulated wavelength.
+RII-SIO2-FRANTA-300C,wl_max_um,125.141,um,,literature,RII-SIO2-FRANTA-300C,Highest tabulated wavelength.
+RII-SIO2-FRANTA-300C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-300C,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-300C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-300C,Lowest tabulated wavelength.
 RII-SIO2-FRANTA-300C,wl_min_um,0.0275043,um,,literature,RII-SIO2-FRANTA-300C,Lowest tabulated wavelength.
 RII-SIO2-GAO,n_at_reference,1.4824547000000001,,486.1,interpolated,RII-SIO2-GAO,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16084,6 +16380,8 @@ RII-SIO2-GAO,n_at_reference,1.4755092,,656.3,interpolated,RII-SIO2-GAO,Linear in
 RII-SIO2-GAO,n_at_reference,1.47068,,1000.0,interpolated,RII-SIO2-GAO,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SIO2-GAO,wl_max_um,1.25,um,,literature,RII-SIO2-GAO,Highest tabulated wavelength.
 RII-SIO2-GAO,wl_max_um,1.25,um,,literature,RII-SIO2-GAO,Highest tabulated wavelength.
+RII-SIO2-GAO,wl_max_um,1.25,um,,literature,RII-SIO2-GAO,Highest tabulated wavelength.
+RII-SIO2-GAO,wl_min_um,0.252,um,,literature,RII-SIO2-GAO,Lowest tabulated wavelength.
 RII-SIO2-GAO,wl_min_um,0.252,um,,literature,RII-SIO2-GAO,Lowest tabulated wavelength.
 RII-SIO2-GAO,wl_min_um,0.252,um,,literature,RII-SIO2-GAO,Lowest tabulated wavelength.
 RII-SIO2-GHOSH-E,n_at_reference,1.463494367830639,,486.1,calculated,RII-SIO2-GHOSH-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -16092,6 +16390,8 @@ RII-SIO2-GHOSH-E,n_at_reference,1.4548830541274065,,656.3,calculated,RII-SIO2-GH
 RII-SIO2-GHOSH-E,n_at_reference,1.4473122221981818,,1000.0,calculated,RII-SIO2-GHOSH-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-SIO2-GHOSH-E,n_at_reference,1.431680476676643,,2000.0,calculated,RII-SIO2-GHOSH-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-SIO2-GHOSH-E,wl_max_um,2.0531,um,,literature,RII-SIO2-GHOSH-E,Highest wavelength the cited fit is valid over.
+RII-SIO2-GHOSH-E,wl_max_um,2.0531,um,,literature,RII-SIO2-GHOSH-E,Highest wavelength the cited fit is valid over.
+RII-SIO2-GHOSH-E,wl_min_um,0.198,um,,literature,RII-SIO2-GHOSH-E,Lowest wavelength the cited fit is valid over.
 RII-SIO2-GHOSH-E,wl_min_um,0.198,um,,literature,RII-SIO2-GHOSH-E,Lowest wavelength the cited fit is valid over.
 RII-SIO2-GHOSH-O,n_at_reference,1.4544495336849743,,486.1,calculated,RII-SIO2-GHOSH-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-SIO2-GHOSH-O,n_at_reference,1.4487038091890982,,587.6,calculated,RII-SIO2-GHOSH-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -16099,6 +16399,8 @@ RII-SIO2-GHOSH-O,n_at_reference,1.4461219516522268,,656.3,calculated,RII-SIO2-GH
 RII-SIO2-GHOSH-O,n_at_reference,1.4388140355734067,,1000.0,calculated,RII-SIO2-GHOSH-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-SIO2-GHOSH-O,n_at_reference,1.423805393682075,,2000.0,calculated,RII-SIO2-GHOSH-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-SIO2-GHOSH-O,wl_max_um,2.0531,um,,literature,RII-SIO2-GHOSH-O,Highest wavelength the cited fit is valid over.
+RII-SIO2-GHOSH-O,wl_max_um,2.0531,um,,literature,RII-SIO2-GHOSH-O,Highest wavelength the cited fit is valid over.
+RII-SIO2-GHOSH-O,wl_min_um,0.198,um,,literature,RII-SIO2-GHOSH-O,Lowest wavelength the cited fit is valid over.
 RII-SIO2-GHOSH-O,wl_min_um,0.198,um,,literature,RII-SIO2-GHOSH-O,Lowest wavelength the cited fit is valid over.
 RII-SIO2-KISCHKAT,n_at_reference,1.43793,,2000.0,interpolated,RII-SIO2-KISCHKAT,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SIO2-KISCHKAT,n_at_reference,1.4204466666666666,,3000.0,interpolated,RII-SIO2-KISCHKAT,Linear interpolation between tabulated samples near 3.0 um from the cited reference.
@@ -16109,6 +16411,8 @@ RII-SIO2-KISCHKAT,n_at_reference,2.8118,,10000.0,interpolated,RII-SIO2-KISCHKAT,
 RII-SIO2-KISCHKAT,n_at_reference,1.7324733437663016,,12000.0,interpolated,RII-SIO2-KISCHKAT,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SIO2-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-SIO2-KISCHKAT,Highest tabulated wavelength.
 RII-SIO2-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-SIO2-KISCHKAT,Highest tabulated wavelength.
+RII-SIO2-KISCHKAT,wl_max_um,14.28571,um,,literature,RII-SIO2-KISCHKAT,Highest tabulated wavelength.
+RII-SIO2-KISCHKAT,wl_min_um,1.53846,um,,literature,RII-SIO2-KISCHKAT,Lowest tabulated wavelength.
 RII-SIO2-KISCHKAT,wl_min_um,1.53846,um,,literature,RII-SIO2-KISCHKAT,Lowest tabulated wavelength.
 RII-SIO2-KISCHKAT,wl_min_um,1.53846,um,,literature,RII-SIO2-KISCHKAT,Lowest tabulated wavelength.
 RII-SIO2-LEMARCHAND,n_at_reference,1.4775885,,486.1,interpolated,RII-SIO2-LEMARCHAND,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16118,6 +16422,8 @@ RII-SIO2-LEMARCHAND,n_at_reference,1.46746,,1000.0,interpolated,RII-SIO2-LEMARCH
 RII-SIO2-LEMARCHAND,n_at_reference,1.465156,,2000.0,interpolated,RII-SIO2-LEMARCHAND,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-SIO2-LEMARCHAND,wl_max_um,2.5,um,,literature,RII-SIO2-LEMARCHAND,Highest tabulated wavelength.
 RII-SIO2-LEMARCHAND,wl_max_um,2.5,um,,literature,RII-SIO2-LEMARCHAND,Highest tabulated wavelength.
+RII-SIO2-LEMARCHAND,wl_max_um,2.5,um,,literature,RII-SIO2-LEMARCHAND,Highest tabulated wavelength.
+RII-SIO2-LEMARCHAND,wl_min_um,0.25,um,,literature,RII-SIO2-LEMARCHAND,Lowest tabulated wavelength.
 RII-SIO2-LEMARCHAND,wl_min_um,0.25,um,,literature,RII-SIO2-LEMARCHAND,Lowest tabulated wavelength.
 RII-SIO2-LEMARCHAND,wl_min_um,0.25,um,,literature,RII-SIO2-LEMARCHAND,Lowest tabulated wavelength.
 RII-SIO2-MALITSON,n_at_reference,1.4631284508610218,,486.1,calculated,RII-SIO2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -16130,6 +16436,8 @@ RII-SIO2-MALITSON,n_at_reference,1.389027848195899,,4000.0,calculated,RII-SIO2-M
 RII-SIO2-MALITSON,n_at_reference,1.3404572894914368,,5000.0,calculated,RII-SIO2-MALITSON,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-SIO2-MALITSON,wl_max_um,6.7,um,,literature,RII-SIO2-MALITSON,Highest wavelength the cited fit is valid over.
 RII-SIO2-MALITSON,wl_max_um,6.7,um,,literature,RII-SIO2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-SIO2-MALITSON,wl_max_um,6.7,um,,literature,RII-SIO2-MALITSON,Highest wavelength the cited fit is valid over.
+RII-SIO2-MALITSON,wl_min_um,0.21,um,,literature,RII-SIO2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-SIO2-MALITSON,wl_min_um,0.21,um,,literature,RII-SIO2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-SIO2-MALITSON,wl_min_um,0.21,um,,literature,RII-SIO2-MALITSON,Lowest wavelength the cited fit is valid over.
 RII-SIO2-POPOVA,n_at_reference,0.38710532994923863,,8000.0,interpolated,RII-SIO2-POPOVA,Linear interpolation between tabulated samples near 8.0 um from the cited reference.
@@ -16137,6 +16445,8 @@ RII-SIO2-POPOVA,n_at_reference,2.5509466019417473,,10000.0,interpolated,RII-SIO2
 RII-SIO2-POPOVA,n_at_reference,1.7020022471910112,,12000.0,interpolated,RII-SIO2-POPOVA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SIO2-POPOVA,wl_max_um,50.0,um,,literature,RII-SIO2-POPOVA,Highest tabulated wavelength.
 RII-SIO2-POPOVA,wl_max_um,50.0,um,,literature,RII-SIO2-POPOVA,Highest tabulated wavelength.
+RII-SIO2-POPOVA,wl_max_um,50.0,um,,literature,RII-SIO2-POPOVA,Highest tabulated wavelength.
+RII-SIO2-POPOVA,wl_min_um,7.0,um,,literature,RII-SIO2-POPOVA,Lowest tabulated wavelength.
 RII-SIO2-POPOVA,wl_min_um,7.0,um,,literature,RII-SIO2-POPOVA,Lowest tabulated wavelength.
 RII-SIO2-POPOVA,wl_min_um,7.0,um,,literature,RII-SIO2-POPOVA,Lowest tabulated wavelength.
 RII-SIO2-RADHAKRISHNAN-E,n_at_reference,1.5589739505866467,,486.1,calculated,RII-SIO2-RADHAKRISHNAN-E,Evaluated from the refractiveindex.info formula 1 5-term Sellmeier fit; not a tabulated value.
@@ -16147,6 +16457,8 @@ RII-SIO2-RADHAKRISHNAN-E,n_at_reference,1.5292341738140962,,2000.0,calculated,RI
 RII-SIO2-RADHAKRISHNAN-E,n_at_reference,1.507081674518104,,3000.0,calculated,RII-SIO2-RADHAKRISHNAN-E,Evaluated from the refractiveindex.info formula 1 5-term Sellmeier fit; not a tabulated value.
 RII-SIO2-RADHAKRISHNAN-E,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Highest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-E,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Highest wavelength the cited fit is valid over.
+RII-SIO2-RADHAKRISHNAN-E,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Highest wavelength the cited fit is valid over.
+RII-SIO2-RADHAKRISHNAN-E,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-E,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-E,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-E,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-O,n_at_reference,1.549677512475747,,486.1,calculated,RII-SIO2-RADHAKRISHNAN-O,Evaluated from the refractiveindex.info formula 1 5-term Sellmeier fit; not a tabulated value.
@@ -16157,6 +16469,8 @@ RII-SIO2-RADHAKRISHNAN-O,n_at_reference,1.520952008063957,,2000.0,calculated,RII
 RII-SIO2-RADHAKRISHNAN-O,n_at_reference,1.4995628526793159,,3000.0,calculated,RII-SIO2-RADHAKRISHNAN-O,Evaluated from the refractiveindex.info formula 1 5-term Sellmeier fit; not a tabulated value.
 RII-SIO2-RADHAKRISHNAN-O,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Highest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-O,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Highest wavelength the cited fit is valid over.
+RII-SIO2-RADHAKRISHNAN-O,wl_max_um,3.0,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Highest wavelength the cited fit is valid over.
+RII-SIO2-RADHAKRISHNAN-O,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-O,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RADHAKRISHNAN-O,wl_min_um,0.18,um,,literature,RII-SIO2-RADHAKRISHNAN-O,Lowest wavelength the cited fit is valid over.
 RII-SIO2-RODRIGUEZ-DEMARCOS,n_at_reference,1.4690489265280922,,486.1,interpolated,RII-SIO2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16165,6 +16479,8 @@ RII-SIO2-RODRIGUEZ-DEMARCOS,n_at_reference,1.46309903374561,,656.3,interpolated,
 RII-SIO2-RODRIGUEZ-DEMARCOS,n_at_reference,1.459110930826463,,1000.0,interpolated,RII-SIO2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-SIO2-RODRIGUEZ-DEMARCOS,wl_max_um,1.51066,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
 RII-SIO2-RODRIGUEZ-DEMARCOS,wl_max_um,1.51066,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-SIO2-RODRIGUEZ-DEMARCOS,wl_max_um,1.51066,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-SIO2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299714,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-SIO2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299714,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-SIO2-RODRIGUEZ-DEMARCOS,wl_min_um,0.0299714,um,,literature,RII-SIO2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-SRF2-FELDMAN,n_at_reference,1.4413440253856948,,486.1,calculated,RII-SRF2-FELDMAN,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -16179,12 +16495,16 @@ RII-SRF2-FELDMAN,n_at_reference,1.3817969415366003,,8000.0,calculated,RII-SRF2-F
 RII-SRF2-FELDMAN,n_at_reference,1.3509916319819328,,10000.0,calculated,RII-SRF2-FELDMAN,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-SRF2-FELDMAN,wl_max_um,11.5,um,,literature,RII-SRF2-FELDMAN,Highest wavelength the cited fit is valid over.
 RII-SRF2-FELDMAN,wl_max_um,11.5,um,,literature,RII-SRF2-FELDMAN,Highest wavelength the cited fit is valid over.
+RII-SRF2-FELDMAN,wl_max_um,11.5,um,,literature,RII-SRF2-FELDMAN,Highest wavelength the cited fit is valid over.
+RII-SRF2-FELDMAN,wl_min_um,0.21,um,,literature,RII-SRF2-FELDMAN,Lowest wavelength the cited fit is valid over.
 RII-SRF2-FELDMAN,wl_min_um,0.21,um,,literature,RII-SRF2-FELDMAN,Lowest wavelength the cited fit is valid over.
 RII-SRF2-FELDMAN,wl_min_um,0.21,um,,literature,RII-SRF2-FELDMAN,Lowest wavelength the cited fit is valid over.
 RII-SRF2-KAISER,n_at_reference,1.36552,,10000.0,interpolated,RII-SRF2-KAISER,Linear interpolation between tabulated samples near 10.0 um from the cited reference.
 RII-SRF2-KAISER,n_at_reference,1.32945,,12000.0,interpolated,RII-SRF2-KAISER,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SRF2-KAISER,wl_max_um,80.0,um,,literature,RII-SRF2-KAISER,Highest tabulated wavelength.
 RII-SRF2-KAISER,wl_max_um,80.0,um,,literature,RII-SRF2-KAISER,Highest tabulated wavelength.
+RII-SRF2-KAISER,wl_max_um,80.0,um,,literature,RII-SRF2-KAISER,Highest tabulated wavelength.
+RII-SRF2-KAISER,wl_min_um,10.0,um,,literature,RII-SRF2-KAISER,Lowest tabulated wavelength.
 RII-SRF2-KAISER,wl_min_um,10.0,um,,literature,RII-SRF2-KAISER,Lowest tabulated wavelength.
 RII-SRF2-KAISER,wl_min_um,10.0,um,,literature,RII-SRF2-KAISER,Lowest tabulated wavelength.
 RII-SRF2-LI,n_at_reference,1.3183252154703253,,486.1,calculated,RII-SRF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -16200,6 +16520,8 @@ RII-SRF2-LI,n_at_reference,1.2177047459932053,,10000.0,calculated,RII-SRF2-LI,Ev
 RII-SRF2-LI,n_at_reference,1.1716779724030273,,12000.0,calculated,RII-SRF2-LI,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-SRF2-LI,wl_max_um,14.0,um,,literature,RII-SRF2-LI,Highest wavelength the cited fit is valid over.
 RII-SRF2-LI,wl_max_um,14.0,um,,literature,RII-SRF2-LI,Highest wavelength the cited fit is valid over.
+RII-SRF2-LI,wl_max_um,14.0,um,,literature,RII-SRF2-LI,Highest wavelength the cited fit is valid over.
+RII-SRF2-LI,wl_min_um,0.15,um,,literature,RII-SRF2-LI,Lowest wavelength the cited fit is valid over.
 RII-SRF2-LI,wl_min_um,0.15,um,,literature,RII-SRF2-LI,Lowest wavelength the cited fit is valid over.
 RII-SRF2-LI,wl_min_um,0.15,um,,literature,RII-SRF2-LI,Lowest wavelength the cited fit is valid over.
 RII-SRF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.4907076399821257,,486.1,interpolated,RII-SRF2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16215,6 +16537,8 @@ RII-SRF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.3964328247038091,,10000.0,interpola
 RII-SRF2-RODRIGUEZ-DEMARCOS,n_at_reference,1.355154817323321,,12000.0,interpolated,RII-SRF2-RODRIGUEZ-DEMARCOS,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-SRF2-RODRIGUEZ-DEMARCOS,wl_max_um,682.162027,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
 RII-SRF2-RODRIGUEZ-DEMARCOS,wl_max_um,682.162027,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-SRF2-RODRIGUEZ-DEMARCOS,wl_max_um,682.162027,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Highest tabulated wavelength.
+RII-SRF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.001582488,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-SRF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.001582488,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-SRF2-RODRIGUEZ-DEMARCOS,wl_min_um,0.001582488,um,,literature,RII-SRF2-RODRIGUEZ-DEMARCOS,Lowest tabulated wavelength.
 RII-TE-CALDWELL-E,n_at_reference,3.475958016206807,,4000.0,calculated,RII-TE-CALDWELL-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -16223,6 +16547,8 @@ RII-TE-CALDWELL-E,n_at_reference,3.2639366890085246,,8000.0,calculated,RII-TE-CA
 RII-TE-CALDWELL-E,n_at_reference,3.2379207844076077,,10000.0,calculated,RII-TE-CALDWELL-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-CALDWELL-E,n_at_reference,3.22132715359803,,12000.0,calculated,RII-TE-CALDWELL-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-CALDWELL-E,wl_max_um,14.0,um,,literature,RII-TE-CALDWELL-E,Highest wavelength the cited fit is valid over.
+RII-TE-CALDWELL-E,wl_max_um,14.0,um,,literature,RII-TE-CALDWELL-E,Highest wavelength the cited fit is valid over.
+RII-TE-CALDWELL-E,wl_min_um,4.0,um,,literature,RII-TE-CALDWELL-E,Lowest wavelength the cited fit is valid over.
 RII-TE-CALDWELL-E,wl_min_um,4.0,um,,literature,RII-TE-CALDWELL-E,Lowest wavelength the cited fit is valid over.
 RII-TE-CALDWELL-O,n_at_reference,2.599541420619917,,4000.0,calculated,RII-TE-CALDWELL-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-CALDWELL-O,n_at_reference,2.478059184372737,,5000.0,calculated,RII-TE-CALDWELL-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -16230,6 +16556,8 @@ RII-TE-CALDWELL-O,n_at_reference,2.3654684317122605,,8000.0,calculated,RII-TE-CA
 RII-TE-CALDWELL-O,n_at_reference,2.340108270009117,,10000.0,calculated,RII-TE-CALDWELL-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-CALDWELL-O,n_at_reference,2.324936986108038,,12000.0,calculated,RII-TE-CALDWELL-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-CALDWELL-O,wl_max_um,14.0,um,,literature,RII-TE-CALDWELL-O,Highest wavelength the cited fit is valid over.
+RII-TE-CALDWELL-O,wl_max_um,14.0,um,,literature,RII-TE-CALDWELL-O,Highest wavelength the cited fit is valid over.
+RII-TE-CALDWELL-O,wl_min_um,4.0,um,,literature,RII-TE-CALDWELL-O,Lowest wavelength the cited fit is valid over.
 RII-TE-CALDWELL-O,wl_min_um,4.0,um,,literature,RII-TE-CALDWELL-O,Lowest wavelength the cited fit is valid over.
 RII-TE-CIESIELSKI,n_at_reference,2.810349081364829,,486.1,interpolated,RII-TE-CIESIELSKI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-TE-CIESIELSKI,n_at_reference,3.8775278276481147,,587.6,interpolated,RII-TE-CIESIELSKI,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
@@ -16238,6 +16566,8 @@ RII-TE-CIESIELSKI,n_at_reference,4.557,,1000.0,interpolated,RII-TE-CIESIELSKI,Li
 RII-TE-CIESIELSKI,n_at_reference,4.252,,2000.0,interpolated,RII-TE-CIESIELSKI,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-TE-CIESIELSKI,wl_max_um,2.0,um,,literature,RII-TE-CIESIELSKI,Highest tabulated wavelength.
 RII-TE-CIESIELSKI,wl_max_um,2.0,um,,literature,RII-TE-CIESIELSKI,Highest tabulated wavelength.
+RII-TE-CIESIELSKI,wl_max_um,2.0,um,,literature,RII-TE-CIESIELSKI,Highest tabulated wavelength.
+RII-TE-CIESIELSKI,wl_min_um,0.2,um,,literature,RII-TE-CIESIELSKI,Lowest tabulated wavelength.
 RII-TE-CIESIELSKI,wl_min_um,0.2,um,,literature,RII-TE-CIESIELSKI,Lowest tabulated wavelength.
 RII-TE-CIESIELSKI,wl_min_um,0.2,um,,literature,RII-TE-CIESIELSKI,Lowest tabulated wavelength.
 RII-TE-GUO-E,n_at_reference,1.216559,,486.1,interpolated,RII-TE-GUO-E,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16245,6 +16575,8 @@ RII-TE-GUO-E,n_at_reference,1.8547560000000003,,587.6,interpolated,RII-TE-GUO-E,
 RII-TE-GUO-E,n_at_reference,2.4521705999999996,,656.3,interpolated,RII-TE-GUO-E,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-TE-GUO-E,wl_max_um,0.9,um,,literature,RII-TE-GUO-E,Highest tabulated wavelength.
 RII-TE-GUO-E,wl_max_um,0.9,um,,literature,RII-TE-GUO-E,Highest tabulated wavelength.
+RII-TE-GUO-E,wl_max_um,0.9,um,,literature,RII-TE-GUO-E,Highest tabulated wavelength.
+RII-TE-GUO-E,wl_min_um,0.4,um,,literature,RII-TE-GUO-E,Lowest tabulated wavelength.
 RII-TE-GUO-E,wl_min_um,0.4,um,,literature,RII-TE-GUO-E,Lowest tabulated wavelength.
 RII-TE-GUO-E,wl_min_um,0.4,um,,literature,RII-TE-GUO-E,Lowest tabulated wavelength.
 RII-TE-GUO-O,n_at_reference,1.4576892,,486.1,interpolated,RII-TE-GUO-O,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16252,15 +16584,21 @@ RII-TE-GUO-O,n_at_reference,2.2633428,,587.6,interpolated,RII-TE-GUO-O,Linear in
 RII-TE-GUO-O,n_at_reference,2.9213674,,656.3,interpolated,RII-TE-GUO-O,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-TE-GUO-O,wl_max_um,0.9,um,,literature,RII-TE-GUO-O,Highest tabulated wavelength.
 RII-TE-GUO-O,wl_max_um,0.9,um,,literature,RII-TE-GUO-O,Highest tabulated wavelength.
+RII-TE-GUO-O,wl_max_um,0.9,um,,literature,RII-TE-GUO-O,Highest tabulated wavelength.
+RII-TE-GUO-O,wl_min_um,0.4,um,,literature,RII-TE-GUO-O,Lowest tabulated wavelength.
 RII-TE-GUO-O,wl_min_um,0.4,um,,literature,RII-TE-GUO-O,Lowest tabulated wavelength.
 RII-TE-GUO-O,wl_min_um,0.4,um,,literature,RII-TE-GUO-O,Lowest tabulated wavelength.
 RII-TE-SHERMAN-E,n_at_reference,6.1767507979554495,,10000.0,calculated,RII-TE-SHERMAN-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-SHERMAN-E,n_at_reference,6.164439419344792,,12000.0,calculated,RII-TE-SHERMAN-E,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-SHERMAN-E,wl_max_um,30.3,um,,literature,RII-TE-SHERMAN-E,Highest wavelength the cited fit is valid over.
+RII-TE-SHERMAN-E,wl_max_um,30.3,um,,literature,RII-TE-SHERMAN-E,Highest wavelength the cited fit is valid over.
+RII-TE-SHERMAN-E,wl_min_um,8.5,um,,literature,RII-TE-SHERMAN-E,Lowest wavelength the cited fit is valid over.
 RII-TE-SHERMAN-E,wl_min_um,8.5,um,,literature,RII-TE-SHERMAN-E,Lowest wavelength the cited fit is valid over.
 RII-TE-SHERMAN-O,n_at_reference,4.467558905743489,,10000.0,calculated,RII-TE-SHERMAN-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-SHERMAN-O,n_at_reference,4.456230426692668,,12000.0,calculated,RII-TE-SHERMAN-O,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-TE-SHERMAN-O,wl_max_um,30.3,um,,literature,RII-TE-SHERMAN-O,Highest wavelength the cited fit is valid over.
+RII-TE-SHERMAN-O,wl_max_um,30.3,um,,literature,RII-TE-SHERMAN-O,Highest wavelength the cited fit is valid over.
+RII-TE-SHERMAN-O,wl_min_um,8.5,um,,literature,RII-TE-SHERMAN-O,Lowest wavelength the cited fit is valid over.
 RII-TE-SHERMAN-O,wl_min_um,8.5,um,,literature,RII-TE-SHERMAN-O,Lowest wavelength the cited fit is valid over.
 RII-Y3AL5O12-BOND,n_at_reference,1.8472796,,486.1,interpolated,RII-Y3AL5O12-BOND,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-Y3AL5O12-BOND,n_at_reference,1.8359772,,587.6,interpolated,RII-Y3AL5O12-BOND,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
@@ -16271,6 +16609,8 @@ RII-Y3AL5O12-BOND,n_at_reference,1.7855,,3000.0,interpolated,RII-Y3AL5O12-BOND,L
 RII-Y3AL5O12-BOND,n_at_reference,1.7602,,4000.0,interpolated,RII-Y3AL5O12-BOND,Linear interpolation between tabulated samples near 4.0 um from the cited reference.
 RII-Y3AL5O12-BOND,wl_max_um,4.0,um,,literature,RII-Y3AL5O12-BOND,Highest tabulated wavelength.
 RII-Y3AL5O12-BOND,wl_max_um,4.0,um,,literature,RII-Y3AL5O12-BOND,Highest tabulated wavelength.
+RII-Y3AL5O12-BOND,wl_max_um,4.0,um,,literature,RII-Y3AL5O12-BOND,Highest tabulated wavelength.
+RII-Y3AL5O12-BOND,wl_min_um,0.4,um,,literature,RII-Y3AL5O12-BOND,Lowest tabulated wavelength.
 RII-Y3AL5O12-BOND,wl_min_um,0.4,um,,literature,RII-Y3AL5O12-BOND,Lowest tabulated wavelength.
 RII-Y3AL5O12-BOND,wl_min_um,0.4,um,,literature,RII-Y3AL5O12-BOND,Lowest tabulated wavelength.
 RII-Y3AL5O12-FRANTA,n_at_reference,1.8437436821354203,,486.1,interpolated,RII-Y3AL5O12-FRANTA,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16286,6 +16626,8 @@ RII-Y3AL5O12-FRANTA,n_at_reference,1.233537868885652,,10000.0,interpolated,RII-Y
 RII-Y3AL5O12-FRANTA,n_at_reference,0.1251305252844058,,12000.0,interpolated,RII-Y3AL5O12-FRANTA,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-Y3AL5O12-FRANTA,wl_max_um,400.286,um,,literature,RII-Y3AL5O12-FRANTA,Highest tabulated wavelength.
 RII-Y3AL5O12-FRANTA,wl_max_um,400.286,um,,literature,RII-Y3AL5O12-FRANTA,Highest tabulated wavelength.
+RII-Y3AL5O12-FRANTA,wl_max_um,400.286,um,,literature,RII-Y3AL5O12-FRANTA,Highest tabulated wavelength.
+RII-Y3AL5O12-FRANTA,wl_min_um,0.119914,um,,literature,RII-Y3AL5O12-FRANTA,Lowest tabulated wavelength.
 RII-Y3AL5O12-FRANTA,wl_min_um,0.119914,um,,literature,RII-Y3AL5O12-FRANTA,Lowest tabulated wavelength.
 RII-Y3AL5O12-FRANTA,wl_min_um,0.119914,um,,literature,RII-Y3AL5O12-FRANTA,Lowest tabulated wavelength.
 RII-Y3AL5O12-ZELMON,n_at_reference,1.8438391820771596,,486.1,calculated,RII-Y3AL5O12-ZELMON,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
@@ -16297,6 +16639,8 @@ RII-Y3AL5O12-ZELMON,n_at_reference,1.7824936810712553,,3000.0,calculated,RII-Y3A
 RII-Y3AL5O12-ZELMON,n_at_reference,1.7570300465411077,,4000.0,calculated,RII-Y3AL5O12-ZELMON,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-Y3AL5O12-ZELMON,n_at_reference,1.7219959401886238,,5000.0,calculated,RII-Y3AL5O12-ZELMON,Evaluated from the refractiveindex.info formula 2 2-term Sellmeier fit; not a tabulated value.
 RII-Y3AL5O12-ZELMON,wl_max_um,5.0,um,,literature,RII-Y3AL5O12-ZELMON,Highest wavelength the cited fit is valid over.
+RII-Y3AL5O12-ZELMON,wl_max_um,5.0,um,,literature,RII-Y3AL5O12-ZELMON,Highest wavelength the cited fit is valid over.
+RII-Y3AL5O12-ZELMON,wl_min_um,0.4,um,,literature,RII-Y3AL5O12-ZELMON,Lowest wavelength the cited fit is valid over.
 RII-Y3AL5O12-ZELMON,wl_min_um,0.4,um,,literature,RII-Y3AL5O12-ZELMON,Lowest wavelength the cited fit is valid over.
 RII-ZNS-AMOTCHKINA,n_at_reference,2.428588013683477,,486.1,calculated,RII-ZNS-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-ZNS-AMOTCHKINA,n_at_reference,2.3658652061346293,,587.6,calculated,RII-ZNS-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
@@ -16310,6 +16654,8 @@ RII-ZNS-AMOTCHKINA,n_at_reference,2.2357021596065176,,8000.0,calculated,RII-ZNS-
 RII-ZNS-AMOTCHKINA,n_at_reference,2.2174081382748487,,10000.0,calculated,RII-ZNS-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-ZNS-AMOTCHKINA,n_at_reference,2.1931702099396824,,12000.0,calculated,RII-ZNS-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-ZNS-AMOTCHKINA,wl_max_um,14.0,um,,literature,RII-ZNS-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-ZNS-AMOTCHKINA,wl_max_um,14.0,um,,literature,RII-ZNS-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-ZNS-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-ZNS-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-ZNS-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-ZNS-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-ZNS-BOND,n_at_reference,2.4347277999999997,,486.1,interpolated,RII-ZNS-BOND,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
 RII-ZNS-BOND,n_at_reference,2.3710432,,587.6,interpolated,RII-ZNS-BOND,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
@@ -16318,6 +16664,8 @@ RII-ZNS-BOND,n_at_reference,2.2932,,1000.0,interpolated,RII-ZNS-BOND,Linear inte
 RII-ZNS-BOND,n_at_reference,2.2653,,2000.0,interpolated,RII-ZNS-BOND,Linear interpolation between tabulated samples near 2.0 um from the cited reference.
 RII-ZNS-BOND,wl_max_um,2.4,um,,literature,RII-ZNS-BOND,Highest tabulated wavelength.
 RII-ZNS-BOND,wl_max_um,2.4,um,,literature,RII-ZNS-BOND,Highest tabulated wavelength.
+RII-ZNS-BOND,wl_max_um,2.4,um,,literature,RII-ZNS-BOND,Highest tabulated wavelength.
+RII-ZNS-BOND,wl_min_um,0.45,um,,literature,RII-ZNS-BOND,Lowest tabulated wavelength.
 RII-ZNS-BOND,wl_min_um,0.45,um,,literature,RII-ZNS-BOND,Lowest tabulated wavelength.
 RII-ZNS-BOND,wl_min_um,0.45,um,,literature,RII-ZNS-BOND,Lowest tabulated wavelength.
 RII-ZNS-OZAKI,n_at_reference,2.452751497005988,,486.1,interpolated,RII-ZNS-OZAKI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16326,6 +16674,8 @@ RII-ZNS-OZAKI,n_at_reference,2.3609386885245898,,656.3,interpolated,RII-ZNS-OZAK
 RII-ZNS-OZAKI,n_at_reference,2.30211223628692,,1000.0,interpolated,RII-ZNS-OZAKI,Linear interpolation between tabulated samples near 1.0 um from the cited reference.
 RII-ZNS-OZAKI,wl_max_um,1.0332,um,,literature,RII-ZNS-OZAKI,Highest tabulated wavelength.
 RII-ZNS-OZAKI,wl_max_um,1.0332,um,,literature,RII-ZNS-OZAKI,Highest tabulated wavelength.
+RII-ZNS-OZAKI,wl_max_um,1.0332,um,,literature,RII-ZNS-OZAKI,Highest tabulated wavelength.
+RII-ZNS-OZAKI,wl_min_um,0.2214,um,,literature,RII-ZNS-OZAKI,Lowest tabulated wavelength.
 RII-ZNS-OZAKI,wl_min_um,0.2214,um,,literature,RII-ZNS-OZAKI,Lowest tabulated wavelength.
 RII-ZNS-OZAKI,wl_min_um,0.2214,um,,literature,RII-ZNS-OZAKI,Lowest tabulated wavelength.
 RII-ZNS-QUERRY,n_at_reference,2.425035,,486.1,interpolated,RII-ZNS-QUERRY,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16341,6 +16691,8 @@ RII-ZNS-QUERRY,n_at_reference,2.199,,10000.0,interpolated,RII-ZNS-QUERRY,Linear 
 RII-ZNS-QUERRY,n_at_reference,2.1650323802962452,,12000.0,interpolated,RII-ZNS-QUERRY,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-ZNS-QUERRY,wl_max_um,166.6667,um,,literature,RII-ZNS-QUERRY,Highest tabulated wavelength.
 RII-ZNS-QUERRY,wl_max_um,166.6667,um,,literature,RII-ZNS-QUERRY,Highest tabulated wavelength.
+RII-ZNS-QUERRY,wl_max_um,166.6667,um,,literature,RII-ZNS-QUERRY,Highest tabulated wavelength.
+RII-ZNS-QUERRY,wl_min_um,0.22,um,,literature,RII-ZNS-QUERRY,Lowest tabulated wavelength.
 RII-ZNS-QUERRY,wl_min_um,0.22,um,,literature,RII-ZNS-QUERRY,Lowest tabulated wavelength.
 RII-ZNS-QUERRY,wl_min_um,0.22,um,,literature,RII-ZNS-QUERRY,Lowest tabulated wavelength.
 RII-ZNSE-ADACHI,n_at_reference,2.8047000000000004,,486.1,interpolated,RII-ZNSE-ADACHI,Linear interpolation between tabulated samples near 0.4861 um from the cited reference.
@@ -16348,6 +16700,8 @@ RII-ZNSE-ADACHI,n_at_reference,2.5937398104265403,,587.6,interpolated,RII-ZNSE-A
 RII-ZNSE-ADACHI,n_at_reference,2.536668060836502,,656.3,interpolated,RII-ZNSE-ADACHI,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
 RII-ZNSE-ADACHI,wl_max_um,0.82656,um,,literature,RII-ZNSE-ADACHI,Highest tabulated wavelength.
 RII-ZNSE-ADACHI,wl_max_um,0.82656,um,,literature,RII-ZNSE-ADACHI,Highest tabulated wavelength.
+RII-ZNSE-ADACHI,wl_max_um,0.82656,um,,literature,RII-ZNSE-ADACHI,Highest tabulated wavelength.
+RII-ZNSE-ADACHI,wl_min_um,0.23393,um,,literature,RII-ZNSE-ADACHI,Lowest tabulated wavelength.
 RII-ZNSE-ADACHI,wl_min_um,0.23393,um,,literature,RII-ZNSE-ADACHI,Lowest tabulated wavelength.
 RII-ZNSE-ADACHI,wl_min_um,0.23393,um,,literature,RII-ZNSE-ADACHI,Lowest tabulated wavelength.
 RII-ZNSE-AMOTCHKINA,n_at_reference,2.874114826152224,,486.1,calculated,RII-ZNSE-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
@@ -16362,6 +16716,8 @@ RII-ZNSE-AMOTCHKINA,n_at_reference,2.5417242713325368,,8000.0,calculated,RII-ZNS
 RII-ZNSE-AMOTCHKINA,n_at_reference,2.5328353839277207,,10000.0,calculated,RII-ZNSE-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-AMOTCHKINA,n_at_reference,2.521760621739845,,12000.0,calculated,RII-ZNSE-AMOTCHKINA,Evaluated from the refractiveindex.info formula 2 3-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-AMOTCHKINA,wl_max_um,13.9,um,,literature,RII-ZNSE-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-ZNSE-AMOTCHKINA,wl_max_um,13.9,um,,literature,RII-ZNSE-AMOTCHKINA,Highest wavelength the cited fit is valid over.
+RII-ZNSE-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-ZNSE-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-AMOTCHKINA,wl_min_um,0.4,um,,literature,RII-ZNSE-AMOTCHKINA,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-CONNOLLY,n_at_reference,2.6243635636142084,,587.6,calculated,RII-ZNSE-CONNOLLY,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-CONNOLLY,n_at_reference,2.57747105881576,,656.3,calculated,RII-ZNSE-CONNOLLY,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
@@ -16375,6 +16731,8 @@ RII-ZNSE-CONNOLLY,n_at_reference,2.4065326092369372,,10000.0,calculated,RII-ZNSE
 RII-ZNSE-CONNOLLY,n_at_reference,2.392994254201039,,12000.0,calculated,RII-ZNSE-CONNOLLY,Evaluated from the refractiveindex.info formula 1 3-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-CONNOLLY,wl_max_um,18.2,um,,literature,RII-ZNSE-CONNOLLY,Highest wavelength the cited fit is valid over.
 RII-ZNSE-CONNOLLY,wl_max_um,18.2,um,,literature,RII-ZNSE-CONNOLLY,Highest wavelength the cited fit is valid over.
+RII-ZNSE-CONNOLLY,wl_max_um,18.2,um,,literature,RII-ZNSE-CONNOLLY,Highest wavelength the cited fit is valid over.
+RII-ZNSE-CONNOLLY,wl_min_um,0.54,um,,literature,RII-ZNSE-CONNOLLY,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-CONNOLLY,wl_min_um,0.54,um,,literature,RII-ZNSE-CONNOLLY,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-CONNOLLY,wl_min_um,0.54,um,,literature,RII-ZNSE-CONNOLLY,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-MARPLE,n_at_reference,2.1543856022569123,,486.1,calculated,RII-ZNSE-MARPLE,Evaluated from the refractiveindex.info formula 2 1-term Sellmeier fit; not a tabulated value.
@@ -16383,6 +16741,8 @@ RII-ZNSE-MARPLE,n_at_reference,1.8909605035102623,,656.3,calculated,RII-ZNSE-MAR
 RII-ZNSE-MARPLE,n_at_reference,1.7725833859660682,,1000.0,calculated,RII-ZNSE-MARPLE,Evaluated from the refractiveindex.info formula 2 1-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-MARPLE,n_at_reference,1.7190798120074162,,2000.0,calculated,RII-ZNSE-MARPLE,Evaluated from the refractiveindex.info formula 2 1-term Sellmeier fit; not a tabulated value.
 RII-ZNSE-MARPLE,wl_max_um,2.5,um,,literature,RII-ZNSE-MARPLE,Highest wavelength the cited fit is valid over.
+RII-ZNSE-MARPLE,wl_max_um,2.5,um,,literature,RII-ZNSE-MARPLE,Highest wavelength the cited fit is valid over.
+RII-ZNSE-MARPLE,wl_min_um,0.48,um,,literature,RII-ZNSE-MARPLE,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-MARPLE,wl_min_um,0.48,um,,literature,RII-ZNSE-MARPLE,Lowest wavelength the cited fit is valid over.
 RII-ZNSE-QUERRY,n_at_reference,2.57116,,587.6,interpolated,RII-ZNSE-QUERRY,Linear interpolation between tabulated samples near 0.5876 um from the cited reference.
 RII-ZNSE-QUERRY,n_at_reference,2.529665,,656.3,interpolated,RII-ZNSE-QUERRY,Linear interpolation between tabulated samples near 0.6563 um from the cited reference.
@@ -16396,6 +16756,8 @@ RII-ZNSE-QUERRY,n_at_reference,2.399,,10000.0,interpolated,RII-ZNSE-QUERRY,Linea
 RII-ZNSE-QUERRY,n_at_reference,2.3876720633827073,,12000.0,interpolated,RII-ZNSE-QUERRY,Linear interpolation between tabulated samples near 12.0 um from the cited reference.
 RII-ZNSE-QUERRY,wl_max_um,21.7391,um,,literature,RII-ZNSE-QUERRY,Highest tabulated wavelength.
 RII-ZNSE-QUERRY,wl_max_um,21.7391,um,,literature,RII-ZNSE-QUERRY,Highest tabulated wavelength.
+RII-ZNSE-QUERRY,wl_max_um,21.7391,um,,literature,RII-ZNSE-QUERRY,Highest tabulated wavelength.
+RII-ZNSE-QUERRY,wl_min_um,0.5,um,,literature,RII-ZNSE-QUERRY,Lowest tabulated wavelength.
 RII-ZNSE-QUERRY,wl_min_um,0.5,um,,literature,RII-ZNSE-QUERRY,Lowest tabulated wavelength.
 RII-ZNSE-QUERRY,wl_min_um,0.5,um,,literature,RII-ZNSE-QUERRY,Lowest tabulated wavelength.
 RPO-BACD14_MOLD,abbe_number_vd,60.231575,,587.6,manufacturer,RPO-AGF-NZHAGEN-MIRROR,Vd from .agf NM record.
