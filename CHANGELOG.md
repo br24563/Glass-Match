@@ -4,6 +4,60 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
+## [Unreleased]
+
+### Fixed
+- **`GlassDatabase.n_at()` no longer crashes whenever a crystal has no stored
+  reference row at the requested wavelength.** The n/k interpolation branch
+  built its points list with `list(zip(wavelengths, n_values, None))`; zipping
+  with `None` raises `TypeError: 'NoneType' object is not iterable` before any
+  interpolation happens, and `_interp` expects `(wavelength, n)` pairs and reads
+  column 1. Because `app.py` called `n_at` from inside the candidate-matching
+  loop and swallowed the error, an off-grid wavelength silently turned every
+  chalcogenide crystal into a `n = unavailable` candidate: in the shipped data
+  124 of the 141 tabulated-nk materials raised on *every* off-grid request,
+  including the default d-line, and were scored as having no index at all
+  rather than an interpolated one. `_interp` now returns the `(wavelength, n)`
+  rows it is documented to take, so the value comes back labelled
+  `"interpolated"`, and requests outside the tabulated window still return
+  `(None, "unavailable")` instead of an invented number. Guarded by
+  `tests/test_n_at_interpolation.py`, which pins an in-range value against a
+  hand-computed linear interpolation, sweeps every material with tabulated n/k
+  through `n_at` and asserts it never raises, and drives the matching table and
+  the Glass Detail tab through `AppTest` at 700 nm to prove the UI path really
+  consumes the fix. The first draft of the sweep passed against the unfixed
+  code, because it only looked at the *label* — which `except TypeError` turns
+  into `"unavailable"` — so it now asserts `n is not None` as well.
+- **The spectral n/k index no longer drops samples when n and k are stored as
+  separate rows at the same wavelength.** `_spectral_nk_index()` built a dict
+  keyed on wavelength, so the second row at a wavelength overwrote the first:
+  on `RII-SI-GREEN-1995` (a reference page that publishes n and k as two
+  tables) 76 of 121 n-samples vanished, and the material looked tabulated only
+  from 1.01 µm to 1.45 µm when it actually spans 0.25 µm to 1.45 µm. Both rows
+  are now merged into one sample. Where two rows carry *different* values for
+  the same quantity at the same wavelength — `RII-AL2O3-QUERRY` has two such
+  samples, e.g. n = 5.5394 and 5.5073 at 2.9499 µm — an index can only serve
+  one of them, so the first row wins **and the disagreement is reported**
+  rather than absorbed: `validate_spectral_nk_frame()` is new in
+  `glassmatch.validation`, and the Data quality report now has a
+  "Spectral n/k flags" column. Guarded by `tests/test_spectral_nk_index.py`
+  (8 tests, all of which fail against the previous index) and by
+  `tests/test_validation.py`, which pins the exact set of conflicting samples
+  so a re-import cannot quietly add another.
+
+### Added
+- **`validate_spectral_nk_frame()`** — `spectral_nk.csv` was the one data file
+  with no validator at all: `validate_property_frame`,
+  `validate_glass_frame` and `validate_transmission_frame` all existed, but
+  `data/normalized/spectral_nk.csv` (135,347 rows) was never checked. It now
+  reports non-numeric or out-of-range n/k, extinction coefficients below zero
+  (20 rows, both from `RII-AL2O3-QUERRY` variants of Querry 1985), out-of-range
+  wavelengths, missing `source_id`, and duplicate/conflicting samples at one
+  wavelength. Per the module's rule it flags only: nothing is merged, dropped
+  or corrected. Complementary rows — n held in one row, k in another — are
+  legitimate for that table and are *not* reported as duplicates.
+
+
 ## [0.6.2] - 2026-09-28
 
 ### Fixed

@@ -7,6 +7,12 @@ import pandas as pd
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "normalized"
 
+# The label a spectral_nk sample carries once both halves of a page's n and k
+# tables have been merged onto one wavelength.  This string is already the
+# dominant data_type in spectral_nk.csv ("literature (tabulated n,k)"), so
+# merged rows join the existing vocabulary instead of inventing a new one.
+NK_BOTH_LABELS = "literature (tabulated n,k)"
+
 PROPERTY_LABELS = {
     "refractive_index_nd": "Refractive index (n_d)",
     "abbe_number_vd": "Abbe number (V_d)",
@@ -211,20 +217,53 @@ class GlassDatabase:
 
         spectral_nk.csv is the largest table in the database (~135k rows), so
         the per-glass slice is memoized rather than rescanned per plot.
+
+        A reference page may publish n and k as two separate tables, and the
+        importer stores them as separate rows sharing wavelengths (RII-SI-GREEN-1995
+        and RII-AL2O3-QUERRY do).  Rows at one wavelength are therefore merged
+        rather than keyed: keying a dict straight off the wavelength let the
+        later row replace the earlier one, which dropped 76 of that silicon
+        page's 121 tabulated n samples and made its table look like it started
+        at 1.01 um, so n_at reported "unavailable" for wavelengths the cited
+        reference plainly tabulates.  The label of a merged row says so.
         """
         idx = getattr(self, "_nk_idx", None)
         if idx is None:
             idx = {}
             f = self.spectral_nk
             if not f.empty and "glass_id" in f.columns:
+                cols = set(f.columns)
+                has_n, has_k = "n" in cols, "k" in cols
+                n_source = f["n"] if has_n else None
+                k_source = f["k"] if has_k else None
+                dt_source = (f["data_type"] if "data_type" in cols
+                             else pd.Series(["literature"] * len(f), index=f.index))
                 for gid, grp in f.groupby("glass_id", sort=False):
+                    merged: dict = {}
+                    for w, n, k, dt in zip(grp["wavelength_um"],
+                                          n_source.loc[grp.index] if has_n else [None] * len(grp),
+                                          k_source.loc[grp.index] if has_k else [None] * len(grp),
+                                          dt_source.loc[grp.index]):
+                        if not has_n or pd.isna(n):
+                            n = None
+                        if not has_k or pd.isna(k):
+                            k = None
+                        entry = merged.setdefault(float(w), {"n": None, "k": None,
+                                                             "labels": set()})
+                        if n is not None:
+                            if entry["n"] is None:      # first value wins; a
+                                entry["n"] = float(n)   # disagreement is data
+                                entry["labels"].add(str(dt))  # quality, not ours
+                        if k is not None:               # to resolve silently.
+                            if entry["k"] is None:
+                                entry["k"] = float(k)
+                                entry["labels"].add(str(dt))
                     idx[str(gid)] = {
-                        float(w): (None if pd.isna(n) else float(n),
-                                   None if pd.isna(k) else float(k),
-                                   str(dt))
-                        for w, n, k, dt in zip(grp["wavelength_um"],
-                                               grp.get("n"), grp.get("k"),
-                                               grp.get("data_type", "literature"))}
+                        w: (v["n"], v["k"],
+                            NK_BOTH_LABELS if (v["n"] is not None and v["k"] is not None
+                                               and len(v["labels"]) > 1)
+                            else (next(iter(v["labels"])) if v["labels"] else "literature"))
+                        for w, v in merged.items()}
             self._nk_idx = idx
         return idx
 
@@ -278,8 +317,13 @@ class GlassDatabase:
                           float(pts["wavelength_um"].max()))
                 if lo <= w_um <= hi:
                     from glassmatch.importers.refractiveindex_yaml import _interp
+                    # _interp reads (wavelength_um, n) pairs; the third zip
+                    # argument of an earlier draft made zip() iterate None and
+                    # raised before _interp was reached, so this branch - the
+                    # only way a crystal answers an off-grid wavelength - was
+                    # dead for 123 of the 124 materials that can use it.
                     val, _rng = _interp(
-                        w_um, list(zip(pts["wavelength_um"], pts["n"], None)))
+                        w_um, list(zip(pts["wavelength_um"], pts["n"])))
                     if val is not None and val == val:
                         return float(val), "interpolated"
         coef = self.sellmeier_for(gid, sellmeier_only=True)

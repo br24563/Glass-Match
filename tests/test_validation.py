@@ -1,7 +1,8 @@
 """Tests: validation flags bad values, duplicates, missing provenance."""
 import pandas as pd
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
-                                   validate_transmission_frame, orphan_source_ids,
+                                   validate_transmission_frame,
+                                   validate_spectral_nk_frame, orphan_source_ids,
                                    orphan_glass_ids)
 
 
@@ -94,3 +95,79 @@ def test_density_rule_admits_polymer_but_rejects_nonsense():
     flagged = [i for i in validate_property_frame(props) if "density" in i["issue"]]
     assert len(flagged) == 1
     assert flagged[0]["value"] == 250.0
+
+
+# --- spectral_nk: the table with no validator at all ------------------------
+# n and k legitimately share a wavelength when a reference page publishes them
+# as two tables, so a plain duplicate check would cry wolf on every such page.
+
+def _nk(*rows):
+    return pd.DataFrame([{"glass_id": r[0], "wavelength_um": r[1], "n": r[2],
+                          "k": r[3], "source_id": "RII-TEST"} for r in rows])
+
+
+def test_spectral_nk_accepts_n_and_k_held_apart_at_one_wavelength():
+    """The complementary layout must not be reported as a duplicate sample."""
+    nk = _nk(("X", 0.5, 2.0, None), ("X", 0.5, None, 1e-5),
+             ("X", 0.6, 2.1, 2e-5))
+    assert validate_spectral_nk_frame(nk) == []
+
+
+def test_spectral_nk_reports_conflicting_duplicates():
+    """Two different n values at one wavelength: reported, never merged away."""
+    nk = _nk(("X", 0.5, 2.0, None), ("X", 0.5, 2.5, None))
+    issues = validate_spectral_nk_frame(nk)
+    assert len(issues) == 2, issues
+    assert all("conflicting n" in i["issue"] for i in issues), issues
+    assert sorted(i["value"] for i in issues) == [2.0, 2.5]
+
+
+def test_spectral_nk_reports_identical_duplicates_as_duplicates():
+    """A re-import artefact reads differently from a scientific disagreement."""
+    nk = _nk(("X", 0.5, 2.0, None), ("X", 0.5, 2.0, None))
+    issues = validate_spectral_nk_frame(nk)
+    assert len(issues) == 2, issues
+    assert all("duplicate n" in i["issue"] for i in issues), issues
+
+
+def test_spectral_nk_flags_impossible_and_unparseable_values():
+    nk = _nk(("X", 0.5, 2.0, -1e-5))        # negative extinction coefficient
+    nk = pd.concat([nk, _nk(("X", 0.6, "two", None))], ignore_index=True)
+    issues = validate_spectral_nk_frame(nk)
+    kinds = [i["issue"] for i in issues]
+    assert any(k.startswith("k=") and "outside" in k for k in kinds), kinds
+    assert "non-numeric n" in kinds, kinds
+
+
+def test_spectral_nk_flags_out_of_range_wavelength_and_missing_source():
+    nk = _nk(("X", 0.001, 2.0, None))
+    nk.loc[0, "source_id"] = ""
+    kinds = [i["issue"] for i in validate_spectral_nk_frame(nk)]
+    assert any("outside 0.05-50" in k for k in kinds), kinds
+    assert any("missing source_id" == k for k in kinds), kinds
+
+
+def test_spectral_nk_validation_is_empty_safe():
+    assert validate_spectral_nk_frame(pd.DataFrame()) == []
+    assert validate_spectral_nk_frame(pd.DataFrame([{"glass_id": "X"}])) == []
+
+
+def test_shipped_spectral_nk_reports_only_the_known_conflicts():
+    """The disagreements in data/normalized are pinned by material and sample.
+
+    If this fails, either a re-import introduced a new conflict or someone
+    resolved one of these in the data - in which case the merge in
+    GlassDatabase._spectral_nk_index no longer needs a reported fallback.
+    """
+    from glassmatch.database import GlassDatabase
+    db = GlassDatabase.load()
+    issues = [i for i in validate_spectral_nk_frame(db.spectral_nk)
+              if "conflicting" in i["issue"] or "duplicate" in i["issue"]]
+    assert sorted({(i["glass_id"], i["column"], i["wavelength_um"])
+                   for i in issues}) == [
+        ("RII-AL2O3-QUERRY", "k", 2.9499),
+        ("RII-AL2O3-QUERRY", "k", 3.7594),
+        ("RII-AL2O3-QUERRY", "n", 2.9499),
+        ("RII-AL2O3-QUERRY", "n", 3.7594),
+    ], issues
+
