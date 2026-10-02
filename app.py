@@ -8,8 +8,8 @@ import streamlit as st
 from glassmatch import __version__
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
-from glassmatch.spectra import (dispersion_curve, fresnel_transmission, band_stats,
-                                 band_stats_nk)
+from glassmatch.spectra import dispersion_curve, fresnel_transmission
+from glassmatch.transmission import band_transmission as _band_transmission
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
                                    validate_transmission_frame,
@@ -182,60 +182,19 @@ requirements = {"nd_min": nd_min, "nd_max": nd_max, "vd_min": vd_min, "vd_max": 
                 "density_min": d_lo2 if use_density else None,
                 "density_max": d_hi2 if use_density else None,
                 "cte_min": None, "cte_max": cte_max if use_cte else None}
-def n_at(db, gid, wl_um):
-    c = db.sellmeier_for(gid, sellmeier_only=True)
-    if c is None:
-        return None
-    from glassmatch.spectra import sellmeier_n
-    try:
-        return sellmeier_n(wl_um, (float(c["B1"]), float(c["B2"]), float(c["B3"])),
-                           (float(c["C1_um2"]), float(c["C2_um2"]), float(c["C3_um2"])))
-    except (TypeError, ValueError):
-        return None
-
-
-def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
-    """Mean uncoated Fresnel transmittance. CALCULATED, labelled."""
-    c = db.sellmeier_for(gid)
-    if c is None:
-        return None, "missing (no Sellmeier data)"
-    import numpy as np
-    wls = np.linspace(wl_lo_um, wl_hi_um, n)
-    vals = [fresnel_transmission(n_at(db, gid, w)) for w in wls]
-    vals = [v for v in vals if v == v]
-    if not vals:
-        return None, "missing"
-    return round(float(sum(vals) / len(vals) * 100.0), 1), "calculated (Fresnel, uncoated)"
+# Transmission precedence (manufacturer -> tabulated n/k -> Fresnel) lives in
+# glassmatch.transmission so it is importable and testable without Streamlit.
 
 
 def band_transmission(gid, lo_um, hi_um, mode):
-    """(value_pct | None, basis label) for the selected requirement mode.
+    """(value_pct | None, basis label) for this app's current state.
 
-    Manufacturer transmission.csv rows are preferred. If the glass HAS
-    manufacturer rows but they can't satisfy the mode (no samples in band,
-    or Entire-range coverage too sparse), the value is reported missing
-    rather than silently substituting a calculated estimate. Fresnel is
-    only the fallback when the glass has no manufacturer rows at all.
+    Thin adapter: the chain itself takes its state as arguments so tests can
+    pass synthetic groups; here it is bound to what the UI is holding.
     """
-    s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode)
-    if s is not None:
-        if s.get("value_pct") is not None:
-            # Round here so every consumer (table, caption, export) shows the
-            # same number; a raw mean of binary floats prints as e.g.
-            # 98.49999999999999%.
-            return round(s["value_pct"], 1), s["label"]
-        return None, f"missing ({s['label']})"
-    # Crystals and semiconductors publish measured n and k rather than a
-    # manufacturer transmittance curve, which left 195 materials unsearchable.
-    # Derive it from the optical constants instead - clearly labelled, and only
-    # from bulk measurements.
-    nk = band_stats_nk(nk_groups.get(str(gid)), lo_um, hi_um, mode, nk_thickness_mm)
-    if nk is not None:
-        if nk.get("value_pct") is not None:
-            return round(nk["value_pct"], 1), nk["label"]
-        return None, f"missing ({nk['label']})"
-    v, note = transmission_estimate(db, gid, lo_um, hi_um)
-    return v, note
+    return _band_transmission(db, gid, lo_um, hi_um, mode,
+                              t_groups=t_groups, nk_groups=nk_groups,
+                              thickness_mm=nk_thickness_mm)
 
 
 trans, trans_basis = {}, {}
