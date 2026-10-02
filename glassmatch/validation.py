@@ -208,6 +208,74 @@ def validate_transmission_frame(t: pd.DataFrame) -> list:
     return issues
 
 
+def validate_spectral_nk_frame(nk: pd.DataFrame) -> list:
+    """Flag questionable spectral_nk.csv samples; fixes nothing.
+
+    One row per (glass_id, wavelength_um) is *not* the shape of this table: a
+    reference page may publish n and k as two separate tables, which the
+    importer stores as separate rows sharing wavelengths (RII-SI-GREEN-1995 and
+    RII-AL2O3-QUERRY do), and GlassDatabase merges them into one sample.  That
+    merge is legitimate.  What must not pass silently is two rows carrying
+    different values for the *same* column at the same wavelength: the merge
+    can only keep one of them, and picking a winner is a data decision, not an
+    indexing one - so it is reported here and left alone.
+    """
+    issues = []
+    if nk.empty or "glass_id" not in nk.columns:
+        return issues
+    if "wavelength_um" in nk.columns:
+        wv = pd.to_numeric(nk["wavelength_um"], errors="coerce")
+        for i in nk.index[wv.isna() & nk["wavelength_um"].notna()]:
+            issues.append({"row": i, "glass_id": nk.at[i, "glass_id"],
+                           "issue": "non-numeric wavelength",
+                           "value": nk.at[i, "wavelength_um"]})
+        for i in nk.index[wv.notna() & ((wv < 0.05) | (wv > 50.0))]:
+            issues.append({"row": i, "glass_id": nk.at[i, "glass_id"],
+                           "issue": f"wavelength {wv[i]} um outside 0.05-50",
+                           "value": float(wv[i])})
+    if "source_id" in nk.columns:
+        missing = nk["source_id"].isna() | (nk["source_id"].astype(str).str.strip() == "")
+        for i in nk.index[missing]:
+            issues.append({"row": i, "glass_id": nk.at[i, "glass_id"],
+                           "issue": "missing source_id"})
+    for col, bounds in (("n", (0.1, 20.0)), ("k", (0.0, 100.0))):
+        if col not in nk.columns:
+            continue
+        vals = pd.to_numeric(nk[col], errors="coerce")
+        present = nk[col].notna()
+        for i in nk.index[vals.isna() & present]:
+            issues.append({"row": i, "glass_id": nk.at[i, "glass_id"],
+                           "issue": f"non-numeric {col}",
+                           "value": nk.at[i, col]})
+        lo, hi = bounds
+        for i in nk.index[vals.notna() & ((vals < lo) | (vals > hi))]:
+            issues.append({"row": i, "glass_id": nk.at[i, "glass_id"],
+                           "issue": f"{col}={float(vals[i])} outside [{lo},{hi}]",
+                           "value": float(vals[i])})
+        # Two samples of the same quantity at one wavelength: identical values
+        # are a re-import artefact, differing ones are a real conflict. Neither
+        # is merged away silently.
+        keys = ["glass_id", "wavelength_um"]
+        held = nk[present & vals.notna()]
+        if held.empty or not all(k in held.columns for k in keys):
+            continue
+        for (gid, wl), grp in held.groupby(keys, sort=False):
+            if len(grp) < 2:
+                continue
+            distinct = grp[col].astype(float).round(12).unique()
+            conflict = len(distinct) > 1
+            for i in grp.index:
+                if conflict:
+                    issue = (f"conflicting {col} at {wl} um - {len(distinct)} "
+                             f"values, only the first row is served")
+                else:
+                    issue = f"duplicate {col} at {wl} um"
+                issues.append({"row": i, "glass_id": gid, "issue": issue,
+                               "column": col, "wavelength_um": wl,
+                               "value": float(grp.at[i, col])})
+    return issues
+
+
 def orphan_source_ids(glasses: pd.DataFrame, properties: pd.DataFrame,
                       sources: pd.DataFrame) -> list:
     """source_ids referenced by data but absent from sources.csv."""

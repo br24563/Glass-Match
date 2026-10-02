@@ -12,7 +12,9 @@ from glassmatch.spectra import (dispersion_curve, fresnel_transmission, band_sta
                                  band_stats_nk)
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
-                                   validate_transmission_frame, orphan_source_ids,
+                                   validate_transmission_frame,
+                                   validate_spectral_nk_frame,
+                                   orphan_source_ids,
                                    orphan_glass_ids,
                                    find_transmission_conflicts)
 from glassmatch.importers.generic_csv import import_csv
@@ -71,6 +73,7 @@ def _load_all(_key: str):
         "properties": validate_property_frame(db.properties),
         "glasses": validate_glass_frame(db.glasses),
         "transmission": validate_transmission_frame(db.transmission),
+        "spectral_nk": validate_spectral_nk_frame(db.spectral_nk),
         "orphan_sources": orphan_source_ids(db.glasses, db.properties, db.sources),
         "orphan_glasses": orphan_glass_ids(db.properties, db.glasses),
         "transmission_conflicts": _load_transmission_conflicts(db),
@@ -607,14 +610,15 @@ with tabs[5]:
     st.subheader("Data quality report")
     n_prop, n_glass = len(quality["properties"]), len(quality["glasses"])
     n_trans, n_orph = len(quality["transmission"]), len(quality["orphan_sources"])
-    n_orph_g = len(quality["orphan_glasses"])
-    q1, q2, q3, q4, q5 = st.columns(5)
+    n_orph_g, n_nk = len(quality["orphan_glasses"]), len(quality["spectral_nk"])
+    q1, q2, q3, q4, q5, q6 = st.columns(6)
     q1.metric("Property flags", n_prop)
     q2.metric("Glass flags", n_glass)
     q3.metric("Transmission flags", n_trans)
-    q4.metric("Orphan source refs", n_orph)
-    q5.metric("Orphan glass refs", n_orph_g)
-    total = n_prop + n_glass + n_trans + n_orph + n_orph_g
+    q4.metric("Spectral n/k flags", n_nk)
+    q5.metric("Orphan source refs", n_orph)
+    q6.metric("Orphan glass refs", n_orph_g)
+    total = n_prop + n_glass + n_trans + n_nk + n_orph + n_orph_g
     if total == 0:
         st.success("All checks pass — no flagged records. Nothing is auto-fixed; "
                    "flags here would list questionable records for review.")
@@ -622,7 +626,8 @@ with tabs[5]:
         st.caption("Flagged records are listed, never silently corrected. "
                    "Review before relying on them.")
         for title, key in [("Properties", "properties"), ("Glasses", "glasses"),
-                           ("Transmission samples", "transmission")]:
+                           ("Transmission samples", "transmission"),
+                           ("Spectral n/k samples", "spectral_nk")]:
             if quality[key]:
                 with st.expander(f"{title}: {len(quality[key])} flagged record(s)"):
                     st.dataframe(pd.DataFrame(quality[key]), width="stretch", hide_index=True)
