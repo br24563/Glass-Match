@@ -45,6 +45,23 @@ the patch version, schema/format changes bump the minor version.
   `tests/test_validation.py`, which pins the exact set of conflicting samples
   so a re-import cannot quietly add another.
 
+### Changed
+- **The transmission precedence chain moved out of `app.py` into
+  `glassmatch/transmission.py`.** `n_at()`, `transmission_estimate()` and
+  `band_transmission()` were module-level functions in the Streamlit script, so
+  testing them meant importing `app.py` — which executes the whole UI and loads
+  the full database (measured: 202 s) for one assertion. The chain now takes
+  `db`, `t_groups`, `nk_groups` and `thickness_mm` as arguments instead of
+  reading globals; `app.py` keeps a four-line adapter that binds them to what
+  the sidebar is holding, so the UI behaviour is unchanged. The contract was
+  characterized *before* the move by extracting the three functions from the
+  shipped `app.py` with `ast` (22/22 checks against the real source text, not a
+  copy) and is pinned afterwards by `tests/test_transmission_precedence.py`
+  (11 tests, 5.8 s). The precedence itself is unchanged: manufacturer rows
+  first; manufacturer rows that exist but cannot answer the requested mode
+  report *missing* rather than falling through to an estimate; tabulated n/k
+  second; uncoated Fresnel last.
+
 ### Added
 - **`validate_spectral_nk_frame()`** — `spectral_nk.csv` was the one data file
   with no validator at all: `validate_property_frame`,
