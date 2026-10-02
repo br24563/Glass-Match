@@ -12,6 +12,10 @@ B_COLS = [f"B{i}" for i in range(1, MAX_TERMS + 1)]
 C_COLS = [f"C{i}_um2" for i in range(1, MAX_TERMS + 1)]
 
 
+# ---------------------------------------------------------------------------
+# Sellmeier dispersion: evaluating archived CD coefficient rows.
+# Calculated only - nothing in this section reads a manufacturer table.
+
 def sellmeier_n(wavelength_um: float, B: tuple, C: tuple) -> float:
     l2 = wavelength_um ** 2
     n2 = 1.0 + sum(b * l2 / (l2 - c) for b, c in zip(B, C))
@@ -87,6 +91,10 @@ def dispersion_curve(coeffs: dict, wl_um: list) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# ---------------------------------------------------------------------------
+# Uncoated single-surface-loss estimate: a pure function of n, no data and no
+# thickness assumption - which is exactly why it is the last fallback.
+
 def fresnel_transmission(n: float) -> float:
     """Uncoated two-surface transmittance estimate T=(1-R)^2, R=((n-1)/(n+1))^2."""
     if n is None or n <= 1.0:
@@ -96,8 +104,10 @@ def fresnel_transmission(n: float) -> float:
 
 
 # ---------------------------------------------------------------------------
-# Manufacturer transmission rows (transmission.csv): 0-1 fraction per sample.
-# Band statistics for the three requirement modes. Pure functions: no db.
+# Calculated transmission from tabulated n/k (spectral_nk.csv): complex-index
+# Fresnel reflection plus Beer-Lambert bulk absorption, and the band statistics
+# derived from them. Every figure depends on the assumed blank thickness and
+# says so in its label. Pure functions: no db.
 
 def transmission_from_nk(n: float, k: float, wl_um: float,
                         thickness_mm: float = 10.0) -> float:
@@ -204,6 +214,12 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
     return {"value_pct": value, "label": label, "n_points": int(t.size),
             "coverage": coverage, "thickness_mm": float(thickness_mm)}
 
+
+# ---------------------------------------------------------------------------
+# Manufacturer transmission rows (transmission.csv): 0-1 fraction per sample,
+# summarized for the three requirement modes. Measured data, not calculated -
+# which is why a glass that has them can never be answered by an estimate.
+# Pure functions: no db.
 
 def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                min_coverage: float = 0.90) -> dict | None:

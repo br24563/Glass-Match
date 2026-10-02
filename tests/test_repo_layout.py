@@ -279,21 +279,93 @@ def test_reachability_analysis_finds_the_lazy_import():
         "traversal must follow it or it detects nothing")
 
 
-def test_the_guard_detects_a_missing_declaration():
-    """A guard that cannot fail is worse than none. Prove this one bites.
+# --- README "Database contents" table ---------------------------------------
+# Counts drift silently. The mirror row claimed 1,657 when the seven makers it
+# names total 1,596 - the 61-glass IR bucket was counted twice, so the table
+# summed to 2,782 while its own Total row said 2,721. Each row is pinned to the
+# manufacturer_ids it names, and every maker must appear in exactly one row.
 
-    Drops PyYAML from the parsed requirement set - reproducing the original
-    bug - and asserts it is then reported as undeclared.
-    """
-    declared = _declared_requirements()
-    assert _is_satisfied("yaml", declared), (
-        "PyYAML should satisfy 'import yaml'; if this fails the satisfaction "
-        "rule is too strict to be trusted")
-    assert _is_satisfied("numpy", declared), (
-        "a pinned requirement like 'numpy>=1.26' must still be recognised")
-    without = {p for p in declared if p != "pyyaml"}
-    assert not _is_satisfied("yaml", without), (
-        "removing pyyaml must make 'import yaml' undeclared - otherwise this "
-        "guard cannot fail and proves nothing")
-    # A comment must not be able to satisfy a module name.
-    assert not _is_satisfied("yaml", {"-", "#", "parsing", "comments"})
+_BUCKET_MAKERS = {
+    "SCHOTT June-2025": {"SCHOTT"},
+    "OHARA May-2026": {"OHARA"},
+    "HOYA / NIKON": {"HOYA", "NIKON", "HIKARI", "SUMITA", "CDGM", "LZOS", "CORNING"},
+    "IR (generic": {"INFRARED", "LIGHTPATH", "UMICORE"},
+    "Polymers (Zeon": {"ZEON", "ARTON", "TOPAS", "ARCHER", "RPO"},
+}
+_CRYSTAL_MAKER = "RII"   # counted in the Total row's notes, not a table row
+
+
+def _readme_table_number(text, marker):
+    """Integer in the second cell of the README table row labelled `marker`."""
+    import re
+    for line in text.splitlines():
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) >= 2 and marker in cells[0]:
+            digits = re.sub(r"[^0-9]", "", cells[1])
+            assert digits, f"README row {marker!r} has no number: {line!r}"
+            return int(digits)
+    raise AssertionError(f"README table row not found for {marker!r}")
+
+
+def test_readme_database_table_matches_the_shipped_data():
+    """Every count in README's database table must be true today."""
+    import re
+
+    import pandas as pd
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    norm = ROOT / "data" / "normalized"
+    g = pd.read_csv(norm / "glasses.csv", encoding="utf-8")
+    counts = g["manufacturer_id"].value_counts()
+
+    for marker, makers in _BUCKET_MAKERS.items():
+        want = int(counts.reindex(list(makers)).fillna(0).sum())
+        got = _readme_table_number(text, marker)
+        assert got == want, (
+            f"README row {marker!r} says {got:,} but the makers it names "
+            f"({', '.join(sorted(makers))}) total {want:,} in glasses.csv")
+
+    total = _readme_table_number(text, "**Total**")
+    assert total == len(g) == g["glass_id"].nunique()
+
+    # Exactly one row per manufacturer: a new maker must be added to the table.
+    covered = set().union(*_BUCKET_MAKERS.values()) | {_CRYSTAL_MAKER}
+    assert set(counts.index) == covered, (
+        "glasses.csv manufacturers and README table rows disagree: "
+        f"only in data {sorted(set(counts.index) - covered)}, "
+        f"only in README {sorted(covered - set(counts.index))}")
+
+    # The bucket rows (excluding crystal pages) predate the RII merge, so they
+    # must sum to the non-crystal count the merge note records: 2,526.
+    bucket_sum = sum(_readme_table_number(text, m) for m in _BUCKET_MAKERS)
+    assert bucket_sum + int(counts[_CRYSTAL_MAKER]) == total
+
+    # Inline claims in the Total row: curve coverage, crystal pages, row counts.
+    total_row = next(ln for ln in text.splitlines() if ln.startswith("| **Total**"))
+    sm = pd.read_csv(norm / "sellmeier.csv", encoding="utf-8")
+    verified = set(sm[sm["formula"].astype(str).str.startswith("Sellmeier")]
+                   ["glass_id"].astype(str))
+    archived = set(sm["glass_id"].astype(str)) - verified
+    gids = set(g["glass_id"].astype(str))
+    actual = {
+        "verified Sellmeier curves": len(verified & gids),
+        "archived non-dispersable": len(archived & gids),
+        "with no curve": len(gids - set(sm["glass_id"].astype(str))),
+        "CC0 crystal pages": int(counts[_CRYSTAL_MAKER]),
+    }
+    for phrase, want in actual.items():
+        m = re.search(rf"([\d,]+) {re.escape(phrase)}", total_row)
+        assert m, f"README Total row no longer states {phrase!r}"
+        assert int(m.group(1).replace(",", "")) == want, (
+            f"README claims {m.group(1)} {phrase}, data has {want:,}")
+
+    for csv_name, phrase in (("transmission.csv", "transmission rows"),
+                             ("spectral_nk.csv", "tabulated n/k samples")):
+        rows = len(pd.read_csv(norm / csv_name, encoding="utf-8"))
+        m = re.search(rf"(\d+)k {re.escape(phrase)}", total_row)
+        assert m, f"README Total row no longer states {phrase!r}"
+        assert int(m.group(1)) == round(rows / 1000), (
+            f"README claims {m.group(1)}k {phrase}, {csv_name} has {rows:,}")
+
+

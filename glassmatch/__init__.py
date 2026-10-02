@@ -15,6 +15,7 @@ __all__ = [
     "validate_glass_frame",
     "candidate_pairs",
     "candidates_for",
+    "curated_equivalents",
     "EquivalencyCriteria",
 ]
 __version__ = "0.6.2"

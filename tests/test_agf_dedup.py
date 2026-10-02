@@ -33,5 +33,5 @@ def test_dispersion_status_gating():
                                  "formula": "Non-Sellmeier CD record (x)"}]),
     )
     assert db.dispersion_status("A") == "archived-non-sellmeier"
-    assert db.summary_frame().iloc[0]["has_sellmeier"] == False
+    assert not db.summary_frame().iloc[0]["has_sellmeier"]
     assert db.sellmeier_for("A", sellmeier_only=True) is None

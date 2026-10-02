@@ -391,8 +391,3 @@ def import_refractiveindex(root: Path, materials: dict,
             "spectral": pd.DataFrame(spec),
             "sources": pd.DataFrame(srcs), "issues": issues}
 
-    return doi, first
-
-    B = coeffs[1:1 + n]
-    C_um2 = [c * c for c in coeffs[1 + n:1 + 2 * n]]
-    return sellmeier_n(lam_um, tuple(B), tuple(C_um2))

@@ -200,7 +200,6 @@ def test_measurement_form_detects_film_pages():
 def test_staged_2nm_germanium_film_is_never_marked_bulk():
     """The real page, not a synthetic one: its n=1.46 is not germanium."""
     from glassmatch.database import GlassDatabase
-    from glassmatch.importers.refractiveindex_yaml import measurement_form
     db = GlassDatabase.load()
     nk = db.spectral_nk
     gid = "RII-GE-CIESIELSKI-2NM"

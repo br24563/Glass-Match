@@ -1,0 +1,38 @@
+# Ruff configuration.
+#
+# Pinned explicitly so every machine - and CI - lints with the same rules,
+# whatever a given ruff release happens to default to. The rules below are the
+# ones that catch real defects (undefined names, unused imports, shadowed
+# bindings, syntax errors) plus the two the codebase already documents inline
+# with `# noqa: ... - reason`:
+#
+#   E402  imports that cannot sit at the top because scripts/ put the repo
+#         root on sys.path first
+#   BLE   blind `except:`/`except Exception` - allowed only where the line
+#         itself says why (app.py surfaces import errors in the UI; the
+#         screenshot script is best-effort)
+#
+# Deliberately NOT enabled: the stylistic families (I001 import order, RUF059
+# unused unpacked variables, ...). Turning those on rewrites most files without
+# changing behaviour - a separate, reviewable decision rather than a side
+# effect of introducing a linter.
+
+target-version = "py311"  # CI runs the suite on 3.11 and 3.12
+line-length = 100
+
+[lint]
+select = [
+    "E4",   # imports (E401, E402)
+    "E7",   # statement issues (E712 comparisons, E741 ambiguous names, ...)
+    "E9",   # runtime/syntax errors
+    "F",    # Pyflakes: F821 undefined name, F401 unused import, F811 redefinition
+    "BLE",  # blind except - only where the source line justifies it
+]
+
+[lint.per-file-ignores]
+# These bootstrap sys.path before importing the package under test, so their
+# imports cannot all run at the top of the file.
+"scripts/*" = ["E402"]
+# Screenshot capture is best-effort: any failure ends the capture attempt
+# rather than crashing the run, so every error class is caught on purpose.
+"scripts/capture_screenshots.py" = ["BLE001"]
