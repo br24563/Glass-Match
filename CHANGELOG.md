@@ -6,7 +6,77 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Added
+- **`validate_spectral_nk_frame()`** — `spectral_nk.csv` was the one data file
+  with no validator at all: `validate_property_frame`,
+  `validate_glass_frame` and `validate_transmission_frame` all existed, but
+  `data/normalized/spectral_nk.csv` (135,347 rows) was never checked. It now
+  reports non-numeric or out-of-range n/k, extinction coefficients below zero
+  (20 rows, both from `RII-AL2O3-QUERRY` variants of Querry 1985), out-of-range
+  wavelengths, missing `source_id`, and duplicate/conflicting samples at one
+  wavelength. Per the module's rule it flags only: nothing is merged, dropped
+  or corrected. Complementary rows — n held in one row, k in another — are
+  legitimate for that table and are *not* reported as duplicates.
+
+### Changed
+- **README's database table no longer over-counts (1,657 → 1,596).** The
+  mirror row named seven makers that total 1,596 in `glasses.csv`, not
+  1,657: the 61-glass IR bucket was counted twice (once there, once in its
+  own row), so the rows summed to 2,782 while the Total row said 2,721.
+  Every other claim in that row was checked and is correct (2,721
+  glasses/ids, 18 makers, 220 sources, 710 verified curves, 1,872 archived,
+  139 curve-less, 195 crystal pages, 64k transmission rows, 135k n/k
+  samples). A guard in `tests/test_repo_layout.py` now pins each row to the
+  `manufacturer_id`s it names and the Total row's inline claims to the
+  shipped CSVs, so the counts cannot drift again.
+- **`ruff` is now a declared dev dependency and the repo carries its config.**
+  `ruff>=0.6.0` was added to `requirements-dev.txt`; `ruff.toml` selects the
+  rules that catch real defects (`E4`/`E7`/`E9`, Pyflakes `F`, and `BLE`
+  blind-except) plus the families the codebase already documents inline with
+  `# noqa: ... - reason`, and ignores `E402` in `scripts/` where `sys.path`
+  must be bootstrapped before the package can be imported. With that config
+  `ruff check .` passes; the fix list was 8 unused imports, 1 unused
+  variable, 1 ambiguous name (`l`), one `== False` comparison, the `F821` /
+  `F811` defects below, and a now-sorted `__all__` (`curated_equivalents`
+  was exported but missing from it). The stylistic families (`I001` import
+  order, `RUF059` unused unpacked variables, ...) are deliberately **not**
+  enabled: they would rewrite most files without changing behaviour, which
+  should be its own reviewable decision rather than a side effect of adding
+  a linter.
+- **The transmission precedence chain moved out of `app.py` into
+  `glassmatch/transmission.py`.** `n_at()`, `transmission_estimate()` and
+  `band_transmission()` were module-level functions in the Streamlit script, so
+  testing them meant importing `app.py` — which executes the whole UI and loads
+  the full database (measured: 202 s) for one assertion. The chain now takes
+  `db`, `t_groups`, `nk_groups` and `thickness_mm` as arguments instead of
+  reading globals; `app.py` keeps a four-line adapter that binds them to what
+  the sidebar is holding, so the UI behaviour is unchanged. The contract was
+  characterized *before* the move by extracting the three functions from the
+  shipped `app.py` with `ast` (22/22 checks against the real source text, not a
+  copy) and is pinned afterwards by `tests/test_transmission_precedence.py`
+  (11 tests, 5.8 s). The precedence itself is unchanged: manufacturer rows
+  first; manufacturer rows that exist but cannot answer the requested mode
+  report *missing* rather than falling through to an estimate; tabulated n/k
+  second; uncoated Fresnel last.
+
 ### Fixed
+- **Removed unreachable code in `glassmatch/importers/refractiveindex_yaml.py`.**
+  Five lines after the importer's final `return` referenced undefined names
+  (`coeffs`, `n`, `lam_um`, `first`) — dead, but exactly the kind of leftover
+  that becomes a `NameError` the moment someone edits above it. Found by ruff
+  (`F821`).
+- **Removed a duplicate test definition in `tests/test_repo_layout.py`.**
+  `test_the_guard_detects_a_missing_declaration` was defined twice in the
+  same module, so only the second ever ran and the first was silently
+  discarded, Python keeping the later binding. The two bodies were identical
+  in assertions; the duplicate is gone (`F811`).
+- **`glassmatch/spectra.py` section headers now describe the code under
+  them.** The module's only banner promised "Manufacturer transmission rows"
+  directly above `transmission_from_nk()`/`band_stats_nk()` — which read
+  `spectral_nk.csv`, not `transmission.csv`. Each of the four sections
+  (Sellmeier dispersion, Fresnel estimate, calculated-from-n/k, manufacturer
+  rows) now carries a header saying what it actually computes.
+
 - **`GlassDatabase.n_at()` no longer crashes whenever a crystal has no stored
   reference row at the requested wavelength.** The n/k interpolation branch
   built its points list with `list(zip(wavelengths, n_values, None))`; zipping
@@ -44,36 +114,6 @@ the patch version, schema/format changes bump the minor version.
   (8 tests, all of which fail against the previous index) and by
   `tests/test_validation.py`, which pins the exact set of conflicting samples
   so a re-import cannot quietly add another.
-
-### Changed
-- **The transmission precedence chain moved out of `app.py` into
-  `glassmatch/transmission.py`.** `n_at()`, `transmission_estimate()` and
-  `band_transmission()` were module-level functions in the Streamlit script, so
-  testing them meant importing `app.py` — which executes the whole UI and loads
-  the full database (measured: 202 s) for one assertion. The chain now takes
-  `db`, `t_groups`, `nk_groups` and `thickness_mm` as arguments instead of
-  reading globals; `app.py` keeps a four-line adapter that binds them to what
-  the sidebar is holding, so the UI behaviour is unchanged. The contract was
-  characterized *before* the move by extracting the three functions from the
-  shipped `app.py` with `ast` (22/22 checks against the real source text, not a
-  copy) and is pinned afterwards by `tests/test_transmission_precedence.py`
-  (11 tests, 5.8 s). The precedence itself is unchanged: manufacturer rows
-  first; manufacturer rows that exist but cannot answer the requested mode
-  report *missing* rather than falling through to an estimate; tabulated n/k
-  second; uncoated Fresnel last.
-
-### Added
-- **`validate_spectral_nk_frame()`** — `spectral_nk.csv` was the one data file
-  with no validator at all: `validate_property_frame`,
-  `validate_glass_frame` and `validate_transmission_frame` all existed, but
-  `data/normalized/spectral_nk.csv` (135,347 rows) was never checked. It now
-  reports non-numeric or out-of-range n/k, extinction coefficients below zero
-  (20 rows, both from `RII-AL2O3-QUERRY` variants of Querry 1985), out-of-range
-  wavelengths, missing `source_id`, and duplicate/conflicting samples at one
-  wavelength. Per the module's rule it flags only: nothing is merged, dropped
-  or corrected. Complementary rows — n held in one row, k in another — are
-  legitimate for that table and are *not* reported as duplicates.
-
 
 ## [0.6.2] - 2026-09-28
 

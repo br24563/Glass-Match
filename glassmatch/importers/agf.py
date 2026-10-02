@@ -21,8 +21,6 @@ Output: (glasses, properties, sellmeier, transmission, issues).
 All rows carry data_type='manufacturer' + caller-supplied source_id.
 """
 from __future__ import annotations
-import math
-import pandas as pd
 
 from glassmatch.validation import (DEFAULT_DENSITY_RANGE,
                                    DENSITY_RANGES_BY_CLASS)

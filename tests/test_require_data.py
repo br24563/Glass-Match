@@ -7,10 +7,8 @@ missing property, so a glass with perfect n_d, V_d and transmission but no
 published density was discarded from a query that never mentioned density.
 """
 import pandas as pd
-import pytest
 
-from glassmatch.matching import (WEIGHT_KEYS, constrained_keys, match_glasses,
-                                 normalize_weights, score_glass)
+from glassmatch.matching import (constrained_keys, match_glasses, score_glass)
 
 W = {"nd": 30.0, "transmission": 30.0, "vd": 20.0, "density": 10.0, "cte": 10.0}
 

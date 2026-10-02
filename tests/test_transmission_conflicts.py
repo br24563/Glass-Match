@@ -4,7 +4,7 @@ import math
 import pandas as pd
 import pytest
 
-from glassmatch.validation import (CONFLICT_COLUMNS, TRANSMISSION_KEY,
+from glassmatch.validation import (CONFLICT_COLUMNS,
                                    dedupe_transmission,
                                    find_transmission_conflicts,
                                    split_transmission_conflicts)

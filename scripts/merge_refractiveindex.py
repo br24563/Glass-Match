@@ -40,7 +40,6 @@ def _upsert(path: Path, new: pd.DataFrame, key, sort_by=None) -> None:
         old = pd.read_csv(path, encoding="utf-8")
         if all(c in old.columns for c in cols):
             new_keys = set(map(tuple, new[cols].astype(str).to_numpy()))
-            old_keys = set(map(tuple, old[cols].astype(str).to_numpy()))
             old = old[[k not in new_keys for k in
                        map(tuple, old[cols].astype(str).to_numpy())]]
         merged = pd.concat([old, new], ignore_index=True, sort=False)

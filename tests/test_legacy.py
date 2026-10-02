@@ -11,7 +11,7 @@ def test_legacy_glasses_without_new_columns(tmp_path):
     # Encoding is explicit: the committed CSVs are UTF-8 and the Windows
     # locale default (cp1252) cannot decode them.
     lines = (src / "glasses.csv").read_text(encoding="utf-8").splitlines()
-    legacy = ["\n".join([",".join(l.split(",")[:6]) for l in lines])]
+    legacy = ["\n".join([",".join(ln.split(",")[:6]) for ln in lines])]
     (tmp_path / "glasses.csv").write_text(legacy[0], encoding="utf-8")
     db = GlassDatabase.load(tmp_path)
     s = db.summary_frame()

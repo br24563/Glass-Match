@@ -143,7 +143,7 @@ add a manufacturer without writing any Python. Release history is in
 |---|---|---|
 | SCHOTT June-2025 `.agf` | 366 | Authoritative, current |
 | OHARA May-2026 `.agf` | 433 | Authoritative, current; 188 Herzberger legacy rows archived |
-| HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,657 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
+| HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,596 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
 | **Total** | **2,721** | 710 verified Sellmeier curves · 1,872 archived non-dispersable · 139 with no curve · 195 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
