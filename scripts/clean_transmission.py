@@ -33,6 +33,22 @@ CONFLICTS = DATA_DIR / "transmission_conflicts.csv"
 DEDUP_LOG = DATA_DIR / "transmission_dedup.csv"
 
 
+def _settled_ledger_keys(clean: pd.DataFrame) -> list:
+    """Ledger rows whose key now has a live, undisputed sample.
+
+    Such a key was settled by a newer source - e.g. a manufacturer catalog
+    replacing the mirror that carried the conflict - so it no longer belongs
+    in a ledger of samples that are still excluded.
+    """
+    if not CONFLICTS.exists():
+        return []
+    prior = pd.read_csv(CONFLICTS)
+    live = set(zip(clean["glass_id"], clean["wavelength_um"].astype(float)))
+    return [i for i, g, w in zip(prior.index, prior["glass_id"],
+                                 prior["wavelength_um"])
+            if (g, float(w)) in live]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry-run", action="store_true",
@@ -53,6 +69,13 @@ def main() -> int:
     print(f"conflicting keys         : {len(conflicts)}")
     print(f"rows quarantined         : {len(dropped)}")
     print(f"rows remaining           : {len(clean)}")
+    settled = _settled_ledger_keys(clean)
+    if settled:
+        print(f"ledger keys settled by current data: {len(settled)} "
+              "(removed from transmission_conflicts.csv)")
+        if not args.dry_run:
+            prior = pd.read_csv(CONFLICTS)
+            prior[~prior.index.isin(settled)].to_csv(CONFLICTS, index=False)
     if conflicts.empty and removed_dupes.empty:
         print("nothing to clean - already consistent")
         return 0

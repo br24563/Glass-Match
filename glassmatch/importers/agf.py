@@ -138,6 +138,7 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     def flush():
         if cur is not None and cur.get("glass_name"):
             _flush_cd(cur, source_id, issues)
+            _flush_td(cur, source_id, issues)
             # Manufacturer remarks (GC comments, coefficients that exceeded the
             # stored term limit) were collected but never written anywhere, so
             # they were silently discarded. Fold them into the description,
@@ -153,8 +154,11 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             trans.extend(cur["trans"])
 
     def flush_cd_only():
+        """Flush whichever multi-line record (CD or TD) is still buffered."""
         if cur is not None and cur.get("_cd_pending"):
             _flush_cd(cur, source_id, issues)
+        if cur is not None and cur.get("_td_pending"):
+            _flush_td(cur, source_id, issues)
 
     for lineno, raw in enumerate(text.splitlines(), 1):
         line = raw.strip()
@@ -162,14 +166,17 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             continue
         parts = line.split()
         tag = parts[0].upper()
-        # Continuation lines: Nikon-style polynomial CD wraps across lines as
-        # bare numbers with no tag. Append to the pending CD buffer.
+        # Continuation lines: Nikon wraps CD and TD records across lines as
+        # bare numbers with no tag. Append to whichever buffer is open.
         if _is_num(tag) or (tag.replace(".", "", 1).replace("-", "", 1)
                             .replace("+", "", 1).replace("E", "", 1)
                             .replace("e", "", 1).strip("0123456789") == ""
                             and _floats(parts)):
             if cur is not None and cur.get("_cd_pending"):
                 cur["_cd_pending"].extend(_floats(parts))
+                continue
+            if cur is not None and cur.get("_td_pending"):
+                cur["_td_pending"].extend(_floats(parts))
                 continue
             issues.append({"line": lineno, "issue": "bare-number line outside CD",
                            "text": raw[:80]})
@@ -274,11 +281,12 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             cur["_cd_lineno"] = lineno
             continue
         elif tag == "TD":
+            # TD = D0 D1 D2 E0 E1 lambda_tk T0: the SCHOTT dn/dT model's
+            # coefficients (thermal dispersion, not CTE). NIKON wraps it onto
+            # a second line, so it is buffered like CD.
             flush_cd_only()
-            # SCHOTT-style TD = thermal dn/dT polynomial (D0 D1 D2 E0 E1 Ltk),
-            # NOT CTE/Tg — record but never map to cte/tg properties.
-            issues.append({"line": lineno, "glass": cur["glass_name"],
-                           "issue": "TD thermal-dispersion record noted, not parsed"})
+            cur["_td_pending"] = _floats(parts[1:])
+            continue
         elif tag == "MD":
             flush_cd_only()
             issues.append({"line": lineno, "glass": cur["glass_name"],
@@ -323,7 +331,10 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
         elif tag == "ED":
             flush_cd_only()
             _ed_block(cur, _floats(parts[1:]), source_id)
-        elif tag in ("OD", "AI", "DP"):
+        elif tag == "OD":
+            flush_cd_only()
+            _od_block(cur, parts[1:], source_id)
+        elif tag in ("AI", "DP"):
             flush_cd_only()
             issues.append({"line": lineno, "glass": cur["glass_name"],
                            "issue": f"{tag} record noted, not parsed into optics"})
@@ -466,6 +477,78 @@ def _cd_block(cur: dict, nums: list, source_id: str,
     if n_terms and is_dispersable_formula(row.get("formula")):
         row["n_terms"] = n_terms
     cur["sell"].append(row)
+
+
+TD_PROPS = (("td_D0", "1/K"), ("td_D1", "1/K^2"), ("td_D2", "1/K^3"),
+            ("td_E0", "um^2/K"), ("td_E1", "um^2/K^2"), ("td_lambda_tk", "um"),
+            ("td_T0", "C"))
+# Zemax OD: relative cost, then climate, stain, acid, alkali and phosphate
+# resistance classes. -1 (or "_") means "not given". The class scale is the
+# manufacturer's own (SCHOTT uses ISO classes, the Japanese makers JOGIS), so
+# these are shown per glass, never ranked across makers.
+OD_PROPS = ("relative_cost", "climate_resistance", "stain_resistance",
+            "acid_resistance", "alkali_resistance", "phosphate_resistance")
+
+
+# |dn/dT| above this is not a material property: germanium, the largest of
+# any listed material, is about 4e-4/K. NIKON's 2019 file prints J-BASF2's D0
+# as -2.62 and Q-LASFH11S's as 7.32 - the 1e-6 exponent dropped - and the
+# formula then returns figures near 1/K.
+MAX_DN_DT = 1e-3
+
+
+def _flush_td(cur: dict, source_id: str, issues: list | None = None) -> None:
+    """Store a buffered TD record, plus the dn/dT it implies at the d line.
+
+    All-zero coefficients are Zemax's way of saying "no thermal data" and are
+    not stored. The derived absolute dn/dT (d line, averaged over +20..+40 C,
+    the interval catalogs quote) is labelled calculated.
+    """
+    nums = cur.pop("_td_pending", None)
+    if not nums or len(nums) < 7 or not any(nums[:5]):
+        return
+    gid = cur["glass_row"]["glass_id"]
+    for (prop, unit), v in zip(TD_PROPS, nums[:7]):
+        cur["props"].append(_prop(gid, prop, v, unit, "", source_id,
+                                  ".agf TD record (thermal dn/dT model)."))
+    nd = next((p["value"] for p in cur["props"]
+               if p["property"] == "refractive_index_nd"), None)
+    if nd:
+        from glassmatch.spectra import dn_dt_abs
+        v = dn_dt_abs(nums[:7], float(nd), D_LINE_UM, 20.0, 40.0)
+        if v == v and abs(v) > MAX_DN_DT:
+            cur.setdefault("remarks", []).append(
+                f"TD record implausible (dn/dT would be {v:.3g}/K; D0 = "
+                f"{nums[0]:g}, probably a dropped exponent) - stored verbatim, "
+                "dn/dT not derived.")
+            if issues is not None:
+                issues.append({"glass": cur["glass_name"],
+                               "issue": f"TD implausible: dn/dT {v:.3g}/K"})
+        elif v == v:
+            row = _prop(gid, "dn_dt_abs_d_20_40", round(v * 1e6, 3), "1e-6/K",
+                        587.6, source_id,
+                        "Absolute dn/dT at the d line, mean over +20..+40 C, "
+                        "evaluated from the .agf TD coefficients (SCHOTT "
+                        "dn/dT formula) with the catalog n_d.")
+            row["data_type"] = "calculated"
+            cur["props"].append(row)
+
+
+def _od_block(cur: dict, tokens: list, source_id: str) -> None:
+    gid = cur["glass_row"]["glass_id"]
+    for prop, tok in zip(OD_PROPS, tokens):
+        try:
+            v = float(tok)
+        except ValueError:
+            continue                      # "_" = not given
+        if v < 0:
+            continue                      # -1 = not given
+        cur["props"].append(_prop(
+            gid, prop, v, "" if prop == "relative_cost" else "class", "",
+            source_id, ".agf OD record" + (" (relative to N-BK7 / the maker's "
+                                           "reference glass)." if prop ==
+                                           "relative_cost" else
+                                           "; class scale is the maker's own.")))
 
 
 def _ed_block(cur: dict, nums: list, source_id: str) -> None:

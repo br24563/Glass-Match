@@ -408,8 +408,27 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
 # which is why a glass that has them can never be answered by an estimate.
 # Pure functions: no db.
 
+def scale_internal_transmittance(t, from_mm, to_mm):
+    """Internal transmittance at another thickness: T_to = T_from ** (to/from).
+
+    Beer-Lambert for the bulk path only - valid for *internal* transmittance,
+    which is what .agf IT records hold (no surface reflection). NaN when the
+    source thickness is not a positive length, since a 0 mm sample says
+    nothing about absorption per millimetre. Works on scalars and arrays.
+    """
+    import numpy as np
+    t = np.asarray(t, dtype=float)
+    f = np.asarray(from_mm, dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        out = np.where((f > 0) & np.isfinite(f) & (t >= 0),
+                       np.power(np.clip(t, 0.0, 1.0), float(to_mm) / f),
+                       np.nan)
+    return out if out.ndim else float(out)
+
+
 def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
-               min_coverage: float = 0.90) -> dict | None:
+               min_coverage: float = 0.90,
+               thickness_mm: float | None = None) -> dict | None:
     """Summarize manufacturer transmission samples inside [lo_um, hi_um].
 
     mode:
@@ -417,6 +436,14 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
       "Minimum"       - lowest sample in band (any coverage).
       "Entire range"  - lowest sample, but ONLY if samples span >= min_coverage
                         of the band; otherwise None (cannot verify the claim).
+
+    thickness_mm: when given, every sample is converted from the thickness its
+    catalog lists to this one (scale_internal_transmittance) before the
+    statistic, so glasses measured at 10 mm and at 25 mm are compared on the
+    same path length. Catalogs differ - SCHOTT lists 25 mm, most others 10 mm,
+    some 1 or 3 mm - and comparing them raw ranked the 25 mm glasses as worse
+    than they are. Samples with no usable thickness are excluded and the
+    exclusion disclosed. None keeps every sample at its listed thickness.
 
     Returns dict with value_pct (0-100), label, n_points, coverage — or None
     when there is no usable manufacturer data for this mode. Never fabricates.
@@ -427,11 +454,13 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     """
     if tdf is None or len(tdf) == 0 or hi_um <= lo_um:
         return None
+    import numpy as np
     wl = tdf["wavelength_um"].to_numpy(dtype=float)
     tv = tdf["transmission"].to_numpy(dtype=float)
-    import numpy as np
+    th = (tdf["thickness_mm"].to_numpy(dtype=float)
+          if "thickness_mm" in tdf.columns else np.full(len(tdf), np.nan))
     ok = np.isfinite(wl) & np.isfinite(tv) & (wl >= lo_um) & (wl <= hi_um)
-    wl_b, tv_b = wl[ok], tv[ok]
+    wl_b, tv_b, th_b = wl[ok], tv[ok], th[ok]
     if len(wl_b) == 0:
         return {"value_pct": None, "reason": "no-samples-in-band",
                 "n_points": 0, "coverage": 0.0,
@@ -441,6 +470,7 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     # raw .agf files): GlassMatch does not pick a winner. All rows at a
     # disputed wavelength are excluded from the statistic and the exclusion
     # is disclosed in the label (they remain flagged in Data Quality).
+    # Judged on the values as listed, before any thickness scaling.
     conflict_n = 0
     if len(wl_b) > 1:
         vals_by_wl: dict = {}
@@ -451,12 +481,25 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
         if conflict_wls:
             keep = np.array([round(float(w), 9) not in conflict_wls for w in wl_b])
             conflict_n = int((~keep).sum())
-            wl_b, tv_b = wl_b[keep], tv_b[keep]
+            wl_b, tv_b, th_b = wl_b[keep], tv_b[keep], th_b[keep]
             if len(wl_b) == 0:
                 return {"value_pct": None, "reason": "all-samples-conflict",
                         "n_points": 0, "coverage": 0.0,
                         "label": "every in-band sample is a conflicting duplicate "
                                  "(see Data Quality report)"}
+    no_thickness = 0
+    if thickness_mm is not None:
+        scaled = np.asarray(scale_internal_transmittance(tv_b, th_b,
+                                                         thickness_mm))
+        usable = np.isfinite(scaled)
+        no_thickness = int((~usable).sum())
+        wl_b, tv_b, th_b = wl_b[usable], scaled[usable], th_b[usable]
+        if len(wl_b) == 0:
+            return {"value_pct": None, "reason": "no-usable-thickness",
+                    "n_points": 0, "coverage": 0.0,
+                    "label": "manufacturer samples in band list no usable "
+                             "sample thickness, so they cannot be converted "
+                             f"to {thickness_mm:g} mm"}
     coverage = float((wl_b.max() - wl_b.min()) / span) if len(wl_b) > 1 else 0.0
     if mode == "Entire range" and coverage < min_coverage:
         # cannot honestly claim the entire band meets t_min
@@ -473,15 +516,57 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     else:
         val = float(tv_b.mean())
         how = "mean of samples in band"
-    thickness = None
-    if "thickness_mm" in tdf.columns and len(tdf):
-        thickness = tdf["thickness_mm"].dropna().iloc[0]
+    listed = sorted({float(x) for x in th_b if x == x})
+    listed_s = "/".join(f"{x:g}" for x in listed)
     label = f"manufacturer ({how}; {len(wl_b)} samples"
-    if thickness == thickness and thickness is not None:
-        label += f"; {thickness:g} mm as listed"
+    if thickness_mm is not None and listed and listed != [float(thickness_mm)]:
+        label += (f"; scaled from {listed_s} mm as listed to {thickness_mm:g} mm "
+                  "by Beer-Lambert")
+    elif listed:
+        label += f"; {listed_s} mm as listed"
     label += "; internal transmittance)"
     if conflict_n:
         label += (f"; {conflict_n} conflicting duplicate sample(s) excluded "
                   "from the statistic (see Data Quality)")
-    return {"value_pct": val * 100.0, "label": label,
-            "n_points": int(len(wl_b)), "coverage": coverage}
+    if no_thickness:
+        label += (f"; {no_thickness} sample(s) excluded - the catalog lists no "
+                  "usable thickness for them")
+    out = {"value_pct": val * 100.0, "label": label,
+           "n_points": int(len(wl_b)), "coverage": coverage}
+    if thickness_mm is not None:
+        out["thickness_mm"] = float(thickness_mm)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Thermal dispersion: the SCHOTT dn/dT model that Zemax TD records carry.
+
+def delta_n_abs(td, n: float, wavelength_um: float, t_c: float) -> float:
+    """Absolute index change from T0 to t_c (C) - the SCHOTT formula.
+
+    td = (D0, D1, D2, E0, E1, lambda_tk, T0) as in a Zemax TD record:
+      dn_abs = (n^2 - 1) / (2n) * [D0 dT + D1 dT^2 + D2 dT^3
+                                   + (E0 dT + E1 dT^2) / (l^2 - sign(l_tk) l_tk^2)]
+    with dT = t_c - T0 and n the index at T0. Calculated, never measured.
+    """
+    d0, d1, d2, e0, e1, ltk, t0 = (float(x) for x in td[:7])
+    dt = float(t_c) - t0
+    l2 = float(wavelength_um) ** 2
+    denom = l2 - math.copysign(ltk * ltk, ltk)
+    if denom == 0:
+        return float("nan")
+    n = float(n)
+    return ((n * n - 1.0) / (2.0 * n)
+            * (d0 * dt + d1 * dt ** 2 + d2 * dt ** 3
+               + (e0 * dt + e1 * dt ** 2) / denom))
+
+
+def dn_dt_abs(td, n: float, wavelength_um: float, t1_c: float,
+              t2_c: float) -> float:
+    """Mean absolute dn/dT (1/K) over [t1_c, t2_c] - the figure catalogs
+    quote as "dn/dT, +20/+40 C". NaN when the model is not evaluable."""
+    try:
+        return ((delta_n_abs(td, n, wavelength_um, t2_c)
+                 - delta_n_abs(td, n, wavelength_um, t1_c)) / (t2_c - t1_c))
+    except (TypeError, ValueError, ZeroDivisionError):
+        return float("nan")

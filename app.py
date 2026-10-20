@@ -8,7 +8,8 @@ import streamlit as st
 from glassmatch import __version__
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
-from glassmatch.spectra import dispersion_curve, fresnel_transmission
+from glassmatch.spectra import (dispersion_curve, fresnel_transmission,
+                                scale_internal_transmittance)
 from glassmatch.transmission import band_transmission as _band_transmission
 from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
@@ -148,21 +149,33 @@ vd_min, vd_max = st.sidebar.slider("Abbe number V_d range", 15.0, 95.0, (20.0, 8
 t_min = st.sidebar.slider("Minimum transmission (%)", 0.0, 99.0, float(p.get("tmin", 85.0)), 0.5)
 t_mode = st.sidebar.radio("Transmission requirement applies to", ["Average", "Minimum", "Entire range"],
                           horizontal=True)
+sample_thickness_mm = st.sidebar.number_input(
+    "Sample thickness for transmission (mm)", min_value=0.1, max_value=100.0,
+    value=10.0, step=0.5,
+    help="Every glass is judged at this thickness. Catalogs list internal "
+         "transmittance at different thicknesses (SCHOTT 25 mm, most others "
+         "10 mm, some 1-3 mm); each sample is converted to this one by "
+         "Beer-Lambert, T_d = T_listed ** (d / d_listed), and labelled as "
+         "scaled.")
 with st.sidebar.expander("Crystal / n-k based transmission"):
     st.caption(
         "Crystals and semiconductors publish measured n and k rather than a "
         "manufacturer transmittance curve. For those, GlassMatch computes "
-        "transmission from Fresnel reflection plus Beer-Lambert absorption. "
-        "It is **calculated**, and it depends on the assumed thickness.")
-    nk_thickness_mm = st.number_input("Assumed blank thickness (mm)", min_value=0.1,
-                                      max_value=100.0, value=10.0, step=0.5,
-                                      help="Absorption scales with thickness. "
-                                           "10 mm matches the .agf catalog "
-                                           "IT records.")
+        "transmission from Fresnel reflection plus Beer-Lambert absorption at "
+        "the sample thickness above. It is **calculated**, and it depends on "
+        "that thickness.")
 d_lo2, d_hi2 = st.sidebar.slider("Density range (g/cm^3, optional filter)", 1.5, 6.0, (1.5, 6.0), 0.05)
 use_density = st.sidebar.checkbox("Filter by density", value=False)
 cte_max = st.sidebar.slider("Max CTE (1e-6/K, optional filter)", 0.0, 20.0, 20.0, 0.1)
 use_cte = st.sidebar.checkbox("Filter by CTE", value=False)
+use_dndt = st.sidebar.checkbox(
+    "Limit |dn/dT| (athermal designs)", value=False,
+    help="Absolute dn/dT at the d line, +20/+40 C: manufacturer figures where "
+         "published, otherwise calculated from the catalog's TD coefficients. "
+         "Glasses above the limit are removed; glasses with no thermal data "
+         "are kept and flagged unless 'Require available data' is on.")
+dndt_max = st.sidebar.slider("Max |dn/dT| (1e-6/K)", 0.0, 15.0, 3.0, 0.1,
+                             disabled=not use_dndt)
 require_data = st.sidebar.checkbox("Require available data (missing = fail)",
                                    value=False,
                                    help="If off, missing data is flagged, not failed.")
@@ -181,7 +194,8 @@ requirements = {"nd_min": nd_min, "nd_max": nd_max, "vd_min": vd_min, "vd_max": 
                 "transmission_min": t_min, "transmission_mode": t_mode,
                 "density_min": d_lo2 if use_density else None,
                 "density_max": d_hi2 if use_density else None,
-                "cte_min": None, "cte_max": cte_max if use_cte else None}
+                "cte_min": None, "cte_max": cte_max if use_cte else None,
+                "dndt_abs_max": dndt_max if use_dndt else None}
 # Transmission precedence (manufacturer -> tabulated n/k -> Fresnel) lives in
 # glassmatch.transmission so it is importable and testable without Streamlit.
 
@@ -194,7 +208,7 @@ def band_transmission(gid, lo_um, hi_um, mode):
     """
     return _band_transmission(db, gid, lo_um, hi_um, mode,
                               t_groups=t_groups, nk_groups=nk_groups,
-                              thickness_mm=nk_thickness_mm)
+                              thickness_mm=sample_thickness_mm)
 
 
 trans, trans_basis = {}, {}
@@ -227,6 +241,10 @@ tabs = st.tabs(["Matching Glasses", "Glass Detail", "Spectral Analysis",
 with tabs[0]:
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    n_dndt = int(results.attrs.get("dndt_filtered", 0))
+    if n_dndt:
+        st.info(f"**{n_dndt:,} material(s) removed** by the |dn/dT| limit of "
+                f"{dndt_max:g}e-6/K.")
     if n_excluded:
         detail = ", ".join(f"{r['glass_id']} (no {r['blocking_missing']})"
                            for r in excluded_examples[:3])
@@ -262,7 +280,8 @@ with tabs[0]:
     else:
         show["class"] = show["material_class"]
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-                        "cte", "transmission_%", "completeness", "missing", "class"]],
+                        "cte", "dn_dt", "transmission_%", "completeness", "missing",
+                        "class"]],
                  width="stretch", hide_index=True)
     if nd_override and (scoped["nd_basis"] == "n at reference wavelength").any():
         n_ov = int((scoped["nd_basis"] == "n at reference wavelength").sum())
@@ -322,7 +341,8 @@ with tabs[1]:
     st.subheader("Properties and sources")
     for prop, label in PROPERTY_LABELS.items():
         for r in db.property_provenance(gid, prop):
-            unit = PROPERTY_UNITS.get(prop, "")
+            unit = r.get("unit") or PROPERTY_UNITS.get(prop, "")
+            unit = "" if unit != unit else unit
             st.markdown(f"**{label}**: `{r['value']}` {unit} - *{r['data_type']}*")
             st.caption(f"Source: {r['source_name']} ({r['source_id']}) | "
                        f"license: {r['license']} | {r['notes']} {r['source_url']}")
@@ -406,13 +426,25 @@ with tabs[2]:
         # --- transmission: manufacturer rows preferred, Fresnel fallback ---
         tdf = t_groups.get(str(g))
         if tdf is not None and len(tdf) >= 2:
-            thick = tdf["thickness_mm"].dropna()
-            thick_s = f", {thick.iloc[0]:g} mm as listed" if len(thick) else ""
-            tcurves[g] = pd.DataFrame({
-                "wavelength_um": tdf["wavelength_um"],
-                "transmission_pct": tdf["transmission"] * 100.0,
-                "data_type": f"manufacturer IT{thick_s}"})
-            t_manufacturer.append(g)
+            # Converted to the sidebar's sample thickness, like the matching
+            # table; samples with no usable listed thickness are left out.
+            scaled = scale_internal_transmittance(
+                tdf["transmission"], tdf["thickness_mm"], sample_thickness_mm)
+            listed = sorted({float(x) for x in tdf["thickness_mm"].dropna()
+                             if x > 0})
+            listed_s = "/".join(f"{x:g}" for x in listed)
+            basis = (f"manufacturer IT, {listed_s} mm as listed"
+                     if listed == [float(sample_thickness_mm)] else
+                     f"manufacturer IT, scaled from {listed_s} mm to "
+                     f"{sample_thickness_mm:g} mm")
+            curve = pd.DataFrame({"wavelength_um": tdf["wavelength_um"],
+                                  "transmission_pct": scaled * 100.0,
+                                  "data_type": basis}).dropna()
+            if len(curve):
+                tcurves[g] = curve
+                t_manufacturer.append(g)
+            else:
+                t_missing.append(g)
         elif db.dispersion_status(g) == "sellmeier1":
             c = db.sellmeier_for(g, sellmeier_only=True)
             df = dispersion_curve(c, list(wls), *db.dispersion_range(g, c))
@@ -479,8 +511,9 @@ with tabs[2]:
         st.caption(
             f"Manufacturer IT rows: {len(t_manufacturer)} glass(es); "
             f"calculated uncoated Fresnel: {len(t_calculated)} glass(es) — "
-            "each trace is labelled by basis. Thickness applies as listed; "
-            "internal transmittance is not corrected to your sample thickness.")
+            "each trace is labelled by basis. Manufacturer internal "
+            f"transmittance is converted to {sample_thickness_mm:g} mm "
+            "(Beer-Lambert) from the thickness each catalog lists.")
 with tabs[3]:
     st.header("Comparison (2-5 glasses)")
     comp = st.multiselect("Select glasses", results["glass_id"].tolist(),

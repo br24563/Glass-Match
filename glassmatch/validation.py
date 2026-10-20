@@ -17,7 +17,30 @@ RULES = {
     "wl_max_um": (0.05, 50.0),
     "dPgF": (-0.1, 0.1),
     "glass_code": (20000.0, 999999.999),
+    # Thermal / mechanical / chemical (2026-10 import). Bounds are "physically
+    # possible", not "typical": germanium's dn/dT is ~400e-6/K, polymers'
+    # about -120e-6/K.
+    "dn_dt_abs_d_20_40": (-1000.0, 1000.0),
+    "dn_dt_rel_d_20_40": (-1000.0, 1000.0),
+    "cte_100_300": (0.0, 30.0),
+    "tg": (100.0, 1500.0),
+    "yield_point": (100.0, 1500.0),
+    "thermal_conductivity": (0.01, 500.0),
+    "specific_heat": (0.05, 5.0),
+    "youngs_modulus": (1.0, 600.0),
+    "shear_modulus": (0.5, 300.0),
+    "poisson_ratio": (0.0, 0.5),
+    "stress_optic_coefficient": (-10.0, 20.0),
+    "knoop_hardness": (10.0, 3000.0),
+    "relative_cost": (0.0, 1000.0),
 }
+# Resistance classes are each maker's own scale (SCHOTT writes codes such as
+# 52.3); only a negative value is impossible.
+for _p in ("climate_resistance", "stain_resistance", "acid_resistance",
+           "alkali_resistance", "phosphate_resistance",
+           "acid_resistance_surface", "acid_resistance_powder",
+           "water_resistance_powder"):
+    RULES[_p] = (0.0, 100.0)
 
 # Plausible density window in g/cm^3 per material class. A single global range
 # is wrong in both directions: it rejects real polymer densities (TOPAS 1.02,
@@ -55,7 +78,11 @@ def validate_property_frame(props: pd.DataFrame) -> list:
         if not str(r.get("source_id", "")):
             issues.append({"row": i, "glass_id": r.get("glass_id"),
                            "issue": "missing source_id", "value": v})
-    dup = props.duplicated(subset=["glass_id", "property", "source_id"], keep=False)
+    # The reference wavelength is part of a record's identity: a crystal's n
+    # at 0.5876 um and at 10 um are two values, not one value entered twice.
+    key = [c for c in ("glass_id", "property", "source_id",
+                       "reference_wavelength_nm") if c in props.columns]
+    dup = props.duplicated(subset=key, keep=False)
     for i in props[dup].index.tolist():
         issues.append({"row": i, "glass_id": props.loc[i, "glass_id"],
                        "issue": "duplicate record", "value": props.loc[i, "value"]})

@@ -102,6 +102,15 @@ flagged-issues table; keep the displaced values in
 `data/normalized/transmission_conflicts.csv` so the decision stays auditable.
 To re-check the shipped data: `python scripts/clean_transmission.py --dry-run`.
 
+**Where the catalogs come from.** Manufacturer files go in
+`data/staging/official/<maker>/` (gitignored); `scripts/merge_agf.py`'s
+`CATALOGS` list names each file, its download page and publication date, and
+which mirror file it supersedes. To refresh a maker, download the new file
+from the page in `glassmatch/importers/catalogs.py`, update its `CATALOGS`
+entry (file name, source_id with the new date, `published`, `accessed`) and
+re-run the merge. HIKARI ships an Excel workbook rather than an `.agf`; it is
+read by `glassmatch/importers/hikari_xlsx.py`.
+
 **Rebuilding the whole database** from the staged sources is two commands,
 in this order: `python scripts/merge_agf.py --all`, then
 `python scripts/merge_refractiveindex.py`. Each re-runs

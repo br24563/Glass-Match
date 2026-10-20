@@ -145,8 +145,7 @@ def test_no_catalog_has_a_dispersion_blackout(db):
     s = db.sellmeier
     verified = s[s["formula"].map(is_dispersable_formula)]
     makers = verified["glass_id"].str.split("-").str[0].value_counts()
-    for m in ("HOYA", "CDGM", "SUMITA", "HIKARI", "LZOS", "NIKON", "OHARA",
-              "SCHOTT"):
+    for m in ("HOYA", "CDGM", "SUMITA", "HIKARI", "LZOS", "OHARA", "SCHOTT"):
         assert makers.get(m, 0) > 50, m
 
 
@@ -156,7 +155,11 @@ def test_ir_placeholder_rows_are_clean(db):
            & p["glass_id"].isin(["INFRARED-SILICON", "INFRARED-CDTE",
                                  "INFRARED-ZNSE", "UMICORE-GASIR2"])]
     assert nd.empty
-    assert "CDGM-H-ZF52" not in set(db.glasses["glass_id"])
+    # The hand-entered H-ZF52 carried SCHOTT SF6's values (1.80518 / 25.43).
+    # CDGM's own 2026 catalog now supplies the real glass.
+    rows = db.property_provenance("CDGM-H-ZF52", "refractive_index_nd")
+    assert [r["source_id"] for r in rows] == ["CDGM-AGF-2026-09"]
+    assert db.property_value("CDGM-H-ZF52", "refractive_index_nd") == 1.84666
 
 
 def test_ir_fits_verified_only_against_their_reference(db):

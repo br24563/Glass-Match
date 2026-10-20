@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,724 materials · 18 source collections · 219 traceable sources** — search,
+**2,920 materials · 18 source collections · 221 traceable sources** — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
 materials, polymers, and moldables.
 
@@ -25,9 +25,20 @@ materials, polymers, and moldables.
   density, CTE) with transparent Compatibility Scores and user-adjustable weights.
   Maker-scoped, paginated results scale to thousands of glasses.
 - **Transmission modes**: Average / Minimum / Entire range, evaluated against
-  manufacturer IT rows (64k samples) with Fresnel fallback labelled as
+  manufacturer IT rows (70k samples) with Fresnel fallback labelled as
   calculated; Entire range refuses to score when band coverage < 90%.
+  Catalogs list internal transmittance at different thicknesses (SCHOTT
+  25 mm, most others 10 mm, some 1-3 mm); every sample is converted to one
+  user-chosen sample thickness by Beer-Lambert, T_d = T^(d/d_listed), and
+  labelled as scaled, so glasses are compared on the same path length.
   Conflicting duplicate samples are excluded (never pick-a-winner) and disclosed.
+- **Thermal and mechanical data**: absolute dn/dT (d line, +20/+40 C) for
+  1,819 materials - HIKARI's own figures, or calculated from each catalog's
+  TD coefficients with the SCHOTT dn/dT formula - with an optional |dn/dT|
+  limit for athermal designs; relative cost and climate/stain/acid/alkali/
+  phosphate resistance classes from the .agf OD records; and, for the 155
+  current HIKARI glasses, T_g, thermal conductivity, Young's and shear
+  modulus, Poisson's ratio, stress-optic coefficient and Knoop hardness.
 - **Data quality report**: range checks, duplicate detection, missing-source
   checks and orphan source references — flags are listed for review, never
   auto-fixed.
@@ -151,21 +162,34 @@ add a manufacturer without writing any Python. Release history is in
 
 | Maker file | Glasses | Notes |
 |---|---|---|
-| SCHOTT June-2025 `.agf` | 366 | Authoritative, current |
-| OHARA May-2026 `.agf` | 433 | Authoritative, current; 188 Herzberger legacy rows archived |
-| HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,595 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
+| SCHOTT June-2025 `.agf` | 366 | Manufacturer, current (re-checked 2026-10-20: unchanged) |
+| OHARA May-2026 `.agf` | 433 | Manufacturer, current |
+| HOYA July-2026 `.agf` (incl. obsolete) | 436 | Manufacturer, current; 1 mirror-only legacy glass kept as obsolete |
+| CDGM Sept-2026 `.agf` | 375 | Manufacturer, current; 23 mirror-only legacy glasses kept as obsolete |
+| SUMITA Aug-2026 `.agf` (incl. discontinued) | 433 | Manufacturer, current |
+| HIKARI June-2025 catalog workbook + Nikon 2019 `.agf` | 397 | 155 current HIKARI glasses (with thermal/mechanical data); 235 discontinued HIKARI and 7 Nikon NIFS/NICF from Nikon's 2019 Zemax data |
+| LZOS / Corning | 150 | nzhagen/zemaxglass mirror, vintage unknown (no public catalog found) — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,724** | 2,574 verified dispersion curves · 19 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
+| **Total** | **2,920** | 2,756 verified dispersion curves · 33 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 70k transmission rows · 135k tabulated n/k samples |
+
+1,244 glasses are marked obsolete, from each catalog's own status field (or,
+for HIKARI, absence from the current catalog); the Database explorer hides
+them by default. HIKARI glasses are listed once, under HIKARI: Nikon's 2019
+file distributes the same line, and the old mirror had most of them twice.
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
 
 ## Data sources and licensing
 
-- SCHOTT/OHARA `.agf` files: authoritative, redistribution-limited — bulk files
-  stay in untracked `data/staging/`; only normalized rows ship.
-- Mirror `.agf` files: `mirror-vintage-unknown; verify vs manufacturer catalog`.
+- Manufacturer catalogs (SCHOTT, OHARA, HOYA, CDGM, SUMITA `.agf`; HIKARI's
+  Excel workbook; Nikon's Zemax data): authoritative, redistribution-limited —
+  the files stay in untracked `data/staging/` (`data/staging/official/<maker>/`
+  for the 2026-10 downloads); only normalized rows ship. Each `sources.csv`
+  row records the download page, publication date and access date.
+- Mirror `.agf` files (LZOS, Corning, IR and polymer makers, which publish no
+  current catalog): `mirror-vintage-unknown; verify vs manufacturer catalog`.
 - Every glass value comes from a parsed catalog record; nothing is
   hand-transcribed. The curated substitution pairs in `equivalents.csv` cite
   the manufacturer catalogs as cross-references only.

@@ -23,6 +23,30 @@ PROPERTY_LABELS = {
     "thermal_conductivity": "Thermal conductivity",
     "youngs_modulus": "Young's modulus",
     "glass_code": "Glass code",
+    "dPgF": "Anomalous partial dispersion dPg,F",
+    "cte_100_300": "CTE (+100/+300 C)",
+    "dn_dt_abs_d_20_40": "dn/dT absolute (d line, +20/+40 C)",
+    "dn_dt_rel_d_20_40": "dn/dT relative to air (d line, +20/+40 C)",
+    "td_D0": "dn/dT model D0", "td_D1": "dn/dT model D1",
+    "td_D2": "dn/dT model D2", "td_E0": "dn/dT model E0",
+    "td_E1": "dn/dT model E1", "td_lambda_tk": "dn/dT model lambda_tk",
+    "td_T0": "dn/dT model reference temperature",
+    "yield_point": "Yield point At",
+    "specific_heat": "Specific heat",
+    "shear_modulus": "Shear modulus",
+    "poisson_ratio": "Poisson's ratio",
+    "stress_optic_coefficient": "Stress-optic coefficient",
+    "knoop_hardness": "Knoop hardness",
+    "abrasion": "Abrasion",
+    "relative_cost": "Relative cost",
+    "climate_resistance": "Climate resistance (class)",
+    "stain_resistance": "Stain resistance (class)",
+    "acid_resistance": "Acid resistance (class)",
+    "alkali_resistance": "Alkali resistance (class)",
+    "phosphate_resistance": "Phosphate resistance (class)",
+    "acid_resistance_surface": "Acid resistance, surface method (class)",
+    "acid_resistance_powder": "Acid resistance, powder method (class)",
+    "water_resistance_powder": "Water resistance, powder method (class)",
 }
 
 PROPERTY_UNITS = {
@@ -35,6 +59,9 @@ PROPERTY_UNITS = {
     "thermal_conductivity": "W/(m K)",
     "youngs_modulus": "GPa",
     "glass_code": "",
+    "dn_dt_abs_d_20_40": "1e-6/K",
+    "dn_dt_rel_d_20_40": "1e-6/K",
+    "cte_100_300": "1e-6/K",
 }
 
 
@@ -391,6 +418,10 @@ class GlassDatabase:
                 "tg": self.property_value(gid, "tg"),
                 "k_thermal": self.property_value(gid, "thermal_conductivity"),
                 "young": self.property_value(gid, "youngs_modulus"),
+                # Manufacturer figures win over values derived from TD
+                # coefficients (property_value's source priority).
+                "dn_dt": self.property_value(gid, "dn_dt_abs_d_20_40"),
+                "relative_cost": self.property_value(gid, "relative_cost"),
                 "has_sellmeier": self.dispersion_status(gid) == "sellmeier1",
                 "dispersion": self.dispersion_status(gid),
                 "has_transmission": bool(has_trans),

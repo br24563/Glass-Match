@@ -7,6 +7,83 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
+  materials).** Downloaded 2026-10-20 from each maker's own site:
+  HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the
+  mirror), CDGM `CDGM-ZEMAX202609.AGF` (352, was 162), SUMITA's 2026-08-26
+  Zemax file (433, was 192), HIKARI's *All Catalog Data* workbook (catalog
+  2025-06-01, 155 current glasses) and Nikon's `NIKON-HIKARI_201911.AGF`.
+  SCHOTT's current download is byte-identical to the June 2025 file already
+  used; OHARA's May 2026 file is current. Each source row records the download
+  page, publication date and access date; the files stay in the gitignored
+  `data/staging/official/`. Every stored n_d/V_d matches its source file
+  exactly, and all 2,756 verified dispersion fits still reproduce their
+  catalog n_d/V_d (worst 3.8e-5 / 0.23). Glasses only the mirror still lists
+  (1 HOYA, 23 CDGM - renamed or long-discontinued types) are kept, marked
+  obsolete and labelled as mirror data. LZOS, Corning and the IR/polymer
+  makers publish no current catalog and stay on the mirror, labelled so.
+- **HIKARI importer** (`glassmatch/importers/hikari_xlsx.py`). HIKARI
+  publishes no Zemax file; its workbook carries the A0-A8 power series (Zemax
+  formula 13), the catalog index at 21 wavelengths - every fit is verified
+  against all of them (worst 4.8e-6) - 10 mm transmittance, T_g, yield point,
+  thermal conductivity, specific heat, Young's and shear modulus, Poisson's
+  ratio, stress-optic coefficient, Knoop hardness, chemical resistance,
+  relative and absolute dn/dT, and HIKARI's list of similar OHARA/HOYA/CDGM/
+  SCHOTT glasses (362 resolved into `equivalents.csv` as manufacturer
+  cross-references). Columns are located by header text, never by position.
+- **dn/dT from the .agf TD records** for 1,698 glasses (coefficients stored
+  verbatim), with the absolute dn/dT at the d line, +20/+40 C, evaluated by
+  the SCHOTT formula (`glassmatch.spectra.dn_dt_abs`) and labelled calculated.
+  Checked against the manufacturer: HIKARI's 2025 catalog figures match the
+  values computed from Nikon's 2019 TD coefficients for 139 of 141 glasses
+  (median difference 0.026e-6/K). The other two - J-BASF2 and Q-LASFH11S -
+  have D0 printed without its 1e-6 exponent in Nikon's file; they are stored
+  verbatim, flagged, and not used. Total coverage 1,819 materials.
+- **|dn/dT| limit** in the matching sidebar for athermal designs: glasses
+  above it are removed (and counted), glasses without thermal data kept and
+  flagged unless "Require available data" is on. dn/dT is a results column.
+- **Relative cost and climate/stain/acid/alkali/phosphate resistance** from
+  the .agf OD records ("-1" and "_" stay missing). Class scales are each
+  maker's own, so they are shown per glass, not ranked.
+- **One sample thickness for transmission.** Catalogs list internal
+  transmittance at 25 mm (SCHOTT), 10 mm (most) or 1-5 mm; samples were
+  compared as listed, which ranked 25 mm glasses below thinner-listed ones
+  (N-BK7 99.2% vs S-BSL7 99.7%; at 10 mm they are 99.68% and 99.70%). Every
+  sample is now converted to the sidebar's sample thickness by Beer-Lambert
+  (`scale_internal_transmittance`) and labelled as scaled; the spectral plot
+  follows. NIKON's Q-FK01AS/Q-FKH1S list 31 samples at 0 mm - a catalog
+  defect - which are excluded and disclosed rather than guessed.
+- The glass detail page now lists every stored property (dn/dT model, cost,
+  resistance classes, mechanical data) with each row's own unit.
+
+### Changed
+- **HIKARI glasses are listed once.** The mirror had 331 of them twice, under
+  NIKON and under HIKARI. They are now all HIKARI (155 current, 235
+  discontinued); NIKON keeps only Nikon's own NIFS/NICF materials. Glass IDs
+  `NIKON-J-*`, `NIKON-E-*` etc. become `HIKARI-*`.
+- CDGM's HWS series (chalcogenide IR glasses with no visible n_d) is classed
+  chalcogenide, so IR-mode matching applies.
+- `transmission.csv` is kept sorted by glass, like the other files.
+- `glassmatch/importers/catalogs.py` and the per-maker READMEs point at the
+  real download pages. HIKARI was described as "Nippon Electric Glass" at a
+  dead domain; SUMITA's domain was wrong; LZOS claimed a CC0 mirror that does
+  not exist.
+
+### Fixed
+- **The data-quality report's 1,174 "duplicate record" flags were false.**
+  A crystal's n at 0.5876 um and at 10 um share glass, property and source;
+  the reference wavelength is now part of the key. The report drops from
+  1,239 flags to 65 real ones (out-of-range LD limits, and an RPO mirror
+  phosphate-resistance value of 1999). Range rules cover the new properties.
+- `scripts/clean_transmission.py` drops ledger entries that current data has
+  settled: the CDGM-mirror conflict at H-LAF2 2.4 um no longer exists in
+  CDGM's own catalog, so the ledger lists 59 still-excluded keys, not 60.
+- Four catalog defects are now caught instead of imported as fits: CDGM
+  H-TK9 (coefficients give n_d 1.62075 vs 1.587166), HOYA MC-TAF115 (catalog
+  n_d 1.777047 vs fit 1.77047, a transposed digit) and MC-FAD61 (4.3e-4 off)
+  are archived; the two NIKON TD exponents above are flagged.
+
+### Added
 - **`validate_spectral_nk_frame()`** — `spectral_nk.csv` was the one data file
   with no validator at all: `validate_property_frame`,
   `validate_glass_frame` and `validate_transmission_frame` all existed, but

@@ -84,7 +84,10 @@ def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
     read from module globals so the chain can be tested on a synthetic
     database; they are exactly the state `app.py` holds.
     """
-    s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode)
+    # Manufacturer samples are converted to the same thickness as the n/k
+    # branch, so every glass is judged on one path length.
+    s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode,
+                   thickness_mm=thickness_mm)
     if s is not None:
         if s.get("value_pct") is not None:
             # Round here so every consumer (table, caption, export) shows the

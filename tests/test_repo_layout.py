@@ -288,7 +288,11 @@ def test_reachability_analysis_finds_the_lazy_import():
 _BUCKET_MAKERS = {
     "SCHOTT June-2025": {"SCHOTT"},
     "OHARA May-2026": {"OHARA"},
-    "HOYA / NIKON": {"HOYA", "NIKON", "HIKARI", "SUMITA", "CDGM", "LZOS", "CORNING"},
+    "HOYA July-2026": {"HOYA"},
+    "CDGM Sept-2026": {"CDGM"},
+    "SUMITA Aug-2026": {"SUMITA"},
+    "HIKARI June-2025": {"HIKARI", "NIKON"},
+    "LZOS / Corning": {"LZOS", "CORNING"},
     "IR (generic": {"INFRARED", "LIGHTPATH", "UMICORE"},
     "Polymers (Zeon": {"ZEON", "ARTON", "TOPAS", "ARCHER", "RPO"},
 }

@@ -10,9 +10,12 @@ def test_legacy_glasses_without_new_columns(tmp_path):
         shutil.copy(src / n, tmp_path / n)
     # Encoding is explicit: the committed CSVs are UTF-8 and the Windows
     # locale default (cp1252) cannot decode them.
-    lines = (src / "glasses.csv").read_text(encoding="utf-8").splitlines()
-    legacy = ["\n".join([",".join(ln.split(",")[:6]) for ln in lines])]
-    (tmp_path / "glasses.csv").write_text(legacy[0], encoding="utf-8")
+    # Parsed as CSV, not split on commas: catalog descriptions contain quoted
+    # commas. The legacy layout is the first six columns.
+    import pandas as pd
+    g = pd.read_csv(src / "glasses.csv", encoding="utf-8", dtype=str)
+    g.iloc[:, :6].to_csv(tmp_path / "glasses.csv", index=False,
+                         encoding="utf-8")
     db = GlassDatabase.load(tmp_path)
     s = db.summary_frame()
     assert set(s["material_class"]) == {"oxide_glass"}

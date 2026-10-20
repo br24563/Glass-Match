@@ -144,18 +144,34 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
     caller passes n at whatever reference wavelength the user is working at and
     the UI must label the column accordingly - it is not the same quantity as a
     catalog n_d and must never be presented as one.
+
+    `requirements["dndt_abs_max"]` (1e-6/K) is a hard filter on |absolute
+    dn/dT| at the d line, +20/+40 C - the athermal-design question, which is
+    pass/fail rather than "closer is better". A glass above it is removed; a
+    glass with no dn/dT data is kept and flagged, unless require_data is on.
+    Both counts go into the result's attrs so the UI can say what was dropped.
     """
     rows = []
     transmissions = transmissions or {}
     nd_override = nd_override or {}
+    dndt_max = (requirements or {}).get("dndt_abs_max")
+    over_dndt = 0
     for _, r in summary.iterrows():
         gid = str(r["glass_id"])
+        dndt = r.get("dn_dt")
+        dndt = None if dndt is None or dndt != dndt else float(dndt)
+        if dndt_max is not None and dndt is not None and abs(dndt) > dndt_max:
+            over_dndt += 1
+            continue
         nd_used = nd_override.get(gid, r.get("nd"))
         props = {"nd": nd_used, "vd": r.get("vd"), "density": r.get("density"),
                  "cte": r.get("cte"), "transmission": transmissions.get(gid)}
         ir = is_ir_glass(r)
         sc = score_glass(props, requirements, weights, require_data=require_data,
                          ir_mode=ir)
+        if dndt_max is not None and dndt is None:
+            sc["blocking_missing"] = sc["blocking_missing"] + ["dn/dT"]
+            sc["excluded"] = bool(require_data)
         rows.append({"glass_id": gid, "glass": r.get("glass"),
                      "manufacturer": r.get("manufacturer"),
                      "manufacturer_id": r.get("manufacturer_id"),
@@ -166,6 +182,7 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                      "nd_basis": ("n at reference wavelength" if gid in nd_override
                                   else "catalog n_d"),
                      "density": r.get("density"), "cte": r.get("cte"),
+                     "dn_dt": dndt,
                      "compatibility": round(float(sc["overall"]) * 100, 1),
                      "completeness": round(float(sc["completeness"]) * 100, 1),
                      "missing": ", ".join(sc["missing"]) if sc["missing"] else "complete",
@@ -182,6 +199,7 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
         if "excluded" in out else out
     kept = kept.reset_index(drop=True)
     kept.attrs["excluded_count"] = int(len(excluded))
+    kept.attrs["dndt_filtered"] = over_dndt
     kept.attrs["excluded_examples"] = (
         excluded.head(5)[["glass_id", "blocking_missing"]].to_dict("records")
         if len(excluded) else [])
