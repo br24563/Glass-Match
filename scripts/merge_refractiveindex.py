@@ -9,6 +9,7 @@ normalized rows derived from it are redistributed with it.
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
@@ -37,7 +38,9 @@ def _upsert(path: Path, new: pd.DataFrame, key, sort_by=None) -> None:
         return
     cols = [key] if isinstance(key, str) else list(key)
     if path.exists() and path.stat().st_size:
-        old = pd.read_csv(path, encoding="utf-8")
+        # round_trip: the default parser can move a float's last digit, so
+        # rows this merge never touches would otherwise churn on rewrite.
+        old = pd.read_csv(path, encoding="utf-8", float_precision="round_trip")
         if all(c in old.columns for c in cols):
             new_keys = set(map(tuple, new[cols].astype(str).to_numpy()))
             old = old[[k not in new_keys for k in
@@ -46,7 +49,11 @@ def _upsert(path: Path, new: pd.DataFrame, key, sort_by=None) -> None:
     else:
         merged = new
     if sort_by:
-        merged = merged.sort_values(sort_by).reset_index(drop=True)
+        merged = merged.sort_values(sort_by, kind="stable").reset_index(drop=True)
+    for col in ("zemax_formula", "rii_formula"):
+        if col in merged.columns:
+            merged[col] = pd.to_numeric(merged[col],
+                                        errors="coerce").astype("Int64")
     merged.to_csv(path, index=False, encoding="utf-8")
     print(f"  {path.name}: {len(merged)} rows")
 
@@ -88,16 +95,29 @@ def main() -> int:
         "manufacturer_id", ["manufacturer_id"])
     _upsert(NORM / "glasses.csv", out["glasses"], "glass_id",
             ["manufacturer_id", "glass_id"])
-    _upsert(NORM / "properties.csv", out["properties"],
-            ["glass_id", "property", "reference_wavelength_nm"],
+    # Keyed on glass_id alone: every property of an RII page comes from this
+    # importer, so a re-import must replace the page's rows wholesale - a
+    # finer key leaves stale values behind when a fit stops covering a
+    # reference wavelength.
+    _upsert(NORM / "properties.csv", out["properties"], "glass_id",
             ["glass_id", "property", "reference_wavelength_nm"])
     _upsert(NORM / "sellmeier.csv", out["sellmeier"], "glass_id", ["glass_id"])
-    _upsert(NORM / "sources.csv", out["sources"], "source_id", ["source_id"])
+    # A page that is merely re-parsed keeps the date it was accessed; only a
+    # page seen for the first time gets today's.
+    src_path = NORM / "sources.csv"
+    if src_path.exists() and not out["sources"].empty:
+        prior = pd.read_csv(src_path, encoding="utf-8")
+        when = dict(zip(prior["source_id"], prior["access_date"]))
+        out["sources"]["access_date"] = [
+            when.get(sid, d) for sid, d in
+            zip(out["sources"]["source_id"], out["sources"]["access_date"])]
+    _upsert(src_path, out["sources"], "source_id", ["source_id"])
     if out["spectral"] is not None and not out["spectral"].empty:
         path = NORM / "spectral_nk.csv"
         new_ids = set(out["spectral"].glass_id.astype(str))
         if path.exists() and path.stat().st_size:
-            old = pd.read_csv(path, encoding="utf-8")
+            old = pd.read_csv(path, encoding="utf-8",
+                              float_precision="round_trip")
             keep = old[~old.glass_id.astype(str).isin(new_ids)]
         else:
             keep = out["spectral"].iloc[0:0]
@@ -106,6 +126,10 @@ def main() -> int:
         merged.to_csv(path, index=False, encoding="utf-8")
         print(f"  spectral_nk.csv: {len(merged)} rows")
     print("\nmerged into data/normalized/")
+    # Catalog IR fits are verified against these pages; re-check them.
+    subprocess.run([sys.executable,
+                    str(ROOT / "scripts" / "verify_ir_dispersion.py")],
+                   check=True)
     return 0
 
 

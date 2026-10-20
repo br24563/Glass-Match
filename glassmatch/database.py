@@ -199,7 +199,10 @@ class GlassDatabase:
         return rows
 
     def dispersion_status(self, glass_id: str) -> str:
-        """'sellmeier1' | 'archived-non-sellmeier' | 'none' — drives UI gating."""
+        """'sellmeier1' | 'archived-non-sellmeier' | 'none' — drives UI gating.
+
+        'sellmeier1' is the historical name for "has a verified dispersion
+        fit"; the fit may be any Zemax formula (Schott, Extended 3 ...)."""
         row = self.sellmeier_for(glass_id)
         if row is None:
             return "none"
@@ -328,7 +331,7 @@ class GlassDatabase:
                         return float(val), "interpolated"
         coef = self.sellmeier_for(gid, sellmeier_only=True)
         if coef is not None:
-            lo, hi = self._sellmeier_range(gid, coef)
+            lo, hi = self.dispersion_range(gid, coef)
             w_um = wavelength_nm / 1000.0
             if lo is None or hi is None or (lo <= w_um <= hi):
                 from glassmatch.spectra import n_from_row
@@ -337,7 +340,7 @@ class GlassDatabase:
                     return float(val), "calculated"
         return None, None
 
-    def _sellmeier_range(self, glass_id: str, coef: dict):
+    def dispersion_range(self, glass_id: str, coef: dict):
         """Validity range (um) for a dispersion curve, or (None, None).
 
         A fit evaluated outside the range its source states is an
@@ -354,17 +357,14 @@ class GlassDatabase:
                 return float(parts[0]), float(parts[1])
             except ValueError:
                 pass
-        f = self.properties
-        if not f.empty:
-            vals = {}
-            for prop, key in (("wl_min_um", "lo"), ("wl_max_um", "hi")):
-                hit = f[(f["glass_id"] == glass_id) & (f["property"] == prop)]
-                if not hit.empty:
-                    v = pd.to_numeric(hit.iloc[0]["value"], errors="coerce")
-                    if v == v and v > 0:
-                        vals[key] = float(v)
-            if "lo" in vals and "hi" in vals:
-                return vals["lo"], vals["hi"]
+        # Through the cached property index: the Fresnel fallback asks this
+        # for every wavelength of every glass, and a DataFrame scan per call
+        # made a full matching run take minutes once every catalog had fits.
+        lo = self.property_value(glass_id, "wl_min_um")
+        hi = self.property_value(glass_id, "wl_max_um")
+        if lo is not None and hi is not None and lo == lo and hi == hi \
+                and lo > 0 and hi > 0:
+            return lo, hi
         return None, None
 
     def summary_frame(self) -> pd.DataFrame:

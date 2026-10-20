@@ -60,6 +60,72 @@ the patch version, schema/format changes bump the minor version.
   second; uncoated Fresnel last.
 
 ### Fixed
+- **Dispersion is evaluated in the formula each catalog names (710 → 2,574
+  verified curves).** Every `.agf` NM record states its dispersion equation in
+  field 2 (1 = Schott, 2 = Sellmeier-1, 13 = Extended 3 ...), but the importer
+  ignored it and evaluated every CD row as Sellmeier-1. Coefficients in any
+  other form failed the n_d check and were archived as "series/polynomial
+  forms" — 1,550 perfectly good fits, so HOYA, CDGM, SUMITA, HIKARI, LZOS,
+  ARCHER, ARTON, TOPAS and ZEON had **no** dispersion curve, Fresnel estimate
+  or n(λ) at all. `glassmatch.spectra.zemax_n` now implements all 13 Zemax
+  formulas; the gate checks n_d (≤ 2×10⁻⁴, was 0.002) **and** V_d (≤ 0.5), and
+  every shipped catalog fit passes with worst residuals 3.8×10⁻⁵ / 0.23.
+  `sellmeier.csv` gains `zemax_formula`, `rii_formula` and a verbatim
+  `coefficients` column. The NIKON J-FK5 test that pinned the old behaviour
+  now pins the correct one.
+- **Seven IR materials no longer carry n_d = 2.0 as manufacturer data.**
+  Zemax writes n_d = 1.0 / V_d = 0 as a placeholder for materials opaque at
+  587.6 nm (AgCl, CdTe, Si, ZBLA, ZBLAN, ZnSe, GASIR2). The value-range NM
+  parser skipped the 1.0 and took the formula number "2" as n_d. NM records in
+  the documented layout are now read by position and a placeholder stays
+  missing.
+- **refractiveindex.info formulas 1 and 2 keep their constant term.** The
+  leading coefficient of `n² − 1 = C1 + Σ …` was read as a "temperature" and
+  dropped, so 19 crystal pages with a non-zero C1 — GaAs Skauli and Kachare,
+  Ge Icenogle, CaF₂/BaF₂/SrF₂/MgF₂ Li, SiO₂ Ghosh, Te Caldwell/Sherman, CdTe
+  and ZnSe Marple, and three Amotchkina films — described the wrong material
+  (Ge Icenogle by 1.22, CaF₂ Li by 0.147). 133 stored `n_at_reference` values
+  are corrected. The earlier validation used Malitson CaF₂, whose C1 is 0.
+- **Formulas 3–9 from refractiveindex.info are evaluated, not skipped.** Four
+  crystal pages that carried only such a fit (Si Edwards, SiO₂ Nyakuchena,
+  ZnS Debenham, YAG Hrabovsky) are now imported, and seven existing pages
+  gain their fit (Si Chandler-Horowitz; CaF₂/BaF₂/SrF₂ Bosomworth far-IR).
+- **IR catalog fits with no catalog n_d are verified against a measurement.**
+  `glassmatch/reference_check.py` + `scripts/verify_ir_dispersion.py` compare
+  each placeholder-n_d catalog fit with one room-temperature bulk
+  refractiveindex.info page named in advance for that material (never the
+  one that happens to agree), at ≤ 0.005 over ≥ 50% of the stated range. All
+  eight checked — Si, Ge ×3, GaAs, CdTe, ZnSe, ZnS — agree to 0.0002–0.0044,
+  and the result is written into the row's notes. Run against the
+  pre-fix reference pages the same check rejected Ge and GaAs by 1.2 and 0.77.
+- **Dispersion is never extrapolated.** The spectral plot and the Fresnel
+  fallback evaluated fits from 0.3 to 2.5 µm regardless of the range the
+  catalog states; they now stop at the fit's `LD` range and the Fresnel label
+  says when it covers only part of the band. The Fresnel fallback also used
+  only the first three Sellmeier terms.
+- **Deep-UV and IR transmission samples are kept (+56 rows).** IT samples
+  were accepted only inside 0.2–5 µm, which dropped NIKON NIFS/NICF and
+  OHARA SK-1300 at 157–193 nm and Ge, KBr, KCl and GASIR beyond 5 µm. The
+  window is now 0.1–50 µm; transmittances outside 0–1 (HOYA's −999
+  placeholders, a 12.0 typo) are still rejected.
+- **Catalog status is honoured: 1,156 discontinued glasses are `obsolete`.**
+  The NM status field (2 = obsolete) was ignored, so every glass showed as
+  standard and the "Hide obsolete glasses" toggle hid nothing.
+- **Removed the hand-entered `CDGM-H-ZF52`.** Its n_d 1.80518 / V_d 25.43,
+  credited to the CDGM catalog, are SCHOTT SF6's values; CDGM lists ZF52 at
+  1.84666 / 23.83. The CDGM `.agf` rows (ZF52, H-ZF52A) remain. Five source
+  records nothing referenced (`SCHOTT-BK7-DS`, `SCHOTT-CAT-2024`,
+  `SUMITA-CAT`, `RIINFO-PUBLIC-DOMAIN`, `GLASSMATCH-CALC`) are gone, and the
+  Data Sources tab no longer claims glass coefficients are refractiveindex.info
+  mirrors.
+- **Re-merging is reproducible.** `merge_refractiveindex.py` keyed crystal
+  properties on an empty wavelength, so `wl_min_um`/`wl_max_um` accumulated
+  686 identical duplicate rows; it now replaces a page's rows wholesale and keeps each
+  page's original access date. Both merge scripts read floats round-trip and
+  keep the CSVs sorted, and `merge_agf.py` runs the transmission
+  quarantine and the IR reference check itself. CONTRIBUTING documented
+  `merge_agf.py` flags that never existed.
+
 - **Removed unreachable code in `glassmatch/importers/refractiveindex_yaml.py`.**
   Five lines after the importer's final `return` referenced undefined names
   (`coeffs`, `n`, `lam_um`, `first`) — dead, but exactly the kind of leftover

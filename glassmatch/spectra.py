@@ -22,6 +22,166 @@ def sellmeier_n(wavelength_um: float, B: tuple, C: tuple) -> float:
     return math.sqrt(n2) if n2 > 0 else float("nan")
 
 
+# ---------------------------------------------------------------------------
+# Zemax dispersion formulas.  Every NM record names the equation its CD
+# coefficients belong to (field 2).  Treating them all as Sellmeier-1 - as an
+# earlier importer did - made 1,550 perfectly good Schott-formula and Extended
+# fits fail the n(d) check and get archived, so HOYA, CDGM, SUMITA, HIKARI and
+# LZOS had no dispersion at all.  Coefficients are in the Zemax order, with
+# wavelength in um.
+
+ZEMAX_FORMULAS = {
+    1: "Schott", 2: "Sellmeier-1", 3: "Herzberger", 4: "Sellmeier-2",
+    5: "Conrady", 6: "Sellmeier-3", 7: "Handbook of Optics 1",
+    8: "Handbook of Optics 2", 9: "Sellmeier-4", 10: "Extended",
+    11: "Sellmeier-5", 12: "Extended 2", 13: "Extended 3",
+}
+# Formulas that are a plain sum of Sellmeier poles, and how many poles each has.
+SELLMEIER_POLES = {2: 3, 6: 4, 11: 5}
+
+
+def zemax_n(formula: int, coeffs, wavelength_um: float) -> float:
+    """n(lambda) for a Zemax dispersion formula number and its CD coefficients.
+
+    Returns NaN for an unknown formula or a non-physical result (n^2 <= 0)
+    rather than raising, so a bad row can be judged instead of crashing.
+    """
+    c = [float(x) for x in coeffs] + [0.0] * 10
+    lam = float(wavelength_um)
+    l2 = lam * lam
+    f = int(formula)
+    if f == 1:
+        n2 = (c[0] + c[1] * l2 + c[2] / l2 + c[3] / l2 ** 2 + c[4] / l2 ** 3
+              + c[5] / l2 ** 4)
+    elif f in SELLMEIER_POLES:
+        n2 = 1.0 + sum(c[2 * i] * l2 / (l2 - c[2 * i + 1])
+                       for i in range(SELLMEIER_POLES[f]))
+    elif f == 3:
+        L = 1.0 / (l2 - 0.028)
+        return (c[0] + c[1] * L + c[2] * L * L + c[3] * l2 + c[4] * l2 ** 2
+                + c[5] * l2 ** 3)
+    elif f == 4:
+        n2 = 1.0 + c[0] + c[1] * l2 / (l2 - c[2] ** 2) + c[3] / (l2 - c[4] ** 2)
+    elif f == 5:
+        return c[0] + c[1] / lam + c[2] / lam ** 3.5
+    elif f == 7:
+        n2 = c[0] + c[1] / (l2 - c[2]) - c[3] * l2
+    elif f == 8:
+        n2 = c[0] + c[1] * l2 / (l2 - c[2]) - c[3] * l2
+    elif f == 9:
+        n2 = c[0] + c[1] * l2 / (l2 - c[2]) + c[3] * l2 / (l2 - c[4])
+    elif f == 10:
+        n2 = (c[0] + c[1] * l2 + c[2] / l2 + c[3] / l2 ** 2 + c[4] / l2 ** 3
+              + c[5] / l2 ** 4 + c[6] / l2 ** 5 + c[7] / l2 ** 6)
+    elif f == 12:
+        n2 = (c[0] + c[1] * l2 + c[2] / l2 + c[3] / l2 ** 2 + c[4] / l2 ** 3
+              + c[5] / l2 ** 4 + c[6] * l2 ** 2 + c[7] * l2 ** 3)
+    elif f == 13:
+        n2 = (c[0] + c[1] * l2 + c[2] * l2 ** 2 + c[3] / l2 + c[4] / l2 ** 2
+              + c[5] / l2 ** 3 + c[6] / l2 ** 4 + c[7] / l2 ** 5
+              + c[8] / l2 ** 6)
+    else:
+        return float("nan")
+    return math.sqrt(n2) if n2 > 0 else float("nan")
+
+
+# ---------------------------------------------------------------------------
+# refractiveindex.info dispersion formulas (database "type: formula N").
+# Coefficients C1, C2, ... in the page's order; wavelength in um. Formulas 1
+# and 2 have a CONSTANT first term - n^2 - 1 = C1 + SUM ... - which an earlier
+# importer mistook for a temperature field and dropped, so every page with a
+# non-zero C1 (GaAs Skauli, Ge Icenogle, the Li fluorides, Te ...) drew the
+# wrong material.
+
+RII_FORMULAS = {
+    1: "Sellmeier", 2: "Sellmeier-2", 3: "Polynomial",
+    4: "RefractiveIndex.INFO", 5: "Cauchy", 6: "Gases", 7: "Herzberger",
+    8: "Retro", 9: "Exotic",
+}
+
+
+def rii_n(formula: int, coeffs, wavelength_um: float) -> float:
+    """n(lambda) for a refractiveindex.info formula number and coefficients.
+
+    NaN for an unknown formula or a non-physical result, never an exception.
+    """
+    c = [float(x) for x in coeffs]
+    lam = float(wavelength_um)
+    l2 = lam * lam
+    f = int(formula)
+    cc = c + [0.0] * 20
+
+    def pairs(start):
+        return [(c[i], c[i + 1]) for i in range(start, len(c) - 1, 2)]
+
+    try:
+        if f == 1:
+            n2 = 1.0 + cc[0] + sum(b * l2 / (l2 - k * k) for b, k in pairs(1))
+        elif f == 2:
+            n2 = 1.0 + cc[0] + sum(b * l2 / (l2 - k) for b, k in pairs(1))
+        elif f == 3:
+            n2 = cc[0] + sum(b * lam ** e for b, e in pairs(1))
+        elif f == 4:
+            n2 = (cc[0] + cc[1] * lam ** cc[2] / (l2 - cc[3] ** cc[4])
+                  + cc[5] * lam ** cc[6] / (l2 - cc[7] ** cc[8])
+                  + sum(b * lam ** e for b, e in pairs(9)))
+        elif f == 5:
+            return cc[0] + sum(b * lam ** e for b, e in pairs(1))
+        elif f == 6:
+            return 1.0 + cc[0] + sum(b / (k - 1.0 / l2) for b, k in pairs(1))
+        elif f == 7:
+            L = 1.0 / (l2 - 0.028)
+            return (cc[0] + cc[1] * L + cc[2] * L * L + cc[3] * l2
+                    + cc[4] * l2 ** 2 + cc[5] * l2 ** 3)
+        elif f == 8:
+            r = cc[0] + cc[1] * l2 / (l2 - cc[2]) + cc[3] * l2
+            # (n^2 - 1) / (n^2 + 2) = r  ->  n^2 = (1 + 2r) / (1 - r)
+            n2 = (1.0 + 2.0 * r) / (1.0 - r)
+        elif f == 9:
+            n2 = (cc[0] + cc[1] / (l2 - cc[2])
+                  + cc[3] * (lam - cc[4]) / ((lam - cc[4]) ** 2 + cc[5]))
+        else:
+            return float("nan")
+    except (ZeroDivisionError, OverflowError, ValueError):
+        return float("nan")
+    if isinstance(n2, complex):
+        return float("nan")
+    return math.sqrt(n2) if n2 > 0 else float("nan")
+
+
+def rii_formula_of(row: dict) -> int | None:
+    """The refractiveindex.info formula number a row was recorded with."""
+    v = row.get("rii_formula")
+    try:
+        if v is None or pd.isna(v) or str(v).strip() == "":
+            return None
+        return int(float(v))
+    except (TypeError, ValueError):
+        return None
+
+
+def zemax_formula_of(row: dict) -> int | None:
+    """The Zemax formula number a sellmeier.csv row was recorded with, if any."""
+    v = row.get("zemax_formula")
+    try:
+        if v is None or pd.isna(v) or str(v).strip() == "":
+            return None
+        return int(float(v))
+    except (TypeError, ValueError):
+        return None
+
+
+def coefficients_of(row: dict) -> list:
+    """Verbatim CD coefficients of a row (space-separated), or []."""
+    v = row.get("coefficients")
+    if v is None or (not isinstance(v, str) and pd.isna(v)):
+        return []
+    try:
+        return [float(x) for x in str(v).split()]
+    except ValueError:
+        return []
+
+
 def active_pairs(values) -> list:
     """Interleaved (B1, C1, B2, C2, ...) -> the (B, C) pairs actually used.
 
@@ -72,6 +232,16 @@ def pairs_from_row(row: dict) -> list:
 
 
 def n_from_row(row: dict, wavelength_um: float) -> float:
+    """Evaluate a sellmeier.csv row in the formula it was recorded with
+    (refractiveindex.info or Zemax), else via its Sellmeier (B, C) columns
+    (legacy rows)."""
+    coeffs = coefficients_of(row)
+    r = rii_formula_of(row)
+    if r is not None and coeffs:
+        return rii_n(r, coeffs, wavelength_um)
+    f = zemax_formula_of(row)
+    if f is not None and coeffs:
+        return zemax_n(f, coeffs, wavelength_um)
     pairs = pairs_from_row(row)
     if not pairs:
         return float("nan")
@@ -79,15 +249,32 @@ def n_from_row(row: dict, wavelength_um: float) -> float:
                        tuple(c for _, c in pairs))
 
 
-def dispersion_curve(coeffs: dict, wl_um: list) -> pd.DataFrame:
-    pairs = pairs_from_row(coeffs)
-    B = tuple(b for b, _ in pairs)
-    C = tuple(c for _, c in pairs)
-    rows = [{"wavelength_um": w, "n": sellmeier_n(w, B, C),
-             "data_type": "calculated",
-             "note": f"Evaluated from {len(pairs)}-term Sellmeier "
-                     f"coefficients; not a manufacturer table."}
-            for w in wl_um]
+def describe_row(row: dict) -> str:
+    """Short human label for the equation a row is evaluated with."""
+    r = rii_formula_of(row)
+    if r is not None and coefficients_of(row):
+        return (f"{RII_FORMULAS.get(r, f'formula {r}')} "
+                f"(refractiveindex.info formula {r})")
+    f = zemax_formula_of(row)
+    if f is not None and coefficients_of(row):
+        return f"{ZEMAX_FORMULAS.get(f, f'formula {f}')} (Zemax formula {f})"
+    return f"{len(pairs_from_row(row))}-term Sellmeier"
+
+
+def dispersion_curve(coeffs: dict, wl_um: list, lo_um: float | None = None,
+                     hi_um: float | None = None) -> pd.DataFrame:
+    """n over wl_um from a verified row. Outside [lo_um, hi_um] - the range the
+    source states the fit is valid for - n is NaN: polynomial fits in
+    particular diverge quickly once extrapolated, so none is drawn there."""
+    what = describe_row(coeffs)
+    rows = []
+    for w in wl_um:
+        inside = (lo_um is None or hi_um is None or lo_um <= w <= hi_um)
+        rows.append({"wavelength_um": w,
+                     "n": n_from_row(coeffs, w) if inside else float("nan"),
+                     "data_type": "calculated",
+                     "note": f"Evaluated from {what} coefficients; not a "
+                             "manufacturer table."})
     return pd.DataFrame(rows)
 
 

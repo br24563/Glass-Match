@@ -7,10 +7,14 @@ Usage (from repo root):
 Reads every staged .agf under data/staging (+ the SCHOTT file under
 data/manufacturers/SCHOTT), parses via glassmatch.importers.agf, and merges
 into data/normalized/*.csv with dated source_ids. Re-running is idempotent:
-rows for the same source_id are replaced, never duplicated.
+rows for the same source_id are replaced, never duplicated. Transmission
+samples are merged unfiltered and then passed through
+scripts/clean_transmission.py, which collapses identical duplicates and
+quarantines conflicting ones into the audit ledgers.
 """
 from __future__ import annotations
 import argparse
+import subprocess
 import sys
 from pathlib import Path
 
@@ -30,7 +34,7 @@ SOURCES = [
     ("OHARA_260529.AGF", "OHARA", "OHARA-AGF-2026-05-29",
      "https://www.ohara-gmbh.com/fileadmin/Dialog_Downloads/Zemax/OHARA_260529.AGF",
      "redistribution-limited; .agf stays local, only normalized rows committed",
-     "OHARA catalog 2026-05-29; UTF-16 read; Herzberger-style rows flagged non-Sellmeier."),
+     "OHARA catalog 2026-05-29; UTF-16 read; 245 Sellmeier-1 + 188 Schott-formula rows."),
 ]
 
 # (file, manufacturer, source_id) — third-party mirror, vintage unknown
@@ -60,7 +64,9 @@ MANUFACTURER_NAMES = {
 
 def _load_csv(path: Path, columns: list) -> pd.DataFrame:
     if path.exists():
-        return pd.read_csv(path)
+        # round_trip: the default parser can move the last digit of a float,
+        # so rows this merge never touches would otherwise churn on rewrite.
+        return pd.read_csv(path, float_precision="round_trip")
     return pd.DataFrame(columns=columns)
 
 
@@ -79,8 +85,9 @@ def main() -> None:
                       ["glass_id", "property", "value", "unit",
                        "reference_wavelength_nm", "data_type", "source_id", "notes"])
     sell = _load_csv(norm / "sellmeier.csv",
-                     ["glass_id", "formula", "wavelength_um", "B1", "B2", "B3",
-                      "C1_um2", "C2_um2", "C3_um2", "source_id", "notes"])
+                     ["glass_id", "formula", "zemax_formula", "coefficients",
+                      "wavelength_um", "B1", "B2", "B3", "C1_um2", "C2_um2",
+                      "C3_um2", "source_id", "notes"])
     trans = _load_csv(norm / "transmission.csv",
                       ["glass_id", "wavelength_um", "transmission",
                        "thickness_mm", "data_type", "source_id", "notes"])
@@ -114,10 +121,12 @@ def main() -> None:
 
     for path, mfr, sid, url, lic, note in jobs:
         mclass = MATERIAL_CLASS.get(mfr, "oxide_glass")
-        g2, p2, s2, t2, iss = import_agf(path, mfr, sid, mclass)
-        print(f"{sid}: {len(g2)} glasses, {len(p2)} props, {len(s2)} sell, "
-              f"{len(t2)} trans, {len(iss)} issues "
-              f"({len([i for i in iss if 'Sellmeier' in str(i.get('issue'))])} non-Sellmeier)")
+        g2, p2, s2, t2, iss = import_agf(path, mfr, sid, mclass,
+                                         quarantine=False)
+        n_arch = len([i for i in iss if "CD archived" in str(i.get("issue"))])
+        print(f"{sid}: {len(g2)} glasses, {len(p2)} props, {len(s2)} "
+              f"dispersion rows ({len(s2) - n_arch} verified, {n_arch} "
+              f"archived), {len(t2)} trans, {len(iss)} issues")
         # Idempotent: drop prior rows from this source_id first.
         for frame, col in ((props, "source_id"), (sell, "source_id"), (trans, "source_id")):
             if not frame.empty and col in frame.columns:
@@ -145,6 +154,16 @@ def main() -> None:
                 "name": MANUFACTURER_NAMES.get(mfr, mfr),
                 "website": url, "notes": note}])], ignore_index=True)
 
+    # The committed files are kept sorted so a re-merge diffs as the data
+    # that changed, not as every row of every re-imported catalog moving.
+    # (transmission.csv stays in import order, which is already stable.)
+    glasses = glasses.sort_values("glass_id", kind="stable")
+    props = props.sort_values(["glass_id", "property"], kind="stable")
+    sell = sell.sort_values("glass_id", kind="stable")
+    for col in ("zemax_formula", "rii_formula"):
+        if col in sell.columns:
+            sell[col] = pd.to_numeric(sell[col], errors="coerce").astype("Int64")
+    sources = sources.sort_values("source_id", kind="stable")
     glasses.to_csv(norm / "glasses.csv", index=False)
     props.to_csv(norm / "properties.csv", index=False)
     sell.to_csv(norm / "sellmeier.csv", index=False)
@@ -152,6 +171,12 @@ def main() -> None:
     sources.to_csv(norm / "sources.csv", index=False)
     mfrs.to_csv(norm / "manufacturers.csv", index=False)
     print(f"Merged {len(jobs)} source(s) into data/normalized.")
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "clean_transmission.py")],
+                   check=True)
+    # IR rows with a placeholder n_d can only be verified against the
+    # refractiveindex.info reference pages; re-apply that check.
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "verify_ir_dispersion.py")],
+                   check=True)
 
 
 if __name__ == "__main__":

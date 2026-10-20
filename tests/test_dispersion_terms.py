@@ -8,8 +8,8 @@ genuine fits with a negative C (S-BSL7) that reproduce n(d) exactly.
 import pytest
 
 from glassmatch.spectra import (MAX_TERMS, active_pairs, classify_dispersion,
-                                dispersion_curve, n_from_row, pairs_from_row,
-                                sellmeier_n)
+                                coefficients_of, dispersion_curve, n_from_row,
+                                pairs_from_row, sellmeier_n)
 from glassmatch.importers.agf import is_sellmeier1_formula, parse_agf_text
 
 # N-BK7, the canonical 3-term Sellmeier-1 fit.
@@ -27,8 +27,9 @@ S_BSL7 = [1.151502, 0.01059841, 0.1185836, -0.01182252, 1.263014, 129.6177]
 S_BSL7_ND = 1.51633
 
 
-def _agf(name, coeffs, nd):
-    return (f"NM {name} 2 1 {nd} 64.0 0 1\nGC \n"
+def _agf(name, coeffs, nd, formula=2):
+    # V_d is the Zemax placeholder 0, so only n(d) is gated here.
+    return (f"NM {name} {formula} 1 {nd} 0 0 1\nGC \n"
             f"CD {' '.join(f'{c:.12E}' for c in coeffs)}\n")
 
 
@@ -53,9 +54,11 @@ def test_sellmeier_n_reproduces_nd():
 
 
 def test_four_term_fit_is_stored_and_evaluated():
-    """The regression this change exists for: B4/C4 used to be dropped."""
-    g, p, s, t, issues = parse_agf_text(_agf("NIFS-V", NIFS_V, NIFS_V_ND),
-                                        "NIKON", "T")
+    """The regression this change exists for: B4/C4 used to be dropped.
+
+    NIKON declares NIFS-V as Zemax formula 6 (Sellmeier-3, four poles)."""
+    g, p, s, t, issues = parse_agf_text(
+        _agf("NIFS-V", NIFS_V, NIFS_V_ND, formula=6), "NIKON", "T")
     row = s.iloc[0]
     assert float(row["B4"]) == pytest.approx(NIFS_V[6])
     assert float(row["C4_um2"]) == pytest.approx(NIFS_V[7])
@@ -98,14 +101,15 @@ def test_dispersion_curve_uses_every_stored_term():
     assert "4-term" in curve.iloc[0]["note"]
 
 
-def test_terms_beyond_the_stored_maximum_are_recorded_not_dropped():
+def test_terms_beyond_the_formula_are_kept_verbatim_and_reported():
     six = [1.0, 0.01, 1.0, 0.02, 1.0, 0.03, 1.0, 0.04, 1.0, 0.05, 1.0, 0.06]
     g, p, s, t, issues = parse_agf_text(_agf("MANY", six, 1.50), "X", "T")
-    row = s.iloc[0]
-    assert len(pairs_from_row(row.to_dict())) == MAX_TERMS
-    # The surplus must survive into the database, not vanish.
-    assert "beyond the" in str(g.iloc[0]["description"])
-    assert any("beyond the" in str(i.get("issue", "")) for i in issues)
+    row = s.iloc[0].to_dict()
+    assert len(pairs_from_row(row)) == MAX_TERMS
+    # Every coefficient survives verbatim, and the mismatch with the declared
+    # formula (Sellmeier-1 has three poles) is reported, not silently used.
+    assert coefficients_of(row) == six
+    assert any("uses 3" in str(i.get("issue", "")) for i in issues)
 
 
 def test_manufacturer_gc_comment_is_not_discarded():

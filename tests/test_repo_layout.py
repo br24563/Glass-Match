@@ -344,12 +344,13 @@ def test_readme_database_table_matches_the_shipped_data():
     # Inline claims in the Total row: curve coverage, crystal pages, row counts.
     total_row = next(ln for ln in text.splitlines() if ln.startswith("| **Total**"))
     sm = pd.read_csv(norm / "sellmeier.csv", encoding="utf-8")
-    verified = set(sm[sm["formula"].astype(str).str.startswith("Sellmeier")]
+    from glassmatch.importers.agf import is_dispersable_formula
+    verified = set(sm[sm["formula"].map(is_dispersable_formula)]
                    ["glass_id"].astype(str))
     archived = set(sm["glass_id"].astype(str)) - verified
     gids = set(g["glass_id"].astype(str))
     actual = {
-        "verified Sellmeier curves": len(verified & gids),
+        "verified dispersion curves": len(verified & gids),
         "archived non-dispersable": len(archived & gids),
         "with no curve": len(gids - set(sm["glass_id"].astype(str))),
         "CC0 crystal pages": int(counts[_CRYSTAL_MAKER]),

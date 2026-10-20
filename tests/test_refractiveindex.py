@@ -89,16 +89,21 @@ def test_nonlinear_index_is_never_read_as_n_squared(tmp_path):
     assert [k for k, _ in parsed["blocks"]["skipped"]] == ["tabulated n2"]
 
 
-def test_unimplemented_formulas_are_reported_not_guessed(tmp_path):
-    """formula 2 is implemented; 4/5/7 are not, and must say so."""
+def test_every_upstream_formula_is_parsed_and_unknown_ones_reported(tmp_path):
+    """Formulas 1-9 are implemented; anything else must say so, not guess."""
     for kind in ("formula 4", "formula 5", "formula 7"):
         f = tmp_path / "x.yml"
         f.write_text(
             f"DATA:\n  - type: {kind}\n    coefficients: 1 2 3 4 5\n",
             encoding="utf-8")
         parsed = parse_ri_page(f)
-        assert [k for k, _ in parsed["blocks"]["skipped"]] == [kind]
-        assert "not implemented" in parsed["blocks"]["skipped"][0][1]
+        assert parsed["blocks"]["skipped"] == []
+        assert parsed["blocks"]["formula"][0]["kind"] == kind
+    f = tmp_path / "y.yml"
+    f.write_text("DATA:\n  - type: formula 10\n    coefficients: 1 2 3\n",
+                 encoding="utf-8")
+    parsed = parse_ri_page(f)
+    assert [k for k, _ in parsed["blocks"]["skipped"]] == ["formula 10"]
 
 
 def test_reference_lines_include_d_and_ir():
@@ -223,13 +228,13 @@ def test_n_at_refuses_to_extrapolate_past_a_stated_range(db):
 
 
 def test_sellmeier_range_prefers_the_source_then_the_catalog(db):
-    rii_range = db._sellmeier_range("RII-CAF2-MALITSON",
+    rii_range = db.dispersion_range("RII-CAF2-MALITSON",
                                    db.sellmeier_for("RII-CAF2-MALITSON"))
     # Malitson's page declares 0.23-9.7 um; the guard must use the source's own
     # numbers, so this is pinned to the staged YAML, not to a remembered value.
     assert rii_range == (0.23, 9.7)
     # N-BK7's .agf row carries no "lo-hi", so the catalog LD limits are used.
-    agf_range = db._sellmeier_range("SCHOTT-N-BK7",
+    agf_range = db.dispersion_range("SCHOTT-N-BK7",
                                    db.sellmeier_for("SCHOTT-N-BK7"))
     assert agf_range is not None and agf_range[0] < agf_range[1]
     assert db.n_at("SCHOTT-N-BK7", 587.6)[0] is not None

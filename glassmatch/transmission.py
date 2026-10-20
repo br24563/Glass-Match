@@ -29,21 +29,26 @@ from glassmatch.spectra import band_stats, band_stats_nk, fresnel_transmission
 
 
 def n_at(db, gid, wl_um):
-    """n from the glass's verified Sellmeier coefficients, else None.
+    """n from the glass's verified dispersion fit, else None.
 
-    `sellmeier_only=True` is deliberate: archived non-Sellmeier rows (NIKON
-    polynomials, series forms) must never be evaluated as a curve, so a glass
-    carrying only those answers "no index" rather than a fabricated number.
+    `sellmeier_only=True` is deliberate: archived rows (coefficients that do
+    not reproduce the catalog n_d / V_d) must never be evaluated as a curve, so
+    a glass carrying only those answers "no index" rather than a fabricated
+    number. The fit is evaluated in its own formula with every stored term,
+    and only inside the range its source states - never extrapolated.
     """
     c = db.sellmeier_for(gid, sellmeier_only=True)
     if c is None:
         return None
-    from glassmatch.spectra import sellmeier_n
-    try:
-        return sellmeier_n(wl_um, (float(c["B1"]), float(c["B2"]), float(c["B3"])),
-                           (float(c["C1_um2"]), float(c["C2_um2"]), float(c["C3_um2"])))
-    except (TypeError, ValueError):
+    lo, hi = db.dispersion_range(gid, c)
+    if lo is not None and hi is not None and not (lo <= wl_um <= hi):
         return None
+    from glassmatch.spectra import n_from_row
+    try:
+        v = n_from_row(c, wl_um)
+    except (TypeError, ValueError, ZeroDivisionError):
+        return None
+    return v if v == v else None
 
 
 def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
@@ -56,7 +61,13 @@ def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
     vals = [v for v in vals if v == v]
     if not vals:
         return None, "missing"
-    return round(float(sum(vals) / len(vals) * 100.0), 1), "calculated (Fresnel, uncoated)"
+    label = "calculated (Fresnel, uncoated)"
+    if len(vals) < len(wls):
+        # The fit is not evaluated outside its stated range, so say how much
+        # of the band the estimate actually describes.
+        label = (f"calculated (Fresnel, uncoated; dispersion fit valid for "
+                 f"{len(vals)}/{len(wls)} band samples)")
+    return round(float(sum(vals) / len(vals) * 100.0), 1), label
 
 
 def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,

@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,721 materials · 18 source collections · 220 traceable sources** — search,
+**2,724 materials · 18 source collections · 219 traceable sources** — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
 materials, polymers, and moldables.
 
@@ -40,24 +40,29 @@ materials, polymers, and moldables.
   flagged for review and never auto-merged; curated (source-backed) pairs are
   shown separately and are never overwritten.
 - Interactive Plotly dispersion + transmission plots (calculated curves labelled).
-  Dispersion is drawn **only** where the archived coefficients reproduce the
-  catalog n_d at 587.6 nm (710 glasses; 1- through 5-term fits are all
-  evaluated, including refractiveindex.info `formula 2`, whose C coefficients
-  are already in um² and must not be squared). The other 1,872 rows are
-  series/polynomial forms that
-  fail that check — they are stored verbatim and **never** evaluated, and the
-  UI says so on the glass page.
-- **Crystal materials** — 195 pages covering CaF₂, MgF₂, BaF₂, SrF₂, LiF, LaF₃,
+  Every catalog's coefficients are evaluated in the formula its `.agf` names
+  (Schott, Sellmeier 1/3/5, Herzberger, Conrady, Extended 2/3 ... — all 13
+  Zemax forms), and a curve is drawn **only** when that reproduces the catalog
+  n_d within 2×10⁻⁴ *and* V_d within 0.5 — 2,574 materials, worst residuals
+  3.8×10⁻⁵ and 0.23. IR crystals whose catalog has no n_d (Zemax writes 1.0)
+  are instead checked against a named room-temperature measurement of the same
+  material (Si, Ge, GaAs, CdTe, ZnSe, ZnS). Curves are never drawn outside the
+  fit's stated wavelength range. The 19 rows that pass neither check are
+  stored verbatim and **never** evaluated, and the UI says so.
+- **Crystal materials** — 199 pages covering CaF₂, MgF₂, BaF₂, SrF₂, LiF, LaF₃,
   sapphire, fused silica/quartz, spinel, YAG, ZnSe, ZnS, Ge, Si, CdTe, GaAs and
   Te, from [refractiveindex.info](https://refractiveindex.info) (public domain,
   **CC0 1.0**, so unlike the manufacturer catalogs it ships with the repo). Each
   cites the paper it came from. Crystals have no n_d/V_d, so the detail page
   gives you a **reference-wavelength control** and tells you whether the number
   is a source measurement, an interpolation between samples, or an evaluation
-  of a published dispersion fit — and says "unavailable" rather than
-  extrapolating when the request falls outside the range the source states.
+  of a published dispersion fit (all nine refractiveindex.info formulas,
+  including the constant term of formulas 1/2) — and says "unavailable"
+  rather than extrapolating when the request falls outside the range the
+  source states.
 - Glass detail pages, 2-5 glass comparison, database + source explorers
-  (material-class filter, obsolete toggle, per-maker coverage table).
+  (material-class filter, obsolete toggle driven by each catalog's own status
+  field — 1,156 discontinued glasses — per-maker coverage table).
 - User CSV + manufacturer `.agf` import with validation; CSV/JSON export
   with provenance preserved.
 ## Installation
@@ -124,10 +129,15 @@ for glasses with no manufacturer rows and is always labelled calculated.
   `status` ∈ {standard, obsolete}; both default safely on legacy files.
 - `spectral_nk.csv` holds tabulated optical constants (wavelength, n, k) for
   crystal pages, verbatim with a per-row `source_id`.
-- Dispersion gate: a `formula` beginning `Sellmeier` means plottable; the
-  importer earns that label only by reproducing the catalog n_d within 0.002.
-  Everything else is stored verbatim as `Non-dispersable (...) - archived,
-  never evaluated`, with the measured discrepancy in the label.
+- Dispersion rows (`sellmeier.csv`) keep the coefficients verbatim in
+  `coefficients` with the equation they belong to in `zemax_formula` or
+  `rii_formula`; the `B*`/`C*` columns are filled only for pure Sellmeier
+  sums. A row is plottable only if the importer earned it a verified label
+  (`Sellmeier-1 (...)`, `Schott (Zemax formula 1, ...)`, ...) by reproducing
+  the catalog n_d and V_d, or, for placeholder-n_d IR crystals, by
+  `scripts/verify_ir_dispersion.py`. Everything else is stored as
+  `Non-dispersable (...) - archived, never evaluated`, with the measured
+  discrepancy in the label.
 - Add a manufacturer: append rows to `manufacturers.csv`/`sources.csv`,
   then glasses + properties — or run `scripts/merge_agf.py` on a staged `.agf`.
   No matching/UI code changes.
@@ -143,10 +153,10 @@ add a manufacturer without writing any Python. Release history is in
 |---|---|---|
 | SCHOTT June-2025 `.agf` | 366 | Authoritative, current |
 | OHARA May-2026 `.agf` | 433 | Authoritative, current; 188 Herzberger legacy rows archived |
-| HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,596 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
+| HOYA / NIKON / HIKARI / SUMITA / CDGM / LZOS / Corning | 1,595 | nzhagen/zemaxglass mirror, vintage unknown — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,721** | 710 verified Sellmeier curves · 1,872 archived non-dispersable · 139 with no curve · 195 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
+| **Total** | **2,724** | 2,574 verified dispersion curves · 19 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 64k transmission rows · 135k tabulated n/k samples |
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
@@ -156,10 +166,12 @@ are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
 - SCHOTT/OHARA `.agf` files: authoritative, redistribution-limited — bulk files
   stay in untracked `data/staging/`; only normalized rows ship.
 - Mirror `.agf` files: `mirror-vintage-unknown; verify vs manufacturer catalog`.
-- N-BK7 anchor values: SCHOTT datasheet (verify at schott.com).
+- Every glass value comes from a parsed catalog record; nothing is
+  hand-transcribed. The curated substitution pairs in `equivalents.csv` cite
+  the manufacturer catalogs as cross-references only.
 - No scraping behind access controls.
 
-**Crystals and tabulated optical constants are a different case.** The 195
+**Crystals and tabulated optical constants are a different case.** The 199
 crystal pages under `data/spectral/refractiveindex_info/` come from the
 [refractiveindex.info](https://refractiveindex.info) database, which its
 maintainer placed in the **public domain under CC0 1.0** ("you may copy,
@@ -203,13 +215,19 @@ Future: achromatic-doublet finder, Zemax export, cost data, Sellmeier fitting.
 
 - Ring 1/2 engine: `glassmatch/importers/agf.py` parses user-downloaded Zemax
   `.agf` catalogs (NM/CD/TD/GC/IT/LD/ED records, UTF-16 fallback, multi-line
-  polynomial CD, nd-vs-Sellmeier cross-check >0.002 flagged). Unknown records
-  flagged, never crash.
+  CD, each fit checked in its own Zemax formula against catalog n_d and V_d).
+  Unknown records flagged, never crash.
 - `glassmatch/importers/catalogs.py`: per-manufacturer download config —
   adding a maker = add an entry, not code.
 - `data/manufacturers/<MFR>/README.md`: per-maker download instructions.
 - 2026-09 merge: 17 staged `.agf` → 2,526 normalized glasses (see table above).
 - 2026-09 merge: 195 refractiveindex.info pages (CC0 1.0) → crystal materials
   covering 17 compounds, the first non-glass material class.
+- 2026-10 audit: dispersion evaluated in each catalog's declared formula
+  (710 -> 2,574 curves), placeholder n_d no longer stored as 2.0, the
+  refractiveindex.info constant term restored on 19 crystal pages, 4 more
+  crystal pages imported, deep-UV/IR transmission samples kept, catalog
+  obsolete status honoured, and the one hand-entered glass (CDGM H-ZF52,
+  which carried SCHOTT SF6's values) removed.
 
 

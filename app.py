@@ -346,25 +346,25 @@ with tabs[1]:
             st.caption("Verbatim from the cited reference via refractiveindex.info "
                        "(CC0 1.0). No smoothing or fitting applied.")
     if coef is not None:
-        from glassmatch.importers.agf import is_sellmeier1_formula
-        ok = is_sellmeier1_formula(coef.get("formula"))
-        terms = coef.get("n_terms")
-        label = (f"(verified {terms}-term Sellmeier)" if ok and terms
-                 else "(verified Sellmeier-1)" if ok
-                 else "(ARCHIVED - does not reproduce n(d), never evaluated)")
+        from glassmatch.importers.agf import is_dispersable_formula
+        from glassmatch.spectra import describe_row
+        ok = is_dispersable_formula(coef.get("formula"))
+        label = (f"(verified {describe_row(coef)})" if ok
+                 else "(ARCHIVED - not verified, never evaluated)")
         with st.expander("Dispersion coefficients " + label):
-            keys = ["formula", "wavelength_um"] + \
+            keys = ["formula", "zemax_formula", "wavelength_um",
+                    "coefficients"] + \
                 [c for c in list(coef) if c.startswith(("B", "C"))] + \
                 ["source_id", "notes"]
-            st.json({k: coef[k] for k in keys if k in coef})
+            st.json({k: coef[k] for k in keys
+                     if k in coef and not (isinstance(coef[k], float)
+                                           and coef[k] != coef[k])})
             if not ok:
                 st.warning("These coefficients are archived verbatim and are "
-                           "never evaluated: the row does not reproduce the "
-                           "catalog n(d) at 587.6 nm, which is how GlassMatch "
-                           "distinguishes a usable Sellmeier fit from the "
-                           "series/polynomial forms some catalogs use (e.g. "
-                           "NIKON polynomial, OHARA/HIKARI legacy rows). No "
-                           "dispersion curve is drawn for this glass.")
+                           "never evaluated: in the formula the catalog names "
+                           "they do not reproduce the catalog n(d) and V_d, or "
+                           "the catalog gives no n(d) to check them against. "
+                           "No dispersion curve is drawn for this glass.")
     with st.expander("Score breakdown"):
         hit = results[results["glass_id"] == gid]
         if not hit.empty:
@@ -415,7 +415,7 @@ with tabs[2]:
             t_manufacturer.append(g)
         elif db.dispersion_status(g) == "sellmeier1":
             c = db.sellmeier_for(g, sellmeier_only=True)
-            df = dispersion_curve(c, list(wls))
+            df = dispersion_curve(c, list(wls), *db.dispersion_range(g, c))
             tcurves[g] = pd.DataFrame({"wavelength_um": df["wavelength_um"],
                                        "transmission_pct": df["n"].map(
                                            lambda n: fresnel_transmission(n) * 100),
@@ -446,11 +446,11 @@ with tabs[2]:
             non_sell.append(g)
             continue
         c = db.sellmeier_for(g, sellmeier_only=True)
-        dcurves[g] = dispersion_curve(c, list(wls))
+        dcurves[g] = dispersion_curve(c, list(wls), *db.dispersion_range(g, c))
     if non_sell:
-        st.warning("Dispersion curve unavailable for these glasses - their "
-                   "archived CD coefficients do not reproduce the catalog "
-                   "n(d), so GlassMatch never evaluates them: "
+        st.warning("Dispersion curve unavailable for these glasses - none "
+                   "has a dispersion fit verified against the catalog n(d) "
+                   "and V_d, so GlassMatch never evaluates one: "
                    + ", ".join(non_sell))
     if t_missing:
         st.info("No transmission data for: " + ", ".join(t_missing))
@@ -461,10 +461,13 @@ with tabs[2]:
             st.caption(
                 f"Tabulated source measurements: {len(tabulated)} material(s) - "
                 "plotted verbatim, no fit. Remaining traces are CALCULATED from "
-                "Sellmeier coefficients, not manufacturer tables.")
+                "the catalog dispersion formula, not manufacturer tables, and "
+                "are not drawn outside the fit's stated wavelength range.")
         else:
-            st.caption("CALCULATED from Sellmeier coefficients - not "
-                       "manufacturer tables.")
+            st.caption("CALCULATED from each catalog's dispersion formula "
+                       "(Sellmeier, Schott, Extended ...) - not manufacturer "
+                       "tables, and not drawn outside the fit's stated "
+                       "wavelength range.")
         if tabulated:
             st.info("Tabulated n(λ) samples span a wider range than the glass "
                     "window above; the plot uses each material's own measured "
@@ -563,9 +566,11 @@ with tabs[4]:
 with tabs[5]:
     st.header("Data sources and licensing")
     st.dataframe(db.sources, width="stretch", hide_index=True)
-    st.warning("Catalog nd/Vd beyond N-BK7 are transcribed reference values: "
-               "re-verify against the current manufacturer datasheet before detailed design. "
-               "Sellmeier rows are CC0 mirrors via refractiveindex.info; manufacturers stay authoritative.")
+    st.warning("Glass nd/Vd and dispersion coefficients are parsed from each "
+               "maker's Zemax .agf catalog (SCHOTT and OHARA direct; the rest "
+               "via a third-party mirror of unknown vintage). Re-verify against "
+               "the current manufacturer datasheet before detailed design. "
+               "Crystal pages come from refractiveindex.info (CC0).")
     st.subheader("Data quality report")
     n_prop, n_glass = len(quality["properties"]), len(quality["glasses"])
     n_trans, n_orph = len(quality["transmission"]), len(quality["orphan_sources"])

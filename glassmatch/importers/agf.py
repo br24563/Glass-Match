@@ -67,6 +67,67 @@ def _prop(gid, prop, value, unit, ref_wl, source_id, notes) -> dict:
     return {"glass_id": gid, "property": prop, "value": value, "unit": unit,
             "reference_wavelength_nm": ref_wl, "data_type": "manufacturer",
             "source_id": source_id, "notes": notes}
+
+
+def _nm_positional(parts: list) -> tuple:
+    """(formula, nd, vd, status) from a documented-layout NM record, or Nones.
+
+    Zemax: NM <name> <formula> <MIL code> <nd> <vd> [exclude] [status] [melt].
+    Accepted only when the formula field is an integer Zemax formula number
+    and nd/vd are numeric, so vendor variants still reach the heuristic.
+    nd <= 1 and vd <= 0 are Zemax placeholders, returned as None.
+    """
+    from glassmatch.spectra import ZEMAX_FORMULAS
+    if len(parts) < 6:
+        return None, None, None, None
+    try:
+        f = float(parts[2])
+        nd, vd = float(parts[4]), float(parts[5])
+    except ValueError:
+        return None, None, None, None
+    if f != int(f) or int(f) not in ZEMAX_FORMULAS or not (0.9 <= nd <= 4.5):
+        return None, None, None, None
+    status = None
+    if len(parts) > 7:
+        try:
+            status = int(float(parts[7]))
+        except ValueError:
+            status = None
+    return (int(f), nd if nd > 1.0 else None, vd if vd > 0.0 else None, status)
+
+
+def _nm_heuristic(rest_tokens: list, nums_all: list, code_idx: int) -> tuple:
+    """(nd, vd) by value range, for NM records that are not in Zemax layout.
+
+    nd = first float in 1.2..2.7 after the glass code; vd = first float in
+    8..130 after nd.  Codename-less records ("NM B270 1 1 1.523080 ...") fall
+    back to a whole-line search.
+    """
+    if code_idx >= 0:
+        nums_after = _floats(rest_tokens[code_idx + 1:])
+        nd = next((v for v in nums_after if 1.2 <= v <= 2.7), None)
+    else:
+        nums_after = nums_all
+        nd = None
+    if nd is None:
+        tail = nums_all[2:] if len(nums_all) > 3 else nums_all
+        nd = next((v for v in tail if 1.2 <= v <= 2.7), None)
+        if nd is None:
+            nd = next((v for v in nums_all if 1.2 <= v <= 2.7), None)
+        nums_after = nums_all
+    vd = None
+    if nd is not None:
+        seen_nd = False
+        for v in nums_after:
+            if not seen_nd and v == nd:
+                seen_nd = True
+                continue
+            if seen_nd and 8.0 <= v <= 130.0:
+                vd = v
+                break
+    return nd, vd
+
+
 def parse_agf_text(text: str, manufacturer: str, source_id: str,
                    material_class: str = "oxide_glass") -> tuple:
     """Parse .agf text -> (glasses, properties, sellmeier, transmission, issues)."""
@@ -139,28 +200,14 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
                     except (TypeError, ValueError):
                         continue
             nums_all = _floats(rest_tokens)
-            if code_idx >= 0:
-                nums_after = _floats(rest_tokens[code_idx + 1:])
-                nd = next((v for v in nums_after if 1.2 <= v <= 2.7), None)
-            else:
-                nums_after = nums_all
-                nd = None
-            if nd is None:  # codename-less NM (B270) or odd vendor layout
-                tail = nums_all[2:] if len(nums_all) > 3 else nums_all
-                nd = next((v for v in tail if 1.2 <= v <= 2.7), None)
-                if nd is None:
-                    nd = next((v for v in nums_all if 1.2 <= v <= 2.7), None)
-                nums_after = nums_all
-            vd = None
-            if nd is not None:
-                seen_nd = False
-                for v in nums_after:
-                    if not seen_nd and v == nd:
-                        seen_nd = True
-                        continue
-                    if seen_nd and 8.0 <= v <= 130.0:
-                        vd = v
-                        break
+            # Every catalog GlassMatch ships uses the documented layout, so it
+            # is read by position. Zemax writes nd=1.0 / vd=0 as a placeholder
+            # for materials with no visible-band index (Si, CdTe, ZnSe ...);
+            # the value-range search mistook the formula number "2" for n_d
+            # there, so it is now only the fallback for non-standard records.
+            formula_id, nd, vd, nm_status = _nm_positional(parts)
+            if formula_id is None:
+                nd, vd = _nm_heuristic(rest_tokens, nums_all, code_idx)
             density = None  # ED record may supply it (see _ed_block)
             if not name:
                 issues.append({"line": lineno, "issue": "NM without name"})
@@ -169,6 +216,10 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             if nd is None or vd is None:
                 issues.append({"line": lineno, "issue": "NM missing nd/vd",
                                "text": raw[:80]})
+            if formula_id is None:
+                issues.append({"line": lineno, "glass": name,
+                               "issue": "NM gives no Zemax formula number; CD "
+                                        "evaluated as Sellmeier-1"})
             # Duplicate NM names in one catalog are real (HOYA mold variants
             # "E-FL6 ... 0 0 4" vs "... 0 0 0", Nikon E-series repeats): same
             # name, slightly different vd/coefficients. Disambiguate with the
@@ -191,7 +242,10 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
             grows = {"glass_id": gid, "manufacturer_id": manufacturer,
                      "glass_name": name, "manufacturer_code": name,
                      "glass_family": guess_family(name),
-                     "material_class": material_class, "status": "standard",
+                     "material_class": material_class,
+                     # Zemax NM status 2 = obsolete; preferred/special/melt
+                     # are all still orderable, so they stay "standard".
+                     "status": "obsolete" if nm_status == 2 else "standard",
                      "description": f"Imported from {source_id}."}
             prows = []
             if nd is not None:
@@ -207,7 +261,8 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
                 prows.append(_prop(gid, "glass_code", code, "",
                                    "", source_id, "glass code from .agf."))
             cur = {"glass_name": name, "glass_row": grows,
-                   "props": prows, "sell": [], "trans": []}
+                   "props": prows, "sell": [], "trans": [],
+                   "formula_id": formula_id, "vd": vd}
         elif cur is None:
             issues.append({"line": lineno, "issue": f"{tag} outside NM block"})
         elif tag == "CD":
@@ -284,17 +339,46 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     import pandas as pd
     return (pd.DataFrame(glasses), pd.DataFrame(props),
             pd.DataFrame(sell), pd.DataFrame(trans), issues)
-def is_sellmeier1_formula(formula: str | None) -> bool:
-    """True only for verified, dispersable Sellmeier rows - the app's gate.
 
-    Non-Sellmeier rows (NIKON polynomials, OHARA/HIKARI series forms) and
-    Sellmeier rows that fail the n(d) cross-check carry archived coefficients
-    that must NEVER be evaluated as a curve.  Accepts the current
-    "Sellmeier*(N-term, ...)" labels and the original unlabelled-term form
-    so older databases keep working.
+
+# Labels a verified row may start with. Anything else - notably the
+# "Non-dispersable ..." archive label - is never evaluated.
+VERIFIED_PREFIXES = ("Sellmeier", "Schott", "Herzberger", "Conrady",
+                     "Handbook", "Extended",
+                     # refractiveindex.info literature fits (crystal pages)
+                     "Polynomial", "RefractiveIndex.INFO", "Cauchy", "Gases",
+                     "Retro", "Exotic")
+# A catalog prints n_d to 5-6 decimals and V_d to 2; a fit in the formula the
+# catalog names reproduces both far inside these limits (median |dn| ~1e-6).
+ND_TOL = 2e-4
+VD_TOL = 0.5
+D_LINE_UM, F_LINE_UM, C_LINE_UM = 0.5875618, 0.4861327, 0.6562725
+
+
+def is_dispersable_formula(formula: str | None) -> bool:
+    """True only for verified dispersion rows - the app's gate.
+
+    Rows that fail the n(d)/V_d cross-check, or name a formula GlassMatch
+    cannot evaluate, carry archived coefficients that must NEVER be drawn as
+    a curve; they are labelled "Non-dispersable ...".
     """
     f = str(formula or "")
-    return f.startswith("Sellmeier")
+    return f.startswith(VERIFIED_PREFIXES)
+
+
+# Kept for callers written when Sellmeier was the only evaluated form.
+is_sellmeier1_formula = is_dispersable_formula
+
+
+def verified_label(formula: int, n_terms: int | None = None) -> str:
+    """The sellmeier.csv label of a verified Zemax CD row (passes the gate)."""
+    from glassmatch.spectra import SELLMEIER_POLES, ZEMAX_FORMULAS
+    fname = ZEMAX_FORMULAS.get(formula, f"formula {formula}")
+    if formula == 2:
+        return f"Sellmeier-1 ({n_terms}-term, Zemax CD record)"
+    if formula in SELLMEIER_POLES:
+        return f"Sellmeier ({n_terms}-term, Zemax formula {formula} {fname})"
+    return f"{fname} (Zemax formula {formula}, CD record)"
 
 
 def _flush_cd(cur: dict, source_id: str, issues: list) -> None:
@@ -308,78 +392,78 @@ def _flush_cd(cur: dict, source_id: str, issues: list) -> None:
 
 def _cd_block(cur: dict, nums: list, source_id: str,
               issues: list, lineno: int) -> None:
-    """CD record: store every term, and keep the coefficients only if they work.
+    """CD record: store every coefficient, and keep the fit only if it works.
 
-    A Zemax CD row is dispersable if evaluating it at 587.6 nm reproduces the
-    catalog n(d) to within 0.002.  That is the only test that reliably tells a
-    usable Sellmeier fit from the series/polynomial forms OHARA legacy,
-    HIKARI Q-series and NIKON polynomial glasses use - all of which fail it,
-    while genuine fits with a negative C (S-BSL7 and friends) pass it.
+    The coefficients are evaluated in the formula the NM record names (Schott,
+    Sellmeier-1, Extended 3 ...). The row is dispersable only if that
+    reproduces the catalog n(d) within ND_TOL and, where the catalog gives one,
+    V_d within VD_TOL. A glass with no catalog n(d) (Zemax writes 1.0 as a
+    placeholder for IR crystals) cannot be checked, so it is archived rather
+    than trusted.
 
     Coefficients that fail are still stored verbatim and labelled
     non-dispersable, so nothing is lost and nothing is ever evaluated as a
     curve it is not.
     """
-    from glassmatch.spectra import (MAX_TERMS, B_COLS, C_COLS,
-                                    active_pairs, classify_dispersion,
-                                    sellmeier_n)
+    from glassmatch.spectra import (MAX_TERMS, B_COLS, C_COLS, SELLMEIER_POLES,
+                                    ZEMAX_FORMULAS, active_pairs,
+                                    classify_dispersion, zemax_n)
     if len(nums) < 6:
         issues.append({"line": lineno, "glass": cur["glass_name"],
                        "issue": f"CD has {len(nums)} coeffs (<6)"})
         return
-    pairs = active_pairs(nums)
-    n_terms, sign_note = classify_dispersion(nums)
-
+    declared = cur.get("formula_id")
+    formula = declared if declared is not None else 2
+    fname = ZEMAX_FORMULAS.get(formula, f"formula {formula}")
     row = {"glass_id": cur["glass_row"]["glass_id"], "wavelength_um": "",
-           "source_id": source_id,
-           "notes": ".agf CD coefficients; verify with catalog."}
-    if sign_note:
-        row["notes"] += " " + sign_note + "."
-    for i, (b, c) in enumerate(pairs[:MAX_TERMS]):
-        row[B_COLS[i]] = b
-        row[C_COLS[i]] = c
-    # Any terms beyond the stored maximum are recorded rather than dropped.
-    dropped = pairs[MAX_TERMS:]
-    if dropped:
-        cur.setdefault("remarks", []).append(
-            f"CD {len(dropped)} term(s) beyond the {MAX_TERMS}-term maximum "
-            "stored in sellmeier.csv: " +
-            " ".join(f"B={b:.6E},C={c:.6E}" for b, c in dropped))
-        issues.append({"line": lineno, "glass": cur["glass_name"],
-                       "issue": f"CD has {len(dropped)} term(s) beyond the "
-                                f"{MAX_TERMS}-term stored maximum; recorded in "
-                                "the glass description, not evaluated"})
-
-    sell_ok = False
-    if not pairs:
-        row["formula"] = "Non-dispersable (no non-zero CD coefficients) - archived, never evaluated"
-    else:
-        try:
-            n587 = sellmeier_n(0.5876, tuple(b for b, _ in pairs[:MAX_TERMS]),
-                               tuple(c for _, c in pairs[:MAX_TERMS]))
-            hdr = next((p["value"] for p in cur["props"]
-                        if p["property"] == "refractive_index_nd"), None)
-            if hdr is None:
-                row["formula"] = (f"Non-dispersable ({n_terms}-term CD with no "
-                                  "catalog n(d) to verify against) - archived, "
-                                  "never evaluated")
-            elif not (n587 == n587) or abs(float(n587) - float(hdr)) > 0.002:
-                row["formula"] = (
-                    f"Non-dispersable ({n_terms}-term CD gives n(d)={n587:.5f} "
-                    f"vs catalog {hdr}; not a Sellmeier fit) - archived, never evaluated")
-                issues.append({"line": lineno, "glass": cur["glass_name"],
-                               "issue": f"CD n(d)={n587:.5f} vs header {hdr}"})
-            else:
-                sell_ok = True
-        except (TypeError, ValueError, ZeroDivisionError):
-            row["formula"] = (f"Non-dispersable ({n_terms}-term CD failed "
-                              "evaluation) - archived, never evaluated")
+           "source_id": source_id, "zemax_formula": formula,
+           "coefficients": " ".join(repr(float(x)) for x in nums),
+           "notes": f".agf CD coefficients, Zemax formula {formula} ({fname})."}
+    n_terms = None
+    if formula in SELLMEIER_POLES:
+        pairs = active_pairs(nums)
+        n_terms, sign_note = classify_dispersion(nums)
+        if sign_note:
+            row["notes"] += " " + sign_note + "."
+        for i, (b, c) in enumerate(pairs[:MAX_TERMS]):
+            row[B_COLS[i]] = b
+            row[C_COLS[i]] = c
+        if len(pairs) > SELLMEIER_POLES[formula]:
             issues.append({"line": lineno, "glass": cur["glass_name"],
-                           "issue": "CD evaluation failed"})
-    if sell_ok:
-        row["formula"] = (f"Sellmeier-1 ({n_terms}-term, Zemax CD record)"
-                          if n_terms == 3 else
-                          f"Sellmeier ({n_terms}-term, Zemax CD record)")
+                           "issue": f"CD has {len(pairs)} poles; {fname} uses "
+                                    f"{SELLMEIER_POLES[formula]}"})
+
+    def archive(why: str) -> None:
+        row["formula"] = f"Non-dispersable ({why}) - archived, never evaluated"
+        issues.append({"line": lineno, "glass": cur["glass_name"],
+                       "issue": f"CD archived: {why}"})
+
+    hdr = next((p["value"] for p in cur["props"]
+                if p["property"] == "refractive_index_nd"), None)
+    if formula not in ZEMAX_FORMULAS:
+        archive(f"unknown Zemax formula {formula}")
+    elif not any(float(x) != 0.0 for x in nums):
+        archive("no non-zero CD coefficients")
+    elif hdr is None:
+        archive(f"{fname} CD with no catalog n(d) to verify against")
+    else:
+        nd = zemax_n(formula, nums, D_LINE_UM)
+        nF = zemax_n(formula, nums, F_LINE_UM)
+        nC = zemax_n(formula, nums, C_LINE_UM)
+        vd = (nd - 1.0) / (nF - nC) if nF != nC else float("nan")
+        cat_vd = cur.get("vd")
+        if not (nd == nd) or abs(nd - float(hdr)) > ND_TOL:
+            archive(f"{fname} CD gives n(d)={nd:.5f} vs catalog {hdr}")
+        elif cat_vd is not None and (not (vd == vd)
+                                     or abs(vd - float(cat_vd)) > VD_TOL):
+            archive(f"{fname} CD gives V_d={vd:.2f} vs catalog {cat_vd}")
+        else:
+            row["notes"] += (f" Verified: n(d) {nd:.6f} vs catalog {hdr}; "
+                             f"V_d {vd:.2f}"
+                             + (f" vs catalog {cat_vd}." if cat_vd is not None
+                                else "."))
+            row["formula"] = verified_label(formula, n_terms)
+    if n_terms and is_dispersable_formula(row.get("formula")):
         row["n_terms"] = n_terms
     cur["sell"].append(row)
 
@@ -441,7 +525,11 @@ def _it_block(cur: dict, nums: list, source_id: str,
     for i in range(0, len(nums), step):
         wl, tval = nums[i], nums[i + 1]
         thick = nums[i + 2] if step == 3 else 10.0
-        if 0.2 <= wl <= 5.0 and 0.0 <= tval <= 1.0:
+        # 0.1-50 um: deep-UV grades (NIKON NIFS/NICF, OHARA SK-1300) list
+        # 157-193 nm and IR crystals (Ge, KBr, GASIR) list out to 30 um; an
+        # earlier 0.2-5 um gate silently dropped those real samples. T outside
+        # 0..1 (HOYA -999 placeholders, a 12.0 typo) is still rejected.
+        if 0.1 <= wl <= 50.0 and 0.0 <= tval <= 1.0:
             cur["trans"].append({"glass_id": gid, "wavelength_um": wl,
                                  "transmission": tval, "thickness_mm": thick,
                                  "data_type": "manufacturer",
@@ -476,7 +564,8 @@ def read_agf_file(path) -> str:
 
 
 def import_agf(path, manufacturer: str, source_id: str,
-               material_class: str = "oxide_glass") -> tuple:
+               material_class: str = "oxide_glass",
+               quarantine: bool = True) -> tuple:
     """Read a user-downloaded .agf file -> normalized frames + issues.
 
     Conflicting duplicate transmission samples (the same wavelength carrying
@@ -485,10 +574,13 @@ def import_agf(path, manufacturer: str, source_id: str,
     row is recorded in the returned issues with both values so the change is
     auditable. Callers that persist data should write
     ``data/normalized/transmission_conflicts.csv`` from those issue rows.
+
+    ``quarantine=False`` returns every IT sample untouched, for a caller that
+    runs scripts/clean_transmission.py afterwards to write the audit ledgers.
     """
     glasses, props, sell, trans, issues = parse_agf_text(
         read_agf_file(path), manufacturer, source_id, material_class)
-    if trans is not None and not trans.empty:
+    if quarantine and trans is not None and not trans.empty:
         from glassmatch.validation import (dedupe_transmission,
                                            split_transmission_conflicts)
         # Identical duplicates first (no information lost), then conflicts

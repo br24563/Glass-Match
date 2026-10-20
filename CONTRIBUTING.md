@@ -52,8 +52,11 @@ The intended path requires **no Python changes** — you add data, not code.
    - *App (recommended)*: run GlassMatch, open the **Import / Export** tab, choose the
      manufacturer, upload the `.agf`, review the flagged-issues table, and download
      the normalized JSON.
-   - *Script*: `python scripts/merge_agf.py --source-id <SOURCE_ID> --path <file.agf>`
-     (idempotent — re-running replaces only that source's rows).
+   - *Script*: register the file in `scripts/merge_agf.py` (`SOURCES` or
+     `GITHUB_FILES`), then `python scripts/merge_agf.py --only <SOURCE_ID>`
+     (or `--all`). Idempotent — re-running replaces only that source's rows.
+     It then runs `scripts/clean_transmission.py` (duplicate/conflict ledgers)
+     and `scripts/verify_ir_dispersion.py` for you.
 4. **Add a `sources.csv` row** with `source_id`, `source_name`, `source_url`,
    `access_date`, and a `license` note. State plainly whether the data came from the
    manufacturer's own site or a third-party mirror.
@@ -98,6 +101,19 @@ choose one. The importer quarantines every row of that key and reports it in the
 flagged-issues table; keep the displaced values in
 `data/normalized/transmission_conflicts.csv` so the decision stays auditable.
 To re-check the shipped data: `python scripts/clean_transmission.py --dry-run`.
+
+**Rebuilding the whole database** from the staged sources is two commands,
+in this order: `python scripts/merge_agf.py --all`, then
+`python scripts/merge_refractiveindex.py`. Each re-runs
+`scripts/verify_ir_dispersion.py`, which needs both the catalog rows and the
+refractiveindex.info reference pages. Both merges keep the CSVs sorted, so the
+diff shows only what actually changed.
+
+**Dispersion coefficients are judged in their own formula.** Every `.agf` NM
+record names its equation (field 2: 1 = Schott, 2 = Sellmeier-1, 13 =
+Extended 3 ...). Never evaluate a CD row as Sellmeier unless the record says
+so; the importer verifies each fit against the catalog n_d *and* V_d and
+archives what fails.
 
 ## Code changes
 
