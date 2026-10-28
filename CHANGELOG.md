@@ -7,6 +7,30 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **Zemax OpticStudio `.agf` export** (`glassmatch/export_agf.py`), with a
+  download button on the Matching and Comparison tabs. Writes NM (formula
+  number, glass code, n_d, V_d, status), CD (the stored coefficients in Zemax
+  order), ED (CTE -30/+70, CTE 20/+300, density, dPgF), TD, OD, LD and IT
+  (each sample with its listed thickness) records, UTF-8 with CRLF line
+  endings. A `CC` header names GlassMatch, the export date and each glass's
+  source catalog with its publication and access dates. Numbers are printed
+  with `repr`, so they parse back to the identical float: nothing is
+  refitted, rounded or rescaled. Only verified fits are exported; archived
+  (non-dispersable) fits never are. refractiveindex.info fits are exported
+  only where a Zemax formula is the same expression (formulas 1 and 2 with
+  no constant term as Sellmeier-1/-3/-5 - formula 1's resonance wavelengths
+  written squared, the value its own evaluation subtracts - and formula 7 as
+  Herzberger); the other 29 pages (formula 4, Cauchy, and
+  constant-plus-poles forms) are skipped and listed in the app. Crystal pages
+  have no catalog n_d, so NM carries n_d/V_d evaluated from the fit inside
+  its stated range, labelled as such in the header. Duplicate glass names in
+  one selection fall back to the glass_id, since Zemax names must be unique.
+  `tests/test_export_agf.py` exports the whole database, re-imports it with
+  `parse_agf_text` and asserts bit-identical n(λ) at eight wavelengths plus
+  identical n_d, V_d, CTE, dPgF, TD, LD and transmission for all 2,727
+  exported materials. A CODE V private-glass file was considered and left
+  out: CODE V's PRV format takes indices at chosen wavelengths and refits
+  them, which would replace the catalog's own coefficients.
 - **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
   materials).** Downloaded 2026-10-20 from each maker's own site:
   HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the
