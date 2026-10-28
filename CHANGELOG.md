@@ -94,6 +94,31 @@ the patch version, schema/format changes bump the minor version.
   not exist.
 
 ### Fixed
+- **278 dPgF values of 0 were catalog filler, not data (2,711 → 2,433
+  stored).** Zemax's ED record has no "not given" marker, so HOYA (111 of its
+  152 zeros), OHARA (60 of 69), the IR/polymer files (every glass) and
+  others write 0 where they publish no dPgF. The importer stored those as
+  measured values, which meant FPL51 and FPL53, two of OHARA's anomalous
+  apochromat glasses, showed normal partial dispersion; OHARA's own
+  workbook gives +0.0280 and +0.0461. The 0 is now checked against each
+  glass's own verified fit: the catalog's normal line
+  (P_g,F = a + b·V_d + k·dPgF) is calibrated from its non-zero values, and
+  the 0 is kept only if the fit puts the glass within 0.001 of that line
+  (`zero_dpgf_verdicts` in `glassmatch/importers/agf.py`). The calibration
+  recovers SCHOTT's published line (0.6438 − 0.001682·V_d). Checked against
+  the SCHOTT, OHARA and CDGM workbooks, which print dPgF separately, every
+  kept 0 is a 0 there too (K7, N-K5, H-K6, S-TIL2 ...), and every dropped 0
+  has a non-zero value there or none at all. One kept 0, OHARA LAM55, is
+  −0.0001 in the workbook. 74 zeros stay. A 0 that cannot be confirmed
+  (no fit, a catalog whose scatter is over 0.001, or a catalog with no
+  non-zero dPgF at all) is dropped. That includes SUMITA's 2026 file, whose
+  values scatter 0.0019 about any line its fits give, so its F2 and K7 zeros,
+  probably real, are dropped with the rest. Each dropped value is noted in
+  the glass's description. `scripts/drop_filler_dpgf.py` applied the check
+  to the committed tables, one source catalog at a time; that gives the same
+  verdict for every one of the 352 zeros as re-importing the staged files.
+  The `.agf` export notes "dPgF not given" for a glass whose ED carries the
+  0 placeholder.
 - **The data-quality report's 1,174 "duplicate record" flags were false.**
   A crystal's n at 0.5876 um and at 10 um share glass, property and source;
   the reference wavelength is now part of the key. The report drops from

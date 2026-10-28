@@ -269,6 +269,8 @@ def export_agf(db, glass_ids, today: _dt.date | None = None) -> AgfExport:
         elif nd is None:
             note += ("; no catalog n_d (Zemax placeholder 1.0), fit checked "
                      "by GlassMatch against an independent measurement")
+        if any(v is not None for v in ed) and ed[3] is None:
+            note += "; dPgF not given (ED carries 0)"
         prov.append(f"CC   {name}: {note}")
 
     header = [

@@ -45,6 +45,8 @@ def selection(db):
 def _samples(frame) -> dict:
     """glass_id -> sorted (wavelength, T, thickness) samples."""
     out = {}
+    if frame.empty:
+        return out
     for gid, w, tv, th in zip(frame["glass_id"].astype(str), frame["wavelength_um"],
                               frame["transmission"], frame["thickness_mm"]):
         out.setdefault(gid, []).append((float(w), float(tv), float(th)))
@@ -64,6 +66,11 @@ def _roundtrip(db, ids):
     for gid, prop, v in zip(p["glass_id"], p["property"], p["value"]):
         props.setdefault((gid, prop), v)
     sell = {r["glass_id"]: r for r in s.to_dict(orient="records")}
+    # The importer drops a dPgF of 0 it cannot confirm against the file's own
+    # normal line (test_dpgf_filler.py); it says so for each one it drops.
+    dropped = {i["glass"] for i in issues if i["issue"].startswith("dPgF 0 dropped")}
+    for gid in dropped:
+        props[(gid, "dPgF-dropped")] = 0.0
     return ex, back, g, props, sell, _samples(t)
 
 
@@ -96,7 +103,10 @@ def _check_glass(db, gid, rid, ex, p, s, t, db_t):
             [k for k, _ in TD_PROPS]:
         want = db.property_value(gid, prop)
         if want is not None:
-            assert _prop(p, rid, prop) == want, (gid, prop)
+            got = _prop(p, rid, prop)
+            if prop == "dPgF" and want == 0.0 and got is None:
+                got = _prop(p, rid, "dPgF-dropped")
+            assert got == want, (gid, prop)
 
     assert t.get(rid, []) == db_t.get(gid, []), gid
 
@@ -114,6 +124,24 @@ def test_whole_database_round_trips_exactly(db, db_samples):
     assert len(nm_lines) == len(ex.exported) == len(g), "Zemax names must be unique"
     for gid, rid in back.items():
         _check_glass(db, gid, rid, ex, p, s, t, db_samples)
+
+
+def test_each_catalog_round_trips_with_its_dpgf_zeros(db):
+    """One source catalog per file - the unit the importer calibrates its
+    dPgF check on - brings every stored dPgF back, zeros included."""
+    src = {}
+    for gid in db.glass_ids():
+        row = db.sellmeier_for(gid, sellmeier_only=True)
+        if row is not None:
+            src.setdefault(str(row["source_id"]), []).append(gid)
+    for sid, ids in src.items():
+        if not export_agf(db, ids).exported:
+            continue                     # e.g. a crystal page with no Zemax form
+        ex, back, g, p, s, t = _roundtrip(db, ids)
+        for gid, rid in back.items():
+            want = db.property_value(gid, "dPgF")
+            if want is not None:
+                assert _prop(p, rid, "dPgF") == want, (sid, gid)
 
 
 def test_unverified_fits_are_skipped_and_reported(db, selection):

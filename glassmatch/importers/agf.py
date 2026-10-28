@@ -348,6 +348,7 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
                            "text": raw[:80]})
     flush()
     import pandas as pd
+    props = _drop_filler_dpgf(glasses, props, sell, issues)
     return (pd.DataFrame(glasses), pd.DataFrame(props),
             pd.DataFrame(sell), pd.DataFrame(trans), issues)
 
@@ -582,6 +583,121 @@ def _ed_block(cur: dict, nums: list, source_id: str) -> None:
     if len(nums) >= 4 and -0.05 <= nums[3] <= 0.05:
         cur["props"].append(_prop(gid, "dPgF", nums[3], "", "",
                                   source_id, ".agf ED record (dPgF)."))
+
+
+G_LINE_UM = 0.4358343
+# A stored 0 is accepted as a real value when the glass's own fit puts it
+# within this of zero (or within 3 sigma of the catalog's scatter about its
+# normal line, if wider). 1e-3 keeps CDGM H-K6 (a 0 in CDGM's workbook; its
+# fit says +0.0005) and still drops OHARA S-LAM66 (+0.0015 in the workbook).
+DPGF_ZERO_TOL = 1e-3
+# Calibrating a catalog's normal line needs this many non-zero values and a
+# scatter no wider than this; otherwise its zeros cannot be confirmed.
+DPGF_MIN_CALIBRATION = 10
+DPGF_MAX_SCATTER = 1e-3
+
+
+def zero_dpgf_verdicts(props: list, sell: list) -> dict:
+    """glass_id -> (keep, implied_dPgF, reason) for each dPgF stored as 0.
+
+    Zemax has no "not given" marker in ED, so many catalogs write 0 there:
+    HOYA for 152 of its 435 glasses, OHARA for 69, and the IR/polymer files
+    for every glass. A real dPgF of exactly 0 does exist - the glasses that
+    define a normal line (K7, F2, C7) have one - so a 0 cannot be dropped
+    blindly either.
+
+    Each 0 is judged against the glass's own verified fit instead. The
+    catalog's normal line (P_g,F = a + b V_d - makers each use their own) is
+    recovered from its non-zero dPgF values and the P_g,F their fits give
+    (with a scale factor, since SUMITA's dPgF runs on a slightly larger one);
+    the 0 is kept only if the fit puts this glass on that line. Checked
+    against the SCHOTT, OHARA and CDGM workbooks, which print dPgF
+    separately: every 0 this keeps is a 0 there, and every one it drops has
+    a non-zero value there (or none at all).
+    """
+    import numpy as np
+    from glassmatch.spectra import n_from_row
+    vd = {}
+    for p in props:
+        if p["property"] == "abbe_number_vd":
+            vd.setdefault(p["glass_id"], float(p["value"]))
+    fit = {}
+    for r in sell:
+        if is_dispersable_formula(r.get("formula")):
+            fit.setdefault(r["glass_id"], r)
+
+    def pgf(gid):
+        r = fit.get(gid)
+        if r is None:
+            return float("nan")
+        ng, nf, nc = (n_from_row(r, w) for w in (G_LINE_UM, F_LINE_UM, C_LINE_UM))
+        return (ng - nf) / (nf - nc) if nf != nc else float("nan")
+
+    dp = [(p["glass_id"], float(p["value"])) for p in props
+          if p["property"] == "dPgF"]
+    zeros = [g for g, v in dp if v == 0.0]
+    if not zeros:
+        return {}
+    pts = [(pgf(g), vd[g], v) for g, v in dp if v != 0.0 and g in vd]
+    pts = np.array([q for q in pts if q[0] == q[0]]).reshape(-1, 3)
+    line, scatter = None, None
+    if len(pts) >= DPGF_MIN_CALIBRATION:
+        # P_g,F = a + b V_d + k dPgF. k is 1 for SCHOTT, OHARA, HOYA, CDGM;
+        # SUMITA's values come out about 15% larger than its fits imply, and
+        # a fixed k = 1 read that as scatter. Two trimmed refits keep a few
+        # bad mirror rows (LZOS BF21, K100) from tilting the line.
+        keep = np.ones(len(pts), bool)
+        for _ in range(3):
+            A = np.c_[np.ones(len(pts)), pts[:, 1], pts[:, 2]]
+            coef = np.linalg.lstsq(A[keep], pts[keep, 0], rcond=None)[0]
+            res = pts[:, 0] - A @ coef
+            scatter = 1.4826 * float(np.median(np.abs(res[keep])))
+            keep = np.abs(res) <= max(4.0 * scatter, 1e-5)
+        if scatter <= DPGF_MAX_SCATTER and coef[2] > 0.5:
+            line = coef
+    out = {}
+    for g in zeros:
+        if not any(v != 0.0 for _, v in dp):
+            out[g] = (False, float("nan"), "the catalog gives no non-zero dPgF "
+                                           "for any glass")
+            continue
+        if line is None:
+            out[g] = (False, float("nan"), "the catalog's normal line cannot be "
+                                           "calibrated to confirm it")
+            continue
+        p = pgf(g)
+        if p != p or g not in vd:
+            out[g] = (False, float("nan"), "the glass has no verified fit and "
+                                           "V_d to confirm it")
+            continue
+        implied = (p - (line[0] + line[1] * vd[g])) / line[2]
+        tol = max(DPGF_ZERO_TOL, 3.0 * scatter / line[2])
+        if abs(implied) <= tol:
+            out[g] = (True, implied, "")
+        else:
+            out[g] = (False, implied, f"the fit gives dPgF {implied:+.4f} on the "
+                                      "catalog's own normal line")
+    return out
+
+
+def _drop_filler_dpgf(glasses: list, props: list, sell: list,
+                      issues: list) -> list:
+    """Remove dPgF = 0 values that are the catalog's "not given" filler."""
+    verdicts = zero_dpgf_verdicts(props, sell)
+    drop = {g for g, (keep, _, _) in verdicts.items() if not keep}
+    if not drop:
+        return props
+    rows = {r["glass_id"]: r for r in glasses}
+    for g in sorted(drop):
+        why = verdicts[g][2]
+        remark = f"ED dPgF 0 not stored: {why}, so the 0 reads as 'not given'."
+        r = rows.get(g)
+        if r is not None:
+            r["description"] = (str(r.get("description") or "") + " " + remark).strip()
+        issues.append({"glass": g, "issue": f"dPgF 0 dropped ({why})"})
+    return [p for p in props
+            if not (p["property"] == "dPgF" and p["glass_id"] in drop
+                    and float(p["value"]) == 0.0)]
 
 
 def _it_block(cur: dict, nums: list, source_id: str,
