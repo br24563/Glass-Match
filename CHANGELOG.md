@@ -7,6 +7,22 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **Glass Map tab**: n_d vs V_d Abbe diagram coloured by maker (obsolete
+  glasses hidden by default, current match results ringed) and a P_g,F vs
+  V_d view with the SCHOTT normal line and dPgF. P_g,F is calculated from
+  the verified dispersion fit (n_g, n_F, n_C) for 2,719 glasses, never
+  extrapolated past a fit's stated range, and labelled calculated; the
+  calculated dPgF reproduces SCHOTT's stored values within 2e-4 for 362 of
+  364 glasses (median 2.4e-5; the other two, the AF32eco and D263Teco thin
+  glasses, list dPgF as 0), and each maker's own dPgF is shown beside it.
+- **Pair Finder tab and `glassmatch/pairs.py`**: thin-lens achromatic
+  doublet power split, secondary spectrum (P1−P2)/(V1−V2), apochromat
+  candidates (|ΔP_g,F| below a tolerance with large ΔV) and athermal ranking
+  from γ = (dn/dT)/(n_d−1) − α against a user-given mount CTE. Non-obsolete
+  glasses by default, with maker, material-class, transmission and
+  compatibility filters. Vectorised over the pair triangle: 1,676 current
+  glasses (677k pairs) rank in about 0.15 s. Results are labelled
+  calculated and "not a manufacturer recommendation"; CSV export.
 - **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
   materials).** Downloaded 2026-10-20 from each maker's own site:
   HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the
