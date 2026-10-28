@@ -7,6 +7,23 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **Thermal, mechanical and chemical data for SCHOTT, OHARA and CDGM** from
+  each maker's own Excel data workbook, downloaded 2026-10-28 (new importer
+  `glassmatch/importers/maker_xlsx.py`, wired into `scripts/merge_agf.py` as
+  `PROPERTY_SOURCES`): T_g, thermal conductivity, Young's and shear modulus,
+  Poisson's ratio, stress-optic coefficient, Knoop hardness, specific heat
+  and chemical resistance for 664 glasses (SCHOTT 156, OHARA 161, CDGM 347;
+  5,786 property rows, five new source_ids, data_type manufacturer).
+  Columns are found by header text; units come from the workbooks (SCHOTT's
+  Description sheet, CDGM's headers, E = 2G(1 + nu) on every CDGM and OHARA
+  row, OHARA's catalog notes for beta). Glasses are matched by name to their
+  .agf glass_id (3 SCHOTT rows unmatched: two RealView glasses absent from
+  the .agf, and a row labelled "MD"). The .agf's n_d/V_d are never
+  overwritten; 10 CDGM disagreements are reported (H-TK9's .agf record gives
+  n_d 1.587166 / V_d 75.90 against its own code 621603). A property the .agf
+  already gives is not stored again (1,076 such cells, all equal). CDGM's
+  RC(S)/RA(S) classes are left out: the workbook does not define them. HOYA's
+  data page refused connections, so HOYA has no workbook data yet.
 - **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
   materials).** Downloaded 2026-10-20 from each maker's own site:
   HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the
@@ -70,6 +87,9 @@ the patch version, schema/format changes bump the minor version.
   not exist.
 
 ### Fixed
+- `scripts/merge_refractiveindex.py` re-read `properties.csv` as floats and
+  rewrote 2,037 glass codes as "606577.0"; the value column is now kept as
+  text, so re-running the merges leaves untouched rows byte-identical.
 - **The data-quality report's 1,174 "duplicate record" flags were false.**
   A crystal's n at 0.5876 um and at 10 um share glass, property and source;
   the reference wavelength is now part of the key. The report drops from

@@ -39,7 +39,8 @@ RULES = {
 for _p in ("climate_resistance", "stain_resistance", "acid_resistance",
            "alkali_resistance", "phosphate_resistance",
            "acid_resistance_surface", "acid_resistance_powder",
-           "water_resistance_powder"):
+           "water_resistance_powder", "weathering_resistance_surface_max",
+           "weathering_resistance_surface_min"):
     RULES[_p] = (0.0, 100.0)
 
 # Plausible density window in g/cm^3 per material class. A single global range

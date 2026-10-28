@@ -140,6 +140,7 @@ def test_hikari_fits_verified_at_every_catalog_wavelength(db):
 
 def test_hikari_moduli_are_self_consistent(db):
     p = db.properties
+    p = p[p["source_id"] == "HIKARI-XLSX-2025-06-01"]
     piv = p[p["property"].isin(["youngs_modulus", "shear_modulus",
                                 "poisson_ratio"])].pivot_table(
         index="glass_id", columns="property", values="value", aggfunc="first")

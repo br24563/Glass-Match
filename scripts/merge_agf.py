@@ -34,6 +34,7 @@ sys.path.insert(0, str(ROOT))
 import pandas as pd
 from glassmatch.importers.agf import import_agf
 from glassmatch.importers.hikari_xlsx import import_hikari_xlsx
+from glassmatch.importers.maker_xlsx import import_maker_xlsx, name_key
 
 STAGING = ROOT / "data" / "staging"
 OFFICIAL = STAGING / "official"
@@ -94,6 +95,47 @@ CATALOGS = [
          note="Nikon Zemax data NIKON-HIKARI_201911.AGF (last updated Nov "
               "2019): HIKARI glasses absent from the 2025 HIKARI catalog, "
               "and Nikon's NIFS/NICF materials."),
+]
+
+# Manufacturers' Excel data workbooks: thermal, mechanical and chemical
+# properties added to the glasses of the .agf named in `agf`. Run after every
+# catalog, in this order; a property the .agf or an earlier workbook already
+# gives a glass is never stored twice. Downloaded 2026-10-28. HOYA's data
+# page (hoya-opticalworld.com) refused connections that day.
+PROPERTY_SOURCES = [
+    dict(sid="SCHOTT-XLSX-2025-11-13", mfr="SCHOTT", layout="SCHOTT",
+         agf="SCHOTT-AGF-2025-06",
+         path=OFFICIAL / "schott"
+         / "schott-optical-glass-overview-excel-format-en 202501113.xlsx",
+         url="https://www.schott.com/en-us/products/optical-glass-p1000267/downloads",
+         published="2025-11-13", accessed="2026-10-28",
+         note="SCHOTT 'Optical glass overview glass types (excel table) "
+              "including inquiry glasses', dated 2025-11-13."),
+    dict(sid="CDGM-XLSX-2026-09", mfr="CDGM", layout="CDGM",
+         agf="CDGM-AGF-2026-09",
+         path=OFFICIAL / "cdgm" / "CDGM202609.xlsx",
+         url="https://www.cdgmgd.com/go.htm?k=ge_lei_xia_zai&url=downList",
+         published="2026-09", accessed="2026-10-28",
+         note="CDGM Excel data CDGM202609.xlsx (Excel格式文档) from cdgmgd.com."),
+    dict(sid="OHARA-XLSX-2026-04-02", mfr="OHARA", layout="OHARA",
+         agf="OHARA-AGF-2026-05-29",
+         path=OFFICIAL / "ohara" / "ohara-20260402-5.xlsx",
+         url="https://oharacorp.com/glass-catalog/",
+         published="2026-04-02", accessed="2026-10-28",
+         note="OHARA recommended S glasses, 5-decimal data, 2026-04-02."),
+    dict(sid="OHARA-L-XLSX-2025-03-12", mfr="OHARA", layout="OHARA",
+         agf="OHARA-AGF-2026-05-29",
+         path=OFFICIAL / "ohara" / "ohara-20250312-L5.xlsx",
+         url="https://oharacorp.com/glass-catalog/",
+         published="2025-03-12", accessed="2026-10-28",
+         note="OHARA low-Tg L glasses, 5-decimal data, 2025-03-12."),
+    dict(sid="OHARA-SPECIAL-XLSX-2025-03-12", mfr="OHARA", layout="OHARA",
+         agf="OHARA-AGF-2026-05-29",
+         path=OFFICIAL / "ohara"
+         / "ohara-catalog-special-order-glass-20250312-S-5dec-1.xlsx",
+         url="https://oharacorp.com/glass-catalog/",
+         published="2025-03-12", accessed="2026-10-28",
+         note="OHARA special-order glasses, 5-decimal data, 2025-03-12."),
 ]
 
 # Makers with no current public catalog: the mirror stays their only source.
@@ -248,6 +290,54 @@ def _source_row(sid, mfr, url, doc, published, accessed, lic, note):
             "access_date": accessed, "license": lic, "notes": note}
 
 
+def _property_sources(tables, only):
+    """Add the PROPERTY_SOURCES workbooks' rows -> (props, source rows)."""
+    glasses, props = tables[0], tables[1]
+    jobs = [j for j in PROPERTY_SOURCES if Path(j["path"]).exists()
+            and (not only or j["sid"] in only or j["agf"] in only)]
+    rows, sids = [], {j["sid"] for j in jobs}
+    existing = {(g, p): v for g, p, v, s in zip(
+        props["glass_id"], props["property"], props["value"],
+        props["source_id"]) if s not in sids}
+    for job in jobs:
+        props = props[props["source_id"] != job["sid"]]
+        agf = props[props["source_id"] == job["agf"]]
+        ids = set(agf["glass_id"])
+        g = glasses[glasses["glass_id"].isin(ids)]
+        names = {name_key(n): gid for n, gid in zip(g["glass_name"], g["glass_id"])}
+        cat = {}
+        for gid, prop, v in zip(agf["glass_id"], agf["property"], agf["value"]):
+            if prop in ("refractive_index_nd", "abbe_number_vd"):
+                nd, vd = cat.get(gid, (None, None))
+                v = float(v)
+                cat[gid] = (v, vd) if prop == "refractive_index_nd" else (nd, v)
+        p2, rep = import_maker_xlsx(job["path"], job["layout"], job["sid"],
+                                    names, existing, cat)
+        print(f"{job['sid']}: {len(p2)} props for {rep['matched']} of "
+              f"{rep['rows']} workbook glasses; {len(rep['unmatched'])} "
+              f"unmatched, {rep['skipped_existing']} already given "
+              f"({len(rep['conflicts'])} differ), {len(rep['nd_vd'])} n_d/V_d "
+              f"disagreements, E=2G(1+nu) {rep['moduli_checked'] - len(rep['moduli'])}"
+              f"/{rep['moduli_checked']}")
+        for sheet, lacking in rep["columns"].items():
+            if lacking:
+                print(f"    sheet {sheet!r} has no column for {', '.join(lacking)}")
+        for line in rep["unmatched"]:
+            print(f"    unmatched: {line}")
+        for gid, label, v, ref in rep["nd_vd"]:
+            print(f"    {gid}: workbook {label} {v} vs .agf {ref}")
+        for gid, prop, v, old in rep["conflicts"]:
+            print(f"    {gid}: workbook {prop} {v} vs stored {old} (kept)")
+        for gid, e, gm, nu in rep["moduli"]:
+            print(f"    {gid}: E {e} vs 2G(1+nu) {2 * gm * (1 + nu):.2f}")
+        if not p2.empty:
+            props = pd.concat([props, p2], ignore_index=True)
+        rows.append(_source_row(job["sid"], job["mfr"], job["url"],
+                                Path(job["path"]).name, job["published"],
+                                job["accessed"], LIMITED, job["note"]))
+    return props, rows
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--all", action="store_true")
@@ -354,6 +444,9 @@ def main() -> None:
         tables = _replace(tables, sid, [g2, p2, s2, t2])
         new_sources.append(_source_row(sid, mfr, GITHUB_MIRROR, sid, "",
                                        "2026-09-21", MIRROR_LICENSE, MIRROR_NOTE))
+
+    tables[1], prop_sources = _property_sources(tables, args.only)
+    new_sources += prop_sources
 
     glasses, props, sell, trans = tables
     for row in new_sources:
