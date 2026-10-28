@@ -40,7 +40,10 @@ def _upsert(path: Path, new: pd.DataFrame, key, sort_by=None) -> None:
     if path.exists() and path.stat().st_size:
         # round_trip: the default parser can move a float's last digit, so
         # rows this merge never touches would otherwise churn on rewrite.
-        old = pd.read_csv(path, encoding="utf-8", float_precision="round_trip")
+        # properties.csv mixes glass codes ("606577") with floats in one
+        # column; read as text it is rewritten verbatim, not as "606577.0".
+        old = pd.read_csv(path, encoding="utf-8", float_precision="round_trip",
+                          dtype={"value": str})
         if all(c in old.columns for c in cols):
             new_keys = set(map(tuple, new[cols].astype(str).to_numpy()))
             old = old[[k not in new_keys for k in

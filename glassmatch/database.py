@@ -47,6 +47,10 @@ PROPERTY_LABELS = {
     "acid_resistance_surface": "Acid resistance, surface method (class)",
     "acid_resistance_powder": "Acid resistance, powder method (class)",
     "water_resistance_powder": "Water resistance, powder method (class)",
+    "weathering_resistance_surface_max":
+        "Weathering resistance, surface method, max (class)",
+    "weathering_resistance_surface_min":
+        "Weathering resistance, surface method, min (class)",
 }
 
 PROPERTY_UNITS = {
