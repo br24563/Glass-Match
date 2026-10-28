@@ -39,6 +39,21 @@ materials, polymers, and moldables.
   phosphate resistance classes from the .agf OD records; and, for the 155
   current HIKARI glasses, T_g, thermal conductivity, Young's and shear
   modulus, Poisson's ratio, stress-optic coefficient and Knoop hardness.
+- **Glass map**: interactive n_d vs V_d Abbe diagram coloured by maker,
+  obsolete glasses hidden by default and the current match results ringed;
+  a second view plots P_g,F vs V_d with the normal line and dPgF for
+  secondary-spectrum work. P_g,F is not a stored property: it is
+  **calculated** from each glass's verified dispersion fit (n_g, n_F, n_C)
+  for 2,719 glasses, only where the fit's stated range covers 435.8-656.3 nm,
+  and the manufacturer's own dPgF is shown beside the calculated one.
+- **Pair finder** (`glassmatch/pairs.py`): ranks two-glass achromatic
+  doublets by low element powers, low secondary spectrum, apochromat
+  candidates (near-equal P_g,F, large dV) or athermal residual for a given
+  mount CTE, over the non-obsolete glasses by default, filtered by maker,
+  material class, the sidebar transmission requirement and compatibility
+  score. Vectorised: ~2,000 glasses (two million pairs) rank in well under a
+  second. Every number is calculated (first-order thin lenses in contact)
+  and labelled as a starting point, never a manufacturer recommendation.
 - **Data quality report**: range checks, duplicate detection, missing-source
   checks and orphan source references — flags are listed for review, never
   auto-fixed.
@@ -130,6 +145,26 @@ band; **Minimum** = worst sample; **Entire range** = worst sample but only
 when samples span ≥90% of the band (otherwise reported missing, not guessed).
 Manufacturer IT rows are preferred; a calculated Fresnel estimate is used only
 for glasses with no manufacturer rows and is always labelled calculated.
+
+## Glass pairs
+
+Thin lenses in contact, total power φ, element 1 = higher V_d (crown):
+
+| Quantity | Formula |
+|---|---|
+| Achromat power split | φ1 = φ·V1/(V1−V2), φ2 = −φ·V2/(V1−V2) |
+| Secondary spectrum (g-F focal shift / f) | (P1−P2)/(V1−V2), P = P_g,F |
+| Normal line (SCHOTT, K7/F2) | P_g,F = 0.6438 − 0.001682·V_d |
+| Thermo-optic coefficient | γ = (dn/dT)/(n_d−1) − α  (1e-6/K) |
+| Doublet focal drift | (1/f)·df/dT = −(φ1γ1 + φ2γ2)/φ |
+| Athermal residual | focal drift − mount CTE (0 = athermal) |
+
+Textbook check (tested): N-BK7 / N-F2 (V_d 64.17 / 36.37) gives
+φ1 = 2.308φ, φ2 = −1.308φ — a 100 mm doublet with a 43.3 mm crown and a
+−76.4 mm flint. dn/dT is the absolute value at the d line, +20/+40 C, and α
+the catalog CTE (−30/+70 C), so the athermal ranking covers the 1,790
+glasses that have both. Treat the results as a shortlist for a lens-design
+program, not a design.
 
 ## Database architecture
 
