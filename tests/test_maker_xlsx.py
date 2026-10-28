@@ -1,4 +1,4 @@
-"""Tests: manufacturers' Excel data workbooks (SCHOTT, OHARA, CDGM) as extra
+"""Tests: manufacturers' Excel data workbooks (SCHOTT, OHARA, CDGM, HOYA) as extra
 property sources - header parsing, units, name mapping, no clobbering - and
 the rows they added to the shipped data."""
 import pandas as pd
@@ -185,6 +185,44 @@ def test_schott_units_confirmed_by_its_description_sheet(tmp_path):
         import_maker_xlsx(_schott(tmp_path, bad), "SCHOTT", "T", names)
 
 
+# HOYA layout: names under "Glass Type" in row 0, line labels in row 1,
+# full-width property codes in row 3, data from row 4. Units are printed only
+# on the glass_data_sheet page.
+HOYA_TOP = ["Classification", "Idx", "Glass　Type", "Code",
+            "Refractive\nIndex", "Abbe-\nnumber"]
+HOYA_ROW1 = ["", "", "", "", "nd", "νd", "Water Durability （powder method)",
+             "Staining Resistance（powder method)", "Transition Temperature",
+             "Coefficient of Thermal Conductivity", "Specific Heat Capacity",
+             "Knoop Hardness", "Young's modulus", "Rigidity"]
+HOYA_CODES = ["", "", "", "", 587.562, "", "DW", "DA", "Ｔg", "λ", "Ｃｐ", "HK",
+              "E", "G", "μ", "B", "G"]
+HOYA_UNITS = [["Ｔg(℃)"], ["λ[W/(m･K)]"], ["ＣP[kJ/(kg･K)]"], ["Ｅ(GPa)"],
+              ["Ｇ(GPa)"], ["Ｂ(10-12/Pa)"]]
+
+
+def _hoya(tmp_path, units=HOYA_UNITS):
+    row = ["", 1, "FC5", "487-704", 1.48749, 70.44, 5, 5, 482, 1.01, 0.745,
+           525, 59, 23.6, 0.245, 0.74, 0.09]
+    return _book(tmp_path / "hoya.xlsx", {
+        "20260401data_table1": [HOYA_TOP, HOYA_ROW1, [], HOYA_CODES, row],
+        "glass_data_sheet": units})
+
+
+def test_hoya_full_width_codes_and_units_from_its_data_sheet(tmp_path):
+    names = {name_key("FC5"): "HOYA-FC5"}
+    df, rep = import_maker_xlsx(_hoya(tmp_path), "HOYA", "T", names,
+                                catalog_nd_vd={"HOYA-FC5": (1.48749, 70.44)})
+    v = _vals(df, "HOYA-FC5")
+    assert v["tg"] == 482 and v["specific_heat"] == 0.745
+    assert v["youngs_modulus"] == 59 and v["shear_modulus"] == 23.6
+    assert v["stress_optic_coefficient"] == 0.74
+    assert v["water_resistance_powder"] == 5
+    assert "acid_resistance_powder" not in v       # DA's title disagrees
+    assert not rep["nd_vd"] and rep["moduli_checked"] == 1
+    with pytest.raises(ValueError, match="GPa"):
+        import_maker_xlsx(_hoya(tmp_path, HOYA_UNITS[:3]), "HOYA", "T", names)
+
+
 @pytest.mark.parametrize("cell", ["4-5", "4c", "#N/A", " ", "", None, "-"])
 def test_non_numbers_are_not_values(cell):
     assert _num(cell) is None
@@ -194,7 +232,10 @@ def test_non_numbers_are_not_values(cell):
 
 WORKBOOKS = ("SCHOTT-XLSX-2025-11-13", "CDGM-XLSX-2026-09",
              "OHARA-XLSX-2026-04-02", "OHARA-L-XLSX-2025-03-12",
-             "OHARA-SPECIAL-XLSX-2025-03-12")
+             "OHARA-SPECIAL-XLSX-2025-03-12", "HOYA-XLSX-2026-04-01-MIRROR")
+# HOYA's 2026-04-01 row for LAC13 prints E 105 GPa with G 45 GPa and nu 0.269
+# (2G(1+nu) = 114); the importer reports it and keeps HOYA's figures.
+MODULI_EXCEPTIONS = {"HOYA-LAC13"}
 
 
 @pytest.fixture(scope="module")
@@ -212,8 +253,9 @@ def test_workbook_rows_are_sourced_manufacturer_rows(shipped):
     assert not x["property"].isin(["refractive_index_nd", "abbe_number_vd",
                                    "density", "cte"]).any()
     makers = set(x["glass_id"].str.split("-").str[0])
-    assert makers == {"SCHOTT", "OHARA", "CDGM"}
-    for maker, n in (("SCHOTT", 150), ("OHARA", 150), ("CDGM", 300)):
+    assert makers == {"SCHOTT", "OHARA", "CDGM", "HOYA"}
+    for maker, n in (("SCHOTT", 150), ("OHARA", 150), ("CDGM", 300),
+                     ("HOYA", 200)):
         tg = x[(x["property"] == "tg") & x["glass_id"].str.startswith(maker)]
         assert tg["glass_id"].nunique() >= n
 
@@ -232,11 +274,19 @@ def test_shipped_moduli_are_self_consistent(shipped):
     w = x.pivot_table(index="glass_id", columns="property", values="value",
                       aggfunc="first")
     w = w.dropna(subset=["youngs_modulus", "shear_modulus", "poisson_ratio"])
-    assert len(w) > 450
+    w = w.drop(index=list(MODULI_EXCEPTIONS))
+    assert len(w) > 650
     e = pd.to_numeric(w["youngs_modulus"])
     calc = 2 * pd.to_numeric(w["shear_modulus"]) * (
         1 + pd.to_numeric(w["poisson_ratio"]))
     assert ((e - calc).abs() <= 0.03 * e).all()
+
+
+def test_hoya_workbook_is_recorded_as_a_mirror(shipped):
+    db = shipped[0]
+    src = db.sources.set_index("source_id").loc["HOYA-XLSX-2026-04-01-MIRROR"]
+    assert "mirror" in src["license"]
+    assert "opticalglass" in src["source_url"]
 
 
 def test_same_glass_type_agrees_across_makers(shipped):

@@ -39,7 +39,7 @@ materials, polymers, and moldables.
   phosphate resistance classes from the .agf OD records; and T_g, thermal
   conductivity, Young's and shear modulus, Poisson's ratio, stress-optic
   coefficient, Knoop hardness, specific heat and powder-method chemical
-  resistance from each maker's own Excel data workbook, for 819 glasses
+  resistance from each maker's own Excel data workbook, for 1,057 glasses
   (table below).
 - **Data quality report**: range checks, duplicate detection, missing-source
   checks and orphan source references — flags are listed for review, never
@@ -181,25 +181,30 @@ them by default. HIKARI glasses are listed once, under HIKARI: Nikon's 2019
 file distributes the same line, and the old mirror had most of them twice.
 
 Thermal and mechanical coverage (glasses with a value, from the makers' own
-Excel data workbooks; HOYA's data page could not be reached on 2026-10-28):
+Excel data workbooks):
 
 | Property | SCHOTT | OHARA | CDGM | HIKARI | HOYA |
 |---|---|---|---|---|---|
-| T_g | 156 | 161 | 347 | 155 | 0 |
-| Thermal conductivity | 147 | 161 | 157 | 155 | 0 |
-| Young's modulus | 155 | 161 | 336 | 155 | 0 |
-| Shear modulus | 0 | 161 | 335 | 155 | 0 |
-| Poisson's ratio | 155 | 161 | 327 | 155 | 0 |
-| Stress-optic coefficient | 154 | 161 | 296 | 155 | 0 |
-| Knoop hardness | 156 | 161 | 345 | 155 | 0 |
-| Specific heat | 147 | 0 | 157 | 155 | 0 |
-| Water / acid resistance, powder method | 33 / 32 | 161 / 161 | 347 / 347 | 155 / 155 | 0 |
+| T_g | 156 | 161 | 347 | 155 | 238 |
+| Thermal conductivity | 147 | 161 | 157 | 155 | 238 |
+| Young's modulus | 155 | 161 | 336 | 155 | 224 |
+| Shear modulus | 0 | 161 | 335 | 155 | 224 |
+| Poisson's ratio | 155 | 161 | 327 | 155 | 224 |
+| Stress-optic coefficient | 154 | 161 | 296 | 155 | 201 |
+| Knoop hardness | 156 | 161 | 345 | 155 | 238 |
+| Specific heat | 147 | 0 | 157 | 155 | 238 |
+| Water / acid resistance, powder method | 33 / 32 | 161 / 161 | 347 / 347 | 155 / 155 | 238 / 0 |
 
 SCHOTT's workbook covers its 159 current preferred and inquiry glasses,
 OHARA's three workbooks (S, L and special-order) 161 glasses, CDGM's every
-glass in its current catalog. Units are confirmed from each workbook - its
-headers, SCHOTT's Description sheet, and E = 2G(1 + nu) on every CDGM and
-OHARA row; CDGM's Knoop hardness is stored as printed, in 1e7 Pa.
+glass in its current catalog, HOYA's 238 glasses. Units are confirmed from
+each workbook - its headers, SCHOTT's Description sheet, HOYA's data-sheet
+page, and E = 2G(1 + nu) on every CDGM, OHARA and HOYA row; CDGM's Knoop
+hardness is stored as printed, in 1e7 Pa. HOYA's site refused connections
+on 2026-10-28, so HOYA's figures come from its 2026-04-01 workbook as
+redistributed by the open-source opticalglass package, recorded under the
+mirror source `HOYA-XLSX-2026-04-01-MIRROR` until HOYA's own current file
+(2026-06-01) can be downloaded.
 
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
@@ -208,7 +213,8 @@ are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
 
 - Manufacturer catalogs (SCHOTT, OHARA, HOYA, CDGM, SUMITA `.agf`; HIKARI's
   Excel workbook; SCHOTT's, OHARA's and CDGM's Excel data workbooks; Nikon's
-  Zemax data): authoritative, redistribution-limited —
+  Zemax data; HOYA's workbook for now via a third-party mirror, labelled
+  so): authoritative, redistribution-limited —
   the files stay in untracked `data/staging/` (`data/staging/official/<maker>/`
   for the 2026-10 downloads); only normalized rows ship. Each `sources.csv`
   row records the download page, publication date and access date.

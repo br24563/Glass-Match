@@ -22,8 +22,20 @@ the patch version, schema/format changes bump the minor version.
   overwritten; 10 CDGM disagreements are reported (H-TK9's .agf record gives
   n_d 1.587166 / V_d 75.90 against its own code 621603). A property the .agf
   already gives is not stored again (1,076 such cells, all equal). CDGM's
-  RC(S)/RA(S) classes are left out: the workbook does not define them. HOYA's
-  data page refused connections, so HOYA has no workbook data yet.
+  RC(S)/RA(S) classes are left out: the workbook does not define them.
+- **HOYA thermal and mechanical data, from a mirrored workbook.** HOYA's site
+  refused every connection on 2026-10-28, so its 2026-04-01 Excel data
+  (`HOYA20260401.xlsx`, unchanged; git blob e9204cd4) was taken from the
+  open-source opticalglass package and recorded as
+  `HOYA-XLSX-2026-04-01-MIRROR`: 2,063 rows for 238 glasses (T_g,
+  conductivity, specific heat, Knoop hardness, moduli, Poisson's ratio,
+  photoelastic constant, DW). Units are checked against the workbook's own
+  data-sheet page; E = 2G(1 + mu) holds on 223 of 224 rows (LAC13 prints E
+  105 GPa against 114 from G and mu - reported, kept as printed). n_d
+  disagreements with HOYA's .agf: MC-FAD61 (1.65451 vs 1.65494) and
+  MC-TAF115 (1.77047 vs 1.777047). DA and the other chemical codes are left
+  out: their column titles do not line up with the codes. To be replaced by
+  HOYA's own 2026-06-01 file when the site is reachable.
 - **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
   materials).** Downloaded 2026-10-20 from each maker's own site:
   HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the

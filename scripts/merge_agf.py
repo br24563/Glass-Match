@@ -101,7 +101,10 @@ CATALOGS = [
 # properties added to the glasses of the .agf named in `agf`. Run after every
 # catalog, in this order; a property the .agf or an earlier workbook already
 # gives a glass is never stored twice. Downloaded 2026-10-28. HOYA's data
-# page (hoya-opticalworld.com) refused connections that day.
+# page (hoya-opticalworld.com) refused every connection that day, so HOYA's
+# 2026-04-01 workbook comes from the open-source opticalglass package, which
+# redistributes it unchanged; it is recorded as a mirror until HOYA's own
+# current file can be downloaded.
 PROPERTY_SOURCES = [
     dict(sid="SCHOTT-XLSX-2025-11-13", mfr="SCHOTT", layout="SCHOTT",
          agf="SCHOTT-AGF-2025-06",
@@ -136,6 +139,21 @@ PROPERTY_SOURCES = [
          url="https://oharacorp.com/glass-catalog/",
          published="2025-03-12", accessed="2026-10-28",
          note="OHARA special-order glasses, 5-decimal data, 2025-03-12."),
+    dict(sid="HOYA-XLSX-2026-04-01-MIRROR", mfr="HOYA", layout="HOYA",
+         agf="HOYA-AGF-2026-07-07",
+         path=OFFICIAL / "hoya" / "HOYA20260401.xlsx",
+         url="https://github.com/mjhoptics/opticalglass/blob/master/src/"
+             "opticalglass/data/HOYA20260401.xlsx",
+         published="2026-04-01", accessed="2026-10-28",
+         license="third-party mirror of the manufacturer's redistribution-"
+                 "limited workbook; file stays local, only normalized rows "
+                 "committed; replace with HOYA's own download",
+         note="HOYA Excel data HOYA20260401.xlsx (HOYA's 2026-04-01 edition, "
+              "as linked from hoya-opticalworld.com/english/datadownload/ "
+              "in May 2026), taken from the opticalglass package (commit of "
+              "2026-04-14, git blob e9204cd4) because HOYA's site refused "
+              "connections on 2026-10-28. HOYA's current edition is dated "
+              "2026-06-01."),
 ]
 
 # Makers with no current public catalog: the mirror stays their only source.
@@ -334,7 +352,8 @@ def _property_sources(tables, only):
             props = pd.concat([props, p2], ignore_index=True)
         rows.append(_source_row(job["sid"], job["mfr"], job["url"],
                                 Path(job["path"]).name, job["published"],
-                                job["accessed"], LIMITED, job["note"]))
+                                job["accessed"], job.get("license", LIMITED),
+                                job["note"]))
     return props, rows
 
 

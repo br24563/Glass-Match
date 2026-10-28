@@ -21,6 +21,13 @@ mis-assigning values. Units come from the workbooks themselves:
   B(10^-12/Pa), lambda[W/(m K)], cp[J/(g K)]. E and G are converted to GPa
   (x 0.01) and E = 2G(1 + mu) is checked on every row. Knoop hardness stays
   in CDGM's printed unit (1e7 Pa), not converted to an HK number.
+* HOYA - the codes row (Tg, lambda, Cp, E, G, mu, B) carries no unit, but
+  the workbook's own "glass_data_sheet" prints them (Tg(C), lambda[W/(m K)],
+  Cp[kJ/(kg K)] = J/(g K), E(GPa), G(GPa), B(10^-12/Pa)); the importer
+  refuses the workbook if those texts are missing. E = 2G(1 + mu) is checked
+  on every row. The current HOYA file could not be downloaded (2026-10-28);
+  this reads HOYA's 2026-04-01 workbook as redistributed by the open-source
+  opticalglass package, recorded under a -MIRROR source_id.
 * OHARA - the header names E, G and nu with no unit. E = 2G(1 + sigma) on
   every row pins E and G to one unit, and its magnitude (median E of an oxide
   glass line, 40-150) to GPa rather than 1e8 N/m^2 or kgf/mm^2. beta is in
@@ -29,11 +36,14 @@ mis-assigning values. Units come from the workbooks themselves:
 
 Codes whose meaning the workbook does not state are left out rather than
 guessed: CDGM's RC(S) and RA(S) surface-method classes (CDGM's CR column is
-the .agf climate class verbatim, so it adds nothing).
+the .agf climate class verbatim, so it adds nothing), and HOYA's DA, Tblue,
+DNaOH, DSTPP, D0 and DH, whose titles in the row above the codes do not line
+up with them (DA sits under "Staining Resistance (powder method)").
 """
 from __future__ import annotations
 
 import re
+import unicodedata
 from pathlib import Path
 from statistics import median
 
@@ -125,6 +135,30 @@ LAYOUTS = {
         ],
         "moduli": True,
     },
+    "HOYA": {
+        "maker": "HOYA", "sheet_pattern": r"\d{8}data_table1",
+        "name_header": "Glass Type", "header_depth": 4,
+        "nd": "nd", "vd": "νd",
+        "columns": [
+            _spec("Tg", "tg", "C", note="transition temperature Tg"),
+            _spec("λ", "thermal_conductivity", "W/(m K)",
+                  note="thermal conductivity"),
+            _spec("Cp", "specific_heat", "J/(g K)",
+                  note="specific heat capacity (catalog kJ/(kg K))"),
+            _spec("HK", "knoop_hardness", "HK", note="Knoop hardness"),
+            _spec("E", "youngs_modulus", "GPa", note="Young's modulus"),
+            _spec("G", "shear_modulus", "GPa", note="rigidity modulus"),
+            _spec("μ", "poisson_ratio", note="Poisson's ratio"),
+            _spec("B", "stress_optic_coefficient", "1e-12/Pa",
+                  note="photoelastic constant B"),
+            _spec("DW", "water_resistance_powder", "class",
+                  note="water durability DW (powder method)"),
+        ],
+        "unit_sheet": "glass_data_sheet",
+        "unit_strings": ("Tg(℃)", "λ[W/(m･K)]", "CP[kJ/(kg･K)]", "E(GPa)",
+                         "G(GPa)", "B(10-12/Pa)"),
+        "moduli": True,
+    },
     "OHARA": {
         "maker": "OHARA", "sheets": None, "name_header": "Glass",
         "nd": "nd", "vd": "νd",
@@ -163,7 +197,8 @@ def _key(text) -> str:
     ("Young´s") read as an apostrophe. Case counts: "nD" (589.3 nm) sits next
     to "nd" (587.6 nm) in CDGM's and OHARA's sheets."""
     s = str(text or "").replace("’", "'").replace("´", "'")
-    return re.sub(r"[\s.]", "", s)
+    # NFKC: HOYA writes codes in full-width letters ("Ｃｐ", "Ｅ(GPa)").
+    return re.sub(r"[\s.]", "", unicodedata.normalize("NFKC", s))
 
 
 def _num(v):
@@ -191,17 +226,25 @@ def _header_row(rows, name_header):
     raise ValueError(f"no {name_header!r} header in the first 10 rows")
 
 
-def _locate(head, layout):
-    """Column index per spec, by header text; first match wins (CDGM repeats
-    'Glass' at the far right, OHARA prints a rounded V_d before the exact)."""
-    keys = [_key(h) for h in head]
+def _locate(heads, layout):
+    """Column index per spec, by header text, searching the header rows in
+    order; first match wins (CDGM repeats 'Glass' at the far right, HOYA's
+    'G' is the shear modulus before it is a colour index), except V_d, where
+    OHARA prints a rounded value before the exact one."""
+    keyed = [[_key(h) for h in head] for head in heads]
+
+    def find(text):
+        for keys in keyed:
+            hit = [j for j, k in enumerate(keys) if k == _key(text)]
+            if hit:
+                return hit
+        return []
     cols = {}
     for spec in layout["columns"]:
-        hit = [j for j, k in enumerate(keys) if k == _key(spec["header"])]
+        hit = find(spec["header"])
         if hit:
             cols[spec["prop"]] = (hit[0], spec)
-    nd = [j for j, k in enumerate(keys) if k == _key(layout["nd"])]
-    vd = [j for j, k in enumerate(keys) if k == _key(layout["vd"])]
+    nd, vd = find(layout["nd"]), find(layout["vd"])
     return cols, (nd[0] if nd else None), (vd[-1] if vd else None)
 
 
@@ -220,6 +263,21 @@ def _check_schott_units(wb, layout):
         if unit not in text:
             raise ValueError(f"SCHOTT Description for {code!r} no longer "
                              f"states {unit}: {text!r}")
+
+
+def _check_unit_sheet(wb, layout):
+    """Refuse the workbook unless the sheet that prints the units still
+    states every one the importer assumes."""
+    name = layout["unit_sheet"]
+    if name not in wb.sheetnames:
+        raise ValueError(f"{layout['maker']} workbook has no {name!r} sheet")
+    seen = set()
+    for r in wb[name].iter_rows(values_only=True):
+        seen.update(_key(c) for c in r if isinstance(c, str))
+    for unit in layout["unit_strings"]:
+        if not any(_key(unit) in c for c in seen):
+            raise ValueError(f"{layout['maker']} {name!r} no longer states "
+                             f"{unit}")
 
 
 def _prop(gid, prop, value, unit, source_id, maker, note):
@@ -248,7 +306,16 @@ def import_maker_xlsx(path, layout_name: str, source_id: str, names: dict,
     wb = openpyxl.load_workbook(Path(path), read_only=True, data_only=True)
     if layout_name == "SCHOTT":
         _check_schott_units(wb, layout)
-    sheets = layout["sheets"] or wb.sheetnames[:1]
+    if "unit_sheet" in layout:
+        _check_unit_sheet(wb, layout)
+    if "sheet_pattern" in layout:
+        sheets = [n for n in wb.sheetnames
+                  if re.fullmatch(layout["sheet_pattern"], n)]
+        if not sheets:
+            raise ValueError(f"{maker} workbook has no sheet matching "
+                             f"{layout['sheet_pattern']!r}")
+    else:
+        sheets = layout["sheets"] or wb.sheetnames[:1]
     report = {"rows": 0, "matched": 0, "unmatched": [], "nd_vd": [],
               "conflicts": [], "skipped_existing": 0, "moduli": [],
               "unparsed": 0, "columns": {}}  # columns: sheet -> props it lacks
@@ -256,14 +323,15 @@ def import_maker_xlsx(path, layout_name: str, source_id: str, names: dict,
     for sheet in sheets:
         rows = list(wb[sheet].iter_rows(values_only=True))
         hr, name_col = _header_row(rows, layout["name_header"])
-        cols, nd_col, vd_col = _locate(rows[hr], layout)
+        depth = layout.get("header_depth", 1)
+        cols, nd_col, vd_col = _locate(rows[hr:hr + depth], layout)
         if "tg" not in cols:
             raise ValueError(f"{maker} sheet {sheet!r}: layout not "
                              f"recognised (no T_g column)")
         report["columns"][sheet] = sorted(
             spec["prop"] for spec in layout["columns"]
             if spec["prop"] not in cols)
-        for r in rows[hr + 1:]:
+        for r in rows[hr + depth:]:
             name = r[name_col] if name_col < len(r) else None
             if not isinstance(name, str) or not name.strip():
                 continue
