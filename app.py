@@ -11,7 +11,9 @@ from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
 from glassmatch.spectra import (dispersion_curve, fresnel_transmission,
                                 scale_internal_transmittance)
 from glassmatch.transmission import band_transmission as _band_transmission
-from glassmatch.plotting import dispersion_figure, transmission_figure, score_breakdown_figure
+from glassmatch.plotting import (dispersion_figure, transmission_figure, score_breakdown_figure,
+                                 glass_map_figure, partial_dispersion_figure)
+from glassmatch import pairs as gpairs
 from glassmatch.validation import (validate_property_frame, validate_glass_frame,
                                    validate_transmission_frame,
                                    validate_spectral_nk_frame,
@@ -104,6 +106,16 @@ def _load_transmission_conflicts(db) -> pd.DataFrame:
 
 
 db, summary, t_groups, nk_groups, quality = _load_all(_data_key())
+
+
+@st.cache_resource
+def _glass_table(_key: str):
+    """Per-glass n_d, V_d, P_g,F (calculated), dPgF and thermo-optic
+    coefficient for the glass map and pair finder; built once per data set."""
+    return gpairs.glass_table(summary, gpairs.partial_dispersion_table(db), db)
+
+
+gtable = _glass_table(_data_key())
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
@@ -257,7 +269,8 @@ def agf_download(glass_ids, key):
                          width="stretch", hide_index=True)
 
 
-tabs = st.tabs(["Matching Glasses", "Glass Detail", "Spectral Analysis",
+tabs = st.tabs(["Matching Glasses", "Glass Map", "Pair Finder",
+                "Glass Detail", "Spectral Analysis",
                 "Comparison", "Database Explorer", "Data Sources",
                 "Import / Export"])
 
@@ -349,6 +362,149 @@ with tabs[0]:
             "a calculated uncoated Fresnel estimate is used only when a glass has no "
             "manufacturer rows at all, and is labelled as calculated.")
 with tabs[1]:
+    st.header("Glass map")
+    st.caption("n_d and V_d are catalog (manufacturer) values. P_g,F is not stored: "
+               "it is **calculated** from each glass's verified dispersion fit "
+               "(n_g, n_F, n_C), only where the fit's stated range covers 435.8-656.3 nm.")
+    gm1, gm2, gm3 = st.columns([2, 1, 1])
+    gm_makers = gm1.multiselect("Makers", sorted(gtable["manufacturer"].unique()),
+                                default=sorted(gtable["manufacturer"].unique()),
+                                key="gm_makers")
+    gm_obsolete = gm2.checkbox("Show obsolete glasses", value=False, key="gm_obsolete")
+    gm_top = gm3.number_input("Highlight top N match results", 0, 500, 25, 5,
+                              key="gm_top",
+                              help="The highest-scoring glasses of the Matching "
+                                   "Glasses tab (manufacturers in scope there).")
+    gm_view = gtable[gtable["manufacturer"].isin(gm_makers)]
+    if not gm_obsolete:
+        gm_view = gm_view[gm_view["status"] != "obsolete"]
+    gm_highlight = scoped["glass_id"].head(int(gm_top)).tolist()
+    gm_kind = st.radio("View", ["n_d vs V_d (Abbe diagram)",
+                                "P_g,F vs V_d (partial dispersion)"],
+                       horizontal=True, key="gm_kind")
+    if gm_kind.startswith("n_d"):
+        st.plotly_chart(glass_map_figure(gm_view, gm_highlight), width="stretch")
+        st.caption(f"{int(gm_view[['nd', 'vd']].notna().all(axis=1).sum()):,} glasses "
+                   "plotted. Crystals and IR materials have no catalog n_d/V_d and "
+                   "do not appear.")
+    else:
+        st.plotly_chart(partial_dispersion_figure(gm_view, gm_highlight),
+                        width="stretch")
+        st.caption(
+            f"{int(gm_view['pgf'].notna().sum()):,} glasses plotted. dPgF on hover is "
+            f"P_g,F minus the {gpairs.NORMAL_LINE_LABEL} (calculated); the "
+            "manufacturer's own dPgF, measured against that maker's normal line, "
+            "is shown beside it where stored. Glasses far from the line have "
+            "anomalous partial dispersion - the ones that reduce secondary spectrum.")
+
+with tabs[2]:
+    st.header("Pair finder (achromatic doublet)")
+    st.caption("Thin lenses in contact, total power φ: "
+               "φ1 = φ·V1/(V1−V2), φ2 = −φ·V2/(V1−V2); "
+               "secondary spectrum ∝ (P1−P2)/(V1−V2); thermo-optic "
+               "coefficient γ = (dn/dT)/(n_d−1) − α. Every number here "
+               "is **calculated** - a starting point for design, never a manufacturer "
+               "recommendation.")
+    pf_rank = st.radio("Rank by", ["Low element powers", "Low secondary spectrum",
+                                   "Apochromat candidates", "Athermal (mount CTE)"],
+                       horizontal=True, key="pf_rank")
+    pf_key = {"Low element powers": "power", "Low secondary spectrum": "secondary",
+              "Apochromat candidates": "apo", "Athermal (mount CTE)": "athermal"}[pf_rank]
+    pc1, pc2, pc3, pc4 = st.columns(4)
+    pf_f = pc1.number_input("Doublet focal length (mm)", 1.0, 100000.0, 100.0, 10.0,
+                            key="pf_f")
+    pf_min_dv = pc2.number_input("Min V1 − V2", 1.0, 80.0, 10.0, 1.0, key="pf_min_dv",
+                                 help="Pairs closer in V_d need very strong elements.")
+    pf_mount = pc3.number_input("Mount CTE (1e-6/K)", -5.0, 60.0, 23.6, 0.1,
+                                key="pf_mount", help="23.6 aluminium, 17.3 stainless "
+                                                     "303, 8.6 titanium, 1.2 Invar.",
+                                disabled=pf_key != "athermal")
+    pf_top = pc4.number_input("Pairs shown", 10, 2000, 200, 10, key="pf_top")
+    if pf_key == "apo":
+        ac1, ac2 = st.columns(2)
+        pf_apo_dp = ac1.number_input("Max |P1 − P2|", 0.0001, 0.05, 0.003, 0.0005,
+                                     format="%.4f", key="pf_apo_dp")
+        pf_apo_dv = ac2.number_input("Min V1 − V2 for apochromats", 1.0, 80.0, 20.0,
+                                     1.0, key="pf_apo_dv")
+    else:
+        pf_apo_dp, pf_apo_dv = 0.003, 20.0
+    with st.expander("Which glasses are paired", expanded=False):
+        fc1, fc2 = st.columns(2)
+        pf_makers = fc1.multiselect("Makers", sorted(gtable["manufacturer"].unique()),
+                                    default=sorted(gtable["manufacturer"].unique()),
+                                    key="pf_makers")
+        _classes = sorted(gtable["material_class"].unique())
+        pf_classes = fc2.multiselect("Material classes", _classes,
+                                     default=[c for c in _classes
+                                              if c in ("oxide_glass", "moldable")]
+                                     or _classes, key="pf_classes")
+        pf_obsolete = st.checkbox("Include obsolete glasses", value=False,
+                                  key="pf_obsolete")
+        pf_trans = st.checkbox(
+            f"Only glasses meeting the sidebar transmission requirement "
+            f"({t_min:g}% {t_mode.lower()}, {wl_min:g}-{wl_max:g} {wl_unit}, "
+            f"{sample_thickness_mm:g} mm)", value=False, key="pf_trans",
+            help="Glasses with no transmission data are kept unless 'Require "
+                 "available data' is on.")
+        pf_min_score = st.slider("Minimum compatibility score (sidebar requirements)",
+                                 0.0, 100.0, 0.0, 1.0, key="pf_min_score",
+                                 help="0 pairs every glass; raise it to pair only "
+                                      "glasses that fit the sidebar's n_d, V_d, "
+                                      "density, CTE and dn/dT requirements.")
+    # The pool starts from the match results, so the sidebar's hard filters
+    # (|dn/dT| limit, "Require available data") already apply.
+    pf_ok = results[results["compatibility"] >= pf_min_score]["glass_id"]
+    pool_t = gtable[gtable["glass_id"].isin(set(pf_ok))
+                    & gtable["manufacturer"].isin(pf_makers)
+                    & gtable["material_class"].isin(pf_classes)]
+    if not pf_obsolete:
+        pool_t = pool_t[pool_t["status"] != "obsolete"]
+    if pf_trans:
+        def _t_ok(g):
+            v = trans.get(g)
+            return (not require_data) if v is None else v >= t_min
+        pool_t = pool_t[pool_t["glass_id"].map(_t_ok)]
+    pairs_df = gpairs.find_pairs(pool_t, sort_by=pf_key, top=int(pf_top),
+                                 min_dv=pf_min_dv,
+                                 mount_cte=pf_mount if pf_key == "athermal" else None,
+                                 apo_dp_max=pf_apo_dp, apo_min_dv=pf_apo_dv)
+    st.caption(f"{len(pool_t):,} glasses in the pool → "
+               f"{pairs_df.attrs.get('n_pairs', 0):,} pairs with V1 − V2 ≥ "
+               f"{pf_min_dv:g}; {pairs_df.attrs.get('n_ranked', 0):,} have the data "
+               f"this ranking needs. Showing the top {len(pairs_df):,}.")
+    if pairs_df.empty:
+        st.info("No pairs for these settings - widen the filters.")
+    else:
+        pv = pairs_df.copy()
+        pv["f1_mm"] = pf_f / pv["phi1"]
+        pv["f2_mm"] = pf_f / pv["phi2"]
+        pv_cols = ["crown", "crown_maker", "flint", "flint_maker", "V1", "V2",
+                   "phi1", "phi2", "f1_mm", "f2_mm", "sum_abs_power",
+                   "P1", "P2", "dP", "secondary_spectrum"]
+        if pf_key == "athermal":
+            pv_cols += ["gamma1", "gamma2", "focal_drift", "thermal_residual"]
+        st.dataframe(pv[pv_cols].round(5), width="stretch", hide_index=True)
+        st.caption(
+            "φ1, φ2 in units of the total power; f1, f2 = element focal "
+            "lengths for the focal length above. P = P_g,F calculated from the "
+            "verified fit; secondary_spectrum ≈ g-F focal shift / f. "
+            + ("γ in 1e-6/K from absolute dn/dT (d line, +20/+40 C; "
+               "manufacturer or calculated from TD coefficients) and catalog CTE; "
+               "focal_drift = (1/f)·df/dT, thermal_residual = focal_drift "
+               "− mount CTE (0 = athermal). " if pf_key == "athermal" else "")
+            + "Basis: " + gpairs.PAIR_BASIS + ".")
+        st.download_button("Export pairs CSV", pv.to_csv(index=False).encode(),
+                           "glassmatch_pairs.csv", "text/csv", key="dl_pairs")
+        pick = st.selectbox(
+            "Show a pair on the partial-dispersion diagram", range(len(pv)),
+            format_func=lambda k: f"{pv['crown'].iloc[k]} ({pv['crown_maker'].iloc[k]})"
+                                  f" + {pv['flint'].iloc[k]} ({pv['flint_maker'].iloc[k]})",
+            key="pf_pick")
+        st.plotly_chart(partial_dispersion_figure(
+            pool_t, pair=(pv["crown_id"].iloc[pick], pv["flint_id"].iloc[pick]),
+            height=520), width="stretch")
+
+with tabs[3]:
     st.header("Glass detail + provenance")
     gid = st.selectbox("Glass", scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist())
     row = db.get_glass_row(gid)
@@ -437,7 +593,7 @@ with tabs[1]:
         "starting points for review, **not** manufacturer-stated equivalences: "
         "check melt data, thermal history and coating/availability with the "
         "manufacturer before substituting.")
-with tabs[2]:
+with tabs[4]:
     st.header("Spectral analysis")
     pool = scoped["glass_id"].tolist() if len(scoped) else results["glass_id"].tolist()
     sel = st.multiselect("Glasses on plot (max 8 for readability)", pool,
@@ -538,7 +694,7 @@ with tabs[2]:
             "each trace is labelled by basis. Manufacturer internal "
             f"transmittance is converted to {sample_thickness_mm:g} mm "
             "(Beer-Lambert) from the thickness each catalog lists.")
-with tabs[3]:
+with tabs[5]:
     st.header("Comparison (2-5 glasses)")
     comp = st.multiselect("Select glasses", results["glass_id"].tolist(),
                           default=results["glass_id"].tolist()[:2], max_selections=5)
@@ -549,7 +705,7 @@ with tabs[3]:
     else:
         st.info("Select at least 2 glasses.")
 
-with tabs[4]:
+with tabs[6]:
     st.header("Database explorer")
     mf = st.selectbox("Manufacturer", ["(all)"] + sorted(summary["manufacturer"].unique()))
     fam = st.selectbox("Family", ["(all)"] + sorted(summary["family"].unique()))
@@ -621,7 +777,7 @@ with tabs[4]:
             st.caption("Reviewed pairs carry a source_id. Add manufacturer "
                        "cross-reference charts via PR - see CONTRIBUTING.md.")
 
-with tabs[5]:
+with tabs[7]:
     st.header("Data sources and licensing")
     st.dataframe(db.sources, width="stretch", hide_index=True)
     st.warning("Glass nd/Vd and dispersion coefficients are parsed from each "
@@ -678,7 +834,7 @@ with tabs[5]:
     else:
         st.success("No conflicting transmission samples remain in the database.")
 
-with tabs[6]:
+with tabs[8]:
     st.header("Import your data")
     st.markdown("User CSV columns: `name, manufacturer, nd, vd, density, cte, "
                 "thermal_conductivity, source`.")

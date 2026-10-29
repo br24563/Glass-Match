@@ -36,9 +36,26 @@ materials, polymers, and moldables.
   1,819 materials - HIKARI's own figures, or calculated from each catalog's
   TD coefficients with the SCHOTT dn/dT formula - with an optional |dn/dT|
   limit for athermal designs; relative cost and climate/stain/acid/alkali/
-  phosphate resistance classes from the .agf OD records; and, for the 155
-  current HIKARI glasses, T_g, thermal conductivity, Young's and shear
-  modulus, Poisson's ratio, stress-optic coefficient and Knoop hardness.
+  phosphate resistance classes from the .agf OD records; and T_g, thermal
+  conductivity, Young's and shear modulus, Poisson's ratio, stress-optic
+  coefficient, Knoop hardness, specific heat and powder-method chemical
+  resistance from each maker's own Excel data workbook, for 1,057 glasses
+  (table below).
+- **Glass map**: interactive n_d vs V_d Abbe diagram coloured by maker,
+  obsolete glasses hidden by default and the current match results ringed;
+  a second view plots P_g,F vs V_d with the normal line and dPgF for
+  secondary-spectrum work. P_g,F is not a stored property: it is
+  **calculated** from each glass's verified dispersion fit (n_g, n_F, n_C)
+  for 2,719 glasses, only where the fit's stated range covers 435.8-656.3 nm,
+  and the manufacturer's own dPgF is shown beside the calculated one.
+- **Pair finder** (`glassmatch/pairs.py`): ranks two-glass achromatic
+  doublets by low element powers, low secondary spectrum, apochromat
+  candidates (near-equal P_g,F, large dV) or athermal residual for a given
+  mount CTE, over the non-obsolete glasses by default, filtered by maker,
+  material class, the sidebar transmission requirement and compatibility
+  score. Vectorised: ~2,000 glasses (two million pairs) rank in well under a
+  second. Every number is calculated (first-order thin lenses in contact)
+  and labelled as a starting point, never a manufacturer recommendation.
 - **Data quality report**: range checks, duplicate detection, missing-source
   checks and orphan source references — flags are listed for review, never
   auto-fixed.
@@ -141,6 +158,26 @@ when samples span ≥90% of the band (otherwise reported missing, not guessed).
 Manufacturer IT rows are preferred; a calculated Fresnel estimate is used only
 for glasses with no manufacturer rows and is always labelled calculated.
 
+## Glass pairs
+
+Thin lenses in contact, total power φ, element 1 = higher V_d (crown):
+
+| Quantity | Formula |
+|---|---|
+| Achromat power split | φ1 = φ·V1/(V1−V2), φ2 = −φ·V2/(V1−V2) |
+| Secondary spectrum (g-F focal shift / f) | (P1−P2)/(V1−V2), P = P_g,F |
+| Normal line (SCHOTT, K7/F2) | P_g,F = 0.6438 − 0.001682·V_d |
+| Thermo-optic coefficient | γ = (dn/dT)/(n_d−1) − α  (1e-6/K) |
+| Doublet focal drift | (1/f)·df/dT = −(φ1γ1 + φ2γ2)/φ |
+| Athermal residual | focal drift − mount CTE (0 = athermal) |
+
+Textbook check (tested): N-BK7 / N-F2 (V_d 64.17 / 36.37) gives
+φ1 = 2.308φ, φ2 = −1.308φ — a 100 mm doublet with a 43.3 mm crown and a
+−76.4 mm flint. dn/dT is the absolute value at the d line, +20/+40 C, and α
+the catalog CTE (−30/+70 C), so the athermal ranking covers the 1,790
+glasses that have both. Treat the results as a shortlist for a lens-design
+program, not a design.
+
 ## Database architecture
 
 - `manufacturers.csv`, `glasses.csv`, `properties.csv` (long format with
@@ -188,13 +225,41 @@ for HIKARI, absence from the current catalog); the Database explorer hides
 them by default. HIKARI glasses are listed once, under HIKARI: Nikon's 2019
 file distributes the same line, and the old mirror had most of them twice.
 
+Thermal and mechanical coverage (glasses with a value, from the makers' own
+Excel data workbooks):
+
+| Property | SCHOTT | OHARA | CDGM | HIKARI | HOYA |
+|---|---|---|---|---|---|
+| T_g | 156 | 161 | 347 | 155 | 238 |
+| Thermal conductivity | 147 | 161 | 157 | 155 | 238 |
+| Young's modulus | 155 | 161 | 336 | 155 | 224 |
+| Shear modulus | 0 | 161 | 335 | 155 | 224 |
+| Poisson's ratio | 155 | 161 | 327 | 155 | 224 |
+| Stress-optic coefficient | 154 | 161 | 296 | 155 | 201 |
+| Knoop hardness | 156 | 161 | 345 | 155 | 238 |
+| Specific heat | 147 | 0 | 157 | 155 | 238 |
+| Water / acid resistance, powder method | 33 / 32 | 161 / 161 | 347 / 347 | 155 / 155 | 238 / 0 |
+
+SCHOTT's workbook covers its 159 current preferred and inquiry glasses,
+OHARA's three workbooks (S, L and special-order) 161 glasses, CDGM's every
+glass in its current catalog, HOYA's 238 glasses. Units are confirmed from
+each workbook - its headers, SCHOTT's Description sheet, HOYA's data-sheet
+page, and E = 2G(1 + nu) on every CDGM, OHARA and HOYA row; CDGM's Knoop
+hardness is stored as printed, in 1e7 Pa. HOYA's site refused connections
+on 2026-10-28, so HOYA's figures come from its 2026-04-01 workbook as
+redistributed by the open-source opticalglass package, recorded under the
+mirror source `HOYA-XLSX-2026-04-01-MIRROR` until HOYA's own current file
+(2026-06-01) can be downloaded.
+
 Duplicate NM names across mold variants (HOYA E-FL6/FD-series, Nikon E-series)
 are disambiguated with status-flag suffixes — zero duplicate `glass_id`s.
 
 ## Data sources and licensing
 
 - Manufacturer catalogs (SCHOTT, OHARA, HOYA, CDGM, SUMITA `.agf`; HIKARI's
-  Excel workbook; Nikon's Zemax data): authoritative, redistribution-limited —
+  Excel workbook; SCHOTT's, OHARA's and CDGM's Excel data workbooks; Nikon's
+  Zemax data; HOYA's workbook for now via a third-party mirror, labelled
+  so): authoritative, redistribution-limited —
   the files stay in untracked `data/staging/` (`data/staging/official/<maker>/`
   for the 2026-10 downloads); only normalized rows ship. Each `sources.csv`
   row records the download page, publication date and access date.
