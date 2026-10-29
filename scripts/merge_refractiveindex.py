@@ -133,6 +133,9 @@ def main() -> int:
     subprocess.run([sys.executable,
                     str(ROOT / "scripts" / "verify_ir_dispersion.py")],
                    check=True)
+    # A new data version whenever the content changed.
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build_data_manifest.py")],
+                   check=True)
     return 0
 
 

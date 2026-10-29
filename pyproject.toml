@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "glassmatch"
+dynamic = ["version"]
+description = "Optical glass selection and material database with traceable manufacturer data"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "Brendan Ryan" }]
+keywords = ["optics", "optical glass", "lens design", "refractive index", "zemax"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Intended Audience :: Science/Research",
+]
+# The library, the command line and the bundled database. The web app is an
+# extra: `pip install "glassmatch[app]"`.
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "openpyxl>=3.1",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.60", "plotly>=5.18"]
+dev = ["pytest>=8.0", "ruff>=0.6.0", "streamlit>=1.60", "plotly>=5.18"]
+
+[project.scripts]
+glassmatch = "glassmatch.cli:main"
+
+[project.urls]
+Source = "https://github.com/br24563/Glass-Match"
+Changelog = "https://github.com/br24563/Glass-Match/blob/main/CHANGELOG.md"
+Validation = "https://github.com/br24563/Glass-Match/blob/main/docs/VALIDATION.md"
+
+[tool.setuptools]
+# The shipped database (data/normalized) is installed as glassmatch/data, so
+# an installed copy finds it without the repository (see
+# glassmatch.database._default_data_dir).
+packages = ["glassmatch", "glassmatch.importers", "glassmatch.data"]
+package-dir = { "glassmatch.data" = "data/normalized" }
+
+[tool.setuptools.package-data]
+"glassmatch.data" = ["*.csv", "MANIFEST.json"]
+
+[tool.setuptools.dynamic]
+version = { attr = "glassmatch.__version__" }

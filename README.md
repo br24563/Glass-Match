@@ -5,7 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,920 materials · 18 source collections · 221 traceable sources** — search,
+**2,920 materials · 18 source collections · 227 traceable sources** · data
+version pinned by [`MANIFEST.json`](data/normalized/MANIFEST.json) ·
+[how the data is validated](docs/VALIDATION.md) — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
 materials, polymers, and moldables.
 
@@ -118,7 +120,56 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+**As a Python package** (library + `glassmatch` command + the bundled
+database; the web app is the `[app]` extra):
+
+```text
+pip install "glassmatch[app] @ git+https://github.com/br24563/Glass-Match"
+```
+
 Works offline once installed; no servers, keys, or cloud services.
+
+### Command line
+
+```text
+glassmatch version                      # package + data version, counts
+glassmatch info N-BK7                   # every property with its source
+glassmatch n N-BK7 486.1 587.6 1064     # index; never extrapolated
+glassmatch search --nd 1.5:1.55 --vd 60:70 --preferred --top 10
+glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10 --csv out.csv
+glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf
+glassmatch check                        # data matches its manifest
+```
+
+`python -m glassmatch ...` is the same. In Python:
+`from glassmatch import load_default_database, match_glasses, data_version`.
+
+## Availability
+
+`status` is each catalog's own availability class (the Zemax NM status
+field): **preferred** (the maker's recommended line), **standard**,
+**special**, **melt** (made to order) and **obsolete**. Where a maker's own
+workbook is newer or more specific than its `.agf`, it wins: SCHOTT's
+November 2025 workbook lists 34 glasses as **inquiry** (orderable on request,
+e.g. "N-LAF35 moved to inquiry glasses") that its June 2025 `.agf` marks
+obsolete or preferred, and OHARA's special-order workbook lists 14 glasses its
+`.agf` marks obsolete. The matching sidebar, `glassmatch search` and the pair
+finder hide obsolete glasses by default; `--preferred` / the Availability
+filter narrows to the makers' preferred lines. HIKARI and the mirror-only
+makers publish no preferred class.
+
+## Validation and data versions
+
+[`docs/VALIDATION.md`](docs/VALIDATION.md) lists every check the data passes,
+with the numbers. In short: every fit reproduces its catalog n_d and V_d, and
+888 fits were compared with the makers' own datasheets at 11-20 spectral lines
+from the i line to 2.3 µm - 96.7% agree within 2×10⁻⁵ at every line, the worst
+by 4.8×10⁻⁵ (at the UV end).
+
+The database carries a **data version** (`YYYY.MM.DD` of its last change) in
+`data/normalized/MANIFEST.json`, which pins every file by SHA-256. The app
+shows it, every export (CSV, JSON, `.agf`) records it, and CI fails if the data
+changes without it - so a design can cite exactly which numbers it used.
 
 ## Running tests
 
@@ -184,7 +235,9 @@ program, not a design.
   source_id + data_type), `sources.csv`, `sellmeier.csv` (+`transmission.csv`,
   `equivalents.csv`).
 - `material_class` ∈ {oxide_glass, crystal, chalcogenide, polymer, moldable},
-  `status` ∈ {standard, obsolete}; both default safely on legacy files.
+  `status` ∈ {preferred, standard, special, melt, inquiry, obsolete} (each
+  catalog's own availability class; see "Availability" below); both default
+  safely on legacy files.
 - `spectral_nk.csv` holds tabulated optical constants (wavelength, n, k) for
   crystal pages, verbatim with a per-row `source_id`.
 - Dispersion rows (`sellmeier.csv`) keep the coefficients verbatim in
@@ -220,7 +273,7 @@ add a manufacturer without writing any Python. Release history is in
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
 | **Total** | **2,920** | 2,756 verified dispersion curves · 33 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 70k transmission rows · 135k tabulated n/k samples |
 
-1,244 glasses are marked obsolete, from each catalog's own status field (or,
+1,202 glasses are marked obsolete, from each catalog's own status field (or,
 for HIKARI, absence from the current catalog); the Database explorer hides
 them by default. HIKARI glasses are listed once, under HIKARI: Nikon's 2019
 file distributes the same line, and the old mirror had most of them twice.
@@ -307,8 +360,11 @@ the source catalog. The Data Sources tab reports how many are quarantined.
 Add rows + source metadata via PR (`scripts/merge_agf.py --only <SOURCE_ID>`
 keeps merges idempotent); validation flags out-of-range values.
 Done: bulk `.agf` import, non-Sellmeier gating, IR mode, dedup suffixes,
-equivalency candidates, transmission conflict quarantine, Zemax `.agf` export.
-Future: achromatic-doublet finder, cost data, Sellmeier fitting.
+equivalency candidates, transmission conflict quarantine, Zemax `.agf` export,
+glass map and pair finder, dn/dT and cost data, availability classes,
+datasheet validation, pip package and CLI, versioned data.
+Future: melt-data (tolerance-grade) import, CODE V export, Sellmeier fitting
+of user measurements.
 
 ## Expansion history
 

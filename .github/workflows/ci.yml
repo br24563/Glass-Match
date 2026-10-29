@@ -63,4 +63,34 @@ jobs:
             echo "$offenders"
             exit 1
           fi
-          echo "no manufacturer catalogs tracked (fixtures only)"
+          echo "no manufacturer catalogs tracked (fixtures only)"          offenders=$(git ls-files '*.xlsx' '*.XLSX' || true)
+          if [ -n "$offenders" ]; then
+            echo "Manufacturer data workbooks must not be committed:"
+            echo "$offenders"
+            exit 1
+          fi
+
+      - name: Data manifest matches the data
+        run: python scripts/build_data_manifest.py --check
+
+  package:
+    name: Wheel installs and runs outside the repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build the wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir dist
+      - name: Install into a clean environment and run the CLI elsewhere
+        run: |
+          python -m venv /tmp/gm
+          /tmp/gm/bin/pip install dist/*.whl
+          cd /tmp
+          /tmp/gm/bin/glassmatch version
+          /tmp/gm/bin/glassmatch check
+          /tmp/gm/bin/glassmatch n N-BK7 587.5618
+          /tmp/gm/bin/glassmatch search --nd 1.5:1.55 --vd 60:70 --preferred --top 5

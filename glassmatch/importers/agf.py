@@ -37,6 +37,15 @@ FAMILY_GUESS = (
 )
 
 
+# Zemax NM status field -> GlassMatch status. "inquiry" (available on request)
+# has no Zemax code; it comes from the makers' own workbooks (see
+# scripts/merge_agf.py AVAILABILITY).
+ZEMAX_STATUS = {0: "standard", 1: "preferred", 2: "obsolete", 3: "special",
+                4: "melt"}
+# Statuses that mean "can still be ordered", best first.
+AVAILABLE_STATUSES = ("preferred", "standard", "special", "melt", "inquiry")
+
+
 def guess_family(name: str) -> str:
     u = str(name).upper()
     for key, fam in FAMILY_GUESS:
@@ -250,9 +259,8 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
                      "glass_name": name, "manufacturer_code": name,
                      "glass_family": guess_family(name),
                      "material_class": material_class,
-                     # Zemax NM status 2 = obsolete; preferred/special/melt
-                     # are all still orderable, so they stay "standard".
-                     "status": "obsolete" if nm_status == 2 else "standard",
+                     # The catalog's own availability class (Zemax NM status).
+                     "status": ZEMAX_STATUS.get(nm_status, "standard"),
                      "description": f"Imported from {source_id}."}
             prows = []
             if nd is not None:

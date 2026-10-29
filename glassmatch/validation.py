@@ -58,26 +58,49 @@ DEFAULT_DENSITY_RANGE = (0.8, 9.0)
 
 
 def validate_property_frame(props: pd.DataFrame) -> list:
+    """Flag impossible / incomplete property rows; fixes nothing.
+
+    Vectorised: an iterrows() pass over the ~30k-row table cost ~13 s of
+    every cold start. Only flagged rows are visited, in file order.
+    """
     issues = []
     if props.empty:
         return issues
-    for i, r in props.iterrows():
-        p, v = str(r.get("property", "")), r.get("value")
-        try:
-            f = float(v)
-        except (TypeError, ValueError):
-            issues.append({"row": i, "glass_id": r.get("glass_id"),
+    n = len(props)
+    raw = props["value"] if "value" in props.columns else pd.Series([None] * n,
+                                                                     index=props.index)
+    num = pd.to_numeric(raw, errors="coerce")
+    non_numeric = (raw.notna() & num.isna()) | raw.isna()
+    prop = (props["property"].astype(str) if "property" in props.columns
+            else pd.Series([""] * n, index=props.index))
+    lo = prop.map(lambda p: RULES[p][0] if p in RULES else float("-inf"))
+    hi = prop.map(lambda p: RULES[p][1] if p in RULES else float("inf"))
+    out_of_range = prop.isin(list(RULES)) & ~non_numeric & ~((num >= lo) & (num <= hi))
+
+    def blank(col):
+        if col not in props.columns:
+            return pd.Series([True] * n, index=props.index)
+        c = props[col]
+        return c.isna() | (c.astype(str).str.strip() == "")
+    no_gid, no_src = blank("glass_id"), blank("source_id")
+    gids = props["glass_id"] if "glass_id" in props.columns else pd.Series(
+        [None] * n, index=props.index)
+    flagged = non_numeric | out_of_range | no_gid | no_src
+    for i in props.index[flagged.to_numpy()]:
+        v = raw.at[i]
+        if non_numeric.at[i]:
+            issues.append({"row": i, "glass_id": gids.at[i],
                            "issue": "non-numeric value", "value": v})
             continue
-        if p in RULES:
-            lo, hi = RULES[p]
-            if not (lo <= f <= hi):
-                issues.append({"row": i, "glass_id": r.get("glass_id"),
-                               "issue": f"{p}={f} outside [{lo},{hi}]", "value": f})
-        if not str(r.get("glass_id", "")):
+        if out_of_range.at[i]:
+            f = float(num.at[i])
+            p, (a, z) = prop.at[i], RULES[prop.at[i]]
+            issues.append({"row": i, "glass_id": gids.at[i],
+                           "issue": f"{p}={f} outside [{a},{z}]", "value": f})
+        if no_gid.at[i]:
             issues.append({"row": i, "issue": "missing glass_id", "value": v})
-        if not str(r.get("source_id", "")):
-            issues.append({"row": i, "glass_id": r.get("glass_id"),
+        if no_src.at[i]:
+            issues.append({"row": i, "glass_id": gids.at[i],
                            "issue": "missing source_id", "value": v})
     # The reference wavelength is part of a record's identity: a crystal's n
     # at 0.5876 um and at 10 um are two values, not one value entered twice.
@@ -287,6 +310,9 @@ def validate_spectral_nk_frame(nk: pd.DataFrame) -> list:
         held = nk[present & vals.notna()]
         if held.empty or not all(k in held.columns for k in keys):
             continue
+        # Only keys that occur more than once can be duplicates; grouping all
+        # ~135k (glass, wavelength) keys took ~65 s of every cold start.
+        held = held[held.duplicated(keys, keep=False)]
         for (gid, wl), grp in held.groupby(keys, sort=False):
             if len(grp) < 2:
                 continue

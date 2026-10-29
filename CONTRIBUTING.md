@@ -111,6 +111,13 @@ entry (file name, source_id with the new date, `published`, `accessed`) and
 re-run the merge. HIKARI ships an Excel workbook rather than an `.agf`; it is
 read by `glassmatch/importers/hikari_xlsx.py`.
 
+**After any data change**, run `python scripts/validate_against_datasheets.py`
+(refreshes `docs/VALIDATION.md` and its CSV) and commit the regenerated
+`data/normalized/MANIFEST.json` - the merge scripts rebuild it, CI checks it.
+A release bumps `glassmatch.__version__`, moves the CHANGELOG's Unreleased
+section under the new version with its data version, and is tagged
+`vX.Y.Z`.
+
 **Rebuilding the whole database** from the staged sources is two commands,
 in this order: `python scripts/merge_agf.py --all`, then
 `python scripts/merge_refractiveindex.py`. Each re-runs

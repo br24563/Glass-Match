@@ -21,3 +21,8 @@ __pycache__/
 *.pyc
 .venv/
 .streamlit/secrets.toml
+
+# Packaging artefacts
+build/
+dist/
+*.egg-info/

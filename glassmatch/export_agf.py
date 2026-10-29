@@ -38,13 +38,17 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
+from glassmatch import __version__
+
 from glassmatch.importers.agf import (C_LINE_UM, D_LINE_UM, F_LINE_UM, OD_PROPS,
                                       TD_PROPS, is_dispersable_formula)
 from glassmatch.spectra import (SELLMEIER_POLES, coefficients_of, rii_formula_of,
                                 rii_n, zemax_formula_of)
 
 # Zemax NM status field: 0 standard, 1 preferred, 2 obsolete, 3 special, 4 melt.
-_ZEMAX_STATUS = {"obsolete": 2}
+# "inquiry" (orderable on request; no Zemax code) is written as special.
+_ZEMAX_STATUS = {"standard": 0, "preferred": 1, "obsolete": 2, "special": 3,
+                 "melt": 4, "inquiry": 3}
 # Zemax CD lines carry ten coefficients; shorter stored lists are padded with
 # zeros, which every formula treats as "term absent".
 _CD_WIDTH = 10
@@ -160,6 +164,11 @@ def _dispersion(db, gid: str) -> tuple:
 
 def _pad(tokens: list) -> list:
     return tokens + ["0.0"] * max(0, _CD_WIDTH - len(tokens))
+
+
+def _data_version(db) -> str:
+    from glassmatch.manifest import data_version
+    return data_version(getattr(db, "data_dir", None))
 
 
 def export_agf(db, glass_ids, today: _dt.date | None = None) -> AgfExport:
@@ -279,6 +288,7 @@ def export_agf(db, glass_ids, today: _dt.date | None = None) -> AgfExport:
         "CC Manufacturer data for your own design work. Values are the source "
         "catalogs' own, written verbatim; only verified dispersion fits are "
         "included.",
+        f"CC GlassMatch {__version__}, data version {_data_version(db)}.",
         "CC Source catalog per glass:",
     ] + prov
     result.text = "\r\n".join(header + blocks) + "\r\n"

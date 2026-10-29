@@ -78,10 +78,12 @@ def test_nd_placeholder_is_missing_not_the_formula_number():
 
 
 def test_nm_status_two_is_obsolete():
+    # Status 1 is the maker's "preferred" class (kept since 0.7.0; it used to
+    # be collapsed to "standard").
     g, *_ = parse_agf_text("NM OLD 2 517642 1.5168 64.17 0 2\n"
                            "NM NEW 2 517642 1.5168 64.17 0 1\n", "X", "T")
     assert dict(zip(g["glass_name"], g["status"])) == {"OLD": "obsolete",
-                                                       "NEW": "standard"}
+                                                       "NEW": "preferred"}
 
 
 def test_it_keeps_deep_uv_and_far_ir_but_rejects_placeholders():

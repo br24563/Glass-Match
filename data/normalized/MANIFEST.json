@@ -1,0 +1,53 @@
+{
+  "data_version": "2026.10.28",
+  "files": {
+    "equivalents.csv": {
+      "rows": 365,
+      "sha256": "37c7b5b66694a184795612bf45c1805d8fc9d0ed3da977e72453184c2f31a79b"
+    },
+    "glasses.csv": {
+      "rows": 2920,
+      "sha256": "66f643ecb058e58892ca4206d610b86e4a22b9a9d8d784d3bd291b9b37cc2f29"
+    },
+    "manufacturers.csv": {
+      "rows": 18,
+      "sha256": "7d488df8a1ed7f8cffd883df33507d7f02a4f9e62821fea6aa687c732c7cf29d"
+    },
+    "properties.csv": {
+      "rows": 52577,
+      "sha256": "898ac5e399bcba0387d10acecb036100285f6086e3e0b33591cf0a67318d0c18"
+    },
+    "sellmeier.csv": {
+      "rows": 2789,
+      "sha256": "cae677651ee7dc770dc9e5bf1fce41817646ce7308b2c983386015c625f6676a"
+    },
+    "sources.csv": {
+      "rows": 227,
+      "sha256": "833d91e63321765925adc5e7a9bbbb175565c42513fce83859aee0b3afeb0c79"
+    },
+    "spectral_nk.csv": {
+      "rows": 135347,
+      "sha256": "0ac3c2a95d2046f003b0240bdaed7418f1e5976b13d9b73731baae08dc8724cf"
+    },
+    "transmission.csv": {
+      "rows": 70377,
+      "sha256": "db96fb95239cae3639687faa952c8d8a24e06b1fa2cebdd958f07a7c9942a188"
+    },
+    "transmission_conflicts.csv": {
+      "rows": 59,
+      "sha256": "c85159828beeb316d9fd52a552d150da1252ecfdbd5b09c862c8e44d7a6d53fc"
+    },
+    "transmission_dedup.csv": {
+      "rows": 64,
+      "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
+    }
+  },
+  "package_version": "0.6.2",
+  "summary": {
+    "manufacturers": 18,
+    "materials": 2920,
+    "obsolete": 1202,
+    "sources": 227,
+    "verified_dispersion_fits": 2756
+  }
+}

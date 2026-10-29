@@ -5,7 +5,24 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import pandas as pd
 
-DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "normalized"
+def _default_data_dir() -> Path:
+    """Where the shipped database lives.
+
+    GLASSMATCH_DATA_DIR wins (a private or newer copy); then the repository
+    checkout's data/normalized; then the copy an installed wheel carries as
+    glassmatch/data (see pyproject.toml)."""
+    import os
+    env = os.environ.get("GLASSMATCH_DATA_DIR")
+    if env:
+        return Path(env)
+    here = Path(__file__).resolve().parent
+    for cand in (here.parent / "data" / "normalized", here / "data"):
+        if (cand / "glasses.csv").exists():
+            return cand
+    return here.parent / "data" / "normalized"
+
+
+DEFAULT_DATA_DIR = _default_data_dir()
 
 # The label a spectral_nk sample carries once both halves of a page's n and k
 # tables have been merged onto one wavelength.  This string is already the
@@ -124,19 +141,38 @@ class GlassDatabase:
             return []
         return self.glasses["glass_id"].astype(str).tolist()
 
+    def _row_lookup(self, table: str, key: str) -> dict:
+        """key value -> first row (a Series) of one table, built once.
+
+        A boolean-mask lookup per call cost ~6 ms on the Arrow-backed string
+        columns, and summary_frame makes one per glass: 18 s of a cold start.
+        """
+        cache = self.__dict__.setdefault("_row_lookups", {})
+        if table not in cache or cache[table][0] is not getattr(self, table):
+            frame = getattr(self, table)
+            idx = {}
+            if not frame.empty and key in frame.columns:
+                for i, v in enumerate(frame[key].astype(str)):
+                    idx.setdefault(v, i)
+            cache[table] = (frame, idx)
+        frame, idx = cache[table]
+        return frame, idx
+
+    def _get_row(self, table: str, key: str, value):
+        frame, idx = self._row_lookup(table, key)
+        i = idx.get(str(value))
+        return frame.iloc[i] if i is not None else None
+
     def get_glass_row(self, glass_id: str):
-        hit = self.glasses[self.glasses["glass_id"] == glass_id]
-        return hit.iloc[0] if not hit.empty else None
+        return self._get_row("glasses", "glass_id", glass_id)
 
     def get_manufacturer_row(self, manufacturer_id: str):
-        hit = self.manufacturers[self.manufacturers["manufacturer_id"] == manufacturer_id]
-        return hit.iloc[0] if not hit.empty else None
+        return self._get_row("manufacturers", "manufacturer_id", manufacturer_id)
 
     def get_source_row(self, source_id: str):
         if self.sources.empty:
             return None
-        hit = self.sources[self.sources["source_id"] == source_id]
-        return hit.iloc[0] if not hit.empty else None
+        return self._get_row("sources", "source_id", source_id)
 
     def properties_for(self, glass_id: str) -> pd.DataFrame:
         if self.properties.empty:
@@ -328,20 +364,9 @@ class GlassDatabase:
         """
         gid = str(glass_id)
         tol = wavelength_nm * 1e-4
-        f = self.properties
-        if not f.empty:
-            # Each clause is parenthesised deliberately. In Python `&` binds
-            # tighter than `<`, so `a & b & c < tol` parses as `(a & b & c) < tol`
-            # - comparing a boolean Series to a float, which silently matched
-            # 21,264 of 21,272 rows instead of the single one intended.
-            near = ((pd.to_numeric(f["reference_wavelength_nm"],
-                                   errors="coerce") - wavelength_nm).abs() < tol)
-            hit = f[(f["glass_id"] == gid)
-                    & (f["property"] == "n_at_reference")
-                    & near]
-            if not hit.empty:
-                row = hit.iloc[0]
-                return float(row["value"]), str(row.get("data_type", ""))
+        for wl_nm, value, dtype in self._n_reference_index().get(gid, ()):
+            if abs(wl_nm - wavelength_nm) < tol:
+                return value, dtype
         df = self.spectral_nk_for(gid)
         if df is not None and len(df):
             pts = df.dropna(subset=["n"])
@@ -370,6 +395,27 @@ class GlassDatabase:
                 if val == val and val > 0:
                     return float(val), "calculated"
         return None, None
+
+    def _n_reference_index(self) -> dict:
+        """glass_id -> [(wavelength_nm, n, data_type)] for stored
+        n_at_reference rows, in file order (first match wins), built once.
+        Filtering the whole properties table per call made n_at for every
+        material take ~50 s."""
+        idx = self.__dict__.get("_nref_idx")
+        if idx is None:
+            idx = {}
+            f = self.properties
+            if not f.empty and "property" in f.columns:
+                hit = f[f["property"] == "n_at_reference"]
+                wl = pd.to_numeric(hit["reference_wavelength_nm"], errors="coerce")
+                val = pd.to_numeric(hit["value"], errors="coerce")
+                dts = (hit["data_type"].astype(str) if "data_type" in hit.columns
+                       else [""] * len(hit))
+                for gid, w, v, dt in zip(hit["glass_id"].astype(str), wl, val, dts):
+                    if w == w and v == v:
+                        idx.setdefault(gid, []).append((float(w), float(v), dt))
+            self.__dict__["_nref_idx"] = idx
+        return idx
 
     def dispersion_range(self, glass_id: str, coef: dict):
         """Validity range (um) for a dispersion curve, or (None, None).

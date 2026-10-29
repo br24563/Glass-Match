@@ -6,6 +6,52 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-28 (data version 2026.10.28)
+
+### Added
+- **Availability classes.** `status` now keeps each catalog's own class -
+  preferred, standard, special, melt (made to order), obsolete - instead of
+  collapsing everything but obsolete to "standard" (SCHOTT 124 preferred,
+  HOYA 141 and 60 special, CDGM 170 preferred, OHARA 137, SUMITA 33). Where a
+  maker's own workbook is newer it wins: SCHOTT's November 2025 workbook
+  lists 34 glasses as **inquiry** (orderable on request; 28 of them marked
+  obsolete in its June 2025 `.agf`, e.g. N-LAF35, N-SF56, N-LASF46A), and
+  OHARA's special-order workbook 14 more. Obsolete glasses drop from 1,244 to
+  1,202. The matching sidebar gets an Availability filter (obsolete hidden by
+  default), results show the status, and the `.agf` export writes it back as
+  the Zemax code.
+- **Datasheet validation** (`glassmatch/datasheet_check.py`,
+  `scripts/validate_against_datasheets.py`, `docs/VALIDATION.md`). Every
+  verified fit is compared with the maker's own tabulated catalog index at
+  every printed line from 334 nm to 2.3 um: 888 glass/datasheet pairs from
+  SCHOTT, OHARA, HOYA and CDGM, 96.7% within 2e-5 at every line, worst 4.8e-5
+  (at the UV end). Per-glass residuals are committed; a fixed sample of
+  catalog values (929) lets CI re-check without the workbooks.
+- **Installable package and command line.** `pyproject.toml` builds a wheel
+  that carries the database (as `glassmatch/data`); the web app is the
+  `[app]` extra. `glassmatch version | info | n | search | export-agf |
+  check` (also `python -m glassmatch`). The data directory can be set with
+  `GLASSMATCH_DATA_DIR`. CI builds the wheel, installs it into a clean
+  environment and runs the command line outside the repository.
+- **Versioned data.** `data/normalized/MANIFEST.json` gives the database a
+  data version (`YYYY.MM.DD` of its last change) and pins every file by
+  SHA-256; it changes only when content changes. The app shows it, CSV /
+  JSON / `.agf` exports record it, both merge scripts rebuild it, and CI
+  fails if the data and manifest disagree.
+
+### Changed
+- **Cold start 347 s -> 18 s** (re-run 21 s -> 3.7 s). Four row-by-row scans
+  were the cost: the n/k validator grouped all ~135k (glass, wavelength) keys
+  to find a few duplicates (38 s -> 1.2 s), the property validator used
+  `iterrows` (14 s -> 0.3 s), `n_at` filtered the whole properties table per
+  call (~50 s for all materials -> 1.4 s) and `summary_frame` looked up each
+  glass's manufacturer with a DataFrame mask (18 s). Outputs are identical.
+- Package version 0.7.0.
+
+### Fixed
+- The property validator never flagged a missing glass or source id stored
+  as NaN (it read as the string "nan").
+
 ### Added
 - **Thermal, mechanical and chemical data for SCHOTT, OHARA and CDGM** from
   each maker's own Excel data workbook, downloaded 2026-10-28 (new importer

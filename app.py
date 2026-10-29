@@ -6,6 +6,8 @@ import pandas as pd
 import streamlit as st
 
 from glassmatch import __version__
+from glassmatch.importers.agf import AVAILABLE_STATUSES as _AVAIL
+from glassmatch.manifest import data_version as _data_version
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
 from glassmatch.matching import DEFAULT_WEIGHTS, WEIGHT_KEYS, match_glasses
 from glassmatch.spectra import (dispersion_curve, fresnel_transmission,
@@ -106,6 +108,9 @@ def _load_transmission_conflicts(db) -> pd.DataFrame:
 
 
 db, summary, t_groups, nk_groups, quality = _load_all(_data_key())
+DATA_VERSION = _data_version(DEFAULT_DATA_DIR)
+st.sidebar.caption(f"GlassMatch {__version__} - data {DATA_VERSION} "
+                   "(see Data Sources)")
 
 
 @st.cache_resource
@@ -188,6 +193,13 @@ use_dndt = st.sidebar.checkbox(
          "are kept and flagged unless 'Require available data' is on.")
 dndt_max = st.sidebar.slider("Max |dn/dT| (1e-6/K)", 0.0, 15.0, 3.0, 0.1,
                              disabled=not use_dndt)
+availability = st.sidebar.multiselect(
+    "Availability", list(_AVAIL) + ["obsolete"], default=list(_AVAIL),
+    help="From each maker's catalog: preferred = the maker's recommended "
+         "line; standard; special / melt = special production; inquiry = "
+         "available on request (SCHOTT inquiry glasses, OHARA special order); "
+         "obsolete = no longer produced. HIKARI and the mirror-only makers "
+         "publish no preferred class, so they are 'standard' unless obsolete.")
 require_data = st.sidebar.checkbox("Require available data (missing = fail)",
                                    value=False,
                                    help="If off, missing data is flagged, not failed.")
@@ -243,6 +255,10 @@ for _, _r in summary.iterrows():
 
 results = match_glasses(summary, requirements, w_in, transmissions=trans,
                         require_data=require_data, nd_override=nd_override)
+_n_before, _attrs = len(results), dict(results.attrs)
+results = results[results["status"].isin(availability)].reset_index(drop=True)     if availability else results.iloc[0:0]
+results.attrs.update(_attrs)
+n_unavailable = _n_before - len(results)
 n_excluded = int(results.attrs.get("excluded_count", 0))
 excluded_examples = results.attrs.get("excluded_examples", [])
 
@@ -277,6 +293,9 @@ tabs = st.tabs(["Matching Glasses", "Glass Map", "Pair Finder",
 with tabs[0]:
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    if n_unavailable:
+        st.caption(f"{n_unavailable:,} material(s) hidden by the Availability "
+                   "filter (obsolete glasses are hidden by default).")
     n_dndt = int(results.attrs.get("dndt_filtered", 0))
     if n_dndt:
         st.info(f"**{n_dndt:,} material(s) removed** by the |dn/dT| limit of "
@@ -316,7 +335,7 @@ with tabs[0]:
     else:
         show["class"] = show["material_class"]
     st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-                        "cte", "dn_dt", "transmission_%", "completeness", "missing",
+                        "cte", "dn_dt", "transmission_%", "status", "completeness", "missing",
                         "class"]],
                  width="stretch", hide_index=True)
     if nd_override and (scoped["nd_basis"] == "n at reference wavelength").any():
@@ -335,12 +354,15 @@ with tabs[0]:
     st.download_button("Export results CSV (in-scope glasses)",
                        scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
                                      transmission_basis=scoped["glass_id"].map(trans_basis)
-                                     .fillna("missing")).to_csv(
+                                     .fillna("missing"),
+                                     data_version=DATA_VERSION).to_csv(
                            index=False).encode(),
                        "glassmatch_results.csv", "text/csv")
     import json as _json
     st.download_button("Export requirements + results JSON",
-                       _json.dumps({"requirements": requirements, "weights": w_norm,
+                       _json.dumps({"glassmatch": __version__,
+                                    "data_version": DATA_VERSION,
+                                    "requirements": requirements, "weights": w_norm,
                                     "results": scoped.to_dict(orient="records")},
                                    indent=2, default=str).encode(),
                        "glassmatch_results.json", "application/json")
@@ -779,6 +801,12 @@ with tabs[6]:
 
 with tabs[7]:
     st.header("Data sources and licensing")
+    st.markdown(
+        f"**Data version {DATA_VERSION}** (GlassMatch {__version__}). Every "
+        "file is pinned by SHA-256 in `data/normalized/MANIFEST.json`, so this "
+        "version identifies exactly one set of numbers - cite it with a design. "
+        "How the data is checked: [docs/VALIDATION.md](https://github.com/"
+        "br24563/Glass-Match/blob/main/docs/VALIDATION.md).")
     st.dataframe(db.sources, width="stretch", hide_index=True)
     st.warning("Glass nd/Vd and dispersion coefficients are parsed from each "
                "maker's Zemax .agf catalog (SCHOTT and OHARA direct; the rest "

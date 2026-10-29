@@ -177,6 +177,7 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                      "manufacturer_id": r.get("manufacturer_id"),
                      "family": r.get("family"),
                      "material_class": r.get("material_class", "oxide_glass"),
+                     "status": r.get("status", "standard"),
                      "ir_mode": bool(ir),
                      "nd": nd_used, "vd": r.get("vd"),
                      "nd_basis": ("n at reference wavelength" if gid in nd_override

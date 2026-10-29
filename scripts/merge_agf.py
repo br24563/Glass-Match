@@ -308,6 +308,58 @@ def _source_row(sid, mfr, url, doc, published, accessed, lic, note):
             "access_date": accessed, "license": lic, "notes": note}
 
 
+# Availability the makers state more recently, or more specifically, than
+# their .agf status field. SCHOTT's Nov 2025 workbook splits its line into
+# "Preferred glasses" and "Inquiry glasses" (orderable on request); its June
+# 2025 .agf marks 28 of those inquiry glasses obsolete (status 2) and six
+# P-glasses preferred. OHARA's special-order workbook lists 14 glasses its .agf
+# marks obsolete. A glass absent from these workbooks keeps its .agf status.
+AVAILABILITY = [
+    dict(sid="SCHOTT-XLSX-2025-11-13", agf="SCHOTT-AGF-2025-06",
+         path=OFFICIAL / "schott"
+         / "schott-optical-glass-overview-excel-format-en 202501113.xlsx",
+         sheets={"Preferred glasses": "preferred",
+                 "Inquiry glasses": "inquiry"}),
+    dict(sid="OHARA-SPECIAL-XLSX-2025-03-12", agf="OHARA-AGF-2026-05-29",
+         path=OFFICIAL / "ohara"
+         / "ohara-catalog-special-order-glass-20250312-S-5dec-1.xlsx",
+         sheets={None: "inquiry"}),
+]
+
+
+def _availability(glasses, props):
+    """Apply AVAILABILITY to the glasses table; returns it."""
+    import openpyxl
+    from glassmatch.importers.maker_xlsx import _header_row
+    for job in AVAILABILITY:
+        if not Path(job["path"]).exists():
+            continue
+        ids = set(props.loc[props["source_id"] == job["agf"], "glass_id"])
+        g = glasses[glasses["glass_id"].isin(ids)]
+        names = {name_key(n): gid for n, gid in zip(g["glass_name"], g["glass_id"])}
+        wb = openpyxl.load_workbook(job["path"], read_only=True, data_only=True)
+        changed, seen = 0, 0
+        for sheet, status in job["sheets"].items():
+            ws = wb[sheet] if sheet else wb.worksheets[0]
+            rows = list(ws.iter_rows(values_only=True))
+            hr, col = _header_row(rows, "Glass")
+            for r in rows[hr + 1:]:
+                gid = names.get(name_key(r[col])) if isinstance(r[col], str) else None
+                if gid is None:
+                    continue
+                seen += 1
+                i = glasses.index[glasses["glass_id"] == gid]
+                if (glasses.loc[i, "status"] != status).any():
+                    changed += 1
+                    glasses.loc[i, "status"] = status
+                    glasses.loc[i, "description"] = (
+                        glasses.loc[i, "description"].astype(str)
+                        + f" Availability: {status} per {job['sid']}.")
+        print(f"availability {job['sid']}: {seen} glasses listed, "
+              f"{changed} status(es) updated from the .agf")
+    return glasses
+
+
 def _property_sources(tables, only):
     """Add the PROPERTY_SOURCES workbooks' rows -> (props, source rows)."""
     glasses, props = tables[0], tables[1]
@@ -465,6 +517,7 @@ def main() -> None:
                                        "2026-09-21", MIRROR_LICENSE, MIRROR_NOTE))
 
     tables[1], prop_sources = _property_sources(tables, args.only)
+    tables[0] = _availability(tables[0], tables[1])
     new_sources += prop_sources
 
     glasses, props, sell, trans = tables
@@ -534,6 +587,9 @@ def main() -> None:
     # IR rows with a placeholder n_d can only be verified against the
     # refractiveindex.info reference pages; re-apply that check.
     subprocess.run([sys.executable, str(ROOT / "scripts" / "verify_ir_dispersion.py")],
+                   check=True)
+    # A new data version whenever the content changed.
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build_data_manifest.py")],
                    check=True)
 
 
