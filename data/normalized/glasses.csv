@@ -14,12 +14,12 @@ ARCHER-S-LAL13M,ARCHER,S-LAL13M,S-LAL13M,Optical glass,Imported from ARCHER-AGF-
 ARCHER-S-LAM60M,ARCHER,S-LAM60M,S-LAM60M,Optical glass,Imported from ARCHER-AGF-NZHAGEN-MIRROR.,polymer,standard
 ARCHER-S-NSL3M,ARCHER,S-NSL3M,S-NSL3M,Optical glass,Imported from ARCHER-AGF-NZHAGEN-MIRROR.,polymer,standard
 ARCHER-S-TIM2M,ARCHER,S-TIM2M,S-TIM2M,Optical glass,Imported from ARCHER-AGF-NZHAGEN-MIRROR.,polymer,standard
-ARTON-D4531F,ARTON,D4531F,D4531F,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: Low distortion, Toughness",polymer,standard
-ARTON-D4532,ARTON,D4532,D4532,Optical glass,Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: Moderate Tg and Lower distortion,polymer,standard
-ARTON-D4540,ARTON,D4540,D4540,Optical glass,Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Flow. Low distortion,polymer,standard
-ARTON-DX4900,ARTON,DX4900,DX4900,Optical glass,Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Flow,polymer,standard
-ARTON-F4520,ARTON,F4520,F4520,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Tg , 164 drg.C. Higher flow than F5023.",polymer,standard
-ARTON-F5023,ARTON,F5023,F5023,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Tg , 167 drg.C",polymer,standard
+ARTON-D4531F,ARTON,D4531F,D4531F,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: Low distortion, Toughness ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ARTON-D4532,ARTON,D4532,D4532,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: Moderate Tg and Lower distortion ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ARTON-D4540,ARTON,D4540,D4540,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Flow. Low distortion ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ARTON-DX4900,ARTON,DX4900,DX4900,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Flow ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ARTON-F4520,ARTON,F4520,F4520,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Tg , 164 drg.C. Higher flow than F5023. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ARTON-F5023,ARTON,F5023,F5023,Optical glass,"Imported from ARTON-AGF-NZHAGEN-MIRROR. GC: High Tg , 167 drg.C ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
 CDGM-BAF2,CDGM,BAF2,BAF2,Barium flint,Imported from CDGM-AGF-2026-09.,oxide_glass,obsolete
 CDGM-BAF3,CDGM,BAF3,BAF3,Barium flint,Imported from CDGM-AGF-NZHAGEN-MIRROR. Not in CDGM's current catalog; data from a third-party mirror of unknown vintage - verify before use.,oxide_glass,obsolete
 CDGM-BAF4,CDGM,BAF4,BAF4,Barium flint,Imported from CDGM-AGF-2026-09.,oxide_glass,obsolete
@@ -350,17 +350,17 @@ CDGM-H-ZPK2A,CDGM,H-ZPK2A,H-ZPK2A,Optical glass,Imported from CDGM-AGF-2026-09.,
 CDGM-H-ZPK3,CDGM,H-ZPK3,H-ZPK3,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,standard
 CDGM-H-ZPK5,CDGM,H-ZPK5,H-ZPK5,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,standard
 CDGM-H-ZPK7,CDGM,H-ZPK7,H-ZPK7,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,standard
-CDGM-HWS1,CDGM,HWS1,HWS1,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS2,CDGM,HWS2,HWS2,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS27,CDGM,HWS27,HWS27,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS3,CDGM,HWS3,HWS3,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS4,CDGM,HWS4,HWS4,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS5,CDGM,HWS5,HWS5,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS6,CDGM,HWS6,HWS6,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS6GT,CDGM,HWS6GT,HWS6GT,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS7,CDGM,HWS7,HWS7,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS8,CDGM,HWS8,HWS8,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
-CDGM-HWS9,CDGM,HWS9,HWS9,Optical glass,Imported from CDGM-AGF-2026-09. GC: Infrared optical glass,chalcogenide,standard
+CDGM-HWS1,CDGM,HWS1,HWS1,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS2,CDGM,HWS2,HWS2,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS27,CDGM,HWS27,HWS27,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS3,CDGM,HWS3,HWS3,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS4,CDGM,HWS4,HWS4,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS5,CDGM,HWS5,HWS5,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS6,CDGM,HWS6,HWS6,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS6GT,CDGM,HWS6GT,HWS6GT,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS7,CDGM,HWS7,HWS7,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS8,CDGM,HWS8,HWS8,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+CDGM-HWS9,CDGM,HWS9,HWS9,Optical glass,"Imported from CDGM-AGF-2026-09. GC: Infrared optical glass ED dPgF 0 not stored: the glass has no verified fit and V_d to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
 CDGM-K4A,CDGM,K4A,K4A,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,standard
 CDGM-QF1,CDGM,QF1,QF1,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,obsolete
 CDGM-QF3,CDGM,QF3,QF3,Optical glass,Imported from CDGM-AGF-2026-09.,oxide_glass,obsolete
@@ -404,14 +404,14 @@ CORNING-B10-63,CORNING,B10-63,B10-63,Optical glass,Imported from CORNING-AGF-NZH
 CORNING-B11-60,CORNING,B11-60,B11-60,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-B16-64,CORNING,B16-64,B16-64,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-B18-60,CORNING,B18-60,B18-60,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-B18-65,CORNING,B18-65,B18-65,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
+CORNING-B18-65,CORNING,B18-65,B18-65,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 CORNING-B19-61,CORNING,B19-61,B19-61,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-B23-59,CORNING,B23-59,B23-59,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-B29-52,CORNING,B29-52,B29-52,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
+CORNING-B29-52,CORNING,B29-52,B29-52,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF -0.0046 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 CORNING-B29-77,CORNING,B29-77,B29-77,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-B39-59,CORNING,B39-59,B39-59,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-B42-73,CORNING,B42-73,B42-73,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-B48-46,CORNING,B48-46,B48-46,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
+CORNING-B48-46,CORNING,B48-46,B48-46,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF -0.0013 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 CORNING-B48-53,CORNING,B48-53,B48-53,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-B52-67,CORNING,B52-67,B52-67,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-B58-53,CORNING,B58-53,B58-53,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -424,22 +424,22 @@ CORNING-B89-61,CORNING,B89-61,B89-61,Optical glass,Imported from CORNING-AGF-NZH
 CORNING-B96-67,CORNING,B96-67,B96-67,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C04-38,CORNING,C04-38,C04-38,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C04-64,CORNING,C04-64,C04-64,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-C05-50,CORNING,C05-50,C05-50,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-C0550,CORNING,C0550,C0550,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
+CORNING-C05-50,CORNING,C05-50,C05-50,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF +0.0031 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,standard
+CORNING-C0550,CORNING,C0550,C0550,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF +0.0031 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,standard
 CORNING-C06-44,CORNING,C06-44,C06-44,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C07-57,CORNING,C07-57,C07-57,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C09-59,CORNING,C09-59,C09-59,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C13-44,CORNING,C13-44,C13-44,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C13-56,CORNING,C13-56,C13-56,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C13-58,CORNING,C13-58,C13-58,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-C16-44,CORNING,C16-44,C16-44,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
+CORNING-C16-44,CORNING,C16-44,C16-44,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF -0.0083 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 CORNING-C17-55,CORNING,C17-55,C17-55,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C20-36,CORNING,C20-36,C20-36,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-C20-60,CORNING,C20-60,C20-60,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C23-53,CORNING,C23-53,C23-53,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-C23-57,CORNING,C23-57,C23-57,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-C23-58,CORNING,C23-58,C23-58,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-CORNING-C24-47,CORNING,C24-47,C24-47,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
+CORNING-C24-47,CORNING,C24-47,C24-47,Optical glass,"Imported from CORNING-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the fit gives dPgF -0.0033 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 CORNING-C26-36,CORNING,C26-36,C26-36,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 CORNING-C37-35,CORNING,C37-35,C37-35,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,obsolete
 CORNING-C38-42,CORNING,C38-42,C38-42,Optical glass,Imported from CORNING-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -881,99 +881,99 @@ HIKARI-SSK1,HIKARI,SSK1,SSK1,Dense crown,Imported from NIKON-HIKARI-AGF-2019-11.
 HIKARI-SSK2,HIKARI,SSK2,SSK2,Dense crown,Imported from NIKON-HIKARI-AGF-2019-11.,oxide_glass,obsolete
 HIKARI-SSK8,HIKARI,SSK8,SSK8,Dense crown,Imported from NIKON-HIKARI-AGF-2019-11.,oxide_glass,obsolete
 HOYA-ADC1,HOYA,ADC1,ADC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADC2,HOYA,ADC2,ADC2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF1,HOYA,ADF1,ADF1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-ADC2,HOYA,ADC2,ADC2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0077 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ADF1,HOYA,ADF1,ADF1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0084 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-ADF10,HOYA,ADF10,ADF10,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF355,HOYA,ADF355,ADF355,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF4,HOYA,ADF4,ADF4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF40,HOYA,ADF40,ADF40,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF405,HOYA,ADF405,ADF405,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF455,HOYA,ADF455,ADF455,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-ADF355,HOYA,ADF355,ADF355,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0053 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ADF4,HOYA,ADF4,ADF4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0056 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ADF40,HOYA,ADF40,ADF40,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0079 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ADF405,HOYA,ADF405,ADF405,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0049 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ADF455,HOYA,ADF455,ADF455,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0030 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-ADF50,HOYA,ADF50,ADF50,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-ADF505,HOYA,ADF505,ADF505,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ADF8,HOYA,ADF8,ADF8,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ATC1,HOYA,ATC1,ATC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ATF2,HOYA,ATF2,ATF2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ATF4,HOYA,ATF4,ATF4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAC1,HOYA,BAC1,BAC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAC2,HOYA,BAC2,BAC2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-ADF8,HOYA,ADF8,ADF8,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0055 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ATC1,HOYA,ATC1,ATC1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0088 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ATF2,HOYA,ATF2,ATF2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0194 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-ATF4,HOYA,ATF4,ATF4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0041 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAC1,HOYA,BAC1,BAC1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0043 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAC2,HOYA,BAC2,BAC2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0039 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAC4,HOYA,BAC4,BAC4,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-BAC5,HOYA,BAC5,BAC5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAC6,HOYA,BAC6,BAC6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAC6,HOYA,BAC6,BAC6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0026 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BACD1,HOYA,BACD1,BACD1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACD10,HOYA,BACD10,BACD10,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACD11,HOYA,BACD11,BACD11,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BACD12,HOYA,BACD12,BACD12,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACD13,HOYA,BACD13,BACD13,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BACD13,HOYA,BACD13,BACD13,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0027 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BACD14,HOYA,BACD14,BACD14,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BACD15,HOYA,BACD15,BACD15,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BACD16,HOYA,BACD16,BACD16,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-BACD18,HOYA,BACD18,BACD18,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BACD2,HOYA,BACD2,BACD2,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
-HOYA-BACD3,HOYA,BACD3,BACD3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BACD3,HOYA,BACD3,BACD3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0026 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BACD4,HOYA,BACD4,BACD4,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BACD5,HOYA,BACD5,BACD5,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-BACD50,HOYA,BACD50,BACD50,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACD6,HOYA,BACD6,BACD6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACD7,HOYA,BACD7,BACD7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BACD7,HOYA,BACD7,BACD7,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0019 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BACD8,HOYA,BACD8,BACD8,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACD9,HOYA,BACD9,BACD9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACED1,HOYA,BACED1,BACED1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BACD9,HOYA,BACD9,BACD9,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BACED1,HOYA,BACED1,BACED1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0011 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BACED2,HOYA,BACED2,BACED2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACED20,HOYA,BACED20,BACED20,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACED3,HOYA,BACED3,BACED3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACED4,HOYA,BACED4,BACED4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BACED5,HOYA,BACED5,BACED5,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-BACED9,HOYA,BACED9,BACED9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACL1,HOYA,BACL1,BACL1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BACL3,HOYA,BACL3,BACL3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BACED9,HOYA,BACED9,BACED9,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0016 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BACL1,HOYA,BACL1,BACL1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0049 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BACL3,HOYA,BACL3,BACL3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0022 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAF10,HOYA,BAF10,BAF10,Barium flint,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-BAF11,HOYA,BAF11,BAF11,Barium flint,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
-HOYA-BAF12,HOYA,BAF12,BAF12,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF13,HOYA,BAF13,BAF13,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF2,HOYA,BAF2,BAF2,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAF12,HOYA,BAF12,BAF12,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0017 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF13,HOYA,BAF13,BAF13,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0022 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF2,HOYA,BAF2,BAF2,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0031 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAF20,HOYA,BAF20,BAF20,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF21,HOYA,BAF21,BAF21,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF22,HOYA,BAF22,BAF22,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAF21,HOYA,BAF21,BAF21,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0028 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF22,HOYA,BAF22,BAF22,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0040 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAF23,HOYA,BAF23,BAF23,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF3,HOYA,BAF3,BAF3,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF4,HOYA,BAF4,BAF4,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF5,HOYA,BAF5,BAF5,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF6,HOYA,BAF6,BAF6,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAF7,HOYA,BAF7,BAF7,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAF3,HOYA,BAF3,BAF3,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0032 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF4,HOYA,BAF4,BAF4,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF5,HOYA,BAF5,BAF5,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0033 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF6,HOYA,BAF6,BAF6,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0024 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAF7,HOYA,BAF7,BAF7,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAF8,HOYA,BAF8,BAF8,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BAF9,HOYA,BAF9,BAF9,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BAFD1,HOYA,BAFD1,BAFD1,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BAFD10,HOYA,BAFD10,BAFD10,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD14,HOYA,BAFD14,BAFD14,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAFD14,HOYA,BAFD14,BAFD14,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0035 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAFD15,HOYA,BAFD15,BAFD15,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD16,HOYA,BAFD16,BAFD16,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD2,HOYA,BAFD2,BAFD2,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD3,HOYA,BAFD3,BAFD3,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD4,HOYA,BAFD4,BAFD4,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD5,HOYA,BAFD5,BAFD5,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFD6,HOYA,BAFD6,BAFD6,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAFD16,HOYA,BAFD16,BAFD16,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0027 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAFD2,HOYA,BAFD2,BAFD2,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0016 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAFD3,HOYA,BAFD3,BAFD3,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0010 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAFD4,HOYA,BAFD4,BAFD4,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0013 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAFD5,HOYA,BAFD5,BAFD5,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BAFD6,HOYA,BAFD6,BAFD6,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0022 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAFD7,HOYA,BAFD7,BAFD7,Barium flint,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-BAFD8,HOYA,BAFD8,BAFD8,Barium flint,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-BAFL2,HOYA,BAFL2,BAFL2,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAFL2,HOYA,BAFL2,BAFL2,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BAFL3,HOYA,BAFL3,BAFL3,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-BAFL4,HOYA,BAFL4,BAFL4,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BAFL6,HOYA,BAFL6,BAFL6,Barium flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BSC1,HOYA,BSC1,BSC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BSC3,HOYA,BSC3,BSC3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BSC4,HOYA,BSC4,BSC4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-BSC6,HOYA,BSC6,BSC6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-BAFL6,HOYA,BAFL6,BAFL6,Barium flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0034 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BSC1,HOYA,BSC1,BSC1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0028 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BSC3,HOYA,BSC3,BSC3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0021 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BSC4,HOYA,BSC4,BSC4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0016 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-BSC6,HOYA,BSC6,BSC6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0017 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-BSC7,HOYA,BSC7,BSC7,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-C10,HOYA,C10,C10,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-C12,HOYA,C12,C12,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-C2,HOYA,C2,C2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-C10,HOYA,C10,C10,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0038 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-C12,HOYA,C12,C12,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0030 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-C2,HOYA,C2,C2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0016 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-C3,HOYA,C3,C3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-C40,HOYA,C40,C40,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-C5,HOYA,C5,C5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-C40,HOYA,C40,C40,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-C5,HOYA,C5,C5,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0033 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-C7,HOYA,C7,C7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-CF2,HOYA,CF2,CF2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-CF3,HOYA,CF3,CF3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-CF4,HOYA,CF4,CF4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-CF2,HOYA,CF2,CF2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0019 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-CF3,HOYA,CF3,CF3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-CF4,HOYA,CF4,CF4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0013 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-CF5,HOYA,CF5,CF5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-CF6,HOYA,CF6,CF6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-E-ADF10,HOYA,E-ADF10,E-ADF10,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
@@ -1014,7 +1014,7 @@ HOYA-E-FL5,HOYA,E-FL5,E-FL5,Optical glass,Imported from HOYA-AGF-2026-07-07. GC:
 HOYA-E-FL6,HOYA,E-FL6,E-FL6,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-E-LAF7,HOYA,E-LAF7,E-LAF7,Lanthanum flint,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-F1,HOYA,F1,F1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-F11,HOYA,F11,F11,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-F11,HOYA,F11,F11,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0054 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-F15,HOYA,F15,F15,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-F2,HOYA,F2,F2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-F3,HOYA,F3,F3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
@@ -1025,8 +1025,8 @@ HOYA-F7,HOYA,F7,F7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,
 HOYA-F8,HOYA,F8,F8,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-F9,HOYA,F9,F9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FAD61,HOYA,FAD61,FAD61,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-FC1,HOYA,FC1,FC1,Fluor crown,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FC3,HOYA,FC3,FC3,Fluor crown,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FC1,HOYA,FC1,FC1,Fluor crown,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0042 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-FC3,HOYA,FC3,FC3,Fluor crown,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0055 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FC5,HOYA,FC5,FC5,Fluor crown,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-FCD1,HOYA,FCD1,FCD1,Fluor crown,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FCD10,HOYA,FCD10,FCD10,Fluor crown,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
@@ -1044,21 +1044,21 @@ HOYA-FD1,HOYA,FD1,FD1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_gla
 HOYA-FD10,HOYA,FD10,FD10,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD11,HOYA,FD11,FD11,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD110,HOYA,FD110,FD110,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-FD12,HOYA,FD12,FD12,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FD12,HOYA,FD12,FD12,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0016 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FD13,HOYA,FD13,FD13,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD14,HOYA,FD14,FD14,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD140,HOYA,FD140,FD140,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-FD15,HOYA,FD15,FD15,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FD18,HOYA,FD18,FD18,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FD19,HOYA,FD19,FD19,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FD18,HOYA,FD18,FD18,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0031 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-FD19,HOYA,FD19,FD19,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FD2,HOYA,FD2,FD2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FD20,HOYA,FD20,FD20,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FD20,HOYA,FD20,FD20,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0053 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FD225,HOYA,FD225,FD225,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FD270,HOYA,FD270,FD270,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-FD3,HOYA,FD3,FD3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FD3,HOYA,FD3,FD3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0042 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FD300,HOYA,FD300,FD300,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FD4,HOYA,FD4,FD4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FD41,HOYA,FD41,FD41,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FD41,HOYA,FD41,FD41,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0035 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FD5,HOYA,FD5,FD5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD6,HOYA,FD6,FD6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FD60,HOYA,FD60,FD60,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
@@ -1071,14 +1071,14 @@ HOYA-FDS16-W,HOYA,FDS16-W,FDS16-W,Optical glass,Imported from HOYA-AGF-2026-07-0
 HOYA-FDS165-W,HOYA,FDS165-W,FDS165-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FDS18,HOYA,FDS18,FDS18,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-FDS18-W,HOYA,FDS18-W,FDS18-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-FDS2,HOYA,FDS2,FDS2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FDS2,HOYA,FDS2,FDS2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0048 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FDS20-W,HOYA,FDS20-W,FDS20-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FDS24,HOYA,FDS24,FDS24,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-FDS24-SW,HOYA,FDS24-SW,FDS24-SW,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-FDS24-W,HOYA,FDS24-W,FDS24-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-FDS3,HOYA,FDS3,FDS3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FDS3,HOYA,FDS3,FDS3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0090 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FDS30,HOYA,FDS30,FDS30,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FDS5,HOYA,FDS5,FDS5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FDS5,HOYA,FDS5,FDS5,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0065 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FDS9,HOYA,FDS9,FDS9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FDS90,HOYA,FDS90,FDS90,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-FDS90(P),HOYA,FDS90(P),FDS90(P),Optical glass,Imported from HOYA-AGF-NZHAGEN-MIRROR. GC: H-SERIES Recommended glass type (Ëd=23.88}0.07) Not in HOYA's current catalog; data from a third-party mirror of unknown vintage - verify before use.,oxide_glass,obsolete
@@ -1089,52 +1089,52 @@ HOYA-FEL2,HOYA,FEL2,FEL2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_
 HOYA-FEL3,HOYA,FEL3,FEL3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FEL4,HOYA,FEL4,FEL4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FEL6,HOYA,FEL6,FEL6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FEL7,HOYA,FEL7,FEL7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FF1,HOYA,FF1,FF1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FF2,HOYA,FF2,FF2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FEL7,HOYA,FEL7,FEL7,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-FF1,HOYA,FF1,FF1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0072 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-FF2,HOYA,FF2,FF2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0095 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FF5,HOYA,FF5,FF5,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-FF8,HOYA,FF8,FF8,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-FL1,HOYA,FL1,FL1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FL1,HOYA,FL1,FL1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0010 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FL3,HOYA,FL3,FL3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-FL4,HOYA,FL4,FL4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-FL4,HOYA,FL4,FL4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0024 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-FL5,HOYA,FL5,FL5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FL57,HOYA,FL57,FL57,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FL6,HOYA,FL6,FL6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-FL7,HOYA,FL7,FL7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LAC10,HOYA,LAC10,LAC10,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
-HOYA-LAC11,HOYA,LAC11,LAC11,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LAC11,HOYA,LAC11,LAC11,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0036 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LAC12,HOYA,LAC12,LAC12,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-LAC13,HOYA,LAC13,LAC13,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-LAC14,HOYA,LAC14,LAC14,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-LAC15,HOYA,LAC15,LAC15,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAC6,HOYA,LAC6,LAC6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LAC15,HOYA,LAC15,LAC15,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0057 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LAC6,HOYA,LAC6,LAC6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0030 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LAC7,HOYA,LAC7,LAC7,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-LAC8,HOYA,LAC8,LAC8,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-LAC9,HOYA,LAC9,LAC9,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
-HOYA-LACL1,HOYA,LACL1,LACL1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LACL1,HOYA,LACL1,LACL1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0028 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LACL2,HOYA,LACL2,LACL2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LACL3,HOYA,LACL3,LACL3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LACL4,HOYA,LACL4,LACL4,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LACL3,HOYA,LACL3,LACL3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0011 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LACL4,HOYA,LACL4,LACL4,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0047 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LACL5,HOYA,LACL5,LACL5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LACL6,HOYA,LACL6,LACL6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LACL6,HOYA,LACL6,LACL6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0023 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LACL60,HOYA,LACL60,LACL60,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
-HOYA-LACL7,HOYA,LACL7,LACL7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LACL7,HOYA,LACL7,LACL7,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0048 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LACL8,HOYA,LACL8,LACL8,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LACL9,HOYA,LACL9,LACL9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LAF2,HOYA,LAF2,LAF2,Lanthanum flint,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-LAF20,HOYA,LAF20,LAF20,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LAF20,HOYA,LAF20,LAF20,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0052 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LAF3,HOYA,LAF3,LAF3,Lanthanum flint,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
-HOYA-LAF30,HOYA,LAF30,LAF30,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LAF30,HOYA,LAF30,LAF30,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0041 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LAF45,HOYA,LAF45,LAF45,Lanthanum flint,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-LAF50,HOYA,LAF50,LAF50,Lanthanum flint,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-LAF7,HOYA,LAF7,LAF7,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LAFL1,HOYA,LAFL1,LAFL1,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LAFL2,HOYA,LAFL2,LAFL2,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAFL20,HOYA,LAFL20,LAFL20,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAFL23,HOYA,LAFL23,LAFL23,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAFL3,HOYA,LAFL3,LAFL3,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAFL4,HOYA,LAFL4,LAFL4,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-LAFL5,HOYA,LAFL5,LAFL5,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-LAFL20,HOYA,LAFL20,LAFL20,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0012 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LAFL23,HOYA,LAFL23,LAFL23,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LAFL3,HOYA,LAFL3,LAFL3,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0027 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LAFL4,HOYA,LAFL4,LAFL4,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0046 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-LAFL5,HOYA,LAFL5,LAFL5,Lanthanum flint,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0051 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-LAFL6,HOYA,LAFL6,LAFL6,Lanthanum flint,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-LBC3N,HOYA,LBC3N,LBC3N,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-M-BACD12,HOYA,M-BACD12,M-BACD12,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Glass for molded optics lens,oxide_glass,standard
@@ -1229,16 +1229,16 @@ HOYA-MP-TAFD405,HOYA,MP-TAFD405,MP-TAFD405,Optical glass,Imported from HOYA-AGF-
 HOYA-MP-TAFD51-50,HOYA,MP-TAFD51-50,MP-TAFD51-50,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Preforms for Precision molding,oxide_glass,standard
 HOYA-NBF1,HOYA,NBF1,NBF1,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-NBF2,HOYA,NBF2,NBF2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-NBF3,HOYA,NBF3,NBF3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-NBFD1,HOYA,NBFD1,NBFD1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-NBF3,HOYA,NBF3,NBF3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0089 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-NBFD1,HOYA,NBFD1,NBFD1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0073 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-NBFD10,HOYA,NBFD10,NBFD10,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-NBFD11,HOYA,NBFD11,NBFD11,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-NBFD12,HOYA,NBFD12,NBFD12,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-NBFD13,HOYA,NBFD13,NBFD13,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-NBFD14,HOYA,NBFD14,NBFD14,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-NBFD14,HOYA,NBFD14,NBFD14,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0090 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-NBFD15,HOYA,NBFD15,NBFD15,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type,oxide_glass,standard
 HOYA-NBFD15-W,HOYA,NBFD15-W,NBFD15-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-NBFD2,HOYA,NBFD2,NBFD2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-NBFD2,HOYA,NBFD2,NBFD2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0055 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-NBFD25,HOYA,NBFD25,NBFD25,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-NBFD26,HOYA,NBFD26,NBFD26,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-NBFD265,HOYA,NBFD265,NBFD265,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
@@ -1250,25 +1250,25 @@ HOYA-NBFD32,HOYA,NBFD32,NBFD32,Optical glass,Imported from HOYA-AGF-2026-07-07. 
 HOYA-NBFD38,HOYA,NBFD38,NBFD38,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-NBFD40,HOYA,NBFD40,NBFD40,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-NBFD5,HOYA,NBFD5,NBFD5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-NBFD6,HOYA,NBFD6,NBFD6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-NBFD7,HOYA,NBFD7,NBFD7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-NBFD6,HOYA,NBFD6,NBFD6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-NBFD7,HOYA,NBFD7,NBFD7,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0015 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-NBFD8,HOYA,NBFD8,NBFD8,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
 HOYA-NBFD9,HOYA,NBFD9,NBFD9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PC1,HOYA,PC1,PC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PC2,HOYA,PC2,PC2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PC3,HOYA,PC3,PC3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PCD2,HOYA,PCD2,PCD2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PCD3,HOYA,PCD3,PCD3,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-PC1,HOYA,PC1,PC1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0041 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-PC2,HOYA,PC2,PC2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0026 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-PC3,HOYA,PC3,PC3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0027 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-PCD2,HOYA,PCD2,PCD2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0014 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-PCD3,HOYA,PCD3,PCD3,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0043 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-PCD4,HOYA,PCD4,PCD4,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-PCD40,HOYA,PCD40,PCD40,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-PCD5,HOYA,PCD5,PCD5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-PCD5,HOYA,PCD5,PCD5,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0060 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-PCD51,HOYA,PCD51,PCD51,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-PCD53,HOYA,PCD53,PCD53,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-PCS1,HOYA,PCS1,PCS1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-PCD53,HOYA,PCD53,PCD53,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0059 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-PCS1,HOYA,PCS1,PCS1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0085 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-SBF1,HOYA,SBF1,SBF1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-SBF2,HOYA,SBF2,SBF2,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-SBF5,HOYA,SBF5,SBF5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-TAC1,HOYA,TAC1,TAC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-SBF2,HOYA,SBF2,SBF2,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0036 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-SBF5,HOYA,SBF5,SBF5,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0052 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-TAC1,HOYA,TAC1,TAC1,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0094 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-TAC2,HOYA,TAC2,TAC2,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-TAC4,HOYA,TAC4,TAC4,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-TAC6,HOYA,TAC6,TAC6,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass Type.,oxide_glass,standard
@@ -1283,15 +1283,15 @@ HOYA-TAF4,HOYA,TAF4,TAF4,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: No
 HOYA-TAF48,HOYA,TAF48,TAF48,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAF5,HOYA,TAF5,TAF5,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-TAFD10,HOYA,TAFD10,TAFD10,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-TAFD13,HOYA,TAFD13,TAFD13,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-TAFD17,HOYA,TAFD17,TAFD17,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-TAFD20,HOYA,TAFD20,TAFD20,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-TAFD21,HOYA,TAFD21,TAFD21,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-TAFD13,HOYA,TAFD13,TAFD13,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0044 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-TAFD17,HOYA,TAFD17,TAFD17,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0048 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-TAFD20,HOYA,TAFD20,TAFD20,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0063 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+HOYA-TAFD21,HOYA,TAFD21,TAFD21,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0081 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-TAFD25,HOYA,TAFD25,TAFD25,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD25L,HOYA,TAFD25L,TAFD25L,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD30,HOYA,TAFD30,TAFD30,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD30L,HOYA,TAFD30L,TAFD30L,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-TAFD31,HOYA,TAFD31,TAFD31,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-TAFD31,HOYA,TAFD31,TAFD31,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0056 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-TAFD32,HOYA,TAFD32,TAFD32,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD33,HOYA,TAFD33,TAFD33,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD34,HOYA,TAFD34,TAFD34,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
@@ -1302,7 +1302,7 @@ HOYA-TAFD37A,HOYA,TAFD37A,TAFD37A,Optical glass,Imported from HOYA-AGF-2026-07-0
 HOYA-TAFD40,HOYA,TAFD40,TAFD40,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass type,oxide_glass,standard
 HOYA-TAFD40-W,HOYA,TAFD40-W,TAFD40-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD40L-W,HOYA,TAFD40L-W,TAFD40L-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-TAFD43,HOYA,TAFD43,TAFD43,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-TAFD43,HOYA,TAFD43,TAFD43,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0060 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-TAFD45,HOYA,TAFD45,TAFD45,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: General glass type,oxide_glass,standard
 HOYA-TAFD45L,HOYA,TAFD45L,TAFD45L,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD5,HOYA,TAFD5,TAFD5,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
@@ -1310,62 +1310,62 @@ HOYA-TAFD55,HOYA,TAFD55,TAFD55,Optical glass,Imported from HOYA-AGF-2026-07-07. 
 HOYA-TAFD55-W,HOYA,TAFD55-W,TAFD55-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD5F,HOYA,TAFD5F,TAFD5F,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Not in a position to accept new order because of discontinuation.,oxide_glass,standard
 HOYA-TAFD5G,HOYA,TAFD5G,TAFD5G,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-TAFD6,HOYA,TAFD6,TAFD6,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-TAFD6,HOYA,TAFD6,TAFD6,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0123 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-TAFD65,HOYA,TAFD65,TAFD65,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
 HOYA-TAFD75-W,HOYA,TAFD75-W,TAFD75-W,Optical glass,Imported from HOYA-AGF-2026-07-07. GC: Recommended glass type,oxide_glass,standard
-HOYA-TAFD9,HOYA,TAFD9,TAFD9,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
+HOYA-TAFD9,HOYA,TAFD9,TAFD9,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF +0.0030 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 HOYA-ZNC1,HOYA,ZNC1,ZNC1,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-HOYA-ZNC7,HOYA,ZNC7,ZNC7,Optical glass,Imported from HOYA-AGF-2026-07-07.,oxide_glass,obsolete
-INFRARED-AGCL,INFRARED,AGCL,AGCL,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
-INFRARED-ALN,INFRARED,ALN,ALN,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-ALON,INFRARED,ALON,ALON,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-AMTIR1,INFRARED,AMTIR1,AMTIR1,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet,chalcogenide,standard
-INFRARED-AMTIR3,INFRARED,AMTIR3,AMTIR3,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet,chalcogenide,standard
-INFRARED-BAF2,INFRARED,BAF2,BAF2,Barium flint,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-BEO,INFRARED,BEO,BEO,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-CAF2,INFRARED,CAF2,CAF2,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-CALCITE,INFRARED,CALCITE,CALCITE,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-CDSE,INFRARED,CDSE,CDSE,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-CDTE,INFRARED,CDTE,CDTE,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-CLEARTRAN,INFRARED,CLEARTRAN,CLEARTRAN,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Spec Sheet (Rohm & Haas),chalcogenide,standard
-INFRARED-CLRTR_OLD,INFRARED,CLRTR_OLD,CLRTR_OLD,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Spec Sheet (Morton),chalcogenide,standard
-INFRARED-CSBR,INFRARED,CSBR,CSBR,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-F_SILICA,INFRARED,F_SILICA,F_SILICA,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III,chalcogenide,standard
-INFRARED-GAAS,INFRARED,GAAS,GAAS,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet,chalcogenide,standard
-INFRARED-GEO2,INFRARED,GEO2,GEO2,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-GERMANIUM,INFRARED,GERMANIUM,GERMANIUM,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optical Constants of Solids,chalcogenide,standard
-INFRARED-GE_LONG,INFRARED,GE_LONG,GE_LONG,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: JOSA, 47, 244 (57): 48, 579 (58)",chalcogenide,standard
-INFRARED-GE_OLD,INFRARED,GE_OLD,GE_OLD,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: JOSA, 47, 244 (57): 48, 579 (58)",chalcogenide,standard
-INFRARED-IRG100,INFRARED,IRG100,IRG100,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG11,INFRARED,IRG11,IRG11,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG15,INFRARED,IRG15,IRG15,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG2,INFRARED,IRG2,IRG2,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG3,INFRARED,IRG3,IRG3,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG7,INFRARED,IRG7,IRG7,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRG9,INFRARED,IRG9,IRG9,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-IRGN6,INFRARED,IRGN6,IRGN6,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet,chalcogenide,standard
-INFRARED-KBR,INFRARED,KBR,KBR,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: ISP Optics data sheet (www.ispoptics.com),chalcogenide,standard
-INFRARED-KCL,INFRARED,KCL,KCL,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: ISP Optics data sheet (www.ispoptics.com),chalcogenide,standard
-INFRARED-KRS5,INFRARED,KRS5,KRS5,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-LIF,INFRARED,LIF,LIF,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-MGF2,INFRARED,MGF2,MGF2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: M.J. Dodge, ""Refractive Properties of Magnesium Flouride,"" Appl. Opt. 23",chalcogenide,standard
-INFRARED-MGO,INFRARED,MGO,MGO,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-NACL,INFRARED,NACL,NACL,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III,chalcogenide,standard
-INFRARED-PBF2,INFRARED,PBF2,PBF2,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-SAPPHIRE,INFRARED,SAPPHIRE,SAPPHIRE,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III,chalcogenide,standard
-INFRARED-SILICON,INFRARED,SILICON,SILICON,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-SPINEL,INFRARED,SPINEL,SPINEL,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
-INFRARED-SRF2,INFRARED,SRF2,SRF2,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-SRTIO3,INFRARED,SRTIO3,SRTIO3,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-TI_1173,INFRARED,TI_1173,TI_1173,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
-INFRARED-ZBLA,INFRARED,ZBLA,ZBLA,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-ZBLAN,INFRARED,ZBLAN,ZBLAN,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-ZNSE,INFRARED,ZNSE,ZNSE,Optical glass,Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II,chalcogenide,standard
-INFRARED-ZNS_BROAD,INFRARED,ZNS_BROAD,ZNS_BROAD,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III",chalcogenide,standard
-INFRARED-ZNS_IR,INFRARED,ZNS_IR,ZNS_IR,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III",chalcogenide,standard
-INFRARED-ZNS_VIS,INFRARED,ZNS_VIS,ZNS_VIS,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III",chalcogenide,standard
-LIGHTPATH-BD1,LIGHTPATH,BD1,BD1,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
-LIGHTPATH-BD2,LIGHTPATH,BD2,BD2,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
+HOYA-ZNC7,HOYA,ZNC7,ZNC7,Optical glass,"Imported from HOYA-AGF-2026-07-07. ED dPgF 0 not stored: the fit gives dPgF -0.0017 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+INFRARED-AGCL,INFRARED,AGCL,AGCL,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ALN,INFRARED,ALN,ALN,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ALON,INFRARED,ALON,ALON,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-AMTIR1,INFRARED,AMTIR1,AMTIR1,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-AMTIR3,INFRARED,AMTIR3,AMTIR3,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-BAF2,INFRARED,BAF2,BAF2,Barium flint,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-BEO,INFRARED,BEO,BEO,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CAF2,INFRARED,CAF2,CAF2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CALCITE,INFRARED,CALCITE,CALCITE,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CDSE,INFRARED,CDSE,CDSE,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CDTE,INFRARED,CDTE,CDTE,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CLEARTRAN,INFRARED,CLEARTRAN,CLEARTRAN,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Spec Sheet (Rohm & Haas) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CLRTR_OLD,INFRARED,CLRTR_OLD,CLRTR_OLD,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Spec Sheet (Morton) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-CSBR,INFRARED,CSBR,CSBR,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-F_SILICA,INFRARED,F_SILICA,F_SILICA,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-GAAS,INFRARED,GAAS,GAAS,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Amtir Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-GEO2,INFRARED,GEO2,GEO2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-GERMANIUM,INFRARED,GERMANIUM,GERMANIUM,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optical Constants of Solids ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-GE_LONG,INFRARED,GE_LONG,GE_LONG,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: JOSA, 47, 244 (57): 48, 579 (58) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-GE_OLD,INFRARED,GE_OLD,GE_OLD,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: JOSA, 47, 244 (57): 48, 579 (58) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG100,INFRARED,IRG100,IRG100,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG11,INFRARED,IRG11,IRG11,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG15,INFRARED,IRG15,IRG15,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG2,INFRARED,IRG2,IRG2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG3,INFRARED,IRG3,IRG3,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG7,INFRARED,IRG7,IRG7,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRG9,INFRARED,IRG9,IRG9,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-IRGN6,INFRARED,IRGN6,IRGN6,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Schott Spec Sheet ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-KBR,INFRARED,KBR,KBR,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: ISP Optics data sheet (www.ispoptics.com) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-KCL,INFRARED,KCL,KCL,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: ISP Optics data sheet (www.ispoptics.com) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-KRS5,INFRARED,KRS5,KRS5,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-LIF,INFRARED,LIF,LIF,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-MGF2,INFRARED,MGF2,MGF2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: M.J. Dodge, ""Refractive Properties of Magnesium Flouride,"" Appl. Opt. 23 ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-MGO,INFRARED,MGO,MGO,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-NACL,INFRARED,NACL,NACL,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-PBF2,INFRARED,PBF2,PBF2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-SAPPHIRE,INFRARED,SAPPHIRE,SAPPHIRE,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook V. III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-SILICON,INFRARED,SILICON,SILICON,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-SPINEL,INFRARED,SPINEL,SPINEL,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-SRF2,INFRARED,SRF2,SRF2,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-SRTIO3,INFRARED,SRTIO3,SRTIO3,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-TI_1173,INFRARED,TI_1173,TI_1173,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZBLA,INFRARED,ZBLA,ZBLA,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZBLAN,INFRARED,ZBLAN,ZBLAN,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZNSE,INFRARED,ZNSE,ZNSE,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: Handbook of Optics Vol. II ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZNS_BROAD,INFRARED,ZNS_BROAD,ZNS_BROAD,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZNS_IR,INFRARED,ZNS_IR,ZNS_IR,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+INFRARED-ZNS_VIS,INFRARED,ZNS_VIS,ZNS_VIS,Optical glass,"Imported from INFRARED-AGF-NZHAGEN-MIRROR. GC: source: The Infrared & Electro-Optical Systems Handbook, V.III ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+LIGHTPATH-BD1,LIGHTPATH,BD1,BD1,Optical glass,"Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
+LIGHTPATH-BD2,LIGHTPATH,BD2,BD2,Optical glass,"Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
 LIGHTPATH-C0550,LIGHTPATH,C0550,C0550,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
 LIGHTPATH-D-ZK3M,LIGHTPATH,D-ZK3M,D-ZK3M,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
 LIGHTPATH-D-ZLAF52LAM,LIGHTPATH,D-ZLAF52LAM,D-ZLAF52LAM,Lanthanum flint,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
@@ -1373,7 +1373,7 @@ LIGHTPATH-D-ZLAF52LA_M,LIGHTPATH,D-ZLAF52LA_M,D-ZLAF52LA_M,Lanthanum flint,Impor
 LIGHTPATH-ECO550,LIGHTPATH,ECO550,ECO550,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
 LIGHTPATH-ECO550M,LIGHTPATH,ECO550M,ECO550M,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
 LIGHTPATH-ECO550_E,LIGHTPATH,ECO550_E,ECO550_E,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
-LIGHTPATH-NICHIA_MELT1,LIGHTPATH,NICHIA_MELT1,NICHIA_MELT1,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,standard
+LIGHTPATH-NICHIA_MELT1,LIGHTPATH,NICHIA_MELT1,NICHIA_MELT1,Optical glass,"Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",chalcogenide,standard
 LIGHTPATH-PBH71,LIGHTPATH,PBH71,PBH71,Optical glass,Imported from LIGHTPATH-AGF-NZHAGEN-MIRROR.,chalcogenide,obsolete
 LZOS-LZ_BF1,LZOS,LZ_BF1,LZ_BF1,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_BF11,LZOS,LZ_BF11,LZ_BF11,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -1384,7 +1384,7 @@ LZOS-LZ_BF25,LZOS,LZ_BF25,LZ_BF25,Optical glass,Imported from LZOS-AGF-NZHAGEN-M
 LZOS-LZ_BF28,LZOS,LZ_BF28,LZ_BF28,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_BF7,LZOS,LZ_BF7,LZ_BF7,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_BF8,LZOS,LZ_BF8,LZ_BF8,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-LZOS-LZ_BK10,LZOS,LZ_BK10,LZ_BK10,Borosilicate crown,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
+LZOS-LZ_BK10,LZOS,LZ_BK10,LZ_BK10,Borosilicate crown,"Imported from LZOS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
 LZOS-LZ_BK4,LZOS,LZ_BK4,LZ_BK4,Borosilicate crown,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_BK6,LZOS,LZ_BK6,LZ_BK6,Borosilicate crown,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_BK8,LZOS,LZ_BK8,LZ_BK8,Borosilicate crown,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -1394,12 +1394,12 @@ LZOS-LZ_CTK3,LZOS,LZ_CTK3,LZ_CTK3,Optical glass,Imported from LZOS-AGF-NZHAGEN-M
 LZOS-LZ_CTK8,LZOS,LZ_CTK8,LZ_CTK8,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_CTK9,LZOS,LZ_CTK9,LZ_CTK9,Borosilicate crown,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_F1,LZOS,LZ_F1,LZ_F1,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-LZOS-LZ_F13,LZOS,LZ_F13,LZ_F13,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
+LZOS-LZ_F13,LZOS,LZ_F13,LZ_F13,Optical glass,"Imported from LZOS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
 LZOS-LZ_F4,LZOS,LZ_F4,LZ_F4,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_F6,LZOS,LZ_F6,LZ_F6,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_F8,LZOS,LZ_F8,LZ_F8,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_K100,LZOS,LZ_K100,LZ_K100,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-LZOS-LZ_K8,LZOS,LZ_K8,LZ_K8,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
+LZOS-LZ_K8,LZOS,LZ_K8,LZ_K8,Optical glass,"Imported from LZOS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
 LZOS-LZ_KF6,LZOS,LZ_KF6,LZ_KF6,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_KF7,LZOS,LZ_KF7,LZ_KF7,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_LF5,LZOS,LZ_LF5,LZ_LF5,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -1408,8 +1408,8 @@ LZOS-LZ_LF9,LZOS,LZ_LF9,LZ_LF9,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRR
 LZOS-LZ_LK3,LZOS,LZ_LK3,LZ_LK3,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_LK5,LZOS,LZ_LK5,LZ_LK5,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_LK6,LZOS,LZ_LK6,LZ_LK6,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-LZOS-LZ_LK7,LZOS,LZ_LK7,LZ_LK7,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
-LZOS-LZ_NEWGLASS,LZOS,LZ_NEWGLASS,LZ_NEWGLASS,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
+LZOS-LZ_LK7,LZOS,LZ_LK7,LZ_LK7,Optical glass,"Imported from LZOS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
+LZOS-LZ_NEWGLASS,LZOS,LZ_NEWGLASS,LZ_NEWGLASS,Optical glass,"Imported from LZOS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
 LZOS-LZ_OF1,LZOS,LZ_OF1,LZ_OF1,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_OK4,LZOS,LZ_OK4,LZ_OK4,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
 LZOS-LZ_TBF10,LZOS,LZ_TBF10,LZ_TBF10,Optical glass,Imported from LZOS-AGF-NZHAGEN-MIRROR.,oxide_glass,standard
@@ -1437,7 +1437,7 @@ NIKON-NIFS-A,NIKON,NIFS-A,NIFS-A,Optical glass,Imported from NIKON-HIKARI-AGF-20
 NIKON-NIFS-S,NIKON,NIFS-S,NIFS-S,Optical glass,Imported from NIKON-HIKARI-AGF-2019-11. GC: TCE value is available for 25 to 300 degrees Celsius. Not in the current catalog (HIKARI-XLSX-2025-06-01); last listed in NIKON-HIKARI-AGF-2019-11.,oxide_glass,obsolete
 NIKON-NIFS-U,NIKON,NIFS-U,NIFS-U,Optical glass,Imported from NIKON-HIKARI-AGF-2019-11. GC: TCE value is available for 25 to 300 degrees Celsius. Not in the current catalog (HIKARI-XLSX-2025-06-01); last listed in NIKON-HIKARI-AGF-2019-11.,oxide_glass,obsolete
 NIKON-NIFS-V,NIKON,NIFS-V,NIFS-V,Optical glass,Imported from NIKON-HIKARI-AGF-2019-11. GC: TCE value is available for 25 to 300 degrees Celsius. Not in the current catalog (HIKARI-XLSX-2025-06-01); last listed in NIKON-HIKARI-AGF-2019-11.,oxide_glass,obsolete
-OHARA-APL1,OHARA,APL1,APL1,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-APL1,OHARA,APL1,APL1,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0033 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BAH10,OHARA,BAH10,BAH10,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH11,OHARA,BAH11,BAH11,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH13,OHARA,BAH13,BAH13,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1447,7 +1447,7 @@ OHARA-BAH27,OHARA,BAH27,BAH27,Optical glass,Imported from OHARA-AGF-2026-05-29. 
 OHARA-BAH28,OHARA,BAH28,BAH28,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH30,OHARA,BAH30,BAH30,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH32,OHARA,BAH32,BAH32,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BAH54,OHARA,BAH54,BAH54,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BAH54,OHARA,BAH54,BAH54,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0039 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BAH71,OHARA,BAH71,BAH71,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH77,OHARA,BAH77,BAH77,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAH78,OHARA,BAH78,BAH78,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1462,9 +1462,9 @@ OHARA-BAL3,OHARA,BAL3,BAL3,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: 
 OHARA-BAL35,OHARA,BAL35,BAL35,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAL35Y,OHARA,BAL35Y,BAL35Y,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-BAL41,OHARA,BAL41,BAL41,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BAL42,OHARA,BAL42,BAL42,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BAL42,OHARA,BAL42,BAL42,Barium crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0023 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BAL5,OHARA,BAL5,BAL5,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BAL50,OHARA,BAL50,BAL50,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BAL50,OHARA,BAL50,BAL50,Barium crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0033 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BAL7,OHARA,BAL7,BAL7,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAM12,OHARA,BAM12,BAM12,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BAM21,OHARA,BAM21,BAM21,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1487,14 +1487,14 @@ OHARA-BSL1,OHARA,BSL1,BSL1,Borosilicate crown,Imported from OHARA-AGF-2026-05-29
 OHARA-BSL21,OHARA,BSL21,BSL21,Borosilicate crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSL22,OHARA,BSL22,BSL22,Borosilicate crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSL3,OHARA,BSL3,BSL3,Borosilicate crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSL7,OHARA,BSL7,BSL7,Borosilicate crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BSL7,OHARA,BSL7,BSL7,Borosilicate crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0026 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BSL7Y,OHARA,BSL7Y,BSL7Y,Borosilicate crown,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-BSM10,OHARA,BSM10,BSM10,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM14,OHARA,BSM14,BSM14,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM15,OHARA,BSM15,BSM15,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM16,OHARA,BSM16,BSM16,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM16C,OHARA,BSM16C,BSM16C,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSM18,OHARA,BSM18,BSM18,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BSM18,OHARA,BSM18,BSM18,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0019 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BSM2,OHARA,BSM2,BSM2,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM21,OHARA,BSM21,BSM21,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM22,OHARA,BSM22,BSM22,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1502,23 +1502,23 @@ OHARA-BSM23,OHARA,BSM23,BSM23,Optical glass,Imported from OHARA-AGF-2026-05-29. 
 OHARA-BSM24,OHARA,BSM24,BSM24,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM25,OHARA,BSM25,BSM25,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM28,OHARA,BSM28,BSM28,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSM36,OHARA,BSM36,BSM36,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BSM36,OHARA,BSM36,BSM36,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0057 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BSM4,OHARA,BSM4,BSM4,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM51Y,OHARA,BSM51Y,BSM51Y,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-BSM6,OHARA,BSM6,BSM6,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-BSM7,OHARA,BSM7,BSM7,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSM71,OHARA,BSM71,BSM71,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSM81,OHARA,BSM81,BSM81,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BSM71,OHARA,BSM71,BSM71,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0017 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-BSM81,OHARA,BSM81,BSM81,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0078 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-BSM9,OHARA,BSM9,BSM9,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-BSM93,OHARA,BSM93,BSM93,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-FPL51,OHARA,FPL51,FPL51,Fluor crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-FPL52,OHARA,FPL52,FPL52,Fluor crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-FPL53,OHARA,FPL53,FPL53,Fluor crown,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-BSM93,OHARA,BSM93,BSM93,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0024 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-FPL51,OHARA,FPL51,FPL51,Fluor crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0282 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-FPL52,OHARA,FPL52,FPL52,Fluor crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0391 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-FPL53,OHARA,FPL53,FPL53,Fluor crown,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0479 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-FSL3,OHARA,FSL3,FSL3,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-FSL5,OHARA,FSL5,FSL5,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-FSL5,OHARA,FSL5,FSL5,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0018 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-FTL10,OHARA,FTL10,FTL10,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-FTL8,OHARA,FTL8,FTL8,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-FTM16,OHARA,FTM16,FTM16,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-FTM16,OHARA,FTM16,FTM16,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0090 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-FTM8,OHARA,FTM8,FTM8,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-L-BAL35,OHARA,L-BAL35,L-BAL35,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: Common_Low Softening Temperature,oxide_glass,standard
 OHARA-L-BAL35P,OHARA,L-BAL35P,L-BAL35P,Barium crown,Imported from OHARA-AGF-2026-05-29. GC: Please contact us_Low Softening Temperature,oxide_glass,standard
@@ -1552,50 +1552,50 @@ OHARA-L-PHL2,OHARA,L-PHL2,L-PHL2,Optical glass,Imported from OHARA-AGF-2026-05-2
 OHARA-L-TIH53,OHARA,L-TIH53,L-TIH53,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued_Low Softening Temperature,oxide_glass,obsolete
 OHARA-L-TIM28,OHARA,L-TIM28,L-TIM28,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Recommended_Low Softening Temperature,oxide_glass,standard
 OHARA-L-TIM28P,OHARA,L-TIM28P,L-TIM28P,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: special order_Low Softening Temperature,oxide_glass,obsolete
-OHARA-LAH51,OHARA,LAH51,LAH51,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH52,OHARA,LAH52,LAH52,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH53,OHARA,LAH53,LAH53,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH54,OHARA,LAH54,LAH54,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH55,OHARA,LAH55,LAH55,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH58,OHARA,LAH58,LAH58,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH59,OHARA,LAH59,LAH59,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH60,OHARA,LAH60,LAH60,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH63,OHARA,LAH63,LAH63,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH64,OHARA,LAH64,LAH64,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH65,OHARA,LAH65,LAH65,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH66,OHARA,LAH66,LAH66,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH67,OHARA,LAH67,LAH67,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAH51,OHARA,LAH51,LAH51,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0069 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH52,OHARA,LAH52,LAH52,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0071 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH53,OHARA,LAH53,LAH53,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0055 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH54,OHARA,LAH54,LAH54,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0085 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH55,OHARA,LAH55,LAH55,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0088 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH58,OHARA,LAH58,LAH58,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0087 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH59,OHARA,LAH59,LAH59,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0091 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH60,OHARA,LAH60,LAH60,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0040 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH63,OHARA,LAH63,LAH63,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0048 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH64,OHARA,LAH64,LAH64,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0087 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH65,OHARA,LAH65,LAH65,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0091 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH66,OHARA,LAH66,LAH66,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0097 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAH67,OHARA,LAH67,LAH67,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0083 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAH71,OHARA,LAH71,LAH71,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAH75,OHARA,LAH75,LAH75,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAH75,OHARA,LAH75,LAH75,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0018 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAH78,OHARA,LAH78,LAH78,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-LAH80,OHARA,LAH80,LAH80,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL10,OHARA,LAL10,LAL10,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL11,OHARA,LAL11,LAL11,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL12,OHARA,LAL12,LAL12,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL13,OHARA,LAL13,LAL13,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL14,OHARA,LAL14,LAL14,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL18,OHARA,LAL18,LAL18,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL52,OHARA,LAL52,LAL52,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL54,OHARA,LAL54,LAL54,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL56,OHARA,LAL56,LAL56,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAL10,OHARA,LAL10,LAL10,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0068 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL11,OHARA,LAL11,LAL11,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0037 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL12,OHARA,LAL12,LAL12,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0055 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL13,OHARA,LAL13,LAL13,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0083 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL14,OHARA,LAL14,LAL14,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0085 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL18,OHARA,LAL18,LAL18,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0083 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL52,OHARA,LAL52,LAL52,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0050 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL54,OHARA,LAL54,LAL54,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0023 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL56,OHARA,LAL56,LAL56,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0028 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAL58,OHARA,LAL58,LAL58,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL59,OHARA,LAL59,LAL59,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL60,OHARA,LAL60,LAL60,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL61,OHARA,LAL61,LAL61,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL7,OHARA,LAL7,LAL7,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL8,OHARA,LAL8,LAL8,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAL9,OHARA,LAL9,LAL9,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAM2,OHARA,LAM2,LAM2,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAM3,OHARA,LAM3,LAM3,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAL59,OHARA,LAL59,LAL59,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0098 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL60,OHARA,LAL60,LAL60,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0092 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL61,OHARA,LAL61,LAL61,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0092 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL7,OHARA,LAL7,LAL7,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0042 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL8,OHARA,LAL8,LAL8,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0088 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAL9,OHARA,LAL9,LAL9,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0078 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAM2,OHARA,LAM2,LAM2,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0036 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-LAM3,OHARA,LAM3,LAM3,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0035 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAM51,OHARA,LAM51,LAM51,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-LAM52,OHARA,LAM52,LAM52,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAM54,OHARA,LAM54,LAM54,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAM54,OHARA,LAM54,LAM54,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0077 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAM55,OHARA,LAM55,LAM55,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-LAM58,OHARA,LAM58,LAM58,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-LAM59,OHARA,LAM59,LAM59,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAM60,OHARA,LAM60,LAM60,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAM60,OHARA,LAM60,LAM60,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0095 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAM61,OHARA,LAM61,LAM61,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-LAM66,OHARA,LAM66,LAM66,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-LAM66,OHARA,LAM66,LAM66,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0010 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-LAM7,OHARA,LAM7,LAM7,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-NSL2,OHARA,NSL2,NSL2,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-NSL3,OHARA,NSL3,NSL3,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1642,9 +1642,9 @@ OHARA-PBL27,OHARA,PBL27,PBL27,Optical glass,Imported from OHARA-AGF-2026-05-29. 
 OHARA-PBL35Y,OHARA,PBL35Y,PBL35Y,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-PBL6,OHARA,PBL6,PBL6,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-PBL6Y,OHARA,PBL6Y,PBL6Y,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
-OHARA-PBL7,OHARA,PBL7,PBL7,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-PBL7,OHARA,PBL7,PBL7,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0027 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-PBM1,OHARA,PBM1,PBM1,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-PBM11,OHARA,PBM11,PBM11,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-PBM11,OHARA,PBM11,PBM11,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0058 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-PBM18Y,OHARA,PBM18Y,PBM18Y,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-PBM2,OHARA,PBM2,PBM2,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-PBM22,OHARA,PBM22,PBM22,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
@@ -1663,9 +1663,9 @@ OHARA-PBM6,OHARA,PBM6,PBM6,Optical glass,Imported from OHARA-AGF-2026-05-29. GC:
 OHARA-PBM8,OHARA,PBM8,PBM8,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-PBM8Y,OHARA,PBM8Y,PBM8Y,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: Improved XMT at 365,oxide_glass,standard
 OHARA-PBM9,OHARA,PBM9,PBM9,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-PHM51,OHARA,PHM51,PHM51,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-PHM52,OHARA,PHM52,PHM52,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-PHM53,OHARA,PHM53,PHM53,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-PHM51,OHARA,PHM51,PHM51,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0031 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-PHM52,OHARA,PHM52,PHM52,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0050 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-PHM53,OHARA,PHM53,PHM53,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0045 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-S-APL,OHARA,S-APL,S-APL,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-S-APL1,OHARA,S-APL1,S-APL1,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-S-BAH10,OHARA,S-BAH10,S-BAH10,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: special order,oxide_glass,obsolete
@@ -1861,15 +1861,15 @@ OHARA-SK-1300,OHARA,SK-1300,SK-1300,Dense crown,Imported from OHARA-AGF-2026-05-
 OHARA-SK-1310,OHARA,SK-1310,SK-1310,Dense crown,Imported from OHARA-AGF-2026-05-29. GC: Anhydrous Synthetic Fused Silica,oxide_glass,standard
 OHARA-SSL2,OHARA,SSL2,SSL2,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-SSL5,OHARA,SSL5,SSL5,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-TIH11,OHARA,TIH11,TIH11,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-TIH14,OHARA,TIH14,TIH14,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-TIH23,OHARA,TIH23,TIH23,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-TIH11,OHARA,TIH11,TIH11,Dense flint,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0159 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-TIH14,OHARA,TIH14,TIH14,Dense flint,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0151 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-TIH23,OHARA,TIH23,TIH23,Dense flint,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0141 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-TIH53,OHARA,TIH53,TIH53,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-TIH6,OHARA,TIH6,TIH6,Dense flint,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-TIH6,OHARA,TIH6,TIH6,Dense flint,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF +0.0150 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 OHARA-TIM11,OHARA,TIM11,TIM11,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
 OHARA-TPH55,OHARA,TPH55,TPH55,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-YGH51,OHARA,YGH51,YGH51,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
-OHARA-YGH52,OHARA,YGH52,YGH52,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete
+OHARA-YGH51,OHARA,YGH51,YGH51,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0089 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
+OHARA-YGH52,OHARA,YGH52,YGH52,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0092 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete
 RII-AL2O3-BOIDIN,RII,Boidin,Boidin,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Boidin'.,crystal,standard
 RII-AL2O3-FRANTA,RII,Franta,Franta,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Franta'.,crystal,standard
 RII-AL2O3-HAGEMANN,RII,Hagemann,Hagemann,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Hagemann'.,crystal,standard
@@ -2071,27 +2071,27 @@ RII-ZNSE-MARPLE,RII,Marple,Marple,Zinc selenide,Zinc selenide (ZnSe). refractive
 RII-ZNSE-QUERRY,RII,Querry,Querry,Zinc selenide,Zinc selenide (ZnSe). refractiveindex.info page 'Querry'.,crystal,standard
 RPO-BACD14_MOLD,RPO,BACD14_MOLD,BACD14_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-BSM16C_MOLD,RPO,BSM16C_MOLD,BSM16C_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-D-K59_MOLD,RPO,D-K59_MOLD,D-K59_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-D-LAK6_MOLD,RPO,D-LAK6_MOLD,D-LAK6_MOLD,Lanthanum crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-D-LAK70,RPO,D-LAK70,D-LAK70,Lanthanum crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
-RPO-D-LAK70_MOLD,RPO,D-LAK70_MOLD,D-LAK70_MOLD,Lanthanum crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
-RPO-D-ZLAF52A_MOLD,RPO,D-ZLAF52A_MOLD,D-ZLAF52A_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
+RPO-D-K59_MOLD,RPO,D-K59_MOLD,D-K59_MOLD,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
+RPO-D-LAK6_MOLD,RPO,D-LAK6_MOLD,D-LAK6_MOLD,Lanthanum crown,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
+RPO-D-LAK70,RPO,D-LAK70,D-LAK70,Lanthanum crown,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,obsolete
+RPO-D-LAK70_MOLD,RPO,D-LAK70_MOLD,D-LAK70_MOLD,Lanthanum crown,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,obsolete
+RPO-D-ZLAF52A_MOLD,RPO,D-ZLAF52A_MOLD,D-ZLAF52A_MOLD,Lanthanum flint,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
 RPO-E-FDS1_MOLD,RPO,E-FDS1_MOLD,E-FDS1_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-EKPC,RPO,EKPC,EKPC,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
-RPO-FDS9_MOLD,RPO,FDS9_MOLD,FDS9_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
+RPO-EKPC,RPO,EKPC,EKPC,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,obsolete
+RPO-FDS9_MOLD,RPO,FDS9_MOLD,FDS9_MOLD,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,obsolete
 RPO-H-LAK54_MOLD,RPO,H-LAK54_MOLD,H-LAK54_MOLD,Lanthanum crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-H-ZLAF50B_MOLD,RPO,H-ZLAF50B_MOLD,H-ZLAF50B_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-H-ZLAF52_MOLD,RPO,H-ZLAF52_MOLD,H-ZLAF52_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-H-ZLAF53_MOLD,RPO,H-ZLAF53_MOLD,H-ZLAF53_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-H-ZLAF55_MOLD,RPO,H-ZLAF55_MOLD,H-ZLAF55_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-H-ZLAF56_MOLD,RPO,H-ZLAF56_MOLD,H-ZLAF56_MOLD,Lanthanum flint,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-IG2,RPO,IG2,IG2,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet,moldable,standard
-RPO-IG4,RPO,IG4,IG4,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet,moldable,standard
-RPO-IG5,RPO,IG5,IG5,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet,moldable,standard
-RPO-IG6,RPO,IG6,IG6,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet,moldable,standard
+RPO-IG2,RPO,IG2,IG2,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
+RPO-IG4,RPO,IG4,IG4,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
+RPO-IG5,RPO,IG5,IG5,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
+RPO-IG6,RPO,IG6,IG6,Optical glass,"Imported from RPO-AGF-NZHAGEN-MIRROR. GC: From Vitron data sheet ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
 RPO-K-CSK120_MOLD,RPO,K-CSK120_MOLD,K-CSK120_MOLD,Dense crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-K-VC79_MOLD,RPO,K-VC79_MOLD,K-VC79_MOLD,Dense crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
-RPO-K-VC89_MOLD,RPO,K-VC89_MOLD,K-VC89_MOLD,Dense crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
+RPO-K-VC89_MOLD,RPO,K-VC89_MOLD,K-VC89_MOLD,Dense crown,"Imported from RPO-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",moldable,standard
 RPO-L-LAM60_MOLD,RPO,L-LAM60_MOLD,L-LAM60_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR. GC: Low Softening Temperature,moldable,standard
 RPO-L-TIM28_MOLD,RPO,L-TIM28_MOLD,L-TIM28_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-N-BK7_MOLD,RPO,N-BK7_MOLD,N-BK7_MOLD,Borosilicate crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
@@ -2112,7 +2112,7 @@ RPO-TAF1_MOLD,RPO,TAF1_MOLD,TAF1_MOLD,Optical glass,Imported from RPO-AGF-NZHAGE
 RPO-TAF3_MOLD,RPO,TAF3_MOLD,TAF3_MOLD,Optical glass,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,standard
 RPO-VC78,RPO,VC78,VC78,Dense crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
 RPO-VC78_MOLD,RPO,VC78_MOLD,VC78_MOLD,Dense crown,Imported from RPO-AGF-NZHAGEN-MIRROR.,moldable,obsolete
-SCHOTT-AF32ECO,SCHOTT,AF32ECO,AF32ECO,Optical glass,Imported from SCHOTT-AGF-2025-06. GC: Alkali free alumino borosilicate glass,oxide_glass,standard
+SCHOTT-AF32ECO,SCHOTT,AF32ECO,AF32ECO,Optical glass,"Imported from SCHOTT-AGF-2025-06. GC: Alkali free alumino borosilicate glass ED dPgF 0 not stored: the fit gives dPgF -0.0036 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,standard
 SCHOTT-B270,SCHOTT,B270,B270,Optical glass,Imported from SCHOTT-AGF-2025-06.,oxide_glass,standard
 SCHOTT-BAF13,SCHOTT,BAF13,BAF13,Barium flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-BAF3,SCHOTT,BAF3,BAF3,Barium flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
@@ -2154,7 +2154,7 @@ SCHOTT-BK7,SCHOTT,BK7,BK7,Borosilicate crown,Imported from SCHOTT-AGF-2025-06. G
 SCHOTT-BK7G18,SCHOTT,BK7G18,BK7G18,Borosilicate crown,Imported from SCHOTT-AGF-2025-06. GC: radiation resistant glass,oxide_glass,standard
 SCHOTT-BK7HT,SCHOTT,BK7HT,BK7HT,Borosilicate crown,"Imported from SCHOTT-AGF-2025-06. GC: old, High UV Transmission; glass data moved from former ""I_LINE"" catalog",oxide_glass,obsolete
 SCHOTT-BK8,SCHOTT,BK8,BK8,Borosilicate crown,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
-SCHOTT-D263TECO,SCHOTT,D263TECO,D263TECO,Optical glass,Imported from SCHOTT-AGF-2025-06. GC: Clear borosilicate glass of high chemical resistance,oxide_glass,standard
+SCHOTT-D263TECO,SCHOTT,D263TECO,D263TECO,Optical glass,"Imported from SCHOTT-AGF-2025-06. GC: Clear borosilicate glass of high chemical resistance ED dPgF 0 not stored: the fit gives dPgF -0.0022 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,standard
 SCHOTT-F1,SCHOTT,F1,F1,Optical glass,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-F13,SCHOTT,F13,F13,Optical glass,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-F14,SCHOTT,F14,F14,Optical glass,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
@@ -2435,7 +2435,7 @@ SCHOTT-SF6,SCHOTT,SF6,SF6,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: lead
 SCHOTT-SF63,SCHOTT,SF63,SF63,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-SF64A,SCHOTT,SF64A,SF64A,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-SF66,SCHOTT,SF66,SF66,Dense flint,"Imported from SCHOTT-AGF-2025-06. GC: old, was replaced by N-SF66",oxide_glass,obsolete
-SCHOTT-SF6G05,SCHOTT,SF6G05,SF6G05,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: radiation resistant glass. lead containing glass type,oxide_glass,standard
+SCHOTT-SF6G05,SCHOTT,SF6G05,SF6G05,Dense flint,"Imported from SCHOTT-AGF-2025-06. GC: radiation resistant glass. lead containing glass type ED dPgF 0 not stored: the fit gives dPgF +0.0108 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,standard
 SCHOTT-SF6HT,SCHOTT,SF6HT,SF6HT,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: lead containing glass type,oxide_glass,standard
 SCHOTT-SF8,SCHOTT,SF8,SF8,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
 SCHOTT-SF9,SCHOTT,SF9,SF9,Dense flint,Imported from SCHOTT-AGF-2025-06. GC: old,oxide_glass,obsolete
@@ -2519,7 +2519,7 @@ SUMITA-CD45,SUMITA,CD45,CD45,Optical glass,Imported from SUMITA-AGF-2026-08-26.,
 SUMITA-CSK12,SUMITA,CSK12,CSK12,Dense crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-CSK120,SUMITA,CSK120,CSK120,Dense crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-F1,SUMITA,F1,F1,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
-SUMITA-F2,SUMITA,F2,F2,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
+SUMITA-F2,SUMITA,F2,F2,Optical glass,"Imported from SUMITA-AGF-2026-08-26. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,obsolete
 SUMITA-F3,SUMITA,F3,F3,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-F4,SUMITA,F4,F4,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-F5,SUMITA,F5,F5,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
@@ -2610,7 +2610,7 @@ SUMITA-K-LASFN16,SUMITA,K-LaSFn16,K-LaSFn16,Dense flint,Imported from SUMITA-AGF
 SUMITA-K-LASFN17,SUMITA,K-LaSFn17,K-LaSFn17,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
 SUMITA-K-LASFN2,SUMITA,K-LaSFn2,K-LaSFn2,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
 SUMITA-K-LASFN21,SUMITA,K-LaSFn21,K-LaSFn21,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
-SUMITA-K-LASFN22,SUMITA,K-LaSFn22,K-LaSFn22,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
+SUMITA-K-LASFN22,SUMITA,K-LaSFn22,K-LaSFn22,Dense flint,"Imported from SUMITA-AGF-2026-08-26. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,standard
 SUMITA-K-LASFN23,SUMITA,K-LaSFn23,K-LaSFn23,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
 SUMITA-K-LASFN3,SUMITA,K-LaSFn3,K-LaSFn3,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
 SUMITA-K-LASFN4,SUMITA,K-LaSFn4,K-LaSFn4,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,standard
@@ -2764,7 +2764,7 @@ SUMITA-K-ZNSF8(M),SUMITA,K-ZnSF8(M),K-ZnSF8(M),Dense flint,Imported from SUMITA-
 SUMITA-K11,SUMITA,K11,K11,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-K3,SUMITA,K3,K3,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-K5,SUMITA,K5,K5,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
-SUMITA-K7,SUMITA,K7,K7,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
+SUMITA-K7,SUMITA,K7,K7,Optical glass,"Imported from SUMITA-AGF-2026-08-26. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,obsolete
 SUMITA-KF2,SUMITA,KF2,KF2,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-KF3,SUMITA,KF3,KF3,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-KF4,SUMITA,KF4,KF4,Optical glass,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
@@ -2781,7 +2781,7 @@ SUMITA-LAF70,SUMITA,LAF70,LAF70,Lanthanum flint,Imported from SUMITA-AGF-2026-08
 SUMITA-LAFK55,SUMITA,LAFK55,LAFK55,Fluor crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-LAFK60,SUMITA,LAFK60,LAFK60,Fluor crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-LAFN1,SUMITA,LAFN1,LAFN1,Lanthanum flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
-SUMITA-LAFN10,SUMITA,LAFN10,LAFN10,Lanthanum flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
+SUMITA-LAFN10,SUMITA,LAFN10,LAFN10,Lanthanum flint,"Imported from SUMITA-AGF-2026-08-26. ED dPgF 0 not stored: the catalog's normal line cannot be calibrated to confirm it, so the 0 reads as 'not given'.",oxide_glass,obsolete
 SUMITA-LAFN11,SUMITA,LAFN11,LAFN11,Lanthanum flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-LAFN12,SUMITA,LAFN12,LAFN12,Lanthanum flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-LAFN2,SUMITA,LAFN2,LAFN2,Lanthanum flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
@@ -2911,11 +2911,11 @@ SUMITA-VC78,SUMITA,VC78,VC78,Dense crown,Imported from SUMITA-AGF-2026-08-26.,ox
 SUMITA-VC79,SUMITA,VC79,VC79,Dense crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-VC81,SUMITA,VC81,VC81,Dense crown,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
 SUMITA-ZNSF8,SUMITA,ZNSF8,ZNSF8,Dense flint,Imported from SUMITA-AGF-2026-08-26.,oxide_glass,obsolete
-TOPAS-5013LS-01,TOPAS,5013LS-01,5013LS-01,Optical glass,Imported from TOPAS-AGF-NZHAGEN-MIRROR.,polymer,standard
-TOPAS-5013X16,TOPAS,5013X16,5013X16,Optical glass,Imported from TOPAS-AGF-NZHAGEN-MIRROR.,polymer,standard
-TOPAS-6015S-04,TOPAS,6015S-04,6015S-04,Optical glass,Imported from TOPAS-AGF-NZHAGEN-MIRROR.,polymer,standard
-UMICORE-GASIR1,UMICORE,GASIR1,GASIR1,Optical glass,Imported from UMICORE-AGF-NZHAGEN-MIRROR. GC: GASIR Blank (for use with SPDT or polished optics),chalcogenide,standard
-UMICORE-GASIR2,UMICORE,GASIR2,GASIR2,Optical glass,Imported from UMICORE-AGF-NZHAGEN-MIRROR. GC: Glass OBSOLETE [26 Nov 07] Please use GASIR 1,chalcogenide,obsolete
-ZEON-330R,ZEON,330R,330R,Optical glass,Imported from ZEON-AGF-NZHAGEN-MIRROR.,polymer,standard
-ZEON-480R,ZEON,480R,480R,Optical glass,Imported from ZEON-AGF-NZHAGEN-MIRROR.,polymer,standard
-ZEON-E48R,ZEON,E48R,E48R,Optical glass,Imported from ZEON-AGF-NZHAGEN-MIRROR.,polymer,standard
+TOPAS-5013LS-01,TOPAS,5013LS-01,5013LS-01,Optical glass,"Imported from TOPAS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+TOPAS-5013X16,TOPAS,5013X16,5013X16,Optical glass,"Imported from TOPAS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+TOPAS-6015S-04,TOPAS,6015S-04,6015S-04,Optical glass,"Imported from TOPAS-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+UMICORE-GASIR1,UMICORE,GASIR1,GASIR1,Optical glass,"Imported from UMICORE-AGF-NZHAGEN-MIRROR. GC: GASIR Blank (for use with SPDT or polished optics) ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,standard
+UMICORE-GASIR2,UMICORE,GASIR2,GASIR2,Optical glass,"Imported from UMICORE-AGF-NZHAGEN-MIRROR. GC: Glass OBSOLETE [26 Nov 07] Please use GASIR 1 ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",chalcogenide,obsolete
+ZEON-330R,ZEON,330R,330R,Optical glass,"Imported from ZEON-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ZEON-480R,ZEON,480R,480R,Optical glass,"Imported from ZEON-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard
+ZEON-E48R,ZEON,E48R,E48R,Optical glass,"Imported from ZEON-AGF-NZHAGEN-MIRROR. ED dPgF 0 not stored: the catalog gives no non-zero dPgF for any glass, so the 0 reads as 'not given'.",polymer,standard

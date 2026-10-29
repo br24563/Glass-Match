@@ -93,6 +93,16 @@ materials, polymers, and moldables.
   field — 1,156 discontinued glasses — per-maker coverage table).
 - User CSV + manufacturer `.agf` import with validation; CSV/JSON export
   with provenance preserved.
+- **Zemax OpticStudio export** (`glassmatch/export_agf.py`): the matching
+  results or a comparison selection download as an `.agf` glass catalog
+  (NM/ED/CD/TD/OD/LD/IT records) that loads straight into OpticStudio.
+  Values are written verbatim from the source catalogs, with each glass's
+  source catalog and its date in the `CC` header; only verified dispersion
+  fits are exported - archived fits never are, and refractiveindex.info
+  crystal fits only where a Zemax formula is the identical expression
+  (the others are listed as skipped). Re-importing the file reproduces
+  n(λ), n_d, V_d, CTE, TD and every transmission sample exactly; for the
+  whole database that is 2,727 of 2,920 materials.
 ## Installation
 
 **Easiest (Windows):** double-click `start.bat`. First run creates an isolated
@@ -297,8 +307,8 @@ the source catalog. The Data Sources tab reports how many are quarantined.
 Add rows + source metadata via PR (`scripts/merge_agf.py --only <SOURCE_ID>`
 keeps merges idempotent); validation flags out-of-range values.
 Done: bulk `.agf` import, non-Sellmeier gating, IR mode, dedup suffixes,
-equivalency candidates, transmission conflict quarantine.
-Future: achromatic-doublet finder, Zemax export, cost data, Sellmeier fitting.
+equivalency candidates, transmission conflict quarantine, Zemax `.agf` export.
+Future: achromatic-doublet finder, cost data, Sellmeier fitting.
 
 ## Expansion history
 

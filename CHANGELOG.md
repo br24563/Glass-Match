@@ -41,9 +41,10 @@ the patch version, schema/format changes bump the minor version.
   V_d view with the SCHOTT normal line and dPgF. P_g,F is calculated from
   the verified dispersion fit (n_g, n_F, n_C) for 2,719 glasses, never
   extrapolated past a fit's stated range, and labelled calculated; the
-  calculated dPgF reproduces SCHOTT's stored values within 2e-4 for 362 of
-  364 glasses (median 2.4e-5; the other two, the AF32eco and D263Teco thin
-  glasses, list dPgF as 0), and each maker's own dPgF is shown beside it.
+  calculated dPgF reproduces SCHOTT's stored values within 2e-4 for all 362
+  glasses that have one (median 2.4e-5; the AF32eco and D263Teco thin
+  glasses, whose .agf lists a filler 0, now have no stored dPgF), and each
+  maker's own dPgF is shown beside it.
 - **Pair Finder tab and `glassmatch/pairs.py`**: thin-lens achromatic
   doublet power split, secondary spectrum (P1−P2)/(V1−V2), apochromat
   candidates (|ΔP_g,F| below a tolerance with large ΔV) and athermal ranking
@@ -52,6 +53,30 @@ the patch version, schema/format changes bump the minor version.
   compatibility filters. Vectorised over the pair triangle: 1,676 current
   glasses (677k pairs) rank in about 0.15 s. Results are labelled
   calculated and "not a manufacturer recommendation"; CSV export.
+- **Zemax OpticStudio `.agf` export** (`glassmatch/export_agf.py`), with a
+  download button on the Matching and Comparison tabs. Writes NM (formula
+  number, glass code, n_d, V_d, status), CD (the stored coefficients in Zemax
+  order), ED (CTE -30/+70, CTE 20/+300, density, dPgF), TD, OD, LD and IT
+  (each sample with its listed thickness) records, UTF-8 with CRLF line
+  endings. A `CC` header names GlassMatch, the export date and each glass's
+  source catalog with its publication and access dates. Numbers are printed
+  with `repr`, so they parse back to the identical float: nothing is
+  refitted, rounded or rescaled. Only verified fits are exported; archived
+  (non-dispersable) fits never are. refractiveindex.info fits are exported
+  only where a Zemax formula is the same expression (formulas 1 and 2 with
+  no constant term as Sellmeier-1/-3/-5 - formula 1's resonance wavelengths
+  written squared, the value its own evaluation subtracts - and formula 7 as
+  Herzberger); the other 29 pages (formula 4, Cauchy, and
+  constant-plus-poles forms) are skipped and listed in the app. Crystal pages
+  have no catalog n_d, so NM carries n_d/V_d evaluated from the fit inside
+  its stated range, labelled as such in the header. Duplicate glass names in
+  one selection fall back to the glass_id, since Zemax names must be unique.
+  `tests/test_export_agf.py` exports the whole database, re-imports it with
+  `parse_agf_text` and asserts bit-identical n(λ) at eight wavelengths plus
+  identical n_d, V_d, CTE, dPgF, TD, LD and transmission for all 2,727
+  exported materials. A CODE V private-glass file was considered and left
+  out: CODE V's PRV format takes indices at chosen wavelengths and refits
+  them, which would replace the catalog's own coefficients.
 - **Current manufacturer catalogs replace the third-party mirror (2,724 → 2,920
   materials).** Downloaded 2026-10-20 from each maker's own site:
   HOYA `HOYA20260707_include_obsolete.agf` (435 glasses, was 376 from the
@@ -118,6 +143,31 @@ the patch version, schema/format changes bump the minor version.
 - `scripts/merge_refractiveindex.py` re-read `properties.csv` as floats and
   rewrote 2,037 glass codes as "606577.0"; the value column is now kept as
   text, so re-running the merges leaves untouched rows byte-identical.
+- **278 dPgF values of 0 were catalog filler, not data (2,711 → 2,433
+  stored).** Zemax's ED record has no "not given" marker, so HOYA (111 of its
+  152 zeros), OHARA (60 of 69), the IR/polymer files (every glass) and
+  others write 0 where they publish no dPgF. The importer stored those as
+  measured values, which meant FPL51 and FPL53, two of OHARA's anomalous
+  apochromat glasses, showed normal partial dispersion; OHARA's own
+  workbook gives +0.0280 and +0.0461. The 0 is now checked against each
+  glass's own verified fit: the catalog's normal line
+  (P_g,F = a + b·V_d + k·dPgF) is calibrated from its non-zero values, and
+  the 0 is kept only if the fit puts the glass within 0.001 of that line
+  (`zero_dpgf_verdicts` in `glassmatch/importers/agf.py`). The calibration
+  recovers SCHOTT's published line (0.6438 − 0.001682·V_d). Checked against
+  the SCHOTT, OHARA and CDGM workbooks, which print dPgF separately, every
+  kept 0 is a 0 there too (K7, N-K5, H-K6, S-TIL2 ...), and every dropped 0
+  has a non-zero value there or none at all. One kept 0, OHARA LAM55, is
+  −0.0001 in the workbook. 74 zeros stay. A 0 that cannot be confirmed
+  (no fit, a catalog whose scatter is over 0.001, or a catalog with no
+  non-zero dPgF at all) is dropped. That includes SUMITA's 2026 file, whose
+  values scatter 0.0019 about any line its fits give, so its F2 and K7 zeros,
+  probably real, are dropped with the rest. Each dropped value is noted in
+  the glass's description. `scripts/drop_filler_dpgf.py` applied the check
+  to the committed tables, one source catalog at a time; that gives the same
+  verdict for every one of the 352 zeros as re-importing the staged files.
+  The `.agf` export notes "dPgF not given" for a glass whose ED carries the
+  0 placeholder.
 - **The data-quality report's 1,174 "duplicate record" flags were false.**
   A crystal's n at 0.5876 um and at 10 um share glass, property and source;
   the reference wavelength is now part of the key. The report drops from

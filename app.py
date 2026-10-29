@@ -246,6 +246,29 @@ results = match_glasses(summary, requirements, w_in, transmissions=trans,
 n_excluded = int(results.attrs.get("excluded_count", 0))
 excluded_examples = results.attrs.get("excluded_examples", [])
 
+@st.cache_data(show_spinner=False)
+def _agf_export(glass_ids: tuple, data_key: str):
+    from glassmatch.export_agf import export_agf
+    ex = export_agf(db, glass_ids)
+    return ex.to_bytes(), len(ex.exported), ex.skipped
+
+
+def agf_download(glass_ids, key):
+    """Zemax .agf download for a selection, with what was left out."""
+    data, n_out, skipped = _agf_export(tuple(glass_ids), _data_key())
+    st.download_button(f"Export Zemax catalog (.agf, {n_out} glasses)",
+                       data, "glassmatch_selection.agf",
+                       "application/octet-stream", key=f"agf_{key}",
+                       disabled=not n_out)
+    st.caption("The .agf contains manufacturer catalog data, written verbatim "
+               "with its source and date in the header, for your own design "
+               "work. Only verified dispersion fits are included.")
+    if skipped:
+        with st.expander(f"{len(skipped)} glass(es) not in the .agf"):
+            st.dataframe(pd.DataFrame(skipped, columns=["glass_id", "reason"]),
+                         width="stretch", hide_index=True)
+
+
 tabs = st.tabs(["Matching Glasses", "Glass Map", "Pair Finder",
                 "Glass Detail", "Spectral Analysis",
                 "Comparison", "Database Explorer", "Data Sources",
@@ -321,6 +344,7 @@ with tabs[0]:
                                     "results": scoped.to_dict(orient="records")},
                                    indent=2, default=str).encode(),
                        "glassmatch_results.json", "application/json")
+    agf_download(scoped["glass_id"].tolist(), "match")
     with st.expander("How is Compatibility calculated?"):
         st.markdown(
             "- Each requirement (n_d, V_d, transmission, density, CTE) scores 0-1: "
@@ -677,6 +701,7 @@ with tabs[5]:
     if len(comp) >= 2:
         st.dataframe(results[results["glass_id"].isin(comp)].set_index("glass_id")
                      .astype(str).T, width="stretch")
+        agf_download(comp, "compare")
     else:
         st.info("Select at least 2 glasses.")
 
