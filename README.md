@@ -138,11 +138,46 @@ glassmatch n N-BK7 486.1 587.6 1064     # index; never extrapolated
 glassmatch search --nd 1.5:1.55 --vd 60:70 --preferred --top 10
 glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10 --csv out.csv
 glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf
+glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
+glassmatch search --nd 1.45:1.55 --columns gvd,group_index --wavelength 800 --sort gvd
+glassmatch columns                      # every sortable column and its meaning
+glassmatch n2 --material CaF2           # nonlinear-index measurements
 glassmatch check                        # data matches its manifest
 ```
 
 `python -m glassmatch ...` is the same. In Python:
 `from glassmatch import load_default_database, match_glasses, data_version`.
+
+## Sortable properties
+
+The Database explorer shows every column below and sorts on any of them; the
+matching sidebar's **More columns & filters** adds any as a results column or
+a range filter (missing values are kept unless "Require available data" is
+on); `glassmatch search --columns/--where/--sort` does the same.
+`glassmatch columns` lists them all.
+
+* **Catalog properties** - n_d, V_d, ΔP_g,F, density, CTE (−30/+70 and
+  20/300 °C), T_g, strain / annealing / softening / yield (sag) points,
+  conductivity, specific heat, Young's and shear modulus, Poisson's ratio,
+  stress-optic coefficient, Knoop hardness, flexural strength, dn/dT
+  (absolute d line; SCHOTT also e / g / 1060 nm; OHARA relative at 1550 nm),
+  colour codes (λ80/λ70/λ5, total and internal), transmission range, relative
+  cost, melt / production frequency.
+* **Per-maker scales** - abrasion, ISO grindability, climate / stain / acid /
+  alkali / phosphate resistance. Shown and filterable, labelled "maker's own
+  scale"; not comparable across makers.
+* **Calculated** (labelled; verified fits only, never extrapolated) - n_e,
+  V_e, P_g,F, P_C,t, ΔP_g,F for every fit; n, dn/dλ, group index and GVD at a
+  chosen wavelength; the internal UV edge (λ at 80 % / 5 %) and internal
+  transmittance at 355 / 532 / 1064 / 1550 nm at the chosen thickness; the
+  athermal coefficient γ = (dn/dT)/(n−1) − α; the thermal-shock figure
+  k(1−ν)/(αE); specific stiffness E/ρ.
+* **Nonlinear index n2** - 161 published measurements for 17 crystals, in
+  their own table (one row per paper, with wavelength, pulse duration and
+  method; never averaged).
+
+How each calculated figure was checked against manufacturer data is in
+[`docs/VALIDATION.md`](docs/VALIDATION.md).
 
 ## Availability
 
@@ -271,7 +306,7 @@ add a manufacturer without writing any Python. Release history is in
 | LZOS / Corning | 150 | nzhagen/zemaxglass mirror, vintage unknown (no public catalog found) — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,920** | 2,756 verified dispersion curves · 33 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 70k transmission rows · 135k tabulated n/k samples |
+| **Total** | **2,920** | 2,759 verified dispersion curves · 30 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 70k transmission rows · 135k tabulated n/k samples |
 
 1,202 glasses are marked obsolete, from each catalog's own status field (or,
 for HIKARI, absence from the current catalog); the Database explorer hides

@@ -17,8 +17,14 @@ names (all 13 Zemax formulas; `glassmatch.spectra.zemax_n`). A fit is
 accepted only if it reproduces the catalog n_d within 2×10⁻⁴ **and** V_d
 within 0.5. Across the shipped catalogs the worst accepted residuals are
 3.8×10⁻⁵ and 0.23; everything else is archived and never evaluated. Every
-stored n_d / V_d equals the value in its source file.
-*Pinned by* `tests/test_formula_audit.py`.
+stored n_d / V_d equals the value in its source file, with one documented
+exception: where the maker's own data workbook contradicts its `.agf` and the
+glass's dispersion fit independently reproduces the workbook value, the
+`.agf` value is a typo and the workbook's is stored (with the `.agf` value in
+the notes). Three glasses: CDGM H-TK9 (`.agf` 1.587166 / 75.90, workbook and
+fit 1.62075 / 60.3), HOYA MC-TAF115 (1.777047 vs 1.77047) and HOYA MC-FAD61
+(1.65494 vs 1.65451). Rounding-level V_d differences are never touched.
+*Pinned by* `tests/test_formula_audit.py`, `tests/test_property_columns.py`.
 
 ## 2. Fits agree with the makers' own datasheets at every printed line
 
@@ -32,18 +38,18 @@ constrained.
 
 <!-- crosscheck:begin -->
 
-Generated 2026-10-28 by `scripts/validate_against_datasheets.py`.
+Generated 2026-11-02 by `scripts/validate_against_datasheets.py`.
 
 | Datasheet | Maker | Glasses | Lines per glass | Within 2e-05 | Median max \|Δn\| | Worst \|Δn\| |
 |---|---|---|---|---|---|---|
-| CDGM-XLSX-2026-09 | CDGM | 335 | 17 | 322 | 1.1e-06 | 4.8e-05 |
-| HOYA-XLSX-2026-04-01-MIRROR | HOYA | 236 | 17 | 236 | 4.8e-06 | 7.0e-06 |
+| CDGM-XLSX-2026-09 | CDGM | 336 | 17 | 323 | 1.1e-06 | 4.8e-05 |
+| HOYA-XLSX-2026-04-01-MIRROR | HOYA | 238 | 17 | 238 | 4.8e-06 | 7.0e-06 |
 | OHARA-L-XLSX-2025-03-12 | OHARA | 17 | 20 | 17 | 4.9e-06 | 5.4e-06 |
 | OHARA-SPECIAL-XLSX-2025-03-12 | OHARA | 14 | 20 | 14 | 5.0e-06 | 5.5e-06 |
 | OHARA-XLSX-2026-04-02 | OHARA | 130 | 20 | 130 | 4.9e-06 | 6.8e-06 |
 | SCHOTT-XLSX-2025-11-13 | SCHOTT | 156 | 18 | 140 | 4.9e-06 | 3.8e-05 |
 
-**888 glass/datasheet pairs, 859 (96.7%) within 2e-05 at every line; worst 4.8e-05.**
+**891 glass/datasheet pairs, 862 (96.7%) within 2e-05 at every line; worst 4.8e-05.**
 
 <!-- crosscheck:end -->
 
@@ -78,6 +84,12 @@ values computed from Nikon's 2019 TD coefficients agree for 139 of 141 glasses
 source file and are not used.
 *Pinned by* `tests/test_thermal_and_catalog_data.py`.
 
+SCHOTT's data workbook also tabulates absolute dn/dT at the e and g lines and
+1060 nm (+20/+40 °C). Computed from the same glasses' `.agf` TD coefficients,
+all 461 values agree within 0.1×10⁻⁶/K (median 0.03; SCHOTT prints one
+decimal).
+*Pinned by* `tests/test_property_columns.py`.
+
 ## 5. Transmission
 
 Internal transmittance is compared at one sample thickness, converted from
@@ -96,10 +108,37 @@ gives Young's modulus, shear modulus and Poisson's ratio, E = 2G(1 + ν) is
 checked on every row.
 *Pinned by* `tests/test_maker_xlsx.py`.
 
+## 7. Derived figures
+
+Columns marked "(calculated)" (`glassmatch/derived.py`) are computed from the
+data above, never extrapolated: dispersion figures only inside a fit's stated
+range, transmission figures only between listed samples. Checks:
+
+* **UV edge.** The wavelength where internal transmittance reaches 80 % and
+  5 % at 10 mm, interpolated from the IT samples, against the makers'
+  published *internal* colour codes (HOYA λτ80/λτ5, OHARA λ0.80/λ0.05, HIKARI
+  internal CC): 518 glasses, median difference 0.3 nm, 99 % within 5 nm.
+  (Most published colour codes - λ80/λ5 - are total transmittance including
+  surface reflection, a different quantity, and are stored separately.)
+* **Line indices and partial dispersion.** N-BK7: n_e 1.51872, V_e 63.96,
+  P_g,F 0.5349, ΔP_g,F −0.0009 - SCHOTT's catalog values.
+* **Group-velocity dispersion.** At 800 nm: N-BK7 44.65 fs²/mm, group index
+  1.5266; fused silica 36.16 fs²/mm - the standard reference values.
+* **Thermo-mechanical figures** (athermal γ = (dn/dT)/(n−1) − α, thermal-shock
+  FOM k(1−ν)/(αE), specific stiffness E/ρ) are arithmetic on stored values;
+  their tests check the formulas against hand-computed N-BK7 figures.
+
+*Pinned by* `tests/test_property_columns.py`.
+
 ## Not validated
 
 * LZOS, Corning and the IR / polymer makers come from a third-party mirror
   of unknown date (no current public catalog was found); only check 1
   applies, and the UI labels them.
 * refractiveindex.info crystal pages are literature measurements and are
-  shown as such, with their citation.
+  shown as such, with their citation. Nonlinear-index (n2) measurements are
+  shown verbatim, one per paper, never averaged: n2 depends on pulse duration
+  and method.
+* Abrasion, grindability and chemical-resistance classes are each maker's own
+  scale; GlassMatch shows them per glass and does not compare them across
+  makers.

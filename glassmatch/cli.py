@@ -5,6 +5,10 @@
     glassmatch n N-BK7 486.1 587.6 656.3 1064
     glassmatch search --nd 1.50:1.55 --vd 60:70 --top 10
     glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10
+    glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
+    glassmatch search --nd 1.5:1.6 --columns gvd,group_index --wavelength 800
+    glassmatch columns                       # every sortable column
+    glassmatch n2 --material CaF2            # nonlinear index measurements
     glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf
     glassmatch check
 
@@ -134,6 +138,39 @@ def cmd_search(args) -> int:
     cols = [c for c in ("glass_id", "status", "compatibility", "nd", "vd",
                         "density", "cte", "dn_dt", "transmission_pct")
             if c in out.columns]
+    extra = [c.strip() for c in (args.columns or "").split(",") if c.strip()]
+    where = {}
+    for w in args.where or []:
+        col, _, rng = w.partition("=")
+        where[col.strip()] = _range(rng)
+    wanted = list(dict.fromkeys(extra + list(where)
+                                + ([args.sort] if args.sort else [])))
+    wanted = [c for c in wanted if c not in out.columns]
+    if wanted:
+        from glassmatch import columns as gm_columns
+        known = gm_columns.labels()
+        bad = [c for c in wanted if c not in known]
+        if bad:
+            raise SystemExit("unknown column(s): " + ", ".join(bad)
+                             + " (see `glassmatch columns`)")
+        t_groups = None
+        if any(c.startswith(("uv_edge_int", "t_")) and c.endswith(
+                ("_calc", "355", "532", "1064", "1550")) for c in wanted):
+            t_groups = {str(g): x for g, x in db.transmission.groupby("glass_id")}
+        table = gm_columns.columns(db, summary, t_groups, args.thickness,
+                                   args.wavelength)
+        out = out.join(table[[c for c in wanted if c in table.columns]],
+                       on="glass_id")
+        if where:
+            mask = gm_columns.range_filter(out.set_index("glass_id"), where,
+                                           keep_missing=not args.require_data)
+            out = out[mask.to_numpy()]
+    if args.sort:
+        out = out.sort_values(args.sort, ascending=not args.desc,
+                              na_position="last", kind="stable")
+    cols += [c for c in dict.fromkeys(extra + list(where)
+                                      + ([args.sort] if args.sort else []))
+             if c in out.columns and c not in cols]
     out = out[cols].head(args.top)
     if args.csv:
         out.to_csv(args.csv, index=False)
@@ -141,6 +178,34 @@ def cmd_search(args) -> int:
     else:
         with pd.option_context("display.width", 140, "display.max_columns", 20):
             print(out.to_string(index=False))
+    return 0
+
+
+def cmd_columns(args) -> int:
+    from glassmatch import columns as gm_columns
+    from glassmatch.database import MAKER_SCALE_COLUMNS
+    rows = [{"column": c, "meaning": lab, "unit": unit,
+             "note": "maker's own scale" if c in MAKER_SCALE_COLUMNS else ""}
+            for c, (lab, unit) in gm_columns.labels().items()]
+    with pd.option_context("display.width", 160, "display.max_colwidth", 70,
+                           "display.max_rows", 500):
+        print(pd.DataFrame(rows).to_string(index=False))
+    return 0
+
+
+def cmd_n2(args) -> int:
+    db = _db()
+    t = db.nonlinear_n2
+    if t.empty:
+        raise SystemExit("no n2 data (run scripts/merge_refractiveindex.py)")
+    if args.material:
+        t = t[t["material"].str.upper() == args.material.upper()]
+    t = t.assign(n2_1e20=t["n2_m2_per_w"] * 1e20).sort_values(
+        "n2_m2_per_w", kind="stable")
+    with pd.option_context("display.width", 160):
+        print(t[["material", "wavelength_um", "n2_1e20", "pulse_duration_s",
+                 "method", "source_id"]].rename(
+            columns={"n2_1e20": "n2 (1e-20 m2/W)"}).to_string(index=False))
     return 0
 
 
@@ -202,8 +267,21 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--include-obsolete", action="store_true")
     p.add_argument("--require-data", action="store_true")
     p.add_argument("--top", type=int, default=20)
+    p.add_argument("--columns", help="extra columns, comma-separated "
+                                     "(see `glassmatch columns`)")
+    p.add_argument("--where", action="append", metavar="COL=LO:HI",
+                   help="range filter on any column; repeatable")
+    p.add_argument("--sort", help="sort by this column (ascending)")
+    p.add_argument("--desc", action="store_true", help="sort descending")
+    p.add_argument("--wavelength", type=float, default=1064.0,
+                   help="wavelength (nm) for n_at, dn_dlambda, group_index, gvd")
     p.add_argument("--csv", help="write the results to this CSV file")
     p.set_defaults(func=cmd_search)
+    sub.add_parser("columns", help="every sortable column, with its meaning"
+                   ).set_defaults(func=cmd_columns)
+    p = sub.add_parser("n2", help="nonlinear index n2 measurements (crystals)")
+    p.add_argument("--material", help="e.g. CaF2, SiO2, ZnSe")
+    p.set_defaults(func=cmd_n2)
     p = sub.add_parser("export-agf", help="write glasses as a Zemax .agf")
     p.add_argument("glasses", nargs="+")
     p.add_argument("-o", "--output", required=True)
@@ -214,6 +292,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv=None) -> int:
+    # Labels use symbols (−, γ, ³) a legacy Windows console code page cannot
+    # print; degrade them rather than crash.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, ValueError):
+            pass
     args = build_parser().parse_args(argv)
     return int(args.func(args) or 0)
 

@@ -19,7 +19,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from glassmatch.importers.refractiveindex_yaml import import_refractiveindex
+from glassmatch.importers.refractiveindex_yaml import (import_n2_pages,
+                                                      import_refractiveindex)
 from scripts.fetch_refractiveindex import MATERIALS   # noqa: E402
 
 STAGED = ROOT / "data" / "spectral" / "refractiveindex_info"
@@ -74,6 +75,13 @@ def main() -> int:
 
     out = import_refractiveindex(STAGED, MATERIALS,
                                  access_date=date.today().isoformat())
+    # Nonlinear index n2: its own table, one row per published measurement.
+    n2 = import_n2_pages(STAGED, MATERIALS)
+    print(f"n2 measurements: {len(n2['n2'])} from {len(n2['sources'])} pages")
+    if not n2["sources"].empty:
+        n2["sources"]["access_date"] = date.today().isoformat()
+        out["sources"] = pd.concat([out["sources"], n2["sources"]],
+                                   ignore_index=True)
     print(f"pages imported : {len(out['glasses'])}")
     print(f"properties     : {len(out['properties'])}")
     print(f"sellmeier rows : {len(out['sellmeier'])}")
@@ -115,6 +123,11 @@ def main() -> int:
             when.get(sid, d) for sid, d in
             zip(out["sources"]["source_id"], out["sources"]["access_date"])]
     _upsert(src_path, out["sources"], "source_id", ["source_id"])
+    if not n2["n2"].empty and not args.dry_run:
+        n2["n2"].sort_values(["material", "wavelength_um", "source_id"],
+                             kind="stable").to_csv(
+            NORM / "nonlinear_n2.csv", index=False, encoding="utf-8")
+        print(f"  nonlinear_n2.csv: {len(n2['n2'])} rows")
     if out["spectral"] is not None and not out["spectral"].empty:
         path = NORM / "spectral_nk.csv"
         new_ids = set(out["spectral"].glass_id.astype(str))

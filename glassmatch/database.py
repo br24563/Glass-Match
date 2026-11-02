@@ -68,7 +68,48 @@ PROPERTY_LABELS = {
         "Weathering resistance, surface method, max (class)",
     "weathering_resistance_surface_min":
         "Weathering resistance, surface method, min (class)",
+    "uv_edge_80_nm": "Colour code: lambda at 80 % T, 10 mm (catalog)",
+    "uv_edge_70_nm": "Colour code: lambda at 70 % T, 10 mm (catalog)",
+    "uv_edge_5_nm": "Colour code: lambda at 5 % T, 10 mm (catalog)",
+    "uv_edge_internal_80_nm": "Internal colour code: lambda at 80 %, 10 mm",
+    "uv_edge_internal_5_nm": "Internal colour code: lambda at 5 %, 10 mm",
+    "strain_point": "Strain point (T14.5)",
+    "annealing_point": "Annealing point (T13)",
+    "softening_point": "Softening point (T7.6)",
+    "grindability_class_iso": "Grindability class HG (ISO 12844)",
+    "flexural_strength": "Flexural strength",
+    "dn_dt_abs_e_20_40": "dn/dT absolute (e line, +20/+40 C)",
+    "dn_dt_abs_g_20_40": "dn/dT absolute (g line, +20/+40 C)",
+    "dn_dt_abs_1060_20_40": "dn/dT absolute (1060 nm, +20/+40 C)",
+    "dn_dt_rel_1550_20_40": "dn/dT relative (1550 nm, +20/+40 C)",
 }
+
+# summary_frame column -> stored property. Every one is sortable in the
+# Database explorer and selectable as an extra column / range filter in
+# matching and `glassmatch search`.
+SUMMARY_PROPERTIES = {
+    "dpgf": "dPgF", "cte_20_300": "cte_20_300",
+    "wl_min": "wl_min_um", "wl_max": "wl_max_um",
+    "knoop": "knoop_hardness", "poisson": "poisson_ratio",
+    "shear": "shear_modulus", "stress_optic": "stress_optic_coefficient",
+    "specific_heat": "specific_heat", "flexural_strength": "flexural_strength",
+    "strain_point": "strain_point", "annealing_point": "annealing_point",
+    "yield_point": "yield_point", "softening_point": "softening_point",
+    "uv_edge_80": "uv_edge_80_nm", "uv_edge_70": "uv_edge_70_nm",
+    "uv_edge_5": "uv_edge_5_nm", "uv_edge_int80": "uv_edge_internal_80_nm",
+    "uv_edge_int5": "uv_edge_internal_5_nm",
+    "dn_dt_rel_1550": "dn_dt_rel_1550_20_40",
+    "abrasion": "abrasion", "grindability_hg": "grindability_class_iso",
+    "climate_resistance": "climate_resistance",
+    "acid_resistance": "acid_resistance",
+    "stain_resistance": "stain_resistance",
+    "alkali_resistance": "alkali_resistance",
+    "phosphate_resistance": "phosphate_resistance",
+}
+# Per-maker scales: filterable within one maker, never ranked across makers.
+MAKER_SCALE_COLUMNS = {"abrasion", "grindability_hg", "climate_resistance",
+                       "acid_resistance", "stain_resistance",
+                       "alkali_resistance", "phosphate_resistance"}
 
 PROPERTY_UNITS = {
     "refractive_index_nd": "",
@@ -97,6 +138,8 @@ class GlassDatabase:
     transmission: pd.DataFrame = field(default_factory=pd.DataFrame)
     spectral_nk: pd.DataFrame = field(default_factory=pd.DataFrame)
     equivalents: pd.DataFrame = field(default_factory=pd.DataFrame)
+    # Published nonlinear-index (n2) measurements of crystals, one row each.
+    nonlinear_n2: pd.DataFrame = field(default_factory=pd.DataFrame)
     @classmethod
     def load(cls, data_dir: Path | str = DEFAULT_DATA_DIR) -> "GlassDatabase":
         data_dir = Path(data_dir)
@@ -122,6 +165,7 @@ class GlassDatabase:
             transmission=_read("transmission.csv", required=False),
             spectral_nk=_read("spectral_nk.csv", required=False),
             equivalents=_read("equivalents.csv", required=False),
+            nonlinear_n2=_read("nonlinear_n2.csv", required=False),
         )
         for _col in ("material_class", "status"):
             if _col not in db.glasses.columns:
@@ -187,6 +231,21 @@ class GlassDatabase:
             return float(v)
         except (TypeError, ValueError):
             return None
+
+    def _property_columns(self) -> dict:
+        """property -> {glass_id: float}, from the same priority index as
+        property_value, built once. summary_frame reads ~40 properties for
+        every glass; a property_value call each made it take ~10 s."""
+        cols = self.__dict__.get("_prop_cols")
+        if cols is None:
+            cols = {}
+            for (gid, prop), v in self._property_index().items():
+                try:
+                    cols.setdefault(prop, {})[gid] = float(v)
+                except (TypeError, ValueError):
+                    continue
+            self.__dict__["_prop_cols"] = cols
+        return cols
 
     def _property_index(self) -> dict:
         """(glass_id, property) -> value, preserving property_value's source
@@ -445,37 +504,58 @@ class GlassDatabase:
         return None, None
 
     def summary_frame(self) -> pd.DataFrame:
+        """One row per glass with every sortable stored property.
+
+        Built from plain dicts: iterrows() and a DataFrame row lookup per
+        glass (manufacturer name) cost ~8 s on the Arrow-backed columns."""
         import pandas as pd  # local import keeps module light
         if self.glasses.empty:
             return pd.DataFrame()
+        cols = self._property_columns()
+
+        def pv(gid, prop):
+            return cols.get(prop, {}).get(gid)
+        names = {}
+        if not self.manufacturers.empty:
+            for mid, name in zip(self.manufacturers["manufacturer_id"].astype(str),
+                                 self.manufacturers["name"].astype(str)):
+                names.setdefault(mid, name)
+        t_ids = self._transmission_ids()
+
+        def text(g, key, default=""):
+            v = g.get(key)
+            return default if v is None or v != v or v == "" else str(v)
         rows = []
-        for _, g in self.glasses.iterrows():
+        for g in self.glasses.to_dict(orient="records"):
             gid = str(g["glass_id"])
-            mfr = self.get_manufacturer_row(str(g.get("manufacturer_id", "")))
-            has_trans = gid in self._transmission_ids()
+            mid = text(g, "manufacturer_id")
+            status = self.dispersion_status(gid)
             rows.append({
                 "glass_id": gid,
-                "glass": str(g.get("glass_name", gid)),
-                "manufacturer": str(mfr["name"]) if mfr is not None else str(g.get("manufacturer_id", "")),
-                "manufacturer_id": str(g.get("manufacturer_id", "")),
-                "family": str(g.get("glass_family", "")),
-                "material_class": str(g.get("material_class", "") or "oxide_glass"),
-                "status": str(g.get("status", "") or "standard"),
-                "nd": self.property_value(gid, "refractive_index_nd"),
-                "vd": self.property_value(gid, "abbe_number_vd"),
-                "density": self.property_value(gid, "density"),
-                "cte": self.property_value(gid, "cte"),
-                "tg": self.property_value(gid, "tg"),
-                "k_thermal": self.property_value(gid, "thermal_conductivity"),
-                "young": self.property_value(gid, "youngs_modulus"),
+                "glass": text(g, "glass_name", gid),
+                "manufacturer": names.get(mid, mid),
+                "manufacturer_id": mid,
+                "family": text(g, "glass_family"),
+                "material_class": text(g, "material_class", "oxide_glass"),
+                "status": text(g, "status", "standard"),
+                "nd": pv(gid, "refractive_index_nd"),
+                "vd": pv(gid, "abbe_number_vd"),
+                "density": pv(gid, "density"),
+                "cte": pv(gid, "cte"),
+                "tg": pv(gid, "tg"),
+                "k_thermal": pv(gid, "thermal_conductivity"),
+                "young": pv(gid, "youngs_modulus"),
                 # Manufacturer figures win over values derived from TD
                 # coefficients (property_value's source priority).
-                "dn_dt": self.property_value(gid, "dn_dt_abs_d_20_40"),
-                "relative_cost": self.property_value(gid, "relative_cost"),
-                "has_sellmeier": self.dispersion_status(gid) == "sellmeier1",
-                "dispersion": self.dispersion_status(gid),
-                "has_transmission": bool(has_trans),
-                "description": str(g.get("description", "")),
+                "dn_dt": pv(gid, "dn_dt_abs_d_20_40"),
+                "relative_cost": pv(gid, "relative_cost"),
+                **{col: pv(gid, prop)
+                   for col, prop in SUMMARY_PROPERTIES.items()},
+                "production_frequency": text(g, "production_frequency"),
+                "has_sellmeier": status == "sellmeier1",
+                "dispersion": status,
+                "has_transmission": gid in t_ids,
+                "description": text(g, "description"),
             })
         return pd.DataFrame(rows)
 

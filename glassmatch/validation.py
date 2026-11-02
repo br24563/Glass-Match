@@ -33,6 +33,19 @@ RULES = {
     "stress_optic_coefficient": (-10.0, 20.0),
     "knoop_hardness": (10.0, 3000.0),
     "relative_cost": (0.0, 1000.0),
+    # 2026-11 import: colour codes, molding temperatures, abrasion, n2-free
+    # thermal coefficients.
+    "uv_edge_80_nm": (150.0, 3000.0), "uv_edge_70_nm": (150.0, 3000.0),
+    "uv_edge_5_nm": (150.0, 3000.0), "uv_edge_internal_80_nm": (150.0, 3000.0),
+    "uv_edge_internal_5_nm": (150.0, 3000.0),
+    "strain_point": (100.0, 1500.0), "annealing_point": (100.0, 1500.0),
+    "softening_point": (100.0, 1800.0),
+    "grindability_class_iso": (0.0, 10.0),
+    "abrasion": (0.0, 5000.0),
+    "flexural_strength": (1.0, 2000.0),
+    "dn_dt_abs_e_20_40": (-1000.0, 1000.0), "dn_dt_abs_g_20_40": (-1000.0, 1000.0),
+    "dn_dt_abs_1060_20_40": (-1000.0, 1000.0),
+    "dn_dt_rel_1550_20_40": (-1000.0, 1000.0),
 }
 # Resistance classes are each maker's own scale (SCHOTT writes codes such as
 # 52.3); only a negative value is impossible.

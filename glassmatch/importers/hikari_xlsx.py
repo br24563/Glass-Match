@@ -49,6 +49,9 @@ LINES = {"t": 1.01398, "s": 0.85211, "A'": 0.768195, "r": 0.706519,
 # Scalar properties: (substring of the column header, property, unit, scale,
 # note). Matched against the second header row.
 SCALARS = [
+    ("歪点StP", "strain_point", "C", 1.0, "strain point StP"),
+    ("徐冷点AP", "annealing_point", "C", 1.0, "annealing point AP"),
+    ("軟化点SP", "softening_point", "C", 1.0, "softening point SP"),
     ("常温線膨張係数", "cte", "1e-6/K", 0.1, "CTE -30/+70 C (catalog 1e-7/K)"),
     ("高温線膨張係数", "cte_100_300", "1e-6/K", 0.1,
      "CTE +100/+300 C (catalog 1e-7/K)"),
@@ -124,6 +127,12 @@ def _columns(head1: tuple, head2: tuple) -> dict:
             cols["knoop"] = j
         if "生産頻度" in str(g or ""):
             cols["frequency"] = j
+        if "着色度" in hs and "λ80/λ5" in hs.replace(" ", ""):
+            cols["cc80"] = j
+        if "着色度" in hs and "λ70/λ5" in hs.replace(" ", ""):
+            cols["cc70"] = j
+        if "Internal CC" in hs:
+            cols["cc_internal"] = j
         if "相対" in group and "+20ºC to +40ºC" in group and hs == "d":
             cols["dndt_rel_d"] = j
         for key, prop, unit, scale, note in SCALARS:
@@ -197,6 +206,8 @@ def import_hikari_xlsx(path, source_id: str, manufacturer: str = "HIKARI"):
             "glass_name": name, "manufacturer_code": name,
             "glass_family": "", "material_class": "oxide_glass",
             "status": "standard",
+            "production_frequency": (freq if freq and freq not in ("None", "0")
+                                     else ""),
             "description": (f"Imported from {source_id}."
                             + (f" Production frequency {freq} (A = most "
                                "frequent)." if freq and freq != "None" else ""))})
@@ -213,6 +224,18 @@ def import_hikari_xlsx(path, source_id: str, manufacturer: str = "HIKARI"):
         if dens:
             props.append(_prop(gid, "density", dens, "g/cm3", "", source_id,
                                "specific gravity"))
+        from glassmatch.importers.maker_xlsx import colour_code
+        for key, parser, note in (
+                ("cc80", colour_code(), "colour code lambda80/lambda5, 10 mm"),
+                ("cc70", colour_code(hi=70), "colour code lambda70/lambda5, 10 mm"),
+                ("cc_internal", colour_code(internal=True),
+                 "internal-transmittance colour code lambda80/lambda5, 10 mm")):
+            if key not in cols:
+                continue
+            for prop, v in (parser(r[cols[key]]) or {}).items():
+                if not any(x["glass_id"] == gid and x["property"] == prop
+                           for x in props[-6:]):
+                    props.append(_prop(gid, prop, v, "nm", "", source_id, note))
         if "knoop" in cols and _num(r[cols["knoop"]]) is not None:
             props.append(_prop(gid, "knoop_hardness", _num(r[cols["knoop"]]),
                                "HK", "", source_id, "Knoop hardness"))

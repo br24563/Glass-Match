@@ -1,5 +1,5 @@
 {
-  "data_version": "2026.10.28",
+  "data_version": "2026.11.02",
   "files": {
     "equivalents.csv": {
       "rows": 365,
@@ -7,23 +7,27 @@
     },
     "glasses.csv": {
       "rows": 2920,
-      "sha256": "66f643ecb058e58892ca4206d610b86e4a22b9a9d8d784d3bd291b9b37cc2f29"
+      "sha256": "85c2f95cf8ddb7ecf9cf489e8784380d45d11ebe12a4385baac0f03ef5a2c26e"
     },
     "manufacturers.csv": {
       "rows": 18,
       "sha256": "7d488df8a1ed7f8cffd883df33507d7f02a4f9e62821fea6aa687c732c7cf29d"
     },
+    "nonlinear_n2.csv": {
+      "rows": 161,
+      "sha256": "ae3be536a69bcaaf17de67d471d32697c1e47488715665f9e8fdffcfb504b878"
+    },
     "properties.csv": {
-      "rows": 52577,
-      "sha256": "898ac5e399bcba0387d10acecb036100285f6086e3e0b33591cf0a67318d0c18"
+      "rows": 60947,
+      "sha256": "67e47a15e36461b4fd0ad72fb6b72370199e64f49b5e6d832713fb5a31b47564"
     },
     "sellmeier.csv": {
       "rows": 2789,
-      "sha256": "cae677651ee7dc770dc9e5bf1fce41817646ce7308b2c983386015c625f6676a"
+      "sha256": "f2ab68c176163a5cc62a4a3f73d42ca34c11de1941650e28d9a58c7ea962b7e9"
     },
     "sources.csv": {
-      "rows": 227,
-      "sha256": "833d91e63321765925adc5e7a9bbbb175565c42513fce83859aee0b3afeb0c79"
+      "rows": 315,
+      "sha256": "e527eeeeec37aed00380e2f1449c3af1176e388961febf4334fb9223482791dd"
     },
     "spectral_nk.csv": {
       "rows": 135347,
@@ -42,12 +46,12 @@
       "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
     }
   },
-  "package_version": "0.6.2",
+  "package_version": "0.7.0",
   "summary": {
     "manufacturers": 18,
     "materials": 2920,
     "obsolete": 1202,
-    "sources": 227,
-    "verified_dispersion_fits": 2756
+    "sources": 315,
+    "verified_dispersion_fits": 2759
   }
 }

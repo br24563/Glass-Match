@@ -402,3 +402,69 @@ def import_refractiveindex(root: Path, materials: dict,
             "spectral": pd.DataFrame(spec),
             "sources": pd.DataFrame(srcs), "issues": issues}
 
+
+
+# ---------------------------------------------------------------------------
+# Nonlinear refractive index n2 (the optical Kerr coefficient, m^2/W).
+#
+# "tabulated n2" pages are deliberately kept out of the linear-index import
+# above (n2 ~ 1e-20 m^2/W read as n^2 would be nonsense). They are collected
+# here, separately, one row per published measurement: n2 depends on pulse
+# duration and method (an electronic-only fs value can be half a ns one), so
+# measurements are never averaged or merged - a user sorts and compares them.
+
+def import_n2_pages(root: Path, materials: dict) -> dict:
+    """{'n2': DataFrame, 'sources': DataFrame, 'issues': list} for every
+    `n2__*.yml` page under root, materials as in import_refractiveindex."""
+    root = Path(root)
+    rows, srcs, issues = [], [], []
+    for yml in sorted(root.glob("*/n2__*.yml")):
+        material = yml.parent.name
+        if material not in materials:
+            continue
+        stem, display, _mclass = materials[material]
+        page = yml.stem.split("__", 1)[1]
+        try:
+            doc = yaml.safe_load(yml.read_text(encoding="utf-8")) or {}
+        except (yaml.YAMLError, OSError):
+            issues.append(f"{material}/{page}: unreadable n2 page")
+            continue
+        cond = doc.get("CONDITIONS") or {}
+        key = f"{stem}-{page}".replace(" ", "").upper()
+        source_id = f"RII-{key}-N2"
+        doi, cite = _citation(str(doc.get("REFERENCES") or ""))
+        comments = str(doc.get("COMMENTS") or "").strip()
+        n = 0
+        for entry in doc.get("DATA") or []:
+            if not isinstance(entry, dict) or entry.get("type") != "tabulated n2":
+                continue
+            for wl, val, _x in _tabulated(entry):
+                # Physical window for a solid's n2: ~1e-21 (fluorides) to
+                # ~1e-16 m^2/W (semiconductors in the IR).
+                if not (0 < wl < 100 and 1e-23 < abs(val) < 1e-14):
+                    issues.append(f"{material}/{page}: n2 {val} at {wl} um "
+                                  "outside the physical window, skipped")
+                    continue
+                rows.append({
+                    "material": material, "material_name": display,
+                    "wavelength_um": wl, "n2_m2_per_w": val,
+                    "pulse_duration_s": cond.get("pulse_duration"),
+                    "method": cond.get("n2_method", ""),
+                    "comments": re.sub(r"<[^>]+>", "", comments)[:300],
+                    "source_id": source_id})
+                n += 1
+        if n:
+            srcs.append({
+                "source_id": source_id, "manufacturer": "refractiveindex.info",
+                "source_name": f"{display}: {page} (nonlinear index n2)",
+                "source_url": (f"https://refractiveindex.info/?shelf=main"
+                               f"&book={material}&page={page}"),
+                "source_document": cite or f"refractiveindex.info page {page}",
+                "publication_date": "", "access_date": "",
+                "license": "CC0-1.0 (refractiveindex.info public domain)",
+                "notes": (f"Nonlinear refractive index n2 of {display} via the "
+                          "refractiveindex.info database (CC0 1.0). Primary "
+                          f"reference: {cite or 'see page'}"
+                          + (f" DOI: {doi}" if doi else ""))})
+    return {"n2": pd.DataFrame(rows), "sources": pd.DataFrame(srcs),
+            "issues": issues}

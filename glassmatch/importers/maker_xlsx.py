@@ -59,10 +59,43 @@ MODULI_TOL = 0.03
 MODULI_MAX_FAIL = 0.2
 
 
-def _spec(header, prop, unit="", scale=1.0, note="", sheet_group=None):
-    """One column: exact header text (space- and dot-insensitive)."""
+def _spec(header, prop, unit="", scale=1.0, note="", sheet_group=None,
+          parse=None, attr=False):
+    """One column: exact header text (space- and dot-insensitive).
+
+    sheet_group: text that must appear in the group label above the column
+      (SCHOTT repeats "e-line" under relative / absolute dn/dT and four
+      temperature ranges).
+    parse: cell -> {property: value} for cells that hold more than one number
+      ("45/37*"); `prop` is then only the column's key.
+    attr: the cell is a per-glass text attribute (melt frequency), returned in
+      the report rather than stored as a numeric property.
+    """
     return {"header": header, "prop": prop, "unit": unit, "scale": scale,
-            "note": note or header, "group": sheet_group}
+            "note": note or header, "group": sheet_group, "parse": parse,
+            "attr": attr}
+
+
+def colour_code(scale=1.0, internal=False, hi=80):
+    """Parser for an 'a/b' colour-code cell: the wavelengths (nm) where a
+    10 mm sample transmits 80 % (70 % when the maker marks it - SCHOTT with
+    '*', or a separate lambda70 column) and 5 %. '-' means not given."""
+    pre = "uv_edge_internal" if internal else "uv_edge"
+
+    def parse(raw):
+        txt = str(raw or "").strip()
+        m = re.fullmatch(r"(\d+(?:\.\d+)?|-)\s*/\s*(\d+(?:\.\d+)?|-)\s*(\*?)",
+                         txt)
+        if not m:
+            return None
+        upper, lower, star = m.groups()
+        out = {}
+        if upper != "-":
+            out[f"{pre}_{70 if star else hi}_nm"] = round(float(upper) * scale, 3)
+        if lower != "-":
+            out[f"{pre}_5_nm"] = round(float(lower) * scale, 3)
+        return out
+    return parse
 
 
 # Per layout: which sheets, how to find the header row, and the columns.
@@ -99,6 +132,33 @@ LAYOUTS = {
                   note="water resistance class, JOGIS (powder method)"),
             _spec("SR-J", "acid_resistance_powder", "class",
                   note="acid resistance class, JOGIS (powder method)"),
+            _spec("Colour code", "colour_code", "nm",
+                  parse=colour_code(10.0),
+                  note="colour code: wavelengths of transmission 0.80 (0.70 "
+                       "where marked *) and 0.05 at 10 mm (catalog in 10 nm)"),
+            _spec("T13", "annealing_point", "C",
+                  note="T13, temperature at viscosity 1e13 dPa s"),
+            _spec("T7.6", "softening_point", "C",
+                  note="T7.6, temperature at viscosity 1e7.6 dPa s"),
+            _spec("AT", "yield_point", "C", note="yield point / sag temperature AT"),
+            _spec("Abrasion hardness (HG)", "grindability_class_iso", "class",
+                  note="grindability class HG (ISO 12844)"),
+            _spec("Abrasion HG-J", "abrasion", "",
+                  note="abrasion HG-J (JOGIS method)"),
+            _spec("rel. Price", "relative_cost", "",
+                  note="price relative to N-BK7"),
+            _spec("e-line", "dn_dt_abs_e_20_40", "1e-6/K",
+                  sheet_group="Absolute temperature coefficients of refractive "
+                              "index [+20/+40",
+                  note="absolute dn/dT, e line, +20/+40 C"),
+            _spec("g-line", "dn_dt_abs_g_20_40", "1e-6/K",
+                  sheet_group="Absolute temperature coefficients of refractive "
+                              "index [+20/+40",
+                  note="absolute dn/dT, g line, +20/+40 C"),
+            _spec("1060nm", "dn_dt_abs_1060_20_40", "1e-6/K",
+                  sheet_group="Absolute temperature coefficients of refractive "
+                              "index [+20/+40",
+                  note="absolute dn/dT, 1060 nm, +20/+40 C"),
         ],
         # Description-sheet code -> text that must appear in its description.
         "unit_texts": {
@@ -132,6 +192,25 @@ LAYOUTS = {
                   note="water resistance DW (powder method)"),
             _spec("DA", "acid_resistance_powder", "class",
                   note="acid resistance DA (powder method)"),
+            _spec("λ80 /λ5", "colour_code", "nm", parse=colour_code(),
+                  note="colour code lambda80/lambda5, 10 mm"),
+            _spec("λ70 /λ5", "colour_code_70", "nm", parse=colour_code(hi=70),
+                  note="colour code lambda70/lambda5, 10 mm"),
+            _spec("T1014.5(℃)", "strain_point", "C",
+                  note="strain point T14.5 (viscosity 1e14.5 dPa s)"),
+            _spec("T1013(℃)", "annealing_point", "C",
+                  note="annealing point T13 (viscosity 1e13 dPa s)"),
+            _spec("T107.6(℃)", "softening_point", "C",
+                  note="softening point T7.6 (viscosity 1e7.6 dPa s)"),
+            _spec("Ts(℃)", "yield_point", "C", note="sag temperature Ts"),
+            _spec("FA", "abrasion", "", note="abrasion FA"),
+            _spec("Relative Price", "relative_cost", "", 0.1,
+                  note="price coefficient (price / H-K9L x 10) / 10, i.e. "
+                       "relative to H-K9L"),
+            _spec("Melt Frequency", "production_frequency", attr=True,
+                  note="melt frequency: MA in stock all year, A twice a "
+                       "year, B once a year, C every 1-2 years, D every 2+ "
+                       "years"),
         ],
         "moduli": True,
     },
@@ -153,6 +232,21 @@ LAYOUTS = {
                   note="photoelastic constant B"),
             _spec("DW", "water_resistance_powder", "class",
                   note="water durability DW (powder method)"),
+            _spec("λ80", "uv_edge_80_nm", "nm",
+                  note="coloration code lambda80, 10 mm"),
+            _spec("λ70", "uv_edge_70_nm", "nm",
+                  note="coloration code lambda70 (given instead of lambda80)"),
+            _spec("λ5", "uv_edge_5_nm", "nm", note="coloration code lambda5, 10 mm"),
+            _spec("λτ80", "uv_edge_internal_80_nm", "nm",
+                  note="coloration of internal transmittance lambda80, 10 mm"),
+            _spec("λτ5", "uv_edge_internal_5_nm", "nm",
+                  note="coloration of internal transmittance lambda5, 10 mm"),
+            _spec("T1014.5", "strain_point", "C", note="strain point T14.5"),
+            _spec("T1013", "annealing_point", "C", note="annealing point T13"),
+            _spec("T107.6", "softening_point", "C", note="softening point T7.6"),
+            _spec("Ts", "yield_point", "C", note="sag temperature Ts"),
+            _spec("FA", "abrasion", "", note="abrasion factor FA"),
+            _spec("σb", "flexural_strength", "MPa", note="flexural strength"),
         ],
         "unit_sheet": "glass_data_sheet",
         "unit_strings": ("Tg(℃)", "λ[W/(m･K)]", "CP[kJ/(kg･K)]", "E(GPa)",
@@ -186,6 +280,22 @@ LAYOUTS = {
                   note="acid resistance SR (ISO method)"),
             _spec("PR", "phosphate_resistance", "class",
                   note="phosphate resistance PR (ISO method)"),
+            _spec("λ80", "uv_edge_80_nm", "nm",
+                  note="coloring lambda80, 10 mm"),
+            _spec("(λ70)", "uv_edge_70_nm", "nm",
+                  note="coloring lambda70 (given instead of lambda80)"),
+            _spec("λ5", "uv_edge_5_nm", "nm", note="coloring lambda5, 10 mm"),
+            _spec("λ0.80", "uv_edge_internal_80_nm", "nm",
+                  note="internal transmission coloring lambda0.80, 10 mm"),
+            _spec("λ0.05", "uv_edge_internal_5_nm", "nm",
+                  note="internal transmission coloring lambda0.05, 10 mm"),
+            _spec("StP(℃)", "strain_point", "C", note="strain point StP"),
+            _spec("AP(℃)", "annealing_point", "C", note="annealing point AP"),
+            _spec("SP(℃)", "softening_point", "C", note="softening point SP"),
+            _spec("At(℃)", "yield_point", "C", note="yield point At"),
+            _spec("Abrasion(Aa)", "abrasion", "", note="abrasion Aa"),
+            _spec("1550(20~40)", "dn_dt_rel_1550_20_40", "1e-6/K",
+                  note="relative dn/dT at 1550 nm, +20/+40 C"),
         ],
         "moduli": True, "moduli_gpa": True,
     },
@@ -226,7 +336,21 @@ def _header_row(rows, name_header):
     raise ValueError(f"no {name_header!r} header in the first 10 rows")
 
 
-def _locate(heads, layout):
+def _group_ok(group_rows, j, text):
+    """True if the nearest non-empty group label at or left of column j, in
+    any of the rows above the header, contains `text`."""
+    want = _key(text)
+    for row in group_rows:
+        for k in range(min(j, len(row) - 1), -1, -1):
+            v = row[k]
+            if isinstance(v, str) and v.strip():
+                if want in _key(v):
+                    return True
+                break
+    return False
+
+
+def _locate(heads, layout, group_rows=()):
     """Column index per spec, by header text, searching the header rows in
     order; first match wins (CDGM repeats 'Glass' at the far right, HOYA's
     'G' is the shear modulus before it is a colour index), except V_d, where
@@ -242,6 +366,8 @@ def _locate(heads, layout):
     cols = {}
     for spec in layout["columns"]:
         hit = find(spec["header"])
+        if spec.get("group"):
+            hit = [j for j in hit if _group_ok(group_rows, j, spec["group"])]
         if hit:
             cols[spec["prop"]] = (hit[0], spec)
     nd, vd = find(layout["nd"]), find(layout["vd"])
@@ -318,13 +444,15 @@ def import_maker_xlsx(path, layout_name: str, source_id: str, names: dict,
         sheets = layout["sheets"] or wb.sheetnames[:1]
     report = {"rows": 0, "matched": 0, "unmatched": [], "nd_vd": [],
               "conflicts": [], "skipped_existing": 0, "moduli": [],
-              "unparsed": 0, "columns": {}}  # columns: sheet -> props it lacks
+              "unparsed": 0, "columns": {},  # columns: sheet -> props it lacks
+              "attrs": {}}  # glass_id -> {attribute: text}
     out, moduli = [], []
     for sheet in sheets:
         rows = list(wb[sheet].iter_rows(values_only=True))
         hr, name_col = _header_row(rows, layout["name_header"])
         depth = layout.get("header_depth", 1)
-        cols, nd_col, vd_col = _locate(rows[hr:hr + depth], layout)
+        cols, nd_col, vd_col = _locate(rows[hr:hr + depth], layout,
+                                       rows[max(0, hr - 2):hr])
         if "tg" not in cols:
             raise ValueError(f"{maker} sheet {sheet!r}: layout not "
                              f"recognised (no T_g column)")
@@ -352,28 +480,38 @@ def import_maker_xlsx(path, layout_name: str, source_id: str, names: dict,
                     if v is not None and ref is not None and abs(v - ref) > tol:
                         report["nd_vd"].append((gid, label, v, ref))
             vals = {}
-            for prop, (j, spec) in cols.items():
+            for key, (j, spec) in cols.items():
                 raw = r[j] if j < len(r) else None
-                v = _num(raw)
-                if v is None:
+                if spec.get("attr"):
+                    txt = "" if raw is None else str(raw).strip()
+                    if txt and txt != "-":
+                        report["attrs"].setdefault(gid, {})[key] = txt
+                    continue
+                if spec.get("parse"):
+                    items = spec["parse"](raw)
+                else:
+                    v = _num(raw)
+                    items = (None if v is None
+                             else {key: round(v * spec["scale"], 6)})
+                if not items:
                     if raw is not None and str(raw).strip() not in ("", "-"):
                         report["unparsed"] += 1
                     continue
-                v = round(v * spec["scale"], 6)
-                vals[prop] = v
-                if (gid, prop) in existing:
-                    report["skipped_existing"] += 1
-                    old = existing[(gid, prop)]
-                    try:
-                        same = abs(float(old) - v) < 1e-9
-                    except (TypeError, ValueError):
-                        same = False
-                    if not same:
-                        report["conflicts"].append((gid, prop, v, old))
-                    continue
-                existing[(gid, prop)] = v
-                out.append(_prop(gid, prop, v, spec["unit"], source_id, maker,
-                                 spec["note"]))
+                for prop, v in items.items():
+                    vals[prop] = v
+                    if (gid, prop) in existing:
+                        report["skipped_existing"] += 1
+                        old = existing[(gid, prop)]
+                        try:
+                            same = abs(float(old) - v) < 1e-9
+                        except (TypeError, ValueError):
+                            same = False
+                        if not same:
+                            report["conflicts"].append((gid, prop, v, old))
+                        continue
+                    existing[(gid, prop)] = v
+                    out.append(_prop(gid, prop, v, spec["unit"], source_id,
+                                     maker, spec["note"]))
             if layout.get("moduli") and all(
                     k in vals for k in ("youngs_modulus", "shear_modulus",
                                         "poisson_ratio")):

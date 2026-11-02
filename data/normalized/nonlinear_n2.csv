@@ -1,0 +1,162 @@
+material,material_name,wavelength_um,n2_m2_per_w,pulse_duration_s,method,comments,source_id
+Al2O3,Aluminium oxide (sapphire),0.266,5.97e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
+Al2O3,Aluminium oxide (sapphire),0.355,3.75e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
+Al2O3,Aluminium oxide (sapphire),0.532,3.33e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
+Al2O3,Aluminium oxide (sapphire),1.064,3.1e-20,3e-9,TWM,Extraordinary ray (e). 3 ns. Three-wave mixing.,RII-AL2O3-ADAIR-E-N2
+Al2O3,Aluminium oxide (sapphire),1.064,2.9e-20,3e-9,TWM,Ordinary ray (o). 3 ns. Three-wave mixing.,RII-AL2O3-ADAIR-O-N2
+Al2O3,Aluminium oxide (sapphire),1.064,3.12e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
+Al2O3,Aluminium oxide (sapphire),2.3,2.44e-20,100e-15,SRTBC,Sapphire. 100 fs. Spectrally resolved two-beam coupling.,RII-AL2O3-PATWARDHAN-N2
+Al2O3,Aluminium oxide (sapphire),3.5,2.62e-20,100e-15,SRTBC,Sapphire. 100 fs. Spectrally resolved two-beam coupling.,RII-AL2O3-PATWARDHAN-N2
+Al2O3,Aluminium oxide (sapphire),4.5,2.66e-20,100e-15,SRTBC,Sapphire. 100 fs. Spectrally resolved two-beam coupling.,RII-AL2O3-PATWARDHAN-N2
+BaF2,Barium fluoride,0.266,3.05e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-BAF2-DESALVO-N2
+BaF2,Barium fluoride,0.355,2.73e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-BAF2-DESALVO-N2
+BaF2,Barium fluoride,0.532,2.13e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-BAF2-DESALVO-N2
+BaF2,Barium fluoride,0.532,2.41e-20,27e-12,Z-scan,27 ps. Z-scan.,RII-BAF2-SHEIK-BAHAE-N2
+BaF2,Barium fluoride,0.8,3.3e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-BAF2-ENSLEY-N2
+BaF2,Barium fluoride,1.064,1.91e-20,3e-9,TWM,BaF2[100]. 3 ns. Three-wave mixing.,RII-BAF2-ADAIR-N2
+BaF2,Barium fluoride,1.064,1.43e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-BAF2-DESALVO-N2
+BaF2,Barium fluoride,1.064,2.85e-20,125e-12,TRI,Cubic BaF2. 125 ps. Time-resolved interferometry.,RII-BAF2-MILAM-N2
+BaF2,Barium fluoride,2.0,3.2e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-BAF2-ENSLEY-N2
+BaF2,Barium fluoride,9.2,1.7e-20,2e-12,SPA,2 ps. Spatial profile analysis.,RII-BAF2-POLYANSKIY-N2
+CaF2,Calcium fluoride (fluorite),0.8,1.8e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-CAF2-ENSLEY-N2
+CaF2,Calcium fluoride (fluorite),0.804,1.47e-20,47e-15,CPI,47 fs. Common-path interferometry.,RII-CAF2-VANDERLINDEN-N2
+CaF2,Calcium fluoride (fluorite),1.03,1.71e-20,210e-15,SPMIPR,210 fs. SPM-induced phase regression.,RII-CAF2-KABACINSKI-N2
+CaF2,Calcium fluoride (fluorite),1.064,1.26e-20,3e-9,TWM,CaF2[100]. 3 ns. Three-wave mixing.,RII-CAF2-ADAIR-N2
+CaF2,Calcium fluoride (fluorite),1.064,1.9e-20,125e-12,TRI,Cubic BaF2. 125 ps. Time-resolved interferometry.,RII-CAF2-MILAM-N2
+CaF2,Calcium fluoride (fluorite),2.0,1.7e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-CAF2-ENSLEY-N2
+CaF2,Calcium fluoride (fluorite),2.3,1.09e-20,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-CAF2-PATWARDHAN-N2
+CaF2,Calcium fluoride (fluorite),3.5,1.19e-20,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-CAF2-PATWARDHAN-N2
+CaF2,Calcium fluoride (fluorite),4.5,1.12e-20,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-CAF2-PATWARDHAN-N2
+CdTe,Cadmium telluride,1.064,-1.34e-18,40e-12,Z-scan,40 ps. Z-scan.,RII-CDTE-SHEIK-BAHAE-N2
+CdTe,Cadmium telluride,1.55,3.27e-17,110e-15,Z-scan,CdTe[100]. 110 fs. Z-scan.,RII-CDTE-TATSUURA-100-N2
+CdTe,Cadmium telluride,1.55,5.23e-17,110e-15,Z-scan,CdTe[111]. 110 fs. Z-scan.,RII-CDTE-TATSUURA-111-N2
+GaAs,Gallium arsenide,1.064,3.26e-17,40e-12,Z-scan,40 ps. Z-scan.,RII-GAAS-SHEIK-BAHAE-N2
+GaAs,Gallium arsenide,1.55,2.93e-17,110e-15,Z-scan,GaAs[100]. 110 fs. Z-scan.,RII-GAAS-TATSUURA-N2
+GaAs,Gallium arsenide,2.0,1.4e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-GAAS-ENSLEY-N2
+GaAs,Gallium arsenide,2.5,9e-18,100e-12,Z-scan,100 ps. Z-scan. See reference for n2(λ) in 1.3–3.5 µm range,RII-GAAS-HURLBUT-N2
+GaAs,Gallium arsenide,3.2,8.56e-18,190e-15,FI,Single crystal GaAs. Orientation: (100). 190 fs at 3.2 μm. Fourier Interferometry.,RII-GAAS-JANSONAS-N2
+GaAs,Gallium arsenide,3.9,1.3e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-GAAS-ENSLEY-N2
+GaAs,Gallium arsenide,9.2,7.5e-18,2e-12,SPA,2 ps. Spatial profile analysis.,RII-GAAS-POLYANSKIY-N2
+GaAs,Gallium arsenide,10.6,3.4e-18,200e-12,FWM,200 ps. Four-wave mixing.,RII-GAAS-MATTEO-200PS-N2
+GaAs,Gallium arsenide,10.6,4e-18,220e-15,Z-scan,220 fs. Z-scan.,RII-GAAS-MATTEO-220FS-N2
+Ge,Germanium,2.0,-3.5e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-GE-ENSLEY-N2
+Ge,Germanium,3.9,2.6e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-GE-ENSLEY-N2
+Ge,Germanium,9.2,4e-17,2e-12,SPA,2 ps. Spatial profile analysis.,RII-GE-POLYANSKIY-N2
+Ge,Germanium,10.6,2.5e-17,200e-12,FWM,n-Ge. 200 ps. Four-wave mixing.,RII-GE-MATTEO-200PS-N2
+Ge,Germanium,10.6,4e-17,220e-15,Z-scan,n-Ge. 220 fs. Z-scan.,RII-GE-MATTEO-220FS-N2
+Ge,Germanium,10.6,2.83e-17,300e-9,Z-scan,300 ns. Z-scan.,RII-GE-SHEIK-BAHAE-N2
+LaF3,Lanthanum fluoride,1.064,3.67e-20,3e-9,TWM,Ordinary ray (o). 3 ns. Three-wave mixing.,RII-LAF3-ADAIR-N2
+LaF3,Lanthanum fluoride,1.064,3.95e-20,125e-12,TRI,Hexagonal LaF3 (tysonite). Ordinary ray (o). 125 ps. Time-resolved interferometry.,RII-LAF3-MILAM-N2
+LiF,Lithium fluoride,0.266,1.18e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-LIF-DESALVO-N2
+LiF,Lithium fluoride,0.355,5.68e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-LIF-DESALVO-N2
+LiF,Lithium fluoride,0.532,5.71e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-LIF-DESALVO-N2
+LiF,Lithium fluoride,0.8,8.8e-21,100e-15,Z-scan,100 fs. Z-scan.,RII-LIF-ENSLEY-N2
+LiF,Lithium fluoride,1.064,7.9e-21,3e-9,TWM,LiF[100]. 3 ns. Three-wave mixing.,RII-LIF-ADAIR-N2
+LiF,Lithium fluoride,1.064,7.55e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-LIF-DESALVO-N2
+LiF,Lithium fluoride,1.064,1.1e-20,125e-12,TRI,125 ps. Time-resolved interferometry.,RII-LIF-MILAM-N2
+LiF,Lithium fluoride,2.0,9.8e-21,100e-15,Z-scan,100 fs. Z-scan.,RII-LIF-ENSLEY-N2
+MgAl2O4,Magnesium aluminate (spinel),1.03,3.32e-20,140e-15 97e-15,Z-scan,"140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-MGAL2O4-FLOM-N2
+MgAl2O4,Magnesium aluminate (spinel),1.064,3.69e-20,3e-9,TWM,3 ns. Three-wave mixing.,RII-MGAL2O4-ADAIR-N2
+MgAl2O4,Magnesium aluminate (spinel),1.55,4.16e-20,140e-15 97e-15,Z-scan,"140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-MGAL2O4-FLOM-N2
+MgF2,Magnesium fluoride (magnesite),0.266,1.5e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Ordinary ray (o). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-MGF2-DESALVO-N2
+MgF2,Magnesium fluoride (magnesite),0.355,6.65e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"Ordinary ray (o). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-MGF2-DESALVO-N2
+MgF2,Magnesium fluoride (magnesite),0.532,5.77e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"Ordinary ray (o). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-MGF2-DESALVO-N2
+MgF2,Magnesium fluoride (magnesite),0.8,1.1e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-MGF2-ENSLEY-N2
+MgF2,Magnesium fluoride (magnesite),1.064,7.6e-21,3e-9,TWM,Ordinary ray (o). 3 ns. Three-wave mixing.,RII-MGF2-ADAIR-N2
+MgF2,Magnesium fluoride (magnesite),1.064,5.8e-21,15e-12 17e-12 22e-12 30e-12,Z-scan,"Ordinary ray (o). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-MGF2-DESALVO-N2
+MgF2,Magnesium fluoride (magnesite),1.064,9.9e-21,125e-12,TRI,Ordinary ray (o). 125 ps. Time-resolved interferometry.,RII-MGF2-MILAM-N2
+MgF2,Magnesium fluoride (magnesite),2.0,1.1e-20,100e-15,Z-scan,100 fs. Z-scan.,RII-MGF2-ENSLEY-N2
+MgF2,Magnesium fluoride (magnesite),2.3,6.6e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
+MgF2,Magnesium fluoride (magnesite),3.5,7.4e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
+MgF2,Magnesium fluoride (magnesite),4.5,8.2e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
+Si,Silicon,1.03,2.71e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.16,5.21e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.2,1.23e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.22,4.7e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.3,1.67e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.4,5.57e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.4,1.65e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.48,5.48e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.5,2.41e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.55,4.84e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.55,7.22e-18,110e-15,Z-scan,Si[100]. 110 fs. Z-scan.,RII-SI-TATSUURA-100-N2
+Si,Silicon,1.55,1.01e-17,110e-15,Z-scan,Si[111]. 110 fs. Z-scan.,RII-SI-TATSUURA-111-N2
+Si,Silicon,1.6,2.61e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.62,8.24e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.69,6.57e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.7,2.87e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.76,1.15e-17,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.8,2.38e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.85,1.25e-17,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,1.9,2.99e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,1.95,1.12e-17,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,2.0,7.7e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-ENSLEY-N2
+Si,Silicon,2.0,1.99e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,2.1,2.64e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,2.15,1.01e-17,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
+Si,Silicon,2.2,7e-18,170e-15 190e-15,FI,"Single crystal Si. Orientation: unknown. 170 fs and 190 fs at 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-SI-JANSONAS-N2
+Si,Silicon,2.2,1.18e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,2.3,1.06e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
+Si,Silicon,3.2,4.54e-18,170e-15 190e-15,FI,"Single crystal Si. Orientation: unknown. 170 fs and 190 fs at 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-SI-JANSONAS-N2
+Si,Silicon,3.9,1.1e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-ENSLEY-N2
+Si,Silicon,9.2,1.2e-17,2e-12,SPA,2 ps. Spatial profile analysis.,RII-SI-POLYANSKIY-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.266,7.82e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Fused silica. 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-SIO2-DESALVO-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.351,3.6e-20,,,Fused silica.,RII-SIO2-MILAM-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.355,2.41e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Fused silica. 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-SIO2-DESALVO-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.355,2.5e-20,,TRI,Fused silica. Time-resolved interferometry.,RII-SIO2-WHITE-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.527,3e-20,,,Fused silica.,RII-SIO2-MILAM-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.532,2.24e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Fused silica. 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-SIO2-DESALVO-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.772,2.07e-20,280e-15 140e-15 97e-15,Z-scan,"Fused silica. 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-SIO2-FLOM-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.8,2.7e-20,100e-15,Z-scan,Fused silica. 100 fs. Z-scan.,RII-SIO2-ENSLEY-N2
+SiO2,Silicon dioxide (fused silica / quartz),0.804,2.54e-20,47e-15,CPI,47 fs. Common-path interferometry.,RII-SIO2-VANDERLINDEN-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.03,2.23e-20,280e-15 140e-15 97e-15,Z-scan,"Fused silica. 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-SIO2-FLOM-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.03,2.53e-20,230e-15,FI,Ultraviolet grade fused silica - UVFS (SiO2). 230 fs at 1.03 μm. Fourier Interferometry.,RII-SIO2-JANSONAS-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.03,2.19e-20,210e-15,SPMIPR,210 fs. SPM-induced phase regression.,RII-SIO2-KABACINSKI-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.053,2.74e-20,,,Fused silica.,RII-SIO2-MILAM-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.064,3.15e-20,3e-9,TWM,Quartz. Extraordinary ray (e). 3 ns. Three-wave mixing.,RII-SIO2-ADAIR-E-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.064,2.46e-20,3e-9,TWM,Fused silica. 3 ns. Three-wave mixing.,RII-SIO2-ADAIR-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.064,3.06e-20,3e-9,TWM,Quartz. Ordinary ray (o). 3 ns. Three-wave mixing.,RII-SIO2-ADAIR-O-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.064,2.14e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Fused silica. 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-SIO2-DESALVO-N2
+SiO2,Silicon dioxide (fused silica / quartz),1.55,2.42e-20,280e-15 140e-15 97e-15,Z-scan,"Fused silica. 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-SIO2-FLOM-N2
+SiO2,Silicon dioxide (fused silica / quartz),2.0,2.8e-20,100e-15,Z-scan,Fused silica. 100 fs. Z-scan.,RII-SIO2-ENSLEY-N2
+SiO2,Silicon dioxide (fused silica / quartz),2.3,1.94e-20,100e-15,SRTBC,Fused silica. 100 fs. Spectrally resolved two-beam coupling.,RII-SIO2-PATWARDHAN-N2
+SiO2,Silicon dioxide (fused silica / quartz),3.5,2e-20,100e-15,SRTBC,Fused silica. 100 fs. Spectrally resolved two-beam coupling.,RII-SIO2-PATWARDHAN-N2
+SrF2,Strontium fluoride,1.064,1.46e-20,3e-9,TWM,SrF>sub>2[100]. 3 ns. Three-wave mixing.,RII-SRF2-ADAIR-N2
+SrF2,Strontium fluoride,1.064,1.76e-20,125e-12,TRI,125 ps. Time-resolved interferometry.,RII-SRF2-MILAM-N2
+Te,Tellurium,10.6,5.5e-16,220e-15,SB,Extraordinary ray (e). 220 fs. Spectral broadening.,RII-TE-MATTEO-E-N2
+Te,Tellurium,10.6,3e-16,220e-15,SB,Ordinary ray (o). 220 fs. Spectral broadening.,RII-TE-MATTEO-O-N2
+Y3Al5O12,Yttrium aluminium garnet (YAG),1.03,6.13e-20,210e-15,SPMIPR,210 fs. SPM-induced phase regression.,RII-Y3AL5O12-KABACINSKI-N2
+Y3Al5O12,Yttrium aluminium garnet (YAG),1.064,6.23e-20,3e-9,TWM,3 ns. Three-wave mixing.,RII-Y3AL5O12-ADAIR-N2
+Y3Al5O12,Yttrium aluminium garnet (YAG),1.064,7.3e-20,150e-12,TRI,150 ps. Time-resolved interferometry.,RII-Y3AL5O12-BLISS-N2
+Y3Al5O12,Yttrium aluminium garnet (YAG),1.064,9.41e-20,13e-9,ER,13 ns. Ellipse rotation.,RII-Y3AL5O12-OWYOUNG-N2
+ZnS,Zinc sulfide,0.772,5.29e-19,280e-15 140e-15 97e-15,Z-scan,"Multispectral ZnS (CLEARTRAN). 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-ZNS-FLOM-N2
+ZnS,Zinc sulfide,1.03,4.84e-19,280e-15 140e-15 97e-15,Z-scan,"Multispectral ZnS (CLEARTRAN). 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-ZNS-FLOM-N2
+ZnS,Zinc sulfide,1.03,6.8e-19,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnS. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNS-JANSONAS-N2
+ZnS,Zinc sulfide,1.064,9e-19,3e-9,TWM,Extraordinary ray (e). 3 ns. Three-wave mixing.,RII-ZNS-ADAIR-E-N2
+ZnS,Zinc sulfide,1.064,8.7e-19,3e-9,TWM,Ordinary ray (o). 3 ns. Three-wave mixing.,RII-ZNS-ADAIR-O-N2
+ZnS,Zinc sulfide,1.55,6.16e-19,280e-15 140e-15 97e-15,Z-scan,"Multispectral ZnS (CLEARTRAN). 280 fs @ 772 nm, 140 fs @ 1030 nm, 97 fs @ 1550 nm. Z-scan.",RII-ZNS-FLOM-N2
+ZnS,Zinc sulfide,2.0,5.5e-19,100e-15,Z-scan,100 fs. Z-scan.,RII-ZNS-ENSLEY-N2
+ZnS,Zinc sulfide,2.2,7.4e-19,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnS. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNS-JANSONAS-N2
+ZnS,Zinc sulfide,2.3,4.78e-19,100e-15,SRTBC,Polycrystalline ZnS. 100 fs. Spectrally resolved two-beam coupling.,RII-ZNS-PATWARDHAN-N2
+ZnS,Zinc sulfide,3.2,6e-19,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnS. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNS-JANSONAS-N2
+ZnS,Zinc sulfide,3.5,4.55e-19,100e-15,SRTBC,Polycrystalline ZnS. 100 fs. Spectrally resolved two-beam coupling.,RII-ZNS-PATWARDHAN-N2
+ZnS,Zinc sulfide,3.9,5e-19,100e-15,Z-scan,100 fs. Z-scan.,RII-ZNS-ENSLEY-N2
+ZnS,Zinc sulfide,4.5,5.38e-19,100e-15,SRTBC,Polycrystalline ZnS. 100 fs. Spectrally resolved two-beam coupling.,RII-ZNS-PATWARDHAN-N2
+ZnS,Zinc sulfide,8.3,3.98e-19,100e-15,SRTBC,Polycrystalline ZnS. 100 fs. Spectrally resolved two-beam coupling.,RII-ZNS-PATWARDHAN-N2
+ZnS,Zinc sulfide,9.2,4e-19,2e-12,SPA,2 ps. Spatial profile analysis.,RII-ZNS-POLYANSKIY-N2
+ZnSe,Zinc selenide,0.532,-6.24e-18,27e-12 40e-12,Z-scan,"27 ps @ 0.532 µm, 40 ps @ 1.064 µm. Z-scan.",RII-ZNSE-SHEIK-BAHAE-N2
+ZnSe,Zinc selenide,1.03,2.31e-18,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnSe. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNSE-JANSONAS-N2
+ZnSe,Zinc selenide,1.064,2.87e-18,27e-12 40e-12,Z-scan,"27 ps @ 0.532 µm, 40 ps @ 1.064 µm. Z-scan.",RII-ZNSE-SHEIK-BAHAE-N2
+ZnSe,Zinc selenide,2.0,1.5e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-ZNSE-ENSLEY-N2
+ZnSe,Zinc selenide,2.2,1.59e-18,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnSe. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNSE-JANSONAS-N2
+ZnSe,Zinc selenide,2.3,1.13e-18,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-ZNSE-PATWARDHAN-N2
+ZnSe,Zinc selenide,3.2,1.22e-18,230e-15 170e-15 190e-15,FI,"Polycrystalline ZnSe. 230 fs, 170 fs and 190 fs at 1.03 μm, 2.2 μm and 3.2 μm, respectively. Fourier Interferometry.",RII-ZNSE-JANSONAS-N2
+ZnSe,Zinc selenide,3.5,1e-18,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-ZNSE-PATWARDHAN-N2
+ZnSe,Zinc selenide,3.9,1.2e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-ZNSE-ENSLEY-N2
+ZnSe,Zinc selenide,3.9,1.2e-18,260e-15,Z-scan,260 fs. Z-scan.,RII-ZNSE-WERNER-N2
+ZnSe,Zinc selenide,4.5,1.19e-18,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-ZNSE-PATWARDHAN-N2
+ZnSe,Zinc selenide,8.3,8.7e-19,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-ZNSE-PATWARDHAN-N2
+ZnSe,Zinc selenide,9.2,6.5e-19,2e-12,SPA,2 ps. Spatial profile analysis.,RII-ZNSE-POLYANSKIY-N2
+ZnSe,Zinc selenide,10.6,1.2e-18,200e-12,FWM,200 ps. Four-wave mixing.,RII-ZNSE-MATTEO-200PS-N2
+ZnSe,Zinc selenide,10.6,1e-18,220e-15,Z-scan,220 fs. Z-scan.,RII-ZNSE-MATTEO-220FS-N2
+ZnSe,Zinc selenide,10.6,1.2e-18,300e-9,FWM,"300 ns. Four-wave mixing. Relative measurement (to GaAs). The authors mistakenly used an incorrect value of n2 of GaAs when converting a relative measurement to an absolute value. They used 4.0e-19 cm2/W instead of 4.0e-14 cm2/W, which was cited earlier in the same paper. The database now includes a",RII-ZNSE-PIGEON-N2

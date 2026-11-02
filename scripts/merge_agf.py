@@ -366,6 +366,7 @@ def _property_sources(tables, only):
     jobs = [j for j in PROPERTY_SOURCES if Path(j["path"]).exists()
             and (not only or j["sid"] in only or j["agf"] in only)]
     rows, sids = [], {j["sid"] for j in jobs}
+    attrs, nd_vd = {}, []
     existing = {(g, p): v for g, p, v, s in zip(
         props["glass_id"], props["property"], props["value"],
         props["source_id"]) if s not in sids}
@@ -396,17 +397,88 @@ def _property_sources(tables, only):
             print(f"    unmatched: {line}")
         for gid, label, v, ref in rep["nd_vd"]:
             print(f"    {gid}: workbook {label} {v} vs .agf {ref}")
+            nd_vd.append((gid, label, v, ref, job["sid"]))
         for gid, prop, v, old in rep["conflicts"]:
             print(f"    {gid}: workbook {prop} {v} vs stored {old} (kept)")
         for gid, e, gm, nu in rep["moduli"]:
             print(f"    {gid}: E {e} vs 2G(1+nu) {2 * gm * (1 + nu):.2f}")
+        for gid, a in rep.get("attrs", {}).items():
+            attrs.setdefault(gid, {}).update(a)
         if not p2.empty:
             props = pd.concat([props, p2], ignore_index=True)
         rows.append(_source_row(job["sid"], job["mfr"], job["url"],
                                 Path(job["path"]).name, job["published"],
                                 job["accessed"], job.get("license", LIMITED),
                                 job["note"]))
-    return props, rows
+    return props, rows, attrs, nd_vd
+
+
+def _correct_from_workbook(props, sell, nd_vd):
+    """Fix an .agf NM n_d / V_d that the maker's own workbook contradicts,
+    but only when the glass's dispersion fit independently reproduces the
+    workbook value - two sources against one typo (HOYA MC-TAF115 lists n_d
+    1.777047 for a glass whose fit and workbook both give 1.77047). The fit
+    is then verified against the corrected values. Everything else is left
+    as the .agf has it."""
+    from glassmatch.importers.agf import ND_TOL, VD_TOL, verified_label
+    from glassmatch.spectra import n_from_row
+    by = {}
+    for gid, label, v, ref, sid in nd_vd:
+        by.setdefault(gid, {})[label] = (v, ref, sid)
+    fixed = []
+    for gid, vals in by.items():
+        i = sell.index[sell["glass_id"] == gid]
+        if len(i) != 1:
+            continue
+        row = sell.loc[i[0]].to_dict()
+        try:
+            nd = n_from_row(row, 0.5875618)
+            vd = (nd - 1) / (n_from_row(row, 0.4861327)
+                             - n_from_row(row, 0.6562725))
+        except (TypeError, ValueError, ZeroDivisionError):
+            continue
+        fit = {"n_d": nd, "V_d": vd}
+        tol = {"n_d": ND_TOL, "V_d": VD_TOL}
+        # Only values the fit cannot reconcile with the .agf are candidates
+        # (a 60.58 vs 60.614 V_d is rounding, and the fit agrees with the
+        # .agf); each must be one the fit DOES reproduce from the workbook.
+        wrong = [lab for lab, (v, ref, _s) in vals.items()
+                 if abs(fit[lab] - ref) > tol[lab]]
+        if not wrong or any(abs(fit[lab] - vals[lab][0]) > tol[lab]
+                            for lab in wrong):
+            continue
+        for label, prop in (("n_d", "refractive_index_nd"),
+                            ("V_d", "abbe_number_vd")):
+            if label not in wrong:
+                continue
+            v, ref, sid = vals[label]
+            hit = props.index[(props["glass_id"] == gid)
+                              & (props["property"] == prop)]
+            props.loc[hit, "value"] = v
+            props.loc[hit, "source_id"] = sid
+            props.loc[hit, "notes"] = (
+                f"{label} from the maker's data workbook; the .agf NM record "
+                f"gives {ref}, which the glass's own dispersion fit does not "
+                f"reproduce (fit: {nd if label == 'n_d' else vd:.6g}).")
+            fixed.append((gid, label, ref, v))
+        if str(row.get("formula", "")).startswith("Non-dispersable"):
+            f = int(row["zemax_formula"]) if row.get("zemax_formula") == row.get(
+                "zemax_formula") else 2
+            terms = row.get("n_terms")
+            if terms != terms or terms is None:      # archived rows carry none
+                from glassmatch.spectra import active_pairs, coefficients_of
+                terms = len(active_pairs(coefficients_of(row)))
+            terms = int(terms)
+            sell.loc[i[0], "n_terms"] = terms
+            sell.loc[i[0], "formula"] = verified_label(f, terms)
+            sell.loc[i[0], "notes"] = (str(row.get("notes", "")) + " Verified "
+                                       f"against the maker's workbook n_d/V_d "
+                                       f"({nd:.6f} / {vd:.2f}) after the .agf "
+                                       "NM values were found to be a typo.")
+    for gid, label, ref, v in fixed:
+        print(f"corrected {gid} {label}: .agf {ref} -> workbook {v} "
+              "(dispersion fit agrees with the workbook)")
+    return props, sell
 
 
 def main() -> None:
@@ -516,7 +588,17 @@ def main() -> None:
         new_sources.append(_source_row(sid, mfr, GITHUB_MIRROR, sid, "",
                                        "2026-09-21", MIRROR_LICENSE, MIRROR_NOTE))
 
-    tables[1], prop_sources = _property_sources(tables, args.only)
+    tables[1], prop_sources, attrs, nd_vd = _property_sources(tables, args.only)
+    tables[1], tables[2] = _correct_from_workbook(tables[1], tables[2], nd_vd)
+    # Per-glass text attributes from the workbooks (CDGM melt frequency);
+    # HIKARI's comes with its glass rows.
+    g0 = tables[0]
+    if "production_frequency" not in g0.columns:
+        g0["production_frequency"] = ""
+    for gid, a in attrs.items():
+        if "production_frequency" in a:
+            g0.loc[g0["glass_id"] == gid, "production_frequency"] = (
+                a["production_frequency"])
     tables[0] = _availability(tables[0], tables[1])
     new_sources += prop_sources
 

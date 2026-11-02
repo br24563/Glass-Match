@@ -6,6 +6,49 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Added
+- **Every stored property is sortable, plus 20 calculated figures.** A shared
+  column layer (`glassmatch/columns.py`) feeds the Database explorer (every
+  column, click to sort), a new sidebar section "More columns & filters"
+  (any column as a results column or range filter; missing values kept
+  unless "Require available data" is on), the CSV export and
+  `glassmatch search --columns / --where COL=LO:HI / --sort / --desc /
+  --wavelength`. `glassmatch columns` lists all 55 with their meaning.
+- **Calculated figures** (`glassmatch/derived.py`; labelled, verified fits
+  only, never extrapolated): n_e, V_e, P_g,F, P_C,t and ΔP_g,F for every fit;
+  n, dn/dλ, group index and GVD at a chosen wavelength (N-BK7 at 800 nm:
+  44.65 fs²/mm, group index 1.5266; fused silica 36.16 fs²/mm); the internal
+  UV edge (λ at 80 % / 5 %) and internal transmittance at 355/532/1064/1550
+  nm at the chosen thickness (99 % within 5 nm of the makers' internal colour
+  codes, median 0.3 nm); athermal γ; thermal-shock FOM k(1−ν)/(αE); specific
+  stiffness E/ρ.
+- **More from the makers' workbooks** (8,370 rows): colour codes λ80/λ70/λ5,
+  total and internal (SCHOTT, OHARA, CDGM, HOYA, HIKARI; up to 1,013
+  glasses); strain / annealing / softening / yield points for precision
+  molding (up to 1,003); abrasion (each maker's method) and SCHOTT's ISO
+  grindability class; SCHOTT absolute dn/dT at e / g / 1060 nm (all 461
+  values within 0.1e-6/K of those computed from the .agf TD coefficients);
+  OHARA relative dn/dT at 1550 nm; HOYA flexural strength; SCHOTT relative
+  price where its .agf gives none; CDGM and HIKARI melt / production
+  frequency (a new `production_frequency` glass column).
+- **Nonlinear refractive index n2**: 161 published measurements for 17
+  crystals from refractiveindex.info, in a new `nonlinear_n2.csv` - one row
+  per paper with wavelength, pulse duration and method, never averaged. A
+  sortable table in the Database explorer and `glassmatch n2`.
+
+### Fixed
+- **Three .agf typos corrected from two independent sources.** Where a
+  maker's workbook contradicts its .agf and the glass's own dispersion fit
+  reproduces the workbook, the workbook value is stored and the fit becomes
+  usable: CDGM H-TK9 (.agf n_d 1.587166 / V_d 75.90 -> 1.62075 / 60.3), HOYA
+  MC-TAF115 (1.777047 -> 1.77047) and MC-FAD61 (1.65494 -> 1.65451).
+  Verified fits 2,756 -> 2,759; all three agree with their datasheets.
+- `summary_frame` 10 s -> 0.6 s (warm) and app re-runs 2x faster: band
+  transmission and the substitution finder are cached instead of recomputed
+  on every widget change.
+- The command line no longer crashes printing symbols (−, γ, ³) on a legacy
+  Windows console.
+
 ## [0.7.0] - 2026-10-28 (data version 2026.10.28)
 
 ### Added

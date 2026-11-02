@@ -250,8 +250,14 @@ def test_workbook_rows_are_sourced_manufacturer_rows(shipped):
     assert set(x["source_id"]) == set(WORKBOOKS)
     assert set(x["data_type"]) == {"manufacturer"}
     assert set(WORKBOOKS) <= set(db.sources["source_id"])
-    assert not x["property"].isin(["refractive_index_nd", "abbe_number_vd",
-                                   "density", "cte"]).any()
+    # A workbook supplies n_d / V_d only to correct a documented .agf typo,
+    # which the glass's own dispersion fit confirms (scripts/merge_agf.py
+    # _correct_from_workbook) - three glasses, each noting the .agf value.
+    nv = x[x["property"].isin(["refractive_index_nd", "abbe_number_vd"])]
+    assert set(nv["glass_id"]) == {"CDGM-H-TK9", "HOYA-MC-TAF115",
+                                   "HOYA-MC-FAD61"}
+    assert nv["notes"].str.contains("the .agf NM record gives", regex=False).all()
+    assert not x["property"].isin(["density", "cte"]).any()
     makers = set(x["glass_id"].str.split("-").str[0])
     assert makers == {"SCHOTT", "OHARA", "CDGM", "HOYA"}
     for maker, n in (("SCHOTT", 150), ("OHARA", 150), ("CDGM", 300),

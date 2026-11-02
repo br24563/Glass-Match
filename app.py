@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from glassmatch import __version__
+from glassmatch import columns as gm_columns
 from glassmatch.importers.agf import AVAILABLE_STATUSES as _AVAIL
 from glassmatch.manifest import data_version as _data_version
 from glassmatch.database import load_default_database, PROPERTY_LABELS, PROPERTY_UNITS, DEFAULT_DATA_DIR
@@ -204,6 +205,37 @@ require_data = st.sidebar.checkbox("Require available data (missing = fail)",
                                    value=False,
                                    help="If off, missing data is flagged, not failed.")
 
+_COL_LABELS = gm_columns.labels()
+
+
+def _col_label(c):
+    lab, unit = _COL_LABELS.get(c, (c, ""))
+    return f"{lab} [{unit}]" if unit else lab
+
+
+with st.sidebar.expander("3 \u2022 More columns & filters"):
+    st.caption("Every stored property plus figures GlassMatch calculates "
+               "from them (marked 'calculated'). Columns marked \"maker's own "
+               "scale\" are only comparable within one maker.")
+    prop_wavelength_nm = st.number_input(
+        "Wavelength for n, dn/d\u03bb, group index, GVD (nm)", 200.0, 20000.0,
+        1064.0, 1.0)
+    extra_cols = st.multiselect("Extra columns in results", list(_COL_LABELS),
+                                format_func=_col_label)
+    filter_cols = st.multiselect(
+        "Range filters", [c for c in _COL_LABELS if c != "production_frequency"],
+        format_func=_col_label,
+        help="Glasses outside a range are removed; glasses with no value are "
+             "kept and shown blank, unless 'Require available data' is on.")
+    where = {}
+    for _c in filter_cols:
+        _a, _b = st.columns(2)
+        _lo = _a.number_input(f"min {_c}", value=None, key=f"lo_{_c}",
+                              placeholder="no min")
+        _hi = _b.number_input(f"max {_c}", value=None, key=f"hi_{_c}",
+                              placeholder="no max")
+        where[_c] = (_lo, _hi)
+
 st.sidebar.header("2 \u2022 Weights (%)")
 w_in = {}
 for k in WEIGHT_KEYS:
@@ -235,11 +267,21 @@ def band_transmission(gid, lo_um, hi_um, mode):
                               thickness_mm=sample_thickness_mm)
 
 
-trans, trans_basis = {}, {}
-for gid in summary["glass_id"]:
-    v, basis = band_transmission(gid, wl_min_um, wl_max_um, t_mode)
-    trans[gid] = v
-    trans_basis[gid] = basis
+@st.cache_data(show_spinner=False)
+def _band_all(_key: str, lo_um: float, hi_um: float, mode: str,
+              thickness_mm: float):
+    """Band transmission for every glass; recomputed only when the band, mode
+    or thickness changes, not on every widget interaction."""
+    out_v, out_b = {}, {}
+    for g in summary["glass_id"]:
+        out_v[g], out_b[g] = _band_transmission(
+            db, g, lo_um, hi_um, mode, t_groups=t_groups, nk_groups=nk_groups,
+            thickness_mm=thickness_mm)
+    return out_v, out_b
+
+
+trans, trans_basis = _band_all(_data_key(), float(wl_min_um), float(wl_max_um),
+                               str(t_mode), float(sample_thickness_mm))
 
 # Materials with no catalog n_d (crystals) are judged on n at the chosen
 # reference wavelength instead. Their V_d stays not-applicable, so the Abbe
@@ -261,6 +303,36 @@ results.attrs.update(_attrs)
 n_unavailable = _n_before - len(results)
 n_excluded = int(results.attrs.get("excluded_count", 0))
 excluded_examples = results.attrs.get("excluded_examples", [])
+
+
+@st.cache_data(show_spinner=False)
+def _candidates_for(_key: str, gid: str):
+    return candidates_for(summary, gid, EquivalencyCriteria(), max_results=8)
+
+
+@st.cache_data(show_spinner=False)
+def _candidate_pairs(_key: str, tol_nd: float, tol_vd: float, tol_rho: float):
+    return candidate_pairs(summary, EquivalencyCriteria(
+        tolerance_overrides={"nd": tol_nd, "vd": tol_vd, "density": tol_rho}))
+
+
+@st.cache_data(show_spinner="Computing derived properties…")
+def _column_table(_key: str, thickness_mm: float, wavelength_nm: float):
+    return gm_columns.columns(db, summary, t_groups, thickness_mm,
+                              wavelength_nm)
+
+
+col_table = _column_table(_data_key(), float(sample_thickness_mm),
+                          float(prop_wavelength_nm))
+n_range_filtered = 0
+if where:
+    _attrs = dict(results.attrs)
+    _mask = gm_columns.range_filter(
+        col_table.reindex(results["glass_id"]), where,
+        keep_missing=not require_data)
+    n_range_filtered = int((~_mask).sum())
+    results = results[_mask.to_numpy()].reset_index(drop=True)
+    results.attrs.update(_attrs)
 
 @st.cache_data(show_spinner=False)
 def _agf_export(glass_ids: tuple, data_key: str):
@@ -334,10 +406,19 @@ with tabs[0]:
                    "wavelength, not on a catalog n_d.")
     else:
         show["class"] = show["material_class"]
-    st.dataframe(show[["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-                        "cte", "dn_dt", "transmission_%", "status", "completeness", "missing",
-                        "class"]],
+    _base = ["glass", "manufacturer", "compatibility", "nd", "vd", "density",
+             "cte", "dn_dt", "transmission_%", "status", "completeness",
+             "missing", "class"]
+    _extra = [c for c in dict.fromkeys(extra_cols + list(where))
+              if c not in _base]
+    if _extra:
+        show = show.join(col_table[_extra], on="glass_id")
+    st.dataframe(show[_base + _extra].rename(
+                     columns={c: _col_label(c) for c in _extra}),
                  width="stretch", hide_index=True)
+    if n_range_filtered:
+        st.caption(f"{n_range_filtered:,} material(s) removed by the range "
+                   "filters.")
     if nd_override and (scoped["nd_basis"] == "n at reference wavelength").any():
         n_ov = int((scoped["nd_basis"] == "n at reference wavelength").sum())
         st.caption(
@@ -355,7 +436,10 @@ with tabs[0]:
                        scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
                                      transmission_basis=scoped["glass_id"].map(trans_basis)
                                      .fillna("missing"),
-                                     data_version=DATA_VERSION).to_csv(
+                                     data_version=DATA_VERSION)
+                       .join(col_table[[c for c in dict.fromkeys(extra_cols + list(where))
+                                        if c not in scoped.columns]], on="glass_id")
+                       .to_csv(
                            index=False).encode(),
                        "glassmatch_results.csv", "text/csv")
     import json as _json
@@ -596,7 +680,7 @@ with tabs[3]:
                  for k in WEIGHT_KEYS}), width="stretch")
     st.subheader("Cross-manufacturer substitutions")
     cur = curated_equivalents(db.equivalents, gid)
-    cand = candidates_for(summary, gid, EquivalencyCriteria(), max_results=8)
+    cand = _candidates_for(_data_key(), gid)
     if not cur.empty:
         st.markdown("**Curated** - from manufacturer cross-reference / maintainer review")
         st.dataframe(cur, width="stretch", hide_index=True)
@@ -745,9 +829,31 @@ with tabs[6]:
         view = view[view["has_sellmeier"]]
     if hide_obsolete and "status" in view.columns:
         view = view[view["status"] != "obsolete"]
+    _derived = [c for c in col_table.columns if c not in view.columns]
+    view = view.join(col_table[_derived], on="glass_id")
     st.dataframe(view, width="stretch", hide_index=True)
-    st.caption(f"{len(view)} of {len(summary)} glasses shown. "
-               "Coverage grows ring by ring: core catalogs -> crystals/IR -> polymers.")
+    st.caption(f"{len(view)} of {len(summary)} glasses shown - click any column "
+               "header to sort. Transmission figures are at the sidebar's sample "
+               f"thickness ({sample_thickness_mm:g} mm); n, dn/dλ, group "
+               f"index and GVD at {prop_wavelength_nm:g} nm.")
+    with st.expander("What each column means"):
+        st.dataframe(pd.DataFrame(
+            [{"column": c, "meaning": lab, "unit": unit}
+             for c, (lab, unit) in _COL_LABELS.items()]),
+            width="stretch", hide_index=True)
+    if not db.nonlinear_n2.empty:
+        st.subheader("Nonlinear refractive index n2 (crystals, literature)")
+        st.caption("One row per published measurement, verbatim, with its "
+                   "wavelength, pulse duration and method - n2 depends on "
+                   "both, so measurements are never averaged. Sort by n2 to "
+                   "compare window materials for high-power lasers. Source: "
+                   "refractiveindex.info (CC0); each row cites its paper.")
+        _n2 = db.nonlinear_n2.copy()
+        _n2["n2 (1e-20 m²/W)"] = _n2["n2_m2_per_w"] * 1e20
+        st.dataframe(_n2[["material_name", "wavelength_um", "n2 (1e-20 m²/W)",
+                          "pulse_duration_s", "method", "comments",
+                          "source_id"]],
+                     width="stretch", hide_index=True)
     cov = summary.groupby("manufacturer_id").agg(
         glasses=("glass_id", "count"),
         with_sellmeier=("has_sellmeier", "sum")).reset_index()
@@ -771,7 +877,8 @@ with tabs[6]:
     crit = EquivalencyCriteria(
         tolerance_overrides={"nd": tol_nd, "vd": tol_vd, "density": tol_rho})
     with st.spinner("Computing candidates..."):
-        pairs = candidate_pairs(summary, crit)
+        pairs = _candidate_pairs(_data_key(), float(tol_nd), float(tol_vd),
+                                 float(tol_rho))
     m1, m2, m3 = st.columns(3)
     m1.metric("Candidate pairs", f"{len(pairs):,}")
     m2.metric("Curated pairs", f"{len(db.equivalents):,}")
