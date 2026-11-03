@@ -1,0 +1,133 @@
+"""Matching Glasses tab - moved verbatim from app.py; shared state arrives in ctx."""
+from __future__ import annotations
+
+from glassmatch import __version__
+import streamlit as st
+
+
+def render(ctx):
+    DATA_VERSION = ctx.DATA_VERSION
+    _col_label = ctx._col_label
+    agf_download = ctx.agf_download
+    col_table = ctx.col_table
+    dndt_max = ctx.dndt_max
+    excluded_examples = ctx.excluded_examples
+    extra_cols = ctx.extra_cols
+    n_excluded = ctx.n_excluded
+    n_range_filtered = ctx.n_range_filtered
+    n_ref_nm = ctx.n_ref_nm
+    n_unavailable = ctx.n_unavailable
+    nd_override = ctx.nd_override
+    requirements = ctx.requirements
+    results = ctx.results
+    t_mode = ctx.t_mode
+    trans = ctx.trans
+    trans_basis = ctx.trans_basis
+    w_norm = ctx.w_norm
+    where = ctx.where
+    st.header("Matching glasses")
+    st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    if n_unavailable:
+        st.caption(f"{n_unavailable:,} material(s) hidden by the Availability "
+                   "filter (obsolete glasses are hidden by default).")
+    n_dndt = int(results.attrs.get("dndt_filtered", 0))
+    if n_dndt:
+        st.info(f"**{n_dndt:,} material(s) removed** by the |dn/dT| limit of "
+                f"{dndt_max:g}e-6/K.")
+    if n_excluded:
+        detail = ", ".join(f"{r['glass_id']} (no {r['blocking_missing']})"
+                           for r in excluded_examples[:3])
+        st.info(
+            f"**{n_excluded:,} material(s) excluded** by \u201cRequire available "
+            f"data\u201d \u2014 they have no value for a property you set a "
+            f"requirement on. Example: {detail}. Clear the checkbox to see them "
+            f"anyway, flagged as missing rather than failed.")
+    mf_match = st.multiselect("Manufacturers in scope", sorted(results["manufacturer"].unique()),
+                              default=sorted(results["manufacturer"].unique()))
+    scoped = results[results["manufacturer"].isin(mf_match)] if mf_match else results.iloc[0:0]
+    st.caption(f"{len(scoped)} of {len(results)} glasses in scope.")
+    page_size = st.selectbox("Rows per page", [25, 50, 100, 250], index=1)
+    n_pages = max(1, (len(scoped) + page_size - 1) // page_size)
+    page = st.number_input("Page", min_value=1, max_value=n_pages, value=1)
+    show = scoped.iloc[(page - 1) * page_size: page * page_size].copy()
+    show["transmission_%"] = show["glass_id"].map(
+        lambda g: None if trans.get(g) is None else round(trans[g], 1))
+    if show["ir_mode"].astype(bool).any():
+        show.loc[show["ir_mode"].astype(bool), "vd"] = None  # V_d undefined here
+        # "IR material" is a label, not a judgement: CaF2 and fused silica are
+        # crystals that happen to have no Abbe number, and calling them IR
+        # materials misdescribes them. Only the genuinely IR classes get it.
+        _ir_classes = {"chalcogenide", "crystal_ir"}
+        show["class"] = show.apply(
+            lambda r: "IR material"
+            if (r["ir_mode"] and str(r["material_class"]) in _ir_classes)
+            else str(r["material_class"]), axis=1)
+        st.caption("IR materials and crystals: V_d not applicable — the Abbe "
+                   "weight is redistributed to index + transmission, never "
+                   "penalized. Crystals are scored on n at the reference "
+                   "wavelength, not on a catalog n_d.")
+    else:
+        show["class"] = show["material_class"]
+    _base = ["glass", "manufacturer", "compatibility", "nd", "vd", "density",
+             "cte", "dn_dt", "transmission_%", "status", "completeness",
+             "missing", "class"]
+    _extra = [c for c in dict.fromkeys(extra_cols + list(where))
+              if c not in _base]
+    if _extra:
+        show = show.join(col_table[_extra], on="glass_id")
+    st.dataframe(show[_base + _extra].rename(
+                     columns={c: _col_label(c) for c in _extra}),
+                 width="stretch", hide_index=True)
+    if n_range_filtered:
+        st.caption(f"{n_range_filtered:,} material(s) removed by the range "
+                   "filters.")
+    if nd_override and (scoped["nd_basis"] == "n at reference wavelength").any():
+        n_ov = int((scoped["nd_basis"] == "n at reference wavelength").sum())
+        st.caption(
+            f"The **n** column is a catalog n_d for {len(scoped) - n_ov} of these "
+            f"results, and n at {n_ref_nm:g} nm for {n_ov} material(s) that have "
+            f"no d-line entry (crystals). V_d is shown blank for those because "
+            f"the Abbe number is not defined for them.")
+    n_mfr = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("manufacturer"))
+    n_calc = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("calculated"))
+    n_miss = len(scoped) - n_mfr - n_calc
+    st.caption(f"Transmission basis ({t_mode} of band): {n_mfr} manufacturer IT rows · "
+               f"{n_calc} calculated Fresnel · {n_miss} missing — full labels in the CSV export. "
+               f"Page {page} of {n_pages}.")
+    st.download_button("Export results CSV (in-scope glasses)",
+                       scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
+                                     transmission_basis=scoped["glass_id"].map(trans_basis)
+                                     .fillna("missing"),
+                                     data_version=DATA_VERSION)
+                       .join(col_table[[c for c in dict.fromkeys(extra_cols + list(where))
+                                        if c not in scoped.columns]], on="glass_id")
+                       .to_csv(
+                           index=False).encode(),
+                       "glassmatch_results.csv", "text/csv")
+    import json as _json
+    st.download_button("Export requirements + results JSON",
+                       _json.dumps({"glassmatch": __version__,
+                                    "data_version": DATA_VERSION,
+                                    "requirements": requirements, "weights": w_norm,
+                                    "results": scoped.to_dict(orient="records")},
+                                   indent=2, default=str).encode(),
+                       "glassmatch_results.json", "application/json")
+    agf_download(scoped["glass_id"].tolist(), "match")
+    with st.expander("How is Compatibility calculated?"):
+        st.markdown(
+            "- Each requirement (n_d, V_d, transmission, density, CTE) scores 0-1: "
+            "1.0 inside the band, linear falloff outside.\n"
+            "- Overall = weighted mean over **available** data x coverage factor "
+            "(0.5 + 0.5 x covered weight).\n"
+            "- IR materials and crystals: V_d weight moves to index (60%) + "
+            "transmission (40%); V_d is shown as n/a, never scored. Crystals "
+            "are judged on n at the reference wavelength.\n"
+            f"- Transmission modes (**{t_mode}**): *Average* = mean of samples in "
+            "band; *Minimum* = worst sample; *Entire range* = worst sample but only "
+            "when manufacturer samples span >=90% of the band — otherwise the value "
+            "is reported missing, never guessed.\n"
+            "- Transmission values prefer manufacturer IT rows (transmission.csv); "
+            "a calculated uncoated Fresnel estimate is used only when a glass has no "
+            "manufacturer rows at all, and is labelled as calculated.")
+
+    return {"scoped": scoped}

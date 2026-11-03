@@ -1,0 +1,13 @@
+! illustrative 100 mm cemented doublet (not a commercial design)
+LEN NEW
+TITLE 'doublet'
+DIM M
+WL 656.3 587.6 486.1
+EPD 25.4
+SO 0 1e+20
+S 61.0 6.0 N-BK7_SCHOTT
+STO
+S -44.0 2.5 'N-SF5_SCHOTT'
+S -130.0 96.0
+SI 0 0
+GO

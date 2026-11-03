@@ -71,7 +71,16 @@ def _fits(db, ids=None):
 
 def optical_figures(db) -> pd.DataFrame:
     """n_e, V_e, P_g,F, P_C,t and dP_g,F (vs the normal line
-    P_g,F = 0.6438 - 0.001682 V_d, as SCHOTT defines it) per glass."""
+    P_g,F = 0.6438 - 0.001682 V_d, as SCHOTT defines it) per glass.
+    Cached with the database (glassmatch.cache) when it was read from disk."""
+    from glassmatch import cache
+    cdir = db.cache_dir() if hasattr(db, "cache_dir") else None
+    out = cache.frame(cdir, "optical_figures",
+                      lambda: _optical_figures(db).reset_index())
+    return out.set_index("glass_id") if "glass_id" in out.columns else out
+
+
+def _optical_figures(db) -> pd.DataFrame:
     rows = []
     for gid, fit, lo, hi in _fits(db):
         n = {k: _n(fit, lo, hi, w) for k, w in

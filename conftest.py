@@ -12,3 +12,11 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parent)
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
+
+# Tests never read or write the user's derived-data cache (glassmatch.cache):
+# a run gets its own empty one, so results cannot depend on earlier sessions.
+import os  # noqa: E402
+import tempfile  # noqa: E402
+
+if "GLASSMATCH_CACHE_DIR" not in os.environ:
+    os.environ["GLASSMATCH_CACHE_DIR"] = tempfile.mkdtemp(prefix="glassmatch-cache-")

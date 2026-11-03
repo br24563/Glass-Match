@@ -7,6 +7,36 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **n(λ, T, p) at any temperature and pressure** (`glassmatch/thermal.py`):
+  relative or absolute index from the SCHOTT dn/dT model (TD records) inside
+  its stated validity (−100 … +140 °C, 365 … 1014 nm) with the Edlén air
+  index, else from the maker's own measured dn/dT table; refuses rather than
+  extrapolates (no cryogenic data, no index where no source covers). In the
+  app (Glass Detail → "Index at temperature"), `glassmatch n GLASS NM -T 60
+  [--pressure PA] [--absolute]` and `glassmatch dndt`.
+- **Measured dn/dT tables** (`dn_dt_measured.csv`, 116,639 values, 1,031
+  glasses) from the SCHOTT, OHARA, HOYA, CDGM and HIKARI data workbooks
+  (`scripts/merge_dndt.py`); the model reproduces SCHOTT's tables to the
+  printed digit and is checked against the rest (`scripts/validate_dndt.py`,
+  VALIDATION.md §8). Results note where a maker's table and its TD
+  coefficients disagree.
+- **Lens glass replacement** (`glassmatch/lens.py`): reads JSON, CSV, Zemax
+  .zmx and CODE V .seq prescriptions; paraxial y-nu trace for EFL, BFL,
+  primary axial colour, secondary spectrum, Petzval sum and thermal focus
+  shift with a user mount CTE; ranks available glasses to replace one in the
+  design, keeping curvatures or re-solving one to restore the EFL. New
+  "Lens Glass Replacement" tab, `glassmatch lens FILE` and `glassmatch
+  replace FILE [GLASS]` (default: the design's obsolete glasses). Checked
+  against closed forms (VALIDATION.md §9); first-order screening only, and
+  labelled so.
+- **Faster start**: the database tables, summary, validation report and the
+  default-setting results of the heavier pages are cached as Parquet / JSON
+  in a per-user cache (`glassmatch/cache.py`; key = package version + data
+  version + every CSV's size and mtime, so a stale cache is never read;
+  `GLASSMATCH_CACHE=0` disables it, `GLASSMATCH_CACHE_DIR` moves it).
+  Read-back is tested equal to the CSV load. `pyarrow` added to the app
+  requirements.
+- `app.py` split into one module per tab (`glassmatch_app/pages/`).
 - **Every stored property is sortable, plus 20 calculated figures.** A shared
   column layer (`glassmatch/columns.py`) feeds the Database explorer (every
   column, click to sort), a new sidebar section "More columns & filters"

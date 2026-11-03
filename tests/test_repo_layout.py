@@ -80,7 +80,8 @@ def test_no_manufacturer_catalogs_are_committed():
 # because a screenshot-capture tool had installed it, which is exactly why this
 # class of bug hides from the author. Every third-party import must be declared.
 STDLIB = set(sys.stdlib_module_names)
-LOCAL_ROOTS = {"glassmatch", "scripts", "tests", "app", "conftest", "pytest"}
+LOCAL_ROOTS = {"glassmatch", "glassmatch_app", "scripts", "tests", "app",
+               "conftest", "pytest"}
 # Imported only by optional dev tooling, never by the app or the test suite.
 OPTIONAL = {"playwright"}
 # Distributions whose import name is not a suffix of the PyPI name.
@@ -93,7 +94,8 @@ def _third_party_imports():
     found = {}
     for path in sorted(ROOT.rglob("*.py")):
         rel = path.relative_to(ROOT)
-        if rel.parts[0] in {".venv", ".git", "__pycache__", "build", "dist"}:
+        if rel.parts[0] in {".venv", ".git", "__pycache__", "build", "dist",
+                            ".claude"}:
             continue
         try:
             tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
@@ -187,7 +189,8 @@ def _first_party_modules():
     modules = {}
     for path in sorted(ROOT.rglob("*.py")):
         rel = path.relative_to(ROOT)
-        if rel.parts[0] in {".venv", ".git", "__pycache__", "build", "dist"}:
+        if rel.parts[0] in {".venv", ".git", "__pycache__", "build", "dist",
+                            ".claude"}:
             continue
         parts = list(rel.with_suffix("").parts)
         if parts[-1] == "__init__":

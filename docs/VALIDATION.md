@@ -130,6 +130,73 @@ range, transmission figures only between listed samples. Checks:
 
 *Pinned by* `tests/test_property_columns.py`.
 
+## 8. n(λ, T, p): the dn/dT model against the makers' measured tables
+
+Every maker with a data workbook also tabulates the dn/dT it measured, per
+line and per 20 K interval: 116,639 values for 1,031 glasses
+(`dn_dt_measured.csv`, `scripts/merge_dndt.py`; SCHOTT, HOYA and HIKARI
+relative and absolute, OHARA and CDGM relative). `scripts/validate_dndt.py`
+evaluates the SCHOTT dn/dT model from each glass's own TD record over the
+same interval - absolute, or relative to air via the Edlén air index - and
+compares, for every value inside the model's stated validity (−100 … +140 °C,
+365 … 1014 nm). The makers print one decimal, so ±0.05×10⁻⁶/K is agreement
+to the printed precision.
+
+| Source | basis | glasses | values | within 0.05 | within 0.2 | median | p95 | max |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| SCHOTT 2025-11-13 | absolute | 154 | 921 | 99.2 % | 99.8 % | 0.025 | 0.048 | 1.47 |
+| SCHOTT 2025-11-13 | relative | 154 | 921 | 99.2 % | 100 % | 0.026 | 0.048 | 0.06 |
+| OHARA 2026-04-02 (S) | relative | 130 | 14,300 | 74.2 % | 100 % | 0.029 | 0.080 | 0.16 |
+| OHARA 2025-03-12 (L) | relative | 17 | 1,870 | 74.7 % | 100 % | 0.030 | 0.080 | 0.12 |
+| OHARA 2025-03-12 (special) | relative | 14 | 588 | 81.5 % | 100 % | 0.027 | 0.075 | 0.16 |
+| HOYA 2026-04-01 | absolute | 236 | 14,436 | 91.2 % | 95.3 % | 0.027 | 0.182 | 2.97 |
+| HOYA 2026-04-01 | relative | 236 | 14,436 | 87.7 % | 95.3 % | 0.027 | 0.173 | 3.05 |
+| CDGM 2026-09 | relative | 318 | 17,112 | 39.0 % | 90.6 % | 0.067 | 0.264 | 3.90 |
+
+(differences in 10⁻⁶/K.) That SCHOTT's own tables are reproduced to the
+printed digit, in both bases, checks the implementation of the model and of
+the air index together. HIKARI's measured glasses have no TD record in the
+current workbook, so there is nothing to compare; HIKARI tabulates both bases,
+and converting one into the other with the air model reproduces it
+(`tests/test_thermal.py`).
+
+The large differences are real disagreements between a maker's TD
+coefficients and its own table, concentrated in a few glasses (CDGM ZF50,
+ZF10 and F13 below −20 °C; HOYA NBFD13 at the h line above 80 °C). GlassMatch
+does not choose between them silently: n(λ, T) uses the model inside its
+validity and adds a note whenever the maker's table over the same span
+differs by more than 0.5×10⁻⁶/K.
+
+How n(λ, T, p) is formed and what it refuses is in `glassmatch/thermal.py`:
+the catalog index (relative, at the TD record's T0) → absolute via the air
+index → the model's Δn, or the maker's table summed over its intervals when
+the model is out of range (e.g. OHARA at 1550 nm) → relative to air at T and
+p. Nothing is extrapolated: no index below −100 °C (cryogenic data is not
+in the database), none at a wavelength neither source covers, and no absolute
+n(T) for the 162 measured-only glasses whose catalogs do not state their
+reference temperature (their dn/dT, and so their thermal focus shift, is
+given).
+*Pinned by* `tests/test_thermal.py`, `tests/test_dndt_import.py`.
+
+## 9. Paraxial lens engine
+
+`glassmatch/lens.py` traces a y-nu marginal ray. It is checked against closed
+forms, not against itself (`tests/test_lens.py`):
+
+* thick singlet: EFL, BFL and Petzval sum equal the lensmaker's equation to
+  1e-12 (relative);
+* thin cemented achromat designed from the catalog V_d: EFL exactly as
+  designed, F−C focus difference below 1e-10 mm, and the d- and g-line
+  secondary spectrum equal to the exact thin-lens values (the first-order
+  formula −f (P₁−P₂)/(V₁−V₂) agrees to 3×10⁻⁵ mm);
+* thin singlet heated 20 → 60 °C: EFL change and focus shift against the
+  mount equal f(T) = f₀(1+αΔT)(n−1)/(n−1+Δn);
+* the same design read from JSON, Zemax .zmx (UTF-16) and CODE V .seq in
+  radius and curvature modes gives identical results.
+
+It is a **first-order screen**: no aberrations beyond first order, no
+tolerancing. Replacement rankings say so wherever they are shown.
+
 ## Not validated
 
 * LZOS, Corning and the IR / polymer makers come from a third-party mirror

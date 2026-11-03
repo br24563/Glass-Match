@@ -1,0 +1,7 @@
+{"name": "illustrative 100 mm cemented doublet (not a commercial design)",
+ "units": "mm",
+ "surfaces": [
+  {"radius": 61.0, "thickness": 6.0, "glass": "N-BK7", "maker": "SCHOTT", "semi_diameter": 12.7},
+  {"radius": -44.0, "thickness": 2.5, "glass": "N-SF5", "maker": "SCHOTT", "semi_diameter": 12.7},
+  {"radius": -130.0, "thickness": 96.0, "glass": null, "semi_diameter": 12.7}
+ ]}

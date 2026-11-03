@@ -90,12 +90,50 @@ def cmd_info(args) -> int:
 def cmd_n(args) -> int:
     db = _db()
     gid = _resolve(db, args.glass, args.maker)
+    if args.temperature is None and args.pressure is None and not args.absolute:
+        for wl in args.wavelengths_nm:
+            v, basis = db.n_at(gid, float(wl))
+            print(f"{gid} n({wl:g} nm) = "
+                  + (f"{v:.6f}  [{basis}]" if v is not None else
+                     "unavailable (outside the source's stated range)"))
+        return 0
+    from glassmatch import thermal
+    t = 20.0 if args.temperature is None else args.temperature
+    p = thermal.P0 if args.pressure is None else args.pressure
+    status = 0
     for wl in args.wavelengths_nm:
-        v, basis = db.n_at(gid, float(wl))
-        print(f"{gid} n({wl:g} nm) = "
-              + (f"{v:.6f}  [{basis}]" if v is not None else
-                 "unavailable (outside the source's stated range)"))
-    return 0
+        r = thermal.index_at(db, gid, wl, t, p, absolute=args.absolute)
+        head = f"{gid} n({wl:g} nm, {t:g} C) = "
+        if r["n"] is None:
+            print(head + f"unavailable: {r['reason']}")
+            status = 1
+            continue
+        print(head + f"{r['n']:.6f}  [{r['basis']}; calculated]")
+        print(f"   catalog n = {r['n_catalog']:.6f} at T0 = {r['t0_c']:g} C; "
+              f"{r['method']}")
+        for note in r["notes"]:
+            print(f"   note: {note}")
+    return status
+
+
+def cmd_dndt(args) -> int:
+    db = _db()
+    gid = _resolve(db, args.glass, args.maker)
+    from glassmatch import thermal
+    status = 0
+    for wl in args.wavelengths_nm:
+        r = thermal.dn_dt(db, gid, wl, args.t1, args.t2,
+                          absolute=not args.relative)
+        head = (f"{gid} dn/dT({wl:g} nm, {args.t1:g} ... {args.t2:g} C, "
+                f"{r['basis']}) = ")
+        if r["dn_dt"] is None:
+            print(head + f"unavailable: {r['reason']}")
+            status = 1
+            continue
+        print(head + f"{r['dn_dt']:.3f}e-6/K  [{r['method']}]")
+        for note in r["notes"]:
+            print(f"   note: {note}")
+    return status
 
 
 def cmd_search(args) -> int:
@@ -209,6 +247,98 @@ def cmd_n2(args) -> int:
     return 0
 
 
+def _rx(db, path):
+    from glassmatch import lens
+    try:
+        return lens.read_prescription(db, path)
+    except (lens.PrescriptionError, OSError, ValueError, KeyError) as e:
+        raise SystemExit(f"cannot read {path}: {e}")
+
+
+def _mm(v):
+    return "n/a" if v is None or v != v else f"{v:+.5f} mm"
+
+
+def cmd_lens(args) -> int:
+    from glassmatch import lens
+    db = _db()
+    rx = _rx(db, args.file)
+    a = lens.analyse(db, rx, t_c=args.temperature, mount_cte=args.mount_cte)
+    status = dict(zip(db.glasses["glass_id"], db.glasses["status"]))
+    print(f"{rx.name or args.file}: {len(rx.surfaces)} surfaces, glasses "
+          + ", ".join(f"{g} [{status.get(g, '')}]" for g in rx.glasses()))
+    if a["reason"]:
+        print(f"cannot trace: {a['reason']}")
+        return 1
+    print(f"  EFL {a['efl']:.5f} mm   BFL {a['bfl']:.5f} mm   "
+          f"Petzval sum {a['petzval_sum']:.6f} 1/mm  (d line)")
+    print(f"  primary axial colour F-C {_mm(a['axial_colour'])}   secondary "
+          f"spectrum d-(F+C)/2 {_mm(a['secondary_spectrum'])}   g-d "
+          f"{_mm(a['extra_line_focus'])}")
+    th = a.get("thermal")
+    if th:
+        if th["reason"]:
+            print(f"  thermal: unavailable - {th['reason']}")
+        else:
+            print(f"  thermal 20 -> {args.temperature:g} C (mount CTE "
+                  f"{args.mount_cte:g}e-6/K): focus shift "
+                  f"{_mm(th['focus_shift'])}, EFL change {_mm(th['efl_change'])}")
+            for n in th["notes"]:
+                print(f"    note: {n}")
+    print("  First-order (paraxial) screening only: no aberrations beyond "
+          "first order.")
+    return 0
+
+
+def cmd_replace(args) -> int:
+    from glassmatch import lens
+    db = _db()
+    rx = _rx(db, args.file)
+    status = dict(zip(db.glasses["glass_id"], db.glasses["status"]))
+    if args.glass:
+        try:
+            old = [lens.resolve_glass(db, args.glass,
+                                      [args.maker] if args.maker else
+                                      sorted({g.split("-")[0] for g in rx.glasses()}))]
+        except lens.PrescriptionError as e:
+            raise SystemExit(str(e))
+        if old[0] not in rx.glasses():
+            raise SystemExit(f"{old[0]} is not used in {args.file}")
+    else:
+        old = [g for g in rx.glasses() if status.get(g) == "obsolete"]
+        if not old:
+            print("no obsolete glass in this design; name one to replace")
+            return 0
+    from glassmatch.importers.agf import AVAILABLE_STATUSES
+    for g in old:
+        try:
+            base, df = lens.replacement_candidates(
+                db, rx, g, tol_nd=args.tol_nd, tol_vd=args.tol_vd,
+                statuses=(None if not args.all_statuses else
+                          AVAILABLE_STATUSES + ("obsolete",)),
+                resolve_surface=(args.resolve_surface - 1
+                                 if args.resolve_surface else None),
+                t_c=args.temperature, mount_cte=args.mount_cte,
+                max_results=args.top, efl_tol_pct=args.efl_tol)
+        except lens.PrescriptionError as e:
+            raise SystemExit(str(e))
+        print(f"Replacing {g} [{status.get(g, '')}] - design EFL "
+              f"{base['efl']:.4f} mm, F-C {_mm(base['axial_colour'])}")
+        if df.empty:
+            print("  no candidate within the tolerances")
+            continue
+        if args.csv:
+            df.to_csv(sys.stdout, index=False, lineterminator="\n")
+        else:
+            with pd.option_context("display.width", 200,
+                                   "display.max_columns", 20):
+                print(df.drop(columns=["manufacturer"]).round(5)
+                      .to_string(index=False))
+    print("First-order (paraxial) screening only: verify any replacement in "
+          "an optical design program.")
+    return 0
+
+
 def cmd_export_agf(args) -> int:
     from glassmatch.export_agf import export_agf
     db = _db()
@@ -243,11 +373,27 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("glass")
     p.add_argument("--maker")
     p.set_defaults(func=cmd_info)
-    p = sub.add_parser("n", help="index at wavelengths (nm)")
+    p = sub.add_parser("n", help="index at wavelengths (nm), optionally at "
+                       "another temperature / pressure")
     p.add_argument("glass")
     p.add_argument("wavelengths_nm", type=float, nargs="+")
     p.add_argument("--maker")
+    p.add_argument("--temperature", "-T", type=float,
+                   help="glass and air temperature, C (default: catalog)")
+    p.add_argument("--pressure", type=float,
+                   help="air pressure, Pa (default 101325; 0 = vacuum)")
+    p.add_argument("--absolute", action="store_true",
+                   help="absolute index (vacuum) instead of relative to air")
     p.set_defaults(func=cmd_n)
+    p = sub.add_parser("dndt", help="mean dn/dT over a temperature interval")
+    p.add_argument("glass")
+    p.add_argument("wavelengths_nm", type=float, nargs="+")
+    p.add_argument("--t1", type=float, default=20.0)
+    p.add_argument("--t2", type=float, default=40.0)
+    p.add_argument("--relative", action="store_true",
+                   help="relative to air at normal pressure (default absolute)")
+    p.add_argument("--maker")
+    p.set_defaults(func=cmd_dndt)
     p = sub.add_parser("search", help="rank glasses against requirements")
     p.add_argument("--nd", help="LO:HI")
     p.add_argument("--vd", help="LO:HI")
@@ -282,6 +428,34 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("n2", help="nonlinear index n2 measurements (crystals)")
     p.add_argument("--material", help="e.g. CaF2, SiO2, ZnSe")
     p.set_defaults(func=cmd_n2)
+    p = sub.add_parser("lens", help="first-order analysis of a lens file "
+                       "(.json .csv .zmx .seq)")
+    p.add_argument("file")
+    p.add_argument("--temperature", "-T", type=float,
+                   help="also the thermal focus shift from 20 C to T")
+    p.add_argument("--mount-cte", type=float, default=23.6,
+                   help="mount CTE, 1e-6/K (default 23.6, aluminium 6061)")
+    p.set_defaults(func=cmd_lens)
+    p = sub.add_parser("replace", help="rank replacements for a glass in a "
+                       "lens design (default: its obsolete glasses)")
+    p.add_argument("file")
+    p.add_argument("glass", nargs="?")
+    p.add_argument("--maker")
+    p.add_argument("--resolve-surface", type=int,
+                   help="re-solve this surface's curvature (1-based) to keep "
+                        "the EFL")
+    p.add_argument("--tol-nd", type=float, default=0.03)
+    p.add_argument("--tol-vd", type=float, default=8.0)
+    p.add_argument("--efl-tol", type=float, default=1.0,
+                   help="max EFL change, %% (without --resolve-surface)")
+    p.add_argument("--temperature", "-T", type=float,
+                   help="also compare the thermal focus shift at T")
+    p.add_argument("--mount-cte", type=float, default=23.6)
+    p.add_argument("--all-statuses", action="store_true",
+                   help="include obsolete glasses as candidates")
+    p.add_argument("--top", type=int, default=15)
+    p.add_argument("--csv", action="store_true")
+    p.set_defaults(func=cmd_replace)
     p = sub.add_parser("export-agf", help="write glasses as a Zemax .agf")
     p.add_argument("glasses", nargs="+")
     p.add_argument("-o", "--output", required=True)

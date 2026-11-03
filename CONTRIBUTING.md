@@ -120,7 +120,9 @@ section under the new version with its data version, and is tagged
 
 **Rebuilding the whole database** from the staged sources is two commands,
 in this order: `python scripts/merge_agf.py --all`, then
-`python scripts/merge_refractiveindex.py`. Each re-runs
+`python scripts/merge_refractiveindex.py`, then `python scripts/merge_dndt.py`
+(the makers' measured dn/dT tables; check them with
+`python scripts/validate_dndt.py`). Each re-runs
 `scripts/verify_ir_dispersion.py`, which needs both the catalog rows and the
 refractiveindex.info reference pages. Both merges keep the CSVs sorted, so the
 diff shows only what actually changed.

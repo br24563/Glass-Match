@@ -43,6 +43,17 @@ materials, polymers, and moldables.
   coefficient, Knoop hardness, specific heat and powder-method chemical
   resistance from each maker's own Excel data workbook, for 1,057 glasses
   (table below).
+- **Index at any temperature and pressure**: n(λ, T, p), relative or
+  absolute, from the SCHOTT dn/dT model inside its stated validity or the
+  maker's own measured dn/dT tables (116,639 values from five makers'
+  workbooks), with the method shown and nothing extrapolated
+  ([VALIDATION.md §8](docs/VALIDATION.md)).
+- **Lens glass replacement** (first-order screening): load a prescription
+  (JSON, CSV, Zemax .zmx, CODE V .seq), get EFL, BFL, axial colour,
+  secondary spectrum and thermal focus shift for a mount CTE, and rank
+  available glasses to replace an obsolete one - curvatures kept, or one
+  re-solved to restore the focal length. Paraxial only; verify any change in
+  an optical design program. Example: `docs/examples/doublet.*`.
 - **Glass map**: interactive n_d vs V_d Abbe diagram coloured by maker,
   obsolete glasses hidden by default and the current match results ringed;
   a second view plots P_g,F vs V_d with the normal line and dPgF for
@@ -129,6 +140,12 @@ pip install "glassmatch[app] @ git+https://github.com/br24563/Glass-Match"
 
 Works offline once installed; no servers, keys, or cloud services.
 
+The first start parses the CSV database and caches it (and the default
+results of the heavier pages) as Parquet in a per-user cache
+(`%LOCALAPPDATA%\glassmatch\cache`, or `~/.cache/glassmatch`); later starts
+read that. The cache is keyed to the data and package version, so it is
+never stale. `GLASSMATCH_CACHE=0` turns it off.
+
 ### Command line
 
 ```text
@@ -142,6 +159,12 @@ glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
 glassmatch search --nd 1.45:1.55 --columns gvd,group_index --wavelength 800 --sort gvd
 glassmatch columns                      # every sortable column and its meaning
 glassmatch n2 --material CaF2           # nonlinear-index measurements
+glassmatch n N-BK7 587.6 -T -40         # index at -40 C (relative to air there)
+glassmatch n N-BK7 587.6 --pressure 0   # in vacuum; --absolute for absolute index
+glassmatch dndt S-FPL51 1550 --t1 -20 --t2 0 --relative
+glassmatch lens design.zmx -T 60 --mount-cte 23.6   # EFL, BFL, colour, thermal focus
+glassmatch replace design.zmx           # rank replacements for its obsolete glasses
+glassmatch replace design.seq N-SF5 --maker SCHOTT --resolve-surface 3
 glassmatch check                        # data matches its manifest
 ```
 

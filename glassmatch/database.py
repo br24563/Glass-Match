@@ -140,9 +140,19 @@ class GlassDatabase:
     equivalents: pd.DataFrame = field(default_factory=pd.DataFrame)
     # Published nonlinear-index (n2) measurements of crystals, one row each.
     nonlinear_n2: pd.DataFrame = field(default_factory=pd.DataFrame)
+    # Manufacturers' measured dn/dT: one row per glass, wavelength,
+    # temperature interval and basis (relative / absolute), in 1e-6/K.
+    dn_dt_measured: pd.DataFrame = field(default_factory=pd.DataFrame)
+
     @classmethod
-    def load(cls, data_dir: Path | str = DEFAULT_DATA_DIR) -> "GlassDatabase":
+    def load(cls, data_dir: Path | str = DEFAULT_DATA_DIR,
+             use_cache: bool = True) -> "GlassDatabase":
+        """Read the database. With use_cache, tables come from the local
+        Parquet cache when it matches the CSVs exactly (glassmatch.cache);
+        the CSVs are always the source of truth."""
+        from glassmatch import cache as _cache
         data_dir = Path(data_dir)
+        cdir = _cache.directory(data_dir) if use_cache else None
 
         def _read(name: str, required: bool = True) -> pd.DataFrame:
             path = data_dir / name
@@ -153,7 +163,8 @@ class GlassDatabase:
             # Encoding is explicit: manufacturer comments preserved in the
             # glass description are UTF-8, and a Windows locale default
             # (cp1252) would fail to decode them.
-            return pd.read_csv(path, encoding="utf-8")
+            return _cache.frame(cdir, "table_" + path.stem,
+                                lambda: pd.read_csv(path, encoding="utf-8"))
 
         db = cls(
             data_dir=data_dir,
@@ -166,7 +177,11 @@ class GlassDatabase:
             spectral_nk=_read("spectral_nk.csv", required=False),
             equivalents=_read("equivalents.csv", required=False),
             nonlinear_n2=_read("nonlinear_n2.csv", required=False),
+            dn_dt_measured=_read("dn_dt_measured.csv", required=False),
         )
+        # Only a database read from disk may use the cache: one built in
+        # memory (tests, imports) must never be answered from it.
+        db.__dict__["_cache_dir"] = cdir
         for _col in ("material_class", "status"):
             if _col not in db.glasses.columns:
                 db.glasses[_col] = "oxide_glass" if _col == "material_class" else "standard"
@@ -503,7 +518,16 @@ class GlassDatabase:
             return lo, hi
         return None, None
 
+    def cache_dir(self):
+        """This database's cache directory, or None (in-memory database)."""
+        return self.__dict__.get("_cache_dir")
+
     def summary_frame(self) -> pd.DataFrame:
+        """One row per glass with every sortable stored property (cached)."""
+        from glassmatch import cache as _cache
+        return _cache.frame(self.cache_dir(), "summary", self._build_summary)
+
+    def _build_summary(self) -> pd.DataFrame:
         """One row per glass with every sortable stored property.
 
         Built from plain dicts: iterrows() and a DataFrame row lookup per
