@@ -144,15 +144,21 @@ def test_nk_out_of_band_reports_missing_not_fresnel():
     assert not basis.startswith("calculated")
 
 
-def test_fresnel_is_the_last_resort_and_is_labelled_calculated():
-    """No manufacturer rows, no tabulated n/k: estimate from Sellmeier."""
+def test_fresnel_is_only_an_upper_bound_never_a_value():
+    """No manufacturer rows, no tabulated n/k: the Sellmeier fit gives only
+    the reflection loss - an upper bound, since absorption is unknown. It is
+    stated in the basis, and the glass has no transmission value, so it can
+    never meet a requirement on reflection alone."""
+    from glassmatch.transmission import upper_bound
     val, basis = _bt("G-FRESNEL")
-    assert basis == "calculated (Fresnel, uncoated)"
+    assert val is None
+    assert basis.startswith("missing (absorption unknown")
     B = (1.03961212, 0.231792344, 1.01046945)
     C = (0.00600069867, 0.0200179144, 103.560653)
     vals = [fresnel_transmission(sellmeier_n(float(w), B, C))
             for w in np.linspace(LO, HI, 12)]
-    assert val == round(float(sum(vals) / len(vals) * 100.0), 1)
+    assert upper_bound(basis) == round(float(sum(vals) / len(vals) * 100.0), 1)
+    assert "calculated (Fresnel, uncoated)" in basis
 
 
 def test_no_data_at_all_invents_nothing():

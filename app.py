@@ -25,7 +25,8 @@ st.set_page_config(page_title="GlassMatch", page_icon="🔭", layout="wide")
 PRESETS = {
     "UV (0.30-0.40 um)": (0.30, 0.40), "Visible (0.40-0.70 um)": (0.40, 0.70),
     "NIR (0.70-1.40 um)": (0.70, 1.40), "SWIR (1.40-3.00 um)": (1.40, 3.00),
-    "MWIR (3.00-5.00 um)": (3.00, 5.00), "Custom": None,
+    "MWIR (3.00-5.00 um)": (3.00, 5.00), "LWIR (8.00-12.00 um)": (8.00, 12.00),
+    "Custom": None,
 }
 APP_PRESETS = {
     "General Visible Imaging": {"wl": "Visible (0.40-0.70 um)", "tmin": 90.0,
@@ -158,6 +159,31 @@ wl_max = st.sidebar.number_input(f"Max wavelength ({wl_unit})", value=float(d_hi
 wl_min_um, wl_max_um = wl_min / factor, wl_max / factor
 if wl_min_um >= wl_max_um:
     st.sidebar.error("Minimum wavelength must be < maximum wavelength.")
+# More bands, each of which must ALSO be met (e.g. 400-700 nm and 9-10 um for
+# a dual-band window). The transmission requirement and mode apply to every
+# band; a glass's combined figure is its worst band.
+with st.sidebar.expander("Additional wavelength bands (all must be met)"):
+    n_extra_bands = int(st.number_input("Number of additional bands", 0, 4, 0,
+                                        key="n_extra_bands"))
+    extra_bands = []
+    for _i in range(n_extra_bands):
+        _c1, _c2 = st.columns(2)
+        _lo = _c1.number_input(f"Band {_i + 2} min ({wl_unit})",
+                               value=8.0 * factor, key=f"band{_i}_lo")
+        _hi = _c2.number_input(f"Band {_i + 2} max ({wl_unit})",
+                               value=12.0 * factor, key=f"band{_i}_hi")
+        if _lo >= _hi:
+            st.error(f"Band {_i + 2}: minimum must be < maximum; ignored.")
+        else:
+            extra_bands.append((_lo / factor, _hi / factor))
+    if n_extra_bands:
+        st.caption("The minimum transmission and its mode below apply to "
+                   "every band. A glass passes only if it meets them in all "
+                   "bands; its transmission figure is its worst band, and a "
+                   "band with no data makes it missing, never assumed - tick "
+                   "'Require available data' to drop glasses with no data "
+                   "in a band (most oxide glasses have none past 2.5 um).")
+bands = [(float(wl_min_um), float(wl_max_um))] + extra_bands
 
 nd_min, nd_max = st.sidebar.slider("Refractive index n_d range", 1.30, 2.10, (1.45, 1.85), 0.005)
 with st.sidebar.expander("Crystals & materials without n_d / V_d"):
@@ -258,7 +284,8 @@ requirements = {"nd_min": nd_min, "nd_max": nd_max, "vd_min": vd_min, "vd_max": 
                 "density_min": d_lo2 if use_density else None,
                 "density_max": d_hi2 if use_density else None,
                 "cte_min": None, "cte_max": cte_max if use_cte else None,
-                "dndt_abs_max": dndt_max if use_dndt else None}
+                "dndt_abs_max": dndt_max if use_dndt else None,
+                "wavelength_bands_um": bands}
 # Transmission precedence (manufacturer -> tabulated n/k -> Fresnel) lives in
 # glassmatch.transmission so it is importable and testable without Streamlit.
 
@@ -292,8 +319,17 @@ def _band_all(_key: str, lo_um: float, hi_um: float, mode: str,
     return out_v, out_b
 
 
-trans, trans_basis = _band_all(_data_key(), float(wl_min_um), float(wl_max_um),
-                               str(t_mode), float(sample_thickness_mm))
+band_results = [_band_all(_data_key(), lo, hi, str(t_mode),
+                           float(sample_thickness_mm)) for lo, hi in bands]
+if len(bands) == 1:
+    trans, trans_basis = band_results[0]
+else:
+    from glassmatch.transmission import combine_bands as _combine_bands
+    trans, trans_basis = {}, {}
+    for _g in summary["glass_id"]:
+        trans[_g], trans_basis[_g] = _combine_bands(
+            [(lo, hi, v.get(_g), b.get(_g, "missing"))
+             for (lo, hi), (v, b) in zip(bands, band_results)])
 
 # Materials with no catalog n_d (crystals) are judged on n at the chosen
 # reference wavelength instead. Their V_d stays not-applicable, so the Abbe

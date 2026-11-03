@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from glassmatch import __version__
+from glassmatch.transmission import band_label
 import streamlit as st
 
 
@@ -23,6 +24,8 @@ def render(ctx):
     t_mode = ctx.t_mode
     trans = ctx.trans
     trans_basis = ctx.trans_basis
+    bands = ctx.bands
+    band_results = ctx.band_results
     w_norm = ctx.w_norm
     where = ctx.where
     st.header("Matching glasses")
@@ -52,6 +55,14 @@ def render(ctx):
     show = scoped.iloc[(page - 1) * page_size: page * page_size].copy()
     show["transmission_%"] = show["glass_id"].map(
         lambda g: None if trans.get(g) is None else round(trans[g], 1))
+    # Several bands: each band's own figure beside the combined (worst-band)
+    # one, so it is visible which band limits a glass.
+    band_cols = {}
+    if len(bands) > 1:
+        for (lo, hi), (vals, _b) in zip(bands, band_results):
+            band_cols[f"T {band_label(lo, hi)} (%)"] = vals
+        for col, vals in band_cols.items():
+            show[col] = show["glass_id"].map(vals)
     if show["ir_mode"].astype(bool).any():
         show.loc[show["ir_mode"].astype(bool), "vd"] = None  # V_d undefined here
         # "IR material" is a label, not a judgement: CaF2 and fused silica are
@@ -69,14 +80,16 @@ def render(ctx):
     else:
         show["class"] = show["material_class"]
     _base = ["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-             "cte", "dn_dt", "transmission_%", "status", "completeness",
-             "missing", "class"]
+             "cte", "dn_dt", "transmission_%", *band_cols, "status",
+             "completeness", "missing", "class"]
     _extra = [c for c in dict.fromkeys(extra_cols + list(where))
               if c not in _base]
     if _extra:
         show = show.join(col_table[_extra], on="glass_id")
     st.dataframe(show[_base + _extra].rename(
-                     columns={c: _col_label(c) for c in _extra}),
+                     columns={**{c: _col_label(c) for c in _extra},
+                              **({"transmission_%": "transmission_% (worst band)"}
+                                 if band_cols else {})}),
                  width="stretch", hide_index=True)
     if n_range_filtered:
         st.caption(f"{n_range_filtered:,} material(s) removed by the range "
@@ -90,12 +103,23 @@ def render(ctx):
             f"the Abbe number is not defined for them.")
     n_mfr = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("manufacturer"))
     n_calc = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("calculated"))
-    n_miss = len(scoped) - n_mfr - n_calc
+    n_ub = sum(1 for g in scoped["glass_id"]
+               if "reflection-only upper bound" in str(trans_basis.get(g, "")))
+    n_miss = len(scoped) - n_mfr - n_calc - n_ub
+    if band_cols:
+        st.caption(f"{len(bands)} bands, all required: "
+                   + ", ".join(band_label(lo, hi) for lo, hi in bands)
+                   + ". Basis counts below are for each glass's limiting band; "
+                   "a glass with no value in any band is counted missing.")
     st.caption(f"Transmission basis ({t_mode} of band): {n_mfr} manufacturer IT rows · "
-               f"{n_calc} calculated Fresnel · {n_miss} missing — full labels in the CSV export. "
+               f"{n_calc} calculated from n/k · {n_ub} upper bound only "
+               f"(reflection loss, absorption unknown) · {n_miss} missing — "
+               f"full labels in the CSV export. "
                f"Page {page} of {n_pages}.")
     st.download_button("Export results CSV (in-scope glasses)",
                        scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
+                                     **{c: scoped["glass_id"].map(v)
+                                        for c, v in band_cols.items()},
                                      transmission_basis=scoped["glass_id"].map(trans_basis)
                                      .fillna("missing"),
                                      data_version=DATA_VERSION)
@@ -126,8 +150,10 @@ def render(ctx):
             "band; *Minimum* = worst sample; *Entire range* = worst sample but only "
             "when manufacturer samples span >=90% of the band — otherwise the value "
             "is reported missing, never guessed.\n"
-            "- Transmission values prefer manufacturer IT rows (transmission.csv); "
-            "a calculated uncoated Fresnel estimate is used only when a glass has no "
-            "manufacturer rows at all, and is labelled as calculated.")
+            "- Transmission values prefer manufacturer IT rows (transmission.csv), "
+            "then transmission calculated from tabulated n and k. A glass with "
+            "neither has only the uncoated Fresnel reflection loss, which ignores "
+            "absorption: it is stated as an upper bound and the glass counts as "
+            "missing, so it never meets a transmission requirement on it.")
 
     return {"scoped": scoped}

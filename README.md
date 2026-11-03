@@ -27,13 +27,20 @@ materials, polymers, and moldables.
   density, CTE) with transparent Compatibility Scores and user-adjustable weights.
   Maker-scoped, paginated results scale to thousands of glasses.
 - **Transmission modes**: Average / Minimum / Entire range, evaluated against
-  manufacturer IT rows (70k samples) with Fresnel fallback labelled as
-  calculated; Entire range refuses to score when band coverage < 90%.
+  manufacturer IT rows (70k samples), then transmission calculated from
+  tabulated n and k; a glass with neither has only its uncoated Fresnel
+  reflection loss, which ignores absorption, so that is shown as an upper
+  bound and never meets a requirement. Entire range refuses to score when
+  band coverage < 90%.
   Catalogs list internal transmittance at different thicknesses (SCHOTT
   25 mm, most others 10 mm, some 1-3 mm); every sample is converted to one
   user-chosen sample thickness by Beer-Lambert, T_d = T^(d/d_listed), and
   labelled as scaled, so glasses are compared on the same path length.
   Conflicting duplicate samples are excluded (never pick-a-winner) and disclosed.
+  **Several bands at once** (e.g. 400-700 nm *and* 9-10 µm for a dual-band
+  window): every band must meet the requirement, each band's figure is
+  shown, the combined figure is the worst band, and a band with no data
+  makes the glass missing, never passing.
 - **Thermal and mechanical data**: absolute dn/dT (d line, +20/+40 C) for
   1,819 materials - HIKARI's own figures, or calculated from each catalog's
   TD coefficients with the SCHOTT dn/dT formula - with an optional |dn/dT|
@@ -154,6 +161,7 @@ glassmatch info N-BK7                   # every property with its source
 glassmatch n N-BK7 486.1 587.6 1064     # index; never extrapolated
 glassmatch search --nd 1.5:1.55 --vd 60:70 --preferred --top 10
 glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10 --csv out.csv
+glassmatch search --band 0.4:0.7 --band 9:10 --tmin 80 --require-data   # both bands
 glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf
 glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
 glassmatch search --nd 1.45:1.55 --columns gvd,group_index --wavelength 800 --sort gvd
@@ -264,8 +272,11 @@ transmission and the glass is never penalized for the missing value.
 Transmission requirement modes: **Average** = mean of manufacturer samples in
 band; **Minimum** = worst sample; **Entire range** = worst sample but only
 when samples span ≥90% of the band (otherwise reported missing, not guessed).
-Manufacturer IT rows are preferred; a calculated Fresnel estimate is used only
-for glasses with no manufacturer rows and is always labelled calculated.
+Manufacturer IT rows are preferred, then transmission calculated from
+tabulated n and k. For a glass with neither, the uncoated Fresnel reflection
+loss is stated as an upper bound only: it ignores absorption (it put LiF at
+99 % over 9-10 um, where LiF is opaque), so the glass counts as missing and
+never meets a transmission requirement on it.
 
 ## Glass pairs
 

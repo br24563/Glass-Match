@@ -104,5 +104,69 @@ def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
         if nk.get("value_pct") is not None:
             return round(nk["value_pct"], 1), nk["label"]
         return None, f"missing ({nk['label']})"
+    # Last resort: the uncoated Fresnel figure counts reflection at the two
+    # surfaces and nothing else. It is an upper bound, not a transmittance -
+    # it put LiF at 99 % over 9-10 um, where LiF is opaque - so it never
+    # meets a requirement: the value is missing and the bound is stated.
     v, note = transmission_estimate(db, gid, lo_um, hi_um)
-    return v, note
+    if v is None:
+        return None, note
+    return None, upper_bound_label(v, note)
+
+
+UPPER_BOUND_PREFIX = "missing (absorption unknown; reflection-only upper bound"
+
+
+def upper_bound_label(v: float, note: str) -> str:
+    """Basis for a glass whose only figure is the Fresnel reflection loss."""
+    return f"{UPPER_BOUND_PREFIX} <= {v:g} %, {note})"
+
+
+def upper_bound(basis) -> float | None:
+    """The reflection-only upper bound stated in a basis label, or None."""
+    import re
+    m = re.search(r"reflection-only upper bound <= ([\d.]+) %", str(basis or ""))
+    return float(m.group(1)) if m else None
+
+
+def band_label(lo_um: float, hi_um: float) -> str:
+    """'0.4-0.7 um' / '9-10 um' - the band as the UI and exports name it."""
+    return f"{lo_um:g}-{hi_um:g} um"
+
+
+def combine_bands(per_band: list) -> tuple:
+    """Several bands that must ALL be met -> (value_pct | None, basis).
+
+    per_band: [(lo_um, hi_um, value_pct | None, basis), ...]. The combined
+    value is the lowest band's value - a glass meets "T >= x in every band"
+    exactly when its worst band does - and it is None when any band has no
+    value, because the requirement then cannot be shown to hold. The basis
+    starts with the limiting band's basis (so "manufacturer ..." /
+    "calculated ..." / "missing ..." still classify it) and lists every band.
+    """
+    if len(per_band) == 1:
+        return per_band[0][2], per_band[0][3]
+    detail = "; ".join(
+        f"{band_label(lo, hi)}: "
+        + ("no value" if v is None else f"{v:g} %") + f" ({b})"
+        for lo, hi, v, b in per_band)
+    missing = [p for p in per_band if p[2] is None]
+    if missing:
+        lo, hi, _, b = missing[0]
+        why = b if str(b).startswith("missing") else f"missing ({b})"
+        return None, f"{why} in {band_label(lo, hi)} | all bands: {detail}"
+    lo, hi, v, b = min(per_band, key=lambda p: p[2])
+    return v, f"{b} | limiting band {band_label(lo, hi)} | all bands: {detail}"
+
+
+def multi_band_transmission(db, gid, bands, mode, *, t_groups, nk_groups,
+                            thickness_mm) -> tuple:
+    """band_transmission for every (lo_um, hi_um) in bands, combined with
+    combine_bands -> (value_pct | None, basis, per_band)."""
+    per = []
+    for lo, hi in bands:
+        v, b = band_transmission(db, gid, lo, hi, mode, t_groups=t_groups,
+                                 nk_groups=nk_groups, thickness_mm=thickness_mm)
+        per.append((float(lo), float(hi), v, b))
+    v, b = combine_bands(per)
+    return v, b, per

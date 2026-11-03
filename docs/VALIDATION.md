@@ -97,6 +97,13 @@ each catalog's listed thickness by Beer-Lambert, and labelled as scaled.
 Duplicate samples that disagree are quarantined in
 `data/normalized/transmission_conflicts.csv` with both values, never
 resolved by picking one.
+
+A glass with no measured transmittance and no tabulated n/k has only the
+uncoated Fresnel reflection loss from its dispersion fit. That ignores
+absorption, so it is an upper bound, not a transmittance - over 9-10 µm it
+gave LiF 99 % and CaF₂ 96 %, both absorbing there - and it is never used as
+a transmission value: the glass is missing, with the bound in its basis
+(60 glasses over 400-700 nm, 22 over 9-10 µm).
 *Pinned by* `tests/test_transmission_modes.py`,
 `tests/test_transmission_conflicts.py`.
 

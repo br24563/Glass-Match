@@ -152,16 +152,23 @@ def cmd_search(args) -> int:
     if args.dndt_max is not None:
         req["dndt_abs_max"] = args.dndt_max
     trans = {}
+    per_band = {}
     if args.band:
-        from glassmatch.transmission import band_transmission
-        lo, hi = _range(args.band)
+        from glassmatch.transmission import band_label, multi_band_transmission
+        bands = [_range(b) for b in args.band]
+        if any(lo is None or hi is None or lo >= hi for lo, hi in bands):
+            raise SystemExit("--band needs LO:HI with LO < HI (um)")
         t_groups = {str(g): x for g, x in db.transmission.groupby("glass_id")}
         nk_groups = {str(g): x for g, x in db.spectral_nk.groupby("glass_id")}
         for gid in summary["glass_id"]:
-            v, _ = band_transmission(db, gid, lo, hi, args.mode,
-                                     t_groups=t_groups, nk_groups=nk_groups,
-                                     thickness_mm=args.thickness)
+            v, _, per = multi_band_transmission(
+                db, gid, bands, args.mode, t_groups=t_groups,
+                nk_groups=nk_groups, thickness_mm=args.thickness)
             trans[gid] = v
+            if len(bands) > 1:
+                for lo, hi, bv, _b in per:
+                    per_band.setdefault(f"T_{band_label(lo, hi)}".replace(" ", ""),
+                                        {})[gid] = bv
         if args.tmin is not None:
             req["transmission_min"] = args.tmin
             req["transmission_mode"] = args.mode
@@ -172,9 +179,11 @@ def cmd_search(args) -> int:
         keep = {"preferred"}
     out = out[out["status"].isin(keep)]
     if args.band:
-        out = out.assign(transmission_pct=out["glass_id"].map(trans))
+        out = out.assign(transmission_pct=out["glass_id"].map(trans),
+                         **{c: out["glass_id"].map(v) for c, v in per_band.items()})
     cols = [c for c in ("glass_id", "status", "compatibility", "nd", "vd",
-                        "density", "cte", "dn_dt", "transmission_pct")
+                        "density", "cte", "dn_dt", "transmission_pct",
+                        *per_band)
             if c in out.columns]
     extra = [c.strip() for c in (args.columns or "").split(",") if c.strip()]
     where = {}
@@ -401,8 +410,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--cte", help="LO:HI (1e-6/K)")
     p.add_argument("--dndt-max", type=float,
                    help="max |dn/dT|, d line, 20/40 C (1e-6/K)")
-    p.add_argument("--band", help="transmission band LO:HI (um)")
-    p.add_argument("--tmin", type=float, help="min transmission (%%) in band")
+    p.add_argument("--band", action="append",
+                   help="transmission band LO:HI (um); repeat for several "
+                        "bands that must all be met (transmission_pct is "
+                        "then the worst band)")
+    p.add_argument("--tmin", type=float,
+                   help="min transmission (%%), in every band")
     p.add_argument("--mode", default="Average",
                    choices=["Average", "Minimum", "Entire range"])
     p.add_argument("--thickness", type=float, default=10.0,

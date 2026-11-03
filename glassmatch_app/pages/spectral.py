@@ -57,7 +57,9 @@ def render(ctx):
             tcurves[g] = pd.DataFrame({"wavelength_um": df["wavelength_um"],
                                        "transmission_pct": df["n"].map(
                                            lambda n: fresnel_transmission(n) * 100),
-                                       "data_type": "calculated (Fresnel, uncoated)"})
+                                       "data_type": "upper bound: Fresnel "
+                                       "reflection loss only, uncoated "
+                                       "(absorption not included)"})
             t_calculated.append(g)
         else:
             t_missing.append(g)
@@ -75,7 +77,9 @@ def render(ctx):
                     "wavelength_um": npts["wavelength_um"],
                     "transmission_pct": npts["n"].map(
                         lambda n: fresnel_transmission(n) * 100),
-                    "data_type": "calculated (Fresnel, uncoated, from tabulated n)"})
+                    "data_type": "upper bound: Fresnel reflection loss only, "
+                                 "uncoated, from tabulated n (absorption not "
+                                 "included)"})
                 t_calculated.append(g)
                 t_missing.remove(g)
             tabulated.append(g)
@@ -116,7 +120,9 @@ def render(ctx):
                         width="stretch")
         st.caption(
             f"Manufacturer IT rows: {len(t_manufacturer)} glass(es); "
-            f"calculated uncoated Fresnel: {len(t_calculated)} glass(es) — "
+            f"reflection-loss upper bound only (uncoated Fresnel, absorption "
+            f"not included - real transmission is lower wherever the material "
+            f"absorbs): {len(t_calculated)} glass(es) — "
             "each trace is labelled by basis. Manufacturer internal "
             f"transmittance is converted to {sample_thickness_mm:g} mm "
             "(Beer-Lambert) from the thickness each catalog lists.")

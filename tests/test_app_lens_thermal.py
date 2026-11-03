@@ -36,3 +36,19 @@ def test_thermal_section(at):
     df = next(d.value for d in at.dataframe
               if "n(λ, T, p) (calculated)" in d.value.columns)
     assert len(df) == 9 and df["method"].str.len().gt(0).any()
+
+
+def test_two_bands_in_app(at):
+    at.number_input(key="n_extra_bands").set_value(1).run()
+    at.number_input(key="band0_lo").set_value(9000.0)
+    at.number_input(key="band0_hi").set_value(10000.0).run()
+    assert not at.exception
+    df = at.dataframe[0].value
+    worst = "transmission_% (worst band)"
+    assert {worst, "T 0.4-0.7 um (%)", "T 9-10 um (%)"} <= set(df.columns)
+    both = df.dropna(subset=["T 0.4-0.7 um (%)", "T 9-10 um (%)"])
+    assert len(both) and (both[worst] == both[["T 0.4-0.7 um (%)",
+                                                "T 9-10 um (%)"]].min(axis=1)).all()
+    # A band with no data never passes as if it had.
+    assert df.loc[df["T 9-10 um (%)"].isna(), worst].isna().all()
+    at.number_input(key="n_extra_bands").set_value(0).run()

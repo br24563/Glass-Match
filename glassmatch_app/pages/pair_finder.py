@@ -17,6 +17,7 @@ def render(ctx):
     wl_max = ctx.wl_max
     wl_min = ctx.wl_min
     wl_unit = ctx.wl_unit
+    bands = ctx.bands
     st.header("Pair finder (achromatic doublet)")
     st.caption("Thin lenses in contact, total power φ: "
                "φ1 = φ·V1/(V1−V2), φ2 = −φ·V2/(V1−V2); "
@@ -61,7 +62,10 @@ def render(ctx):
                                   key="pf_obsolete")
         pf_trans = st.checkbox(
             f"Only glasses meeting the sidebar transmission requirement "
-            f"({t_min:g}% {t_mode.lower()}, {wl_min:g}-{wl_max:g} {wl_unit}, "
+            f"({t_min:g}% {t_mode.lower()}, "
+            + (f"{wl_min:g}-{wl_max:g} {wl_unit}" if len(bands) == 1 else
+               " and ".join(f"{lo:g}-{hi:g} um" for lo, hi in bands))
+            + ", "
             f"{sample_thickness_mm:g} mm)", value=False, key="pf_trans",
             help="Glasses with no transmission data are kept unless 'Require "
                  "available data' is on.")

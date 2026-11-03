@@ -7,6 +7,11 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **Several wavelength bands that must all be met** (sidebar "Additional
+  wavelength bands", `glassmatch search --band 0.4:0.7 --band 9:10`): each
+  band is evaluated as before, the combined transmission is the worst band,
+  a band with no data makes the glass missing, and every band's figure is
+  shown and exported. New LWIR (8-12 µm) wavelength preset.
 - **n(λ, T, p) at any temperature and pressure** (`glassmatch/thermal.py`):
   relative or absolute index from the SCHOTT dn/dT model (TD records) inside
   its stated validity (−100 … +140 °C, 365 … 1014 nm) with the Edlén air
@@ -67,6 +72,13 @@ the patch version, schema/format changes bump the minor version.
   sortable table in the Database explorer and `glassmatch n2`.
 
 ### Fixed
+- **A reflection-only estimate no longer passes a transmission requirement.**
+  The uncoated Fresnel figure, used for glasses with no measured
+  transmittance or n/k, counts surface reflection and ignores absorption; it
+  rated LiF 99 % and CaF2 96 % over 9-10 um, where both absorb. It is now
+  stated as an upper bound in the basis and the glass counts as missing
+  (60 glasses over 400-700 nm, 22 over 9-10 um); the spectral plot labels
+  those curves as upper bounds.
 - **Three .agf typos corrected from two independent sources.** Where a
   maker's workbook contradicts its .agf and the glass's own dispersion fit
   reproduces the workbook, the workbook value is stored and the fit becomes
