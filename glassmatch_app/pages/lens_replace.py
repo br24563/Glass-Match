@@ -55,7 +55,16 @@ def render(ctx):
                           60.0, 5.0, key="rx_t")
     mount = c2.number_input("Mount CTE (1e-6/K; 23.6 = Al 6061, 17.3 = "
                             "stainless 304)", 0.0, 100.0, 23.6, key="rx_mount")
-    a = lens.analyse(db, rx, t_c=t_c, mount_cte=mount)
+    allow_x = False
+    if not (lens.CTE_RANGE[0] <= t_c <= lens.CTE_RANGE[1]):
+        allow_x = st.checkbox(
+            "Extrapolate the catalog CTEs linearly outside −30/+70 °C "
+            "(labelled estimate)", key="rx_allow_x",
+            help="Catalog CTEs are means over −30/+70 °C; glass expansion is "
+                 "not linear far outside it, so by default no thermal shift "
+                 "is given there.")
+    a = lens.analyse(db, rx, t_c=t_c, mount_cte=mount,
+                     allow_cte_extrapolation=allow_x)
     if a["reason"]:
         st.error(f"Cannot trace this design: {a['reason']}")
         return
@@ -72,7 +81,7 @@ def render(ctx):
                  f"**{_fmt(th['focus_shift'])}** (EFL change "
                  f"{_fmt(th['efl_change'])}).")
         for n in th["notes"]:
-            st.caption(n)
+            (st.warning if n.startswith("EXTRAPOLATED") else st.caption)(n)
 
     st.subheader("Rank replacements")
     glasses = rx.glasses()
@@ -90,7 +99,8 @@ def render(ctx):
                            if i is None else f"surface {i + 1}", key="rx_res")
     base, df = lens.replacement_candidates(
         db, rx, old, tol_nd=tol_nd, tol_vd=tol_vd, resolve_surface=resolve,
-        t_c=t_c, mount_cte=mount, max_results=25)
+        t_c=t_c, mount_cte=mount, max_results=25,
+        allow_cte_extrapolation=allow_x)
     if df.empty:
         st.info("No available glass within these windows"
                 + ("" if resolve is not None else

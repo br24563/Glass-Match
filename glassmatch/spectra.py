@@ -386,16 +386,20 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "coverage": 0.0, "label": "n/k present but not computable"}
     span = hi_um - lo_um
     coverage = float((wl_b.max() - wl_b.min()) / span) if span > 0 else 0.0
-    if mode == "Minimum":
-        value = float(t.min())
-    elif mode == "Entire range" and coverage >= min_coverage:
-        value = float(t.min())
-    else:
-        value = float(t.mean())
-    label = (f"calculated from tabulated n/k at {thickness_mm:g} mm, "
-             f"{t.size} samples")
     if mode == "Entire range" and coverage < min_coverage:
-        label += f"; samples cover only {coverage:.0%} of the band"
+        # Same rule as the manufacturer branch: the claim cannot be checked.
+        return {"value_pct": None, "reason": "insufficient-coverage",
+                "n_points": int(t.size), "coverage": coverage,
+                "label": f"tabulated n/k cover {coverage:.0%} of band "
+                         f"(<{min_coverage:.0%} required for Entire range)"}
+    why = _sparse(int(t.size), coverage)
+    if why:
+        return {"value_pct": None, "reason": "sparse-coverage",
+                "n_points": int(t.size), "coverage": coverage,
+                "label": f"tabulated n/k: {why}"}
+    value = float(t.min()) if mode in ("Minimum", "Entire range") else float(t.mean())
+    label = (f"calculated from tabulated n/k at {thickness_mm:g} mm, "
+             f"{t.size} samples spanning {coverage:.0%} of the band")
     if dropped:
         label += f"; {dropped} sample(s) dropped for missing k"
     return {"value_pct": value, "label": label, "n_points": int(t.size),
@@ -426,14 +430,32 @@ def scale_internal_transmittance(t, from_mm, to_mm):
     return out if out.ndim else float(out)
 
 
+# A band statistic needs samples that represent the band: at least this many,
+# spanning at least this fraction of it. One sample at 1.06 um is not "the
+# average over 0.7-1.4 um" - spreading it over the band is an extrapolation.
+MIN_BAND_SAMPLES = 2
+MIN_BAND_COVERAGE = 0.50
+
+
+def _sparse(n: int, coverage: float) -> str | None:
+    """Why n samples spanning `coverage` of a band cannot represent it."""
+    if n < MIN_BAND_SAMPLES or coverage < MIN_BAND_COVERAGE:
+        return (f"{n} sample(s) spanning {coverage:.0%} of the band - at least "
+                f"{MIN_BAND_SAMPLES} spanning {MIN_BAND_COVERAGE:.0%} are needed "
+                "to represent it")
+    return None
+
+
 def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                min_coverage: float = 0.90,
                thickness_mm: float | None = None) -> dict | None:
     """Summarize manufacturer transmission samples inside [lo_um, hi_um].
 
     mode:
-      "Average"       - mean of samples in band (any coverage).
-      "Minimum"       - lowest sample in band (any coverage).
+      "Average"       - mean of samples in band.
+      "Minimum"       - lowest sample in band.
+      Both need >= MIN_BAND_SAMPLES samples spanning >= MIN_BAND_COVERAGE
+      of the band; otherwise None with the reason.
       "Entire range"  - lowest sample, but ONLY if samples span >= min_coverage
                         of the band; otherwise None (cannot verify the claim).
 
@@ -507,6 +529,11 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "n_points": int(len(wl_b)), "coverage": coverage,
                 "label": f"manufacturer coverage {coverage:.0%} of band "
                          f"(<{min_coverage:.0%} required for Entire range)"}
+    why = _sparse(len(wl_b), coverage)
+    if why:
+        return {"value_pct": None, "reason": "sparse-coverage",
+                "n_points": int(len(wl_b)), "coverage": coverage,
+                "label": f"manufacturer {why}"}
     if mode == "Minimum":
         val = float(tv_b.min())
         how = "minimum sample in band"
@@ -518,7 +545,8 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
         how = "mean of samples in band"
     listed = sorted({float(x) for x in th_b if x == x})
     listed_s = "/".join(f"{x:g}" for x in listed)
-    label = f"manufacturer ({how}; {len(wl_b)} samples"
+    label = (f"manufacturer ({how}; {len(wl_b)} samples spanning "
+             f"{coverage:.0%} of the band")
     if thickness_mm is not None and listed and listed != [float(thickness_mm)]:
         label += (f"; scaled from {listed_s} mm as listed to {thickness_mm:g} mm "
                   "by Beer-Lambert")

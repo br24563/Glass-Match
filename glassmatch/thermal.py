@@ -298,3 +298,22 @@ def dn_dt(db, glass_id: str, wavelength_nm: float, t1_c: float, t2_c: float,
     out["dn_dt"] = d / (t2 - t1) * 1e6
     out["method"] = note
     return out
+
+
+def relative_dndt(dndt_abs, n, wavelength_um: float = 0.5875618,
+                  t1_c: float = 20.0, t2_c: float = 40.0):
+    """Relative dn/dT (1e-6/K, against air at normal pressure) from absolute
+    dn/dT over the same interval: n_rel = n_abs / n_air at each temperature.
+
+    For a lens in air the relative value is the one that matters, and it is
+    larger than the absolute one by about n * |dn_air/dT| ~ 1.4e-6/K at the
+    d line - not negligible next to the dn/dT of many glasses. Works on
+    scalars or arrays; n is the catalog (relative) index."""
+    import numpy as np
+    dndt_abs = np.asarray(dndt_abs, dtype=float)
+    n = np.asarray(n, dtype=float)
+    a1 = air_index(wavelength_um, t1_c, P0)
+    a2 = air_index(wavelength_um, t2_c, P0)
+    dt = t2_c - t1_c
+    out = ((n * a1 + dndt_abs * 1e-6 * dt) / a2 - n) / dt * 1e6
+    return out if out.ndim else float(out)

@@ -72,17 +72,36 @@ def columns(db, summary: pd.DataFrame, t_groups: dict | None = None,
 
 
 def range_filter(table: pd.DataFrame, where: dict,
-                 keep_missing: bool = True) -> pd.Series:
+                 keep_missing: bool = True, makers=None) -> pd.Series:
     """Boolean mask: rows whose every `col` lies in where[col] = (lo, hi).
     A row with no value is kept (flagged elsewhere) unless keep_missing is
-    False - the same rule as "Require available data"."""
+    False - the same rule as "Require available data".
+
+    Columns in MAKER_SCALE_COLUMNS (abrasion, grindability, chemical
+    resistance classes) are each maker's own test and scale, so a range on
+    them means nothing across makers. Their entry must name one maker,
+    where[col] = (lo, hi, maker), and `makers` (manufacturer_id per row,
+    same index as table) must be given: only that maker's glasses inside
+    the range are kept. Without a maker, ValueError.
+    """
     mask = pd.Series(True, index=table.index)
-    for col, (lo, hi) in where.items():
+    for col, spec in where.items():
+        lo, hi = spec[0], spec[1]
+        maker = spec[2] if len(spec) > 2 else None
         v = pd.to_numeric(table[col], errors="coerce")
         ok = pd.Series(True, index=table.index)
         if lo is not None:
             ok &= v >= lo
         if hi is not None:
             ok &= v <= hi
-        mask &= ok | (v.isna() if keep_missing else False)
+        ok = ok | (v.isna() if keep_missing else False)
+        if col in MAKER_SCALE_COLUMNS:
+            if not maker or makers is None:
+                raise ValueError(
+                    f"{col} is each maker's own scale (its own test method), "
+                    "so a range on it is only meaningful within one maker: "
+                    "name the maker")
+            same = pd.Series(makers, index=table.index).astype(str).str.upper()                 == str(maker).upper()
+            ok = ok & same
+        mask &= ok
     return mask

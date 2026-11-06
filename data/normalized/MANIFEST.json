@@ -1,5 +1,5 @@
 {
-  "data_version": "2026.11.02",
+  "data_version": "2026.11.06",
   "files": {
     "dn_dt_measured.csv": {
       "rows": 116639,
@@ -11,7 +11,7 @@
     },
     "glasses.csv": {
       "rows": 2920,
-      "sha256": "85c2f95cf8ddb7ecf9cf489e8784380d45d11ebe12a4385baac0f03ef5a2c26e"
+      "sha256": "33573fbbe565c2124cc1a6e53a96de5fdb747daa743b289e44812a2e98d31957"
     },
     "manufacturers.csv": {
       "rows": 18,

@@ -32,6 +32,12 @@ def render(ctx):
                f"{'missing' if _t is None else f'{_t:.1f}'}%"
                f" — {trans_basis.get(gid, 'missing')}")
     st.write(f"**Family:** {row['glass_family']} - {row['description']}")
+    _axis = str(row.get("optic_axis", "") or "")
+    if _axis in ("o", "e"):
+        st.info(("Ordinary ray (o-ray): " if _axis == "o" else
+                 "Extraordinary ray (e-ray): ")
+                + 'one polarisation of a birefringent crystal: the index for light polarised {} the optic axis. It is not an isotropic material - the other ray sees a different index - so treat it accordingly in a design.'.format(
+                    "perpendicular to" if _axis == "o" else "parallel to"))
     st.subheader("Properties and sources")
     for prop, label in PROPERTY_LABELS.items():
         for r in db.property_provenance(gid, prop):

@@ -131,7 +131,8 @@ range, transmission figures only between listed samples. Checks:
   P_g,F 0.5349, ΔP_g,F −0.0009 - SCHOTT's catalog values.
 * **Group-velocity dispersion.** At 800 nm: N-BK7 44.65 fs²/mm, group index
   1.5266; fused silica 36.16 fs²/mm - the standard reference values.
-* **Thermo-mechanical figures** (athermal γ = (dn/dT)/(n−1) − α, thermal-shock
+* **Thermo-mechanical figures** (athermal γ = (dn/dT)/(n−1) − α in air with
+  relative and in vacuum with absolute dn/dT, thermal-shock
   FOM k(1−ν)/(αE), specific stiffness E/ρ) are arithmetic on stored values;
   their tests check the formulas against hand-computed N-BK7 figures.
 
@@ -203,6 +204,39 @@ forms, not against itself (`tests/test_lens.py`):
 
 It is a **first-order screen**: no aberrations beyond first order, no
 tolerancing. Replacement rankings say so wherever they are shown.
+
+## 10. Principle audit (2026-11-06)
+
+Every computed value was swept for hidden extrapolation, mixed bases and
+unlabelled calculation. Found and fixed:
+
+| Finding | Effect before | Now |
+|---|---|---|
+| Athermal γ used **absolute** dn/dT | A lens in air needs relative dn/dT; γ was ~2–3×10⁻⁶/K off, the size of the residuals the pair finder ranks | `athermal_gamma_air` (relative, the default) and `athermal_gamma_vacuum`; pair finder has an air / vacuum choice. Relative d-line dn/dT is converted from the absolute value with the Edlén air index (reproduces HIKARI's own relative figures, e.g. J-BAK1 3.07 vs 3.1) |
+| Thermal focus extrapolated the −30/+70 °C catalog CTE linearly | Mount / glass expansion outside the measured range, only noted | Refused by default; `--allow-cte-extrapolation` / app checkbox gives an estimate marked EXTRAPOLATED |
+| Band statistics from samples that don't span the band | One sample at 1.06 µm was "the average over 0.7–1.4 µm" (436 glasses; 127 more under 50 % span) | Average and Minimum need ≥ 2 samples spanning ≥ 50 % of the band, else missing with the reason; the label states the span |
+| Tabulated-n/k "Entire range" with too little coverage returned the **mean** | A claim about the whole band from partial data | Refused, as the manufacturer branch already did |
+| Range filters on maker-specific classes (chemical resistance, abrasion, grindability) across makers | Different tests and scales compared as one number | A filter on these names one maker and keeps only that maker's glasses (`--where acid_resistance@OHARA=1:2`) |
+| Crystal pages named by author ("Malitson", "Li-100K") | Material not visible; a 5 K or 186 °C measurement, a thin film, or one ray of a birefringent crystal looked like an ordinary room-temperature material | Material first, then author, o-/e-ray, measurement temperature and film (`Al2O3 (Malitson, o-ray)`, `Si (Li, 100 K)`); `optic_axis` column; birefringent rows are explained in the app |
+| Derived-data cache keyed to data and package version only | A calculation fix kept serving tables the old code had computed until the next release | The key includes a content hash of the code |
+
+Conventions, stated so they can be checked:
+
+* **dn/dT tables** are interval means (SCHOTT says so; our model reproduces
+  its tables that way). Summing mean × width is exact over whole intervals;
+  only a span that starts or ends inside an interval is approximated (the
+  interval's mean is used for the part). Between tabulated lines dn/dT is
+  interpolated linearly in wavelength; never beyond the outermost lines.
+* **Catalog CTEs** are all Zemax .agf ED values, defined as the −30/+70 °C
+  mean. IR makers' ED values cannot be checked against a second source.
+* **Thermal focus** assumes glass, mount and air at one uniform temperature.
+* **Transmission "Average"** is the mean of the samples in the band (sample-
+  weighted, not wavelength-weighted); with irregular spacing it leans toward
+  the densely sampled part. The label gives the number of samples and span.
+
+Open, not changed here: temperature-specific crystal pages are still separate
+materials (their temperature is now in the name); using them in n(λ, T) is
+cryogenic work for a later phase.
 
 ## Not validated
 

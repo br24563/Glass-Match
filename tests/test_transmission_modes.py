@@ -43,9 +43,18 @@ def test_entire_range_fails_on_sparse_coverage_not_guess():
     assert s["reason"] == "insufficient-coverage"
 
 
-def test_average_still_works_on_sparse_coverage():
-    s = band_stats(SPARSE, 0.40, 0.70, "Average")
-    assert s is not None and s["value_pct"] is not None  # honest partial data
+def test_sparse_samples_do_not_stand_for_the_band():
+    """Samples that do not span the band cannot represent it, in any mode:
+    one point at one edge is not the band's average or minimum."""
+    for mode in ("Average", "Minimum"):
+        s = band_stats(SPARSE, 0.40, 0.70, mode)
+        assert s["value_pct"] is None and s["reason"] == "sparse-coverage"
+        assert "spanning" in s["label"]
+    one = _tdf([(0.55, 0.99, 10.0)])
+    s = band_stats(one, 0.40, 0.70, "Average")
+    assert s["value_pct"] is None and "1 sample(s)" in s["label"]
+    ok = _tdf([(0.42, 0.98, 10.0), (0.60, 0.99, 10.0)])      # 60 % span
+    assert band_stats(ok, 0.40, 0.70, "Average")["value_pct"] is not None
 
 
 def test_no_samples_in_band():
@@ -120,10 +129,11 @@ def test_scaling_flips_a_raw_ranking():
 def test_samples_without_a_usable_thickness_are_excluded_and_disclosed():
     # NIKON Q-FK01AS lists its first two IT samples at 1 mm and the rest at
     # 0 mm - a catalog defect. Those cannot be converted, only disclosed.
-    tdf = _tdf([(0.5, 0.97, 1.0), (0.55, 0.98, 0.0), (0.6, 0.99, 0.0)])
+    tdf = _tdf([(0.5, 0.97, 1.0), (0.58, 0.96, 1.0), (0.55, 0.98, 0.0),
+                (0.6, 0.99, 0.0)])
     s = band_stats(tdf, 0.5, 0.6, "Average", thickness_mm=10.0)
-    assert s["n_points"] == 1
-    assert s["value_pct"] == pytest.approx(0.97 ** 10 * 100)
+    assert s["n_points"] == 2
+    assert s["value_pct"] == pytest.approx((0.97 ** 10 + 0.96 ** 10) / 2 * 100)
     assert "2 sample(s) excluded" in s["label"]
     only_zero = _tdf([(0.5, 0.97, 0.0), (0.6, 0.98, 0.0)])
     s = band_stats(only_zero, 0.5, 0.6, "Average", thickness_mm=10.0)

@@ -174,7 +174,7 @@ def test_band_stats_nk_refuses_thin_film_measurements():
 
 def test_band_stats_nk_drops_film_rows_from_a_mixed_page():
     mixed = pd.DataFrame({
-        "wavelength_um": [1.0, 2.0, 3.0, 4.0], "n": [1.46, 1.44, 1.42, 1.41],
+        "wavelength_um": [1.0, 2.0, 1.5, 4.0], "n": [1.46, 1.44, 1.42, 1.41],
         "k": [1.23, 0.4, 0.0, 0.0],
         "measurement_form": ["film", "film", "bulk", "bulk"]})
     r = band_stats_nk(mixed, 1.0, 4.0, "Average", 10.0)
@@ -390,3 +390,30 @@ def test_upsert_replaces_matching_keys_rather_than_duplicating(tmp_path):
     out = pd.read_csv(path, encoding="utf-8")
     assert len(out) == 1
     assert float(out.iloc[0]["value"]) == pytest.approx(1.43385)
+
+
+@pytest.mark.parametrize("material,page,form,name,axis", [
+    ("Al2O3", "Malitson-o", None, "Al2O3 (Malitson, o-ray)", "o"),
+    ("MgF2", "Zheng-e-186C", None, "MgF2 (Zheng, e-ray, 186 °C)", "e"),
+    ("Si", "Li-100K", None, "Si (Li, 100 K)", ""),
+    ("Ge", "Ciesielski-2nm", "film", "Ge (Ciesielski, 2 nm film)", ""),
+    ("CdTe", "Treharne", "film", "CdTe (Treharne, thin film)", ""),
+    ("Si", "Rodriguez-de Marcos", None, "Si (Rodriguez-de Marcos)", ""),
+    ("CaF2", "Daimon-20", None, "CaF2 (Daimon-20)", ""),   # not guessed as 20 C
+])
+def test_crystal_display_name(material, page, form, name, axis):
+    from glassmatch.importers.refractiveindex_yaml import display_name
+    assert display_name(material, page, form) == (name, axis)
+
+
+def test_crystal_names_in_database():
+    import pandas as pd
+    from glassmatch.database import DEFAULT_DATA_DIR
+    g = pd.read_csv(DEFAULT_DATA_DIR / "glasses.csv", dtype=str, keep_default_na=False)
+    r = g[g["manufacturer_id"] == "RII"]
+    # Material first, the author only as a qualifier.
+    assert r["glass_name"].str.match(r"^[A-Z][A-Za-z0-9]* \(.+\)$").all()
+    assert set(g["optic_axis"]) <= {"", "o", "e"}
+    oe = r[r["glass_id"].str.contains(r"-[OE](?:-|$)", regex=True)]
+    assert len(oe) >= 20 and (oe["optic_axis"] != "").all()
+    assert (g.loc[g["manufacturer_id"] != "RII", "optic_axis"] == "").all()

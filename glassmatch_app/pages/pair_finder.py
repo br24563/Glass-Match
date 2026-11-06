@@ -40,6 +40,13 @@ def render(ctx):
                                                      "303, 8.6 titanium, 1.2 Invar.",
                                 disabled=pf_key != "athermal")
     pf_top = pc4.number_input("Pairs shown", 10, 2000, 200, 10, key="pf_top")
+    pf_medium = "air"
+    if pf_key == "athermal":
+        pf_medium = st.radio(
+            "Lens operates in", ["air", "vacuum"], horizontal=True,
+            key="pf_medium", help="In air the glass index that matters is "
+            "relative to air, so γ uses relative dn/dT; in vacuum, absolute. "
+            "They differ by ~2-3e-6/K in γ.")
     if pf_key == "apo":
         ac1, ac2 = st.columns(2)
         pf_apo_dp = ac1.number_input("Max |P1 − P2|", 0.0001, 0.05, 0.003, 0.0005,
@@ -90,7 +97,8 @@ def render(ctx):
     pairs_df = gpairs.find_pairs(pool_t, sort_by=pf_key, top=int(pf_top),
                                  min_dv=pf_min_dv,
                                  mount_cte=pf_mount if pf_key == "athermal" else None,
-                                 apo_dp_max=pf_apo_dp, apo_min_dv=pf_apo_dv)
+                                 apo_dp_max=pf_apo_dp, apo_min_dv=pf_apo_dv,
+                                 medium=pf_medium)
     st.caption(f"{len(pool_t):,} glasses in the pool → "
                f"{pairs_df.attrs.get('n_pairs', 0):,} pairs with V1 − V2 ≥ "
                f"{pf_min_dv:g}; {pairs_df.attrs.get('n_ranked', 0):,} have the data "
@@ -111,8 +119,11 @@ def render(ctx):
             "φ1, φ2 in units of the total power; f1, f2 = element focal "
             "lengths for the focal length above. P = P_g,F calculated from the "
             "verified fit; secondary_spectrum ≈ g-F focal shift / f. "
-            + ("γ in 1e-6/K from absolute dn/dT (d line, +20/+40 C; "
-               "manufacturer or calculated from TD coefficients) and catalog CTE; "
+            + (f"γ in 1e-6/K for a lens in {pf_medium}: "
+               + ("relative dn/dT (converted from the absolute d-line "
+                  "+20/+40 C value with the Edlén air index)" if pf_medium == "air"
+                  else "absolute dn/dT (d line, +20/+40 C)")
+               + " and catalog CTE; "
                "focal_drift = (1/f)·df/dT, thermal_residual = focal_drift "
                "− mount CTE (0 = athermal). " if pf_key == "athermal" else "")
             + "Basis: " + gpairs.PAIR_BASIS + ".")

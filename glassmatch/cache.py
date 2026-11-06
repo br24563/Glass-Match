@@ -7,9 +7,10 @@ load writes them as Parquet / JSON to a per-user cache directory and later
 loads read those instead.
 
 The cache key covers everything that could change the answer: the package
-version, the manifest's data version and every CSV's name, size and mtime. A
-changed file, a new release or a rebuilt manifest is a new key - a stale
-cache is never read. Any cache failure (read-only disk, missing pyarrow) falls
+version, the manifest's data version, every CSV's name, size and mtime, and a
+content hash of the code that computes the tables. A changed file, a code
+fix, a new release or a rebuilt manifest is a new key - a stale cache is
+never read. Any cache failure (read-only disk, missing pyarrow) falls
 back to the CSV path silently: the cache can make GlassMatch faster, never
 different.
 
@@ -42,15 +43,43 @@ def root() -> Path:
 
 
 def key(data_dir) -> str:
-    """Hash of package version, data version and every CSV's size + mtime."""
+    """Hash of package version, data version, every CSV's size + mtime, and
+    the code that computes the cached tables (see code_fingerprint)."""
     from glassmatch import __version__
     from glassmatch.manifest import read_manifest
     d = Path(data_dir)
-    parts = [__version__, str((read_manifest(d) or {}).get("data_version"))]
+    parts = [__version__, str((read_manifest(d) or {}).get("data_version")),
+             code_fingerprint()]
     for p in sorted(d.glob("*.csv")):
         st = p.stat()
         parts.append(f"{p.name}:{st.st_size}:{st.st_mtime_ns}")
     return hashlib.sha1("|".join(parts).encode()).hexdigest()[:16]
+
+
+_CODE_FP = None
+
+
+def code_fingerprint() -> str:
+    """Content hash of the Python that builds cached tables: the glassmatch
+    package, and app.py + glassmatch_app beside it in a checkout. A fix to a
+    calculation is a new key, so a cached result computed by the old code is
+    never read (the package version alone does not change between
+    releases). Content, not mtime: line-ending or sync touches don't count."""
+    global _CODE_FP
+    if _CODE_FP is None:
+        pkg = Path(__file__).resolve().parent
+        files = sorted(pkg.rglob("*.py"))
+        root = pkg.parent
+        if (root / "app.py").exists():
+            files += [root / "app.py"] + sorted((root / "glassmatch_app").rglob("*.py"))
+        h = hashlib.sha1()
+        for f in files:
+            try:
+                h.update(f.read_bytes().replace(b"\r\n", b"\n"))
+            except OSError:
+                pass
+        _CODE_FP = h.hexdigest()[:16]
+    return _CODE_FP
 
 
 def directory(data_dir) -> Path | None:

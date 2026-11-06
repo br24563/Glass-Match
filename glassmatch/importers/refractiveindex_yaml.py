@@ -201,6 +201,39 @@ def _interp(wl: float, rows: list, col: int = 1):
     return y0 + (y1 - y0) * (wl - x0) / (x1 - x0), rng
 
 
+def display_name(material: str, page: str, form: str | None = None) -> tuple:
+    """(name, optic_axis) for a refractiveindex.info page.
+
+    The page name is the author ('Malitson', 'Li-100K', 'Zheng-e-186C'), which
+    says nothing about the material. The name shown is the material first,
+    then what distinguishes this measurement: author, ray (o / e for a
+    birefringent crystal - not an isotropic material), the measurement
+    temperature when the page states it in K or C, and a film. A suffix
+    that is not one of those stays verbatim ('Daimon-20'), never guessed.
+    optic_axis is 'o', 'e' or ''.
+    """
+    toks = page.split("-")
+    axis, temp, film = "", "", ""
+    while len(toks) > 1:
+        t = toks[-1]
+        m = re.fullmatch(r"(\d+(?:\.\d+)?)([KC])", t)
+        if m and not temp:
+            temp = f"{m.group(1)} K" if m.group(2) == "K" else f"{m.group(1)} °C"
+        elif t in ("o", "e") and not axis:
+            axis = t
+        elif re.fullmatch(r"\d+nm", t) and not film:
+            film = f"{t[:-2]} nm film"
+        elif t == "film" and not film:
+            film = "thin film"
+        else:
+            break
+        toks.pop()
+    if form == "film" and not film:
+        film = "thin film"
+    quals = ["-".join(toks)] + ([f"{axis}-ray"] if axis else [])         + ([temp] if temp else []) + ([film] if film else [])
+    return f"{material} ({', '.join(quals)})", axis
+
+
 def _citation(text: str) -> tuple:
     """(DOI url, short human citation) from a REFERENCES block."""
     doi = ""
@@ -363,8 +396,10 @@ def import_refractiveindex(root: Path, materials: dict,
                       + (f" DOI: {doi}" if doi else "")
                       + (f" | page note: {parsed['comments']}"
                          if parsed["comments"] else ""))})
+        name, axis = display_name(material, page, parsed.get("form"))
         glasses.append({
-            "glass_id": gid, "manufacturer_id": "RII", "glass_name": page,
+            "glass_id": gid, "manufacturer_id": "RII", "glass_name": name,
+            "optic_axis": axis,
             "manufacturer_code": page, "glass_family": display,
             "material_class": mclass, "status": "standard",
             "description": f"{display} ({material}). "

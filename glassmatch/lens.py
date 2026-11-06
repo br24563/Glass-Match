@@ -35,8 +35,8 @@ spaces with the mount CTE, each radius with the CTE of the glass after the
 surface (the glass before it for a lens's last surface), indices from
 n(lambda, T). The image plane is held by the mount, so the thermal focus
 shift is BFL(T) - BFL(T0) (1 + alpha_mount (T - T0)). Catalog CTEs are the
--30/+70 C means; outside that range the expansion is a linear
-extrapolation of the published coefficient, and the result says so.
+-30/+70 C means; outside that range no thermal shift is given unless the
+caller explicitly allows a linear extrapolation, which is then labelled.
 """
 from __future__ import annotations
 
@@ -396,8 +396,12 @@ def trace(rx: Prescription, n: list) -> dict:
     return {"efl": efl, "bfl": bfl, "image_distance": img, "petzval_sum": petz}
 
 
-def _scaled(db, rx: Prescription, t_c: float, mount_cte: float) -> tuple:
-    """Geometry at t_c: (prescription, notes)."""
+def _scaled(db, rx: Prescription, t_c: float, mount_cte: float,
+            allow_cte_extrapolation: bool = False) -> tuple:
+    """Geometry at t_c: (prescription, notes). Outside the -30/+70 C range
+    the catalog CTEs are means over, refuses (PrescriptionError) unless
+    allow_cte_extrapolation, when the expansion is extrapolated linearly and
+    the notes say so."""
     dt = t_c - T_REF
     notes, cte = [], {}
     for g in rx.glasses():
@@ -406,9 +410,15 @@ def _scaled(db, rx: Prescription, t_c: float, mount_cte: float) -> tuple:
             raise PrescriptionError(f"{g}: no CTE in the database")
         cte[g] = v * 1e-6
     if not (CTE_RANGE[0] <= t_c <= CTE_RANGE[1]):
-        notes.append(f"{t_c:g} C is outside the -30/+70 C range the catalog "
-                     "CTEs are measured over; expansion is extrapolated "
-                     "linearly from them")
+        if not allow_cte_extrapolation:
+            raise PrescriptionError(
+                f"{t_c:g} C is outside the -30/+70 C range the catalog CTEs "
+                "are means over; glass expansion is not linear that far, so "
+                "the thermal shift is not given (allow CTE extrapolation to "
+                "get a labelled linear estimate)")
+        notes.append(f"EXTRAPOLATED: {t_c:g} C is outside the -30/+70 C range "
+                     "the catalog CTEs are measured over; expansion is "
+                     "extrapolated linearly from them, at your request")
     surfs = []
     for i, s in enumerate(rx.surfaces):
         after = s.material
@@ -422,7 +432,8 @@ def _scaled(db, rx: Prescription, t_c: float, mount_cte: float) -> tuple:
 
 def analyse(db, rx: Prescription, primary: str = "d", short: str = "F",
             long: str = "C", extra: str = "g", t_c: float | None = None,
-            mount_cte: float = 23.6, p_pa: float | None = None) -> dict:
+            mount_cte: float = 23.6, p_pa: float | None = None,
+            allow_cte_extrapolation: bool = False) -> dict:
     """First-order figures of a prescription (mm). With t_c, also the
     thermal focus shift from 20 C to t_c with the given mount CTE (1e-6/K;
     23.6 = aluminium 6061)."""
@@ -445,7 +456,8 @@ def analyse(db, rx: Prescription, primary: str = "d", short: str = "F",
         "extra_line_focus": f[extra]["image_distance"] - f[primary]["image_distance"],
         "lines": wls})
     if t_c is not None:
-        out["thermal"] = thermal_shift(db, rx, t_c, mount_cte, primary, p_pa)
+        out["thermal"] = thermal_shift(db, rx, t_c, mount_cte, primary, p_pa,
+                                       allow_cte_extrapolation)
     return out
 
 
@@ -479,7 +491,8 @@ def _index_changes(db, rx: Prescription, wavelength_nm: float, t_c: float,
 
 
 def thermal_shift(db, rx: Prescription, t_c: float, mount_cte: float = 23.6,
-                  line: str = "d", p_pa: float | None = None) -> dict:
+                  line: str = "d", p_pa: float | None = None,
+                  allow_cte_extrapolation: bool = False) -> dict:
     """Focus and EFL change from 20 C to t_c (mm). The design is taken at
     20 C with catalog indices; each glass's index changes by its dn over
     20 ... t_c (see _index_changes)."""
@@ -496,7 +509,7 @@ def thermal_shift(db, rx: Prescription, t_c: float, mount_cte: float = 23.6,
         return res
     res["methods"] = sorted(methods)
     try:
-        rx_t, notes = _scaled(db, rx, t_c, mount_cte)
+        rx_t, notes = _scaled(db, rx, t_c, mount_cte, allow_cte_extrapolation)
     except PrescriptionError as e:
         res["reason"] = str(e)
         return res
@@ -545,7 +558,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                            tol_nd: float = 0.03, tol_vd: float = 8.0,
                            statuses=None, resolve_surface: int | None = None,
                            t_c: float | None = None, mount_cte: float = 23.6,
-                           max_results: int = 25, efl_tol_pct: float | None = 1.0):
+                           max_results: int = 25, efl_tol_pct: float | None = 1.0,
+                           allow_cte_extrapolation: bool = False):
     """Rank available glasses as a replacement for `old` in the design.
 
     Curvatures are kept (or one surface is re-solved for the original EFL).
@@ -559,7 +573,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
 
     from glassmatch.importers.agf import AVAILABLE_STATUSES
     statuses = statuses or AVAILABLE_STATUSES
-    base = analyse(db, rx, t_c=t_c, mount_cte=mount_cte)
+    base = analyse(db, rx, t_c=t_c, mount_cte=mount_cte,
+                   allow_cte_extrapolation=allow_cte_extrapolation)
     if base["reason"]:
         raise PrescriptionError(f"the original design cannot be traced: "
                                 f"{base['reason']}")
@@ -587,7 +602,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
             if new is None:
                 continue
             note = f"surface {resolve_surface + 1} re-solved"
-        a = analyse(db, new, t_c=t_c, mount_cte=mount_cte)
+        a = analyse(db, new, t_c=t_c, mount_cte=mount_cte,
+                    allow_cte_extrapolation=allow_cte_extrapolation)
         if a["reason"]:
             continue
         d_efl_pct = (a["efl"] - base["efl"]) / base["efl"] * 100.0

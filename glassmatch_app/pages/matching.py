@@ -91,6 +91,13 @@ def render(ctx):
                               **({"transmission_%": "transmission_% (worst band)"}
                                  if band_cols else {})}),
                  width="stretch", hide_index=True)
+    _axes = (ctx.db.glasses.set_index("glass_id")["optic_axis"]
+             if "optic_axis" in ctx.db.glasses.columns else None)
+    if _axes is not None and scoped["glass_id"].map(_axes).isin(["o", "e"]).any():
+        st.caption("Rows marked o-ray / e-ray are one polarisation of a "
+                   "birefringent crystal (ordinary / extraordinary ray), not an "
+                   "isotropic material: the other polarisation sees a "
+                   "different index.")
     if n_range_filtered:
         st.caption(f"{n_range_filtered:,} material(s) removed by the range "
                    "filters.")

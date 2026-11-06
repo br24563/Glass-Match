@@ -125,7 +125,12 @@ def test_thermo_mechanical_formulas():
                        "cte": 7.1, "k_thermal": 1.114, "poisson": 0.206,
                        "young": 82.0, "density": 2.51}])
     t = dv.thermo_mechanical(s).loc["G"]
-    assert t["athermal_gamma"] == pytest.approx(1.513 / 0.5168 - 7.1)
+    assert t["athermal_gamma_vacuum"] == pytest.approx(1.513 / 0.5168 - 7.1)
+    # In air, relative dn/dT: larger than absolute by ~n |dn_air/dT|.
+    assert t["dn_dt_rel_calc"] == pytest.approx(1.513 + 1.32, abs=0.02)
+    assert t["athermal_gamma_air"] == pytest.approx(
+        t["dn_dt_rel_calc"] / 0.5168 - 7.1)
+    assert t["athermal_gamma_air"] - t["athermal_gamma_vacuum"] > 2.5
     assert t["thermal_shock_fom"] == pytest.approx(
         1.114 * (1 - 0.206) / (7.1e-6 * 82e9) * 1e6)
     assert t["specific_stiffness"] == pytest.approx(82.0 / 2.51)
@@ -171,12 +176,12 @@ def test_range_filter_keeps_missing_unless_required():
 
 def test_cli_sort_where_columns(tmp_path):
     out = tmp_path / "r.csv"
-    assert cli(["search", "--vd", "55:75", "--where", "athermal_gamma=-1:1",
-                "--sort", "athermal_gamma", "--columns", "cte", "--top", "5",
+    assert cli(["search", "--vd", "55:75", "--where", "athermal_gamma_air=-1:1",
+                "--sort", "athermal_gamma_air", "--columns", "cte", "--top", "5",
                 "--csv", str(out)]) == 0
     r = pd.read_csv(out)
-    assert len(r) == 5 and r["athermal_gamma"].between(-1, 1).all()
-    assert r["athermal_gamma"].is_monotonic_increasing
+    assert len(r) == 5 and r["athermal_gamma_air"].between(-1, 1).all()
+    assert r["athermal_gamma_air"].is_monotonic_increasing
 
 
 def test_cli_columns_n2_and_unknown_column(capsys):
@@ -186,3 +191,29 @@ def test_cli_columns_n2_and_unknown_column(capsys):
     assert "RII-CAF2-MILAM-N2" in capsys.readouterr().out
     with pytest.raises(SystemExit, match="unknown column"):
         cli(["search", "--sort", "not_a_column"])
+
+
+def test_maker_scale_filter_needs_a_maker():
+    """Chemical classes are each maker's own scale: no cross-maker range."""
+    t = pd.DataFrame({"acid_resistance": [1.0, 2.0, 1.0, None]},
+                     index=["A1", "A2", "B1", "A3"])
+    makers = ["OHARA", "OHARA", "SCHOTT", "OHARA"]
+    with pytest.raises(ValueError, match="own scale"):
+        gm_columns.range_filter(t, {"acid_resistance": (None, 1)}, makers=makers)
+    m = gm_columns.range_filter(t, {"acid_resistance": (None, 1, "OHARA")},
+                                makers=makers)
+    assert list(m) == [True, False, False, True]      # SCHOTT dropped
+    m = gm_columns.range_filter(t, {"acid_resistance": (None, 1, "ohara")},
+                                makers=makers, keep_missing=False)
+    assert list(m) == [True, False, False, False]
+
+
+def test_cli_maker_scale_filter(tmp_path):
+    with pytest.raises(SystemExit, match="own scale"):
+        cli(["search", "--where", "acid_resistance=1:2"])
+    out = tmp_path / "r.csv"
+    assert cli(["search", "--where", "acid_resistance@OHARA=1:2",
+                "--require-data", "--top", "20", "--csv", str(out)]) == 0
+    r = pd.read_csv(out)
+    assert len(r) and r["glass_id"].str.startswith("OHARA-").all()
+    assert r["acid_resistance"].between(1, 2).all()

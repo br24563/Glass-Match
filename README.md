@@ -163,7 +163,8 @@ glassmatch search --nd 1.5:1.55 --vd 60:70 --preferred --top 10
 glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10 --csv out.csv
 glassmatch search --band 0.4:0.7 --band 9:10 --tmin 80 --require-data   # both bands
 glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf
-glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
+glassmatch search --vd 55:75 --where athermal_gamma_air=-1:1 --sort athermal_gamma_air
+glassmatch search --where acid_resistance@OHARA=1:2   # maker scales: name the maker
 glassmatch search --nd 1.45:1.55 --columns gvd,group_index --wavelength 800 --sort gvd
 glassmatch columns                      # every sortable column and its meaning
 glassmatch n2 --material CaF2           # nonlinear-index measurements
@@ -201,7 +202,8 @@ on); `glassmatch search --columns/--where/--sort` does the same.
   V_e, P_g,F, P_C,t, ΔP_g,F for every fit; n, dn/dλ, group index and GVD at a
   chosen wavelength; the internal UV edge (λ at 80 % / 5 %) and internal
   transmittance at 355 / 532 / 1064 / 1550 nm at the chosen thickness; the
-  athermal coefficient γ = (dn/dT)/(n−1) − α; the thermal-shock figure
+  athermal coefficient γ = (dn/dT)/(n−1) − α, in air (relative dn/dT) and
+  in vacuum (absolute); the thermal-shock figure
   k(1−ν)/(αE); specific stiffness E/ρ.
 * **Nonlinear index n2** - 161 published measurements for 17 crystals, in
   their own table (one row per paper, with wavelength, pulse duration and
@@ -293,8 +295,9 @@ Thin lenses in contact, total power φ, element 1 = higher V_d (crown):
 
 Textbook check (tested): N-BK7 / N-F2 (V_d 64.17 / 36.37) gives
 φ1 = 2.308φ, φ2 = −1.308φ — a 100 mm doublet with a 43.3 mm crown and a
-−76.4 mm flint. dn/dT is the absolute value at the d line, +20/+40 C, and α
-the catalog CTE (−30/+70 C), so the athermal ranking covers the 1,790
+−76.4 mm flint. dn/dT is the d-line value, +20/+40 C - relative to air for
+a lens in air (the default), absolute in vacuum - and α the catalog CTE
+(−30/+70 C), so the athermal ranking covers the 1,790
 glasses that have both. Treat the results as a shortlist for a lens-design
 program, not a design.
 

@@ -6,6 +6,28 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Fixed (principle audit, VALIDATION.md §10)
+- **Athermal γ for a lens in air now uses relative dn/dT.** It used absolute
+  dn/dT, ~2–3e-6/K off. New columns `athermal_gamma_air` (default) and
+  `athermal_gamma_vacuum` replace `athermal_gamma`; `dn_dt_rel_calc` gives
+  the relative d-line dn/dT. The pair finder ranks athermal pairs in air by
+  default, with a vacuum option.
+- **No thermal focus shift outside −30/+70 °C unless asked for**: the catalog
+  CTEs are means over that range. `--allow-cte-extrapolation` (and an app
+  checkbox) gives an estimate marked EXTRAPOLATED.
+- **A band value needs samples that represent the band**: Average and
+  Minimum need ≥ 2 samples spanning ≥ 50 % of it (436 glasses in 0.7–1.4 µm
+  had been "averaged" from one sample). Tabulated-n/k Entire range no longer
+  falls back to the mean when coverage is short.
+- **Maker-specific scales** (chemical resistance, abrasion, grindability)
+  can only be range-filtered within one maker (`--where COL@MAKER=LO:HI`; the
+  app asks whose scale).
+- **Crystal names**: material first, then author, o-/e-ray, measurement
+  temperature and film, e.g. `Si (Li, 100 K)`; new `optic_axis` column; the
+  app explains birefringent rows.
+- The derived-data cache is also keyed to the code, so a calculation fix is
+  never answered from a table the old code computed.
+
 ### Added
 - **Several wavelength bands that must all be met** (sidebar "Additional
   wavelength bands", `glassmatch search --band 0.4:0.7 --band 9:10`): each

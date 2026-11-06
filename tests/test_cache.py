@@ -65,3 +65,11 @@ def test_bad_cache_file_is_rebuilt(tmp_path):
     out = cache.frame(tmp_path, "x", lambda: pd.DataFrame({"a": [2]}))
     assert list(out["a"]) == [2]
     assert list(pd.read_parquet(tmp_path / "x.parquet")["a"]) == [2]
+
+
+def test_key_changes_with_code(monkeypatch, tmp_path):
+    """A calculation fix must not be answered from a cache the old code built."""
+    (tmp_path / "glasses.csv").write_text("glass_id\nA\n", encoding="utf-8")
+    k1 = cache.key(tmp_path)
+    monkeypatch.setattr(cache, "_CODE_FP", "different-code")
+    assert cache.key(tmp_path) != k1

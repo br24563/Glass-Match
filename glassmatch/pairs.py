@@ -105,7 +105,13 @@ def glass_table(summary: pd.DataFrame, pgf: pd.DataFrame, db=None) -> pd.DataFra
         t["dpgf_mfr"] = pd.to_numeric(t["dpgf_mfr"], errors="coerce")
     else:
         t["dpgf_mfr"] = np.nan
-    t["thermo_optic"] = thermo_optic_coefficient(t["dn_dt"], t["nd"], t["cte"])
+    # gamma in air uses relative dn/dT, in vacuum absolute; "thermo_optic"
+    # is the in-air value, which is what a lens in a housing sees.
+    from glassmatch.thermal import relative_dndt
+    t["thermo_optic_vacuum"] = thermo_optic_coefficient(t["dn_dt"], t["nd"], t["cte"])
+    t["thermo_optic_air"] = thermo_optic_coefficient(
+        relative_dndt(t["dn_dt"], t["nd"]), t["nd"], t["cte"])
+    t["thermo_optic"] = t["thermo_optic_air"]
     return t
 
 
@@ -131,9 +137,10 @@ def secondary_spectrum(p1, p2, v1, v2):
 def thermo_optic_coefficient(dn_dt, nd, cte):
     """gamma = dn/dT / (n_d - 1) - alpha, in 1e-6/K when dn/dT and alpha are.
 
-    The fractional change in a thin lens's power per kelvin. Uses absolute
-    dn/dT; for a lens in air the relative value differs by well under
-    0.1e-6/K for most glasses."""
+    The fractional change in a thin lens's power per kelvin. For a lens in
+    air pass RELATIVE dn/dT, in vacuum absolute: they differ by about
+    n |dn_air/dT| ~ 1.4e-6/K, i.e. ~2-3e-6/K in gamma (glass_table gives
+    both)."""
     dn_dt = np.asarray(dn_dt, dtype=float)
     nd = np.asarray(nd, dtype=float)
     cte = np.asarray(cte, dtype=float)
@@ -148,8 +155,8 @@ def thermal_focal_drift(phi1, phi2, gamma1, gamma2, phi=1.0):
 
 def find_pairs(table: pd.DataFrame, *, sort_by: str = "power", top: int = 200,
                min_dv: float = 10.0, mount_cte: float | None = None,
-               apo_dp_max: float = 0.003, apo_min_dv: float = 20.0
-               ) -> pd.DataFrame:
+               apo_dp_max: float = 0.003, apo_min_dv: float = 20.0,
+               medium: str = "air") -> pd.DataFrame:
     """Rank glass pairs for a cemented/contact achromatic doublet.
 
     `table` is a glass_table() frame (already filtered to the glasses in
@@ -165,8 +172,12 @@ def find_pairs(table: pd.DataFrame, *, sort_by: str = "power", top: int = 200,
                   powers low)
       "athermal"  smallest |focal drift - mount CTE| (needs mount_cte)
 
-    Powers are in units of the total power phi (phi = 1).
+    Powers are in units of the total power phi (phi = 1). `medium` picks
+    the gamma used for the thermal columns: "air" (relative dn/dT, the
+    default) or "vacuum" (absolute dn/dT).
     """
+    if medium not in ("air", "vacuum"):
+        raise ValueError("medium must be 'air' or 'vacuum'")
     if sort_by not in SORT_KEYS:
         raise ValueError(f"sort_by must be one of {sorted(SORT_KEYS)}")
     if sort_by == "athermal" and mount_cte is None:
@@ -184,7 +195,8 @@ def find_pairs(table: pd.DataFrame, *, sort_by: str = "power", top: int = 200,
 
     vd = t["vd"].to_numpy(float)
     pgf = t["pgf"].to_numpy(float)
-    gam = t["thermo_optic"].to_numpy(float)
+    col = f"thermo_optic_{medium}"
+    gam = t[col if col in t.columns else "thermo_optic"].to_numpy(float)
 
     i, j = np.triu_indices(n, k=1)
     swap = vd[i] < vd[j]

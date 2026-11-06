@@ -215,3 +215,29 @@ def test_app_has_glass_map_and_pair_finder_tabs():
     gm = next(r for r in app.radio if r.key == "gm_kind")
     gm.set_value("P_g,F vs V_d (partial dispersion)").run()
     assert not app.exception, [e.value for e in app.exception]
+
+
+def test_athermal_gamma_in_air_uses_relative_dndt():
+    """gamma for a lens in air uses relative dn/dT, which for N-BK7 is
+    ~1.4e-6/K above the absolute value - ~2.7e-6/K in gamma."""
+    s = pd.DataFrame([{"glass_id": "G", "glass": "G", "manufacturer": "M",
+                       "manufacturer_id": "M", "material_class": "oxide_glass",
+                       "status": "standard", "nd": 1.5168, "vd": 64.17,
+                       "cte": 7.1, "dn_dt": 1.6}])
+    pgf = pd.DataFrame({"glass_id": ["G"], "pgf": [0.5349], "pgf_basis": ["x"]})
+    t = P.glass_table(s, pgf).iloc[0]
+    assert t["thermo_optic_vacuum"] == pytest.approx(1.6 / 0.5168 - 7.1)
+    assert t["thermo_optic_air"] - t["thermo_optic_vacuum"] == pytest.approx(2.7, abs=0.15)
+    assert t["thermo_optic"] == t["thermo_optic_air"]
+
+
+def test_find_pairs_medium():
+    t = pd.DataFrame({"glass_id": ["A", "B"], "glass": ["A", "B"],
+                      "manufacturer": "M", "vd": [64.0, 36.0], "pgf": [0.54, 0.58],
+                      "thermo_optic_air": [1.0, 2.0], "thermo_optic_vacuum": [-2.0, -1.0],
+                      "thermo_optic": [1.0, 2.0]})
+    air = P.find_pairs(t, sort_by="athermal", mount_cte=0.0)
+    vac = P.find_pairs(t, sort_by="athermal", mount_cte=0.0, medium="vacuum")
+    assert air["gamma1"].iloc[0] == 1.0 and vac["gamma1"].iloc[0] == -2.0
+    with pytest.raises(ValueError):
+        P.find_pairs(t, sort_by="athermal", mount_cte=0.0, medium="water")

@@ -120,7 +120,7 @@ def test_tabulated_nk_answers_when_there_are_no_manufacturer_rows():
     expected = band_stats_nk(nk_groups["G-NK"], LO, HI, "Average", 10.0)
     val, basis = _bt("G-NK")
     assert val == round(float(expected["value_pct"]), 1)
-    assert basis == "calculated from tabulated n/k at 10 mm, 4 samples"
+    assert basis == "calculated from tabulated n/k at 10 mm, 4 samples spanning 100% of the band"
     assert basis.startswith("calculated")
 
 
@@ -128,7 +128,7 @@ def test_assumed_thickness_changes_value_and_is_stated():
     """A calculated figure without its thickness assumption is not a fact."""
     val10, basis10 = _bt("G-NK", thickness_mm=10.0)
     val35, basis35 = _bt("G-NK", thickness_mm=3.5)
-    assert basis35 == "calculated from tabulated n/k at 3.5 mm, 4 samples"
+    assert basis35 == "calculated from tabulated n/k at 3.5 mm, 4 samples spanning 100% of the band"
     assert basis10 != basis35
     assert val35 > val10
 
@@ -170,7 +170,7 @@ def test_no_data_at_all_invents_nothing():
 def test_every_returned_value_is_one_decimal_place():
     """Table, caption and CSV export must all show the same number."""
     t_groups, nk_groups = _groups()
-    t_groups["G-MFR"] = _tdf([(0.50, 0.98437)])
+    t_groups["G-MFR"] = _tdf([(0.50, 0.98437), (0.68, 0.98437)])
     val, _ = band_transmission(_db(), "G-MFR", LO, HI, "Average",
                                t_groups=t_groups, nk_groups=nk_groups,
                                thickness_mm=10.0)

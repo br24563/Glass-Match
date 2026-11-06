@@ -5,7 +5,7 @@
     glassmatch n N-BK7 486.1 587.6 656.3 1064
     glassmatch search --nd 1.50:1.55 --vd 60:70 --top 10
     glassmatch search --nd 1.6:1.8 --band 0.4:0.7 --tmin 99 --thickness 10
-    glassmatch search --vd 55:75 --where athermal_gamma=-1:1 --sort athermal_gamma
+    glassmatch search --vd 55:75 --where athermal_gamma_air=-1:1 --sort athermal_gamma_air
     glassmatch search --nd 1.5:1.6 --columns gvd,group_index --wavelength 800
     glassmatch columns                       # every sortable column
     glassmatch n2 --material CaF2            # nonlinear index measurements
@@ -189,7 +189,8 @@ def cmd_search(args) -> int:
     where = {}
     for w in args.where or []:
         col, _, rng = w.partition("=")
-        where[col.strip()] = _range(rng)
+        col, _, maker = col.strip().partition("@")
+        where[col] = _range(rng) + ((maker,) if maker else ())
     wanted = list(dict.fromkeys(extra + list(where)
                                 + ([args.sort] if args.sort else [])))
     wanted = [c for c in wanted if c not in out.columns]
@@ -209,8 +210,13 @@ def cmd_search(args) -> int:
         out = out.join(table[[c for c in wanted if c in table.columns]],
                        on="glass_id")
         if where:
-            mask = gm_columns.range_filter(out.set_index("glass_id"), where,
-                                           keep_missing=not args.require_data)
+            try:
+                mask = gm_columns.range_filter(
+                    out.set_index("glass_id"), where,
+                    keep_missing=not args.require_data,
+                    makers=out["manufacturer_id"].to_numpy())
+            except ValueError as e:
+                raise SystemExit(f"{e} (e.g. --where {next(iter(where))}@OHARA=LO:HI)")
             out = out[mask.to_numpy()]
     if args.sort:
         out = out.sort_values(args.sort, ascending=not args.desc,
@@ -272,7 +278,8 @@ def cmd_lens(args) -> int:
     from glassmatch import lens
     db = _db()
     rx = _rx(db, args.file)
-    a = lens.analyse(db, rx, t_c=args.temperature, mount_cte=args.mount_cte)
+    a = lens.analyse(db, rx, t_c=args.temperature, mount_cte=args.mount_cte,
+                     allow_cte_extrapolation=args.allow_cte_extrapolation)
     status = dict(zip(db.glasses["glass_id"], db.glasses["status"]))
     print(f"{rx.name or args.file}: {len(rx.surfaces)} surfaces, glasses "
           + ", ".join(f"{g} [{status.get(g, '')}]" for g in rx.glasses()))
@@ -328,6 +335,7 @@ def cmd_replace(args) -> int:
                 resolve_surface=(args.resolve_surface - 1
                                  if args.resolve_surface else None),
                 t_c=args.temperature, mount_cte=args.mount_cte,
+                allow_cte_extrapolation=args.allow_cte_extrapolation,
                 max_results=args.top, efl_tol_pct=args.efl_tol)
         except lens.PrescriptionError as e:
             raise SystemExit(str(e))
@@ -429,7 +437,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--columns", help="extra columns, comma-separated "
                                      "(see `glassmatch columns`)")
     p.add_argument("--where", action="append", metavar="COL=LO:HI",
-                   help="range filter on any column; repeatable")
+                   help="range filter on any column; repeatable. Maker-scale "
+                        "columns (chemical classes, abrasion, grindability) "
+                        "need the maker: COL@MAKER=LO:HI")
     p.add_argument("--sort", help="sort by this column (ascending)")
     p.add_argument("--desc", action="store_true", help="sort descending")
     p.add_argument("--wavelength", type=float, default=1064.0,
@@ -446,6 +456,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("file")
     p.add_argument("--temperature", "-T", type=float,
                    help="also the thermal focus shift from 20 C to T")
+    p.add_argument("--allow-cte-extrapolation", action="store_true",
+                   help="outside -30/+70 C, extrapolate the catalog CTEs "
+                        "linearly (labelled) instead of refusing")
     p.add_argument("--mount-cte", type=float, default=23.6,
                    help="mount CTE, 1e-6/K (default 23.6, aluminium 6061)")
     p.set_defaults(func=cmd_lens)
@@ -464,6 +477,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--temperature", "-T", type=float,
                    help="also compare the thermal focus shift at T")
     p.add_argument("--mount-cte", type=float, default=23.6)
+    p.add_argument("--allow-cte-extrapolation", action="store_true",
+                   help="outside -30/+70 C, extrapolate the catalog CTEs "
+                        "linearly (labelled) instead of refusing")
     p.add_argument("--all-statuses", action="store_true",
                    help="include obsolete glasses as candidates")
     p.add_argument("--top", type=int, default=15)

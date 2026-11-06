@@ -42,7 +42,12 @@ LABELS = {
     "uv_edge_int5_calc": ("λ at 5 % internal T (calculated)", "nm"),
     **{f"t_{nm}": (f"internal T at {nm} nm (calculated)", "%")
        for nm in LASER_LINES_NM},
-    "athermal_gamma": ("athermal γ = (dn/dT)/(n−1) − α (calculated)", "1e-6/K"),
+    "dn_dt_rel_calc": ("dn/dT relative to air, d line, +20/+40 °C (calculated)",
+                       "1e-6/K"),
+    "athermal_gamma_air": ("athermal γ in air = (dn/dT)rel/(n−1) − α (calculated)",
+                           "1e-6/K"),
+    "athermal_gamma_vacuum": ("athermal γ in vacuum = (dn/dT)abs/(n−1) − α "
+                              "(calculated)", "1e-6/K"),
     "thermal_shock_fom": ("thermal-shock FOM k(1−ν)/(αE) (calculated)",
                           "(W/m)/MPa"),
     "specific_stiffness": ("specific stiffness E/ρ (calculated)", "GPa·cm³/g"),
@@ -167,8 +172,12 @@ def thermo_mechanical(summary: pd.DataFrame) -> pd.DataFrame:
     """Per-glass figures from stored scalar properties (summary_frame
     columns): athermal gamma, thermal-shock FOM and specific stiffness.
 
-    * gamma = (dn/dT)/(n_d - 1) - alpha, in 1e-6/K: a thin lens in air has
-      (1/f) df/dT = -gamma, so gamma = 0 is an athermal singlet.
+    * gamma = (dn/dT)/(n_d - 1) - alpha, in 1e-6/K: a thin lens has
+      (1/f) df/dT = -gamma, so gamma = 0 is an athermal singlet. In air the
+      dn/dT is the RELATIVE one (athermal_gamma_air), in vacuum the absolute
+      one (athermal_gamma_vacuum); they differ by ~2-3e-6/K. The relative
+      d-line value is converted from the stored absolute one with the Edlen
+      air index (glassmatch.thermal.relative_dndt).
     * k (1 - nu) / (alpha E), in (W/m) per MPa of fracture strength - the
       thermal-shock parameter R' = sigma_f k (1 - nu)/(alpha E) without the
       strength, which few catalogs give.
@@ -179,7 +188,10 @@ def thermo_mechanical(summary: pd.DataFrame) -> pd.DataFrame:
     nd, dndt, cte = num("nd"), num("dn_dt"), num("cte")
     k, nu, e, rho = num("k_thermal"), num("poisson"), num("young"), num("density")
     out = pd.DataFrame(index=s.index)
-    out["athermal_gamma"] = dndt / (nd - 1) - cte
+    from glassmatch.thermal import relative_dndt
+    out["dn_dt_rel_calc"] = relative_dndt(dndt, nd)
+    out["athermal_gamma_air"] = out["dn_dt_rel_calc"] / (nd - 1) - cte
+    out["athermal_gamma_vacuum"] = dndt / (nd - 1) - cte
     # alpha in 1/K = cte * 1e-6; E in Pa = young * 1e9; per MPa -> x 1e6
     out["thermal_shock_fom"] = k * (1 - nu) / (cte * 1e-6 * e * 1e9) * 1e6
     out["specific_stiffness"] = e / rho

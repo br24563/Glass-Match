@@ -1,5 +1,6 @@
 """Paraxial engine checked against closed-form optics, the four readers
 against each other, and glass replacement on an illustrative doublet."""
+import math
 import subprocess
 import sys
 from pathlib import Path
@@ -158,3 +159,25 @@ def test_cli_lens_and_replace():
                           "SCHOTT", "--resolve-surface", "3", "--csv"],
                          capture_output=True, text=True, cwd=root, check=True)
     assert "HOYA-E-FD5" in out.stdout
+
+
+def test_cte_extrapolation_refused_by_default(db):
+    rx = L.read_prescription(db, FIX / "doublet.json")
+    th = L.thermal_shift(db, rx, -40.0)
+    assert th["reason"] and "-30/+70" in th["reason"] and "focus_shift" not in th
+    th = L.thermal_shift(db, rx, -40.0, allow_cte_extrapolation=True)
+    assert th["reason"] is None and math.isfinite(th["focus_shift"])
+    assert any(n.startswith("EXTRAPOLATED") for n in th["notes"])
+    # Inside the range nothing changes and nothing is noted.
+    th = L.thermal_shift(db, rx, 60.0)
+    assert th["reason"] is None and not th["notes"]
+
+
+def test_cli_cte_flag():
+    root = Path(__file__).resolve().parents[1]
+    base = [sys.executable, "-m", "glassmatch.cli", "lens", str(FIX / "doublet.zmx"), "-T", "-40"]
+    out = subprocess.run(base, capture_output=True, text=True, cwd=root, check=True)
+    assert "thermal: unavailable" in out.stdout
+    out = subprocess.run(base + ["--allow-cte-extrapolation"], capture_output=True,
+                         text=True, cwd=root, check=True)
+    assert "focus shift" in out.stdout and "EXTRAPOLATED" in out.stdout

@@ -261,13 +261,28 @@ with st.sidebar.expander("3 \u2022 More columns & filters"):
         help="Glasses outside a range are removed; glasses with no value are "
              "kept and shown blank, unless 'Require available data' is on.")
     where = {}
+    from glassmatch.database import MAKER_SCALE_COLUMNS as _MAKER_SCALE
     for _c in filter_cols:
+        _maker = None
+        if _c in _MAKER_SCALE:
+            # Each maker's own test and scale: a range only means something
+            # within one maker, so the filter keeps that maker's glasses only.
+            _have = sorted(summary.loc[pd.to_numeric(summary[_c], errors="coerce")
+                                       .notna(), "manufacturer_id"].astype(str)
+                           .unique()) if _c in summary.columns else []
+            if not _have:
+                st.caption(f"No maker gives {_c}; filter ignored.")
+                continue
+            _maker = st.selectbox(f"{_c}: whose scale", _have, key=f"mk_{_c}",
+                                  help="This class is each maker's own test "
+                                       "and scale. The filter keeps only this "
+                                       "maker's glasses inside the range.")
         _a, _b = st.columns(2)
         _lo = _a.number_input(f"min {_c}", value=None, key=f"lo_{_c}",
                               placeholder="no min")
         _hi = _b.number_input(f"max {_c}", value=None, key=f"hi_{_c}",
                               placeholder="no max")
-        where[_c] = (_lo, _hi)
+        where[_c] = (_lo, _hi) + ((_maker,) if _maker else ())
 
 st.sidebar.header("2 \u2022 Weights (%)")
 w_in = {}
@@ -390,7 +405,8 @@ if where:
     _attrs = dict(results.attrs)
     _mask = gm_columns.range_filter(
         col_table.reindex(results["glass_id"]), where,
-        keep_missing=not require_data)
+        keep_missing=not require_data,
+        makers=results["manufacturer_id"].to_numpy())
     n_range_filtered = int((~_mask).sum())
     results = results[_mask.to_numpy()].reset_index(drop=True)
     results.attrs.update(_attrs)
