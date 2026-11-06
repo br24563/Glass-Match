@@ -1,0 +1,10 @@
+{"name": "illustrative Cooke triplet in SK16 / F4 (both now obsolete; not a published design)",
+ "units": "mm",
+ "surfaces": [
+  {"radius": 21.48, "thickness": 2.0, "glass": "SCHOTT-SK16", "semi_diameter": 6.0},
+  {"radius": -124.1, "thickness": 5.26, "glass": null, "semi_diameter": 6.0},
+  {"radius": -19.1, "thickness": 1.0, "glass": "SCHOTT-F4", "semi_diameter": 5.0},
+  {"radius": 22.0, "thickness": 4.86, "glass": null, "semi_diameter": 5.0},
+  {"radius": 328.9, "thickness": 2.25, "glass": "SCHOTT-SK16", "semi_diameter": 6.0},
+  {"radius": -16.7, "thickness": 43.0, "glass": null, "semi_diameter": 6.0}
+ ]}

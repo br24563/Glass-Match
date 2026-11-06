@@ -90,21 +90,35 @@ def render(ctx):
                                                        if g not in obsolete],
                        format_func=lambda g: f"{g} [{status.get(g, '')}]",
                        key="rx_old")
+    modes = {"Keep each replaced element's power (recommended)": "element",
+             "Keep every curvature": "curvatures",
+             "Re-solve one surface for the system EFL": "efl"}
+    mode = modes[st.radio(
+        "How the design adapts", list(modes), key="rx_mode",
+        help="Element power: the replaced element is re-shaped so its own "
+             "focal length is unchanged (both curvatures scaled for an "
+             "element in air, which keeps its shape; the air-side surface "
+             "re-solved for a cemented element), so ray heights on the "
+             "elements after it barely move. EFL re-solve restores the "
+             "system focal length but can move every downstream ray.")]
     c1, c2, c3 = st.columns(3)
     tol_nd = c1.number_input("± n_d window", 0.001, 0.2, 0.03, 0.005, key="rx_nd")
     tol_vd = c2.number_input("± V_d window", 0.5, 30.0, 8.0, 0.5, key="rx_vd")
-    opts = [None] + list(range(len(rx.surfaces)))
-    resolve = c3.selectbox("Re-solve curvature to keep EFL", opts,
-                           format_func=lambda i: "none (keep all curvatures)"
-                           if i is None else f"surface {i + 1}", key="rx_res")
+    resolve = None
+    if mode == "efl":
+        resolve = c3.selectbox("Surface to re-solve",
+                               list(range(len(rx.surfaces))),
+                               format_func=lambda i: f"surface {i + 1}",
+                               key="rx_res")
     base, df = lens.replacement_candidates(
         db, rx, old, tol_nd=tol_nd, tol_vd=tol_vd, resolve_surface=resolve,
         t_c=t_c, mount_cte=mount, max_results=25,
-        allow_cte_extrapolation=allow_x, include_mirrors=ctx.include_mirrors)
+        allow_cte_extrapolation=allow_x, include_mirrors=ctx.include_mirrors,
+        mode=mode)
     if df.empty:
         st.info("No available glass within these windows"
-                + ("" if resolve is not None else
-                   " keeps the EFL within 1 %; try re-solving a surface") + ".")
+                + ("" if mode == "efl" else " keeps the EFL within 1 %")
+                + "; widen the windows or change how the design adapts.")
         return
     st.dataframe(df, width="stretch", hide_index=True, column_config={
         "colour_change_mm": st.column_config.NumberColumn(
@@ -112,6 +126,12 @@ def render(ctx):
             "that line's focus relative to the d-line focus", format="%.5f"),
         "efl_change_pct": st.column_config.NumberColumn("EFL change (%)",
                                                          format="%.4f"),
+        "ray_height_change_pct": st.column_config.NumberColumn(
+            "ray-height change (%)", help="Largest change of the paraxial "
+            "marginal ray height on any surface, as % of the largest height: "
+            "how far the rest of the lens is disturbed", format="%.4f"),
+        "petzval_change": st.column_config.NumberColumn(
+            "Petzval change (1/mm)", format="%.2e"),
         "thermal_shift_change_mm": st.column_config.NumberColumn(
             f"Δ thermal shift at {t_c:g} °C (mm)", format="%.5f")})
     st.caption("Sorted by colour change. All figures are paraxial and "
@@ -120,3 +140,31 @@ def render(ctx):
                "approximated.")
     st.download_button("Download ranking (CSV)", df.to_csv(index=False).encode(),
                        "glass_replacements.csv", "text/csv")
+
+    st.subheader("Write the modified design")
+    pick = st.selectbox("Replacement", df["glass_id"].tolist(), key="rx_pick")
+    new_rx, note = lens.replace_glass(db, rx, old, pick, mode,
+                                      resolve_surface=resolve,
+                                      target_efl=base["efl"])
+    if new_rx is None:
+        st.warning(f"Cannot build the design with {pick}: {note}")
+        return
+    src_fmt = (rx.source or {}).get("fmt")
+    fmts = ([src_fmt] if src_fmt in ("zmx", "seq") else []) + ["json"]
+    out_fmt = st.radio("Format", fmts, horizontal=True, key="rx_fmt",
+                       help="The original .zmx / .seq is rewritten with only "
+                            "the changed surfaces' curvature and glass lines "
+                            "touched; everything else stays as it was.")
+    try:
+        text, ext, enc = lens.export_prescription(db, new_rx, out_fmt)
+    except lens.PrescriptionError as e:
+        st.warning(str(e))
+        return
+    changed = [i + 1 for i, (a_, b_) in enumerate(zip(rx.surfaces, new_rx.surfaces))
+               if a_.material != b_.material or abs(a_.curvature - b_.curvature) > 1e-15]
+    st.caption(f"{old} → {pick}: {note or 'curvatures kept'}. Surfaces changed: "
+               f"{', '.join(map(str, changed))}.")
+    st.download_button(f"Download modified design (.{ext})",
+                       text.encode("utf-16" if enc == "utf-16" else "utf-8"),
+                       f"{rx.name or 'design'}_{pick}.{ext}",
+                       "application/octet-stream", key="rx_dl")

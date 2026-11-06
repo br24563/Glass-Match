@@ -74,6 +74,9 @@ class Prescription:
     object_distance: float = math.inf   # mm before the first surface
     stop: int | None = None
     notes: list = field(default_factory=list)
+    # Where it was read from, so a modified copy can be written back into the
+    # same file with only the changed lines touched (see export_prescription).
+    source: dict | None = None
 
     def glasses(self) -> list:
         return sorted({s.material for s in self.surfaces if s.material})
@@ -207,8 +210,8 @@ def read_zmx(db, text: str) -> Prescription:
     """Zemax OpticStudio sequential .zmx: SURF blocks with TYPE, CURV, DISZ,
     GLAS, DIAM, STOP; UNIT and GCAT at the top. EVENASPH surfaces count
     their r^2 term (PARM 1) in the paraxial curvature."""
-    scale, makers, blocks, cur = 1.0, [], [], None
-    for line in text.splitlines():
+    scale, makers, blocks, cur, gcat_line = 1.0, [], [], None, None
+    for ln, line in enumerate(text.splitlines()):
         tok = line.split()
         if not tok:
             continue
@@ -218,23 +221,24 @@ def read_zmx(db, text: str) -> Prescription:
             if scale is None:
                 raise PrescriptionError(f"unknown .zmx unit {tok[1]!r}")
         elif k == "GCAT":
-            makers = tok[1:]
+            makers, gcat_line = tok[1:], ln
         elif k == "MODE" and len(tok) > 1 and tok[1].upper() != "SEQ":
             raise PrescriptionError("non-sequential .zmx files are not supported")
         elif k == "SURF":
             cur = {"type": "STANDARD", "curv": 0.0, "disz": 0.0, "glas": None,
-                   "diam": None, "stop": False, "parm1": 0.0}
+                   "diam": None, "stop": False, "parm1": 0.0, "surf_line": ln,
+                   "curv_line": None, "glas_line": None}
             blocks.append(cur)
         elif cur is not None:
             if k == "TYPE":
                 cur["type"] = tok[1].upper()
             elif k == "CURV":
-                cur["curv"] = float(tok[1])
+                cur["curv"], cur["curv_line"] = float(tok[1]), ln
             elif k == "DISZ":
                 cur["disz"] = (math.inf if tok[1].upper() == "INFINITY"
                                else float(tok[1]))
             elif k == "GLAS":
-                cur["glas"] = tok[1]
+                cur["glas"], cur["glas_line"] = tok[1], ln
             elif k == "DIAM":
                 cur["diam"] = float(tok[1])
             elif k == "STOP":
@@ -263,8 +267,14 @@ def read_zmx(db, text: str) -> Prescription:
         if b["stop"]:
             stop = i
     od = obj["disz"]
+    source = {"fmt": "zmx", "text": text, "scale": scale, "gcat_line": gcat_line,
+              "makers": makers,
+              "surfaces": [{k: b[k] for k in ("surf_line", "curv_line",
+                                              "glas_line", "parm1", "type")}
+                           | {"curvature": sf.curvature, "material": sf.material}
+                           for b, sf in zip(lens, surfs)]}
     return _checked(Prescription(surfs, "", od * scale if not math.isinf(od)
-                                 else math.inf, stop))
+                                 else math.inf, stop, source=source))
 
 
 _SEQ_UNITS = {"M": 1.0, "C": 10.0, "I": 25.4}
@@ -275,7 +285,8 @@ def read_seq(db, text: str) -> Prescription:
     NAME.MAKER, or a quoted name). Other commands are ignored; a fictitious
     glass ('1.5:60') is refused."""
     scale, curv_mode, surfs, stop, od = 1.0, False, [], None, math.inf
-    for raw in text.splitlines():
+    lines_of = []
+    for ln, raw in enumerate(text.splitlines()):
         line = raw.split("!")[0].strip()
         if not line:
             continue
@@ -305,19 +316,27 @@ def read_seq(db, text: str) -> Prescription:
                                         "to trace")
             mat, label = _material(db, g, ())
             surfs.append(Surface(r, t, mat, None, label))
+            lines_of.append(ln)
             if k == "STO":
                 stop = len(surfs) - 1
         elif k == "SI":
             break
-    return _checked(Prescription(surfs, "", od, stop))
+    source = {"fmt": "seq", "text": text, "scale": scale, "curv_mode": curv_mode,
+              "surfaces": [{"line": ln, "curvature": sf.curvature,
+                            "material": sf.material}
+                           for ln, sf in zip(lines_of, surfs)]}
+    return _checked(Prescription(surfs, "", od, stop, source=source))
 
 
 def read_prescription(db, path=None, text: str | None = None,
                       fmt: str | None = None) -> Prescription:
     """Read a prescription file; the format follows the extension."""
+    encoding = "utf-8"
     if text is None:
         data = Path(path).read_bytes()
-        text = (data.decode("utf-16") if data[:2] in (b"\xff\xfe", b"\xfe\xff")
+        utf16 = data[:2] in (b"\xff\xfe", b"\xfe\xff")
+        encoding = "utf-16" if utf16 else "utf-8"
+        text = (data.decode("utf-16") if utf16
                 else data.decode("utf-8-sig", errors="replace"))
     fmt = (fmt or Path(str(path)).suffix.lstrip(".")).lower()
     reader = {"json": read_json, "csv": read_csv, "zmx": read_zmx,
@@ -326,6 +345,8 @@ def read_prescription(db, path=None, text: str | None = None,
         raise PrescriptionError(f"unknown prescription format {fmt!r} "
                                 "(json, csv, zmx, seq)")
     rx = reader(db, text)
+    if rx.source is not None:
+        rx.source["encoding"] = encoding
     if not rx.name and path is not None:
         rx.name = Path(str(path)).stem
     return rx
@@ -337,6 +358,98 @@ def _checked(rx: Prescription) -> Prescription:
     if rx.surfaces[-1].material is not None:
         raise PrescriptionError("the last surface must be followed by air")
     return rx
+
+
+# ---------------------------------------------------------------------------
+# Writing a modified prescription back
+
+def catalog_name(db, glass_id: str) -> tuple:
+    """(glass name as its maker writes it, maker id)."""
+    row = db.glasses[db.glasses["glass_id"] == glass_id]
+    if row.empty:
+        raise PrescriptionError(f"{glass_id} is not in the database")
+    return str(row["glass_name"].iloc[0]), str(row["manufacturer_id"].iloc[0])
+
+
+def _changed(rx: Prescription):
+    """(index, surface, original entry, curvature changed, glass changed)."""
+    for i, (sf, orig) in enumerate(zip(rx.surfaces, rx.source["surfaces"])):
+        dc = abs(sf.curvature - orig["curvature"]) > 1e-15 * max(1.0, abs(orig["curvature"]))
+        yield i, sf, orig, dc, sf.material != orig["material"]
+
+
+def export_prescription(db, rx: Prescription, fmt: str | None = None) -> tuple:
+    """A modified prescription as file text -> (text, extension, encoding).
+
+    Written back into the file it was read from (.zmx / .seq) by changing
+    only the lines of surfaces whose curvature or glass changed - every
+    other line, setting and comment is left exactly as it was. A glass
+    from a catalog the .zmx does not list is added to its GCAT line. Any
+    prescription can also be written as GlassMatch JSON (fmt="json").
+    """
+    src = rx.source or {}
+    fmt = fmt or src.get("fmt") or "json"
+    if fmt == "json" or src.get("fmt") != fmt:
+        if fmt != "json":
+            raise PrescriptionError(f"can only write {fmt} back into a {fmt} file "
+                                    "it was read from; use JSON")
+        return json.dumps(rx.to_dict(), indent=1), "json", "utf-8"
+    lines = src["text"].splitlines()
+    scale = src["scale"]
+    if fmt == "zmx":
+        need = set()
+        for i, sf, orig, dc, dg in _changed(rx):
+            if dc:
+                ln = orig["curv_line"]
+                if ln is None:
+                    raise PrescriptionError(f"surface {i + 1} has no CURV line")
+                c_file = sf.curvature * scale - (2.0 * orig["parm1"]
+                                                 if orig["type"] == "EVENASPH" else 0.0)
+                tok = lines[ln].split()
+                indent = lines[ln][:len(lines[ln]) - len(lines[ln].lstrip())]
+                lines[ln] = indent + " ".join(["CURV", f"{c_file:.15E}"] + tok[2:])
+            if dg:
+                ln = orig["glas_line"]
+                if ln is None or sf.material is None:
+                    raise PrescriptionError(f"surface {i + 1}: glass cannot be set")
+                name, maker = catalog_name(db, sf.material)
+                need.add(maker)
+                tok = lines[ln].split()
+                indent = lines[ln][:len(lines[ln]) - len(lines[ln].lstrip())]
+                tok[1] = name.replace(" ", "_")
+                nd = db.property_value(sf.material, "refractive_index_nd")
+                vd = db.property_value(sf.material, "abbe_number_vd")
+                if len(tok) > 5 and nd is not None and vd is not None:
+                    tok[4], tok[5] = f"{nd:g}", f"{vd:g}"     # model values
+                lines[ln] = indent + " ".join(tok)
+        have = {m.upper() for m in src.get("makers", [])}
+        extra = [m for m in sorted(need) if m.upper() not in have]
+        if extra:
+            if src.get("gcat_line") is None:
+                raise PrescriptionError("the .zmx has no GCAT line to add "
+                                        f"{', '.join(extra)} to")
+            lines[src["gcat_line"]] = lines[src["gcat_line"]].rstrip() + " " + " ".join(extra)
+    elif fmt == "seq":
+        for i, sf, orig, dc, dg in _changed(rx):
+            if not (dc or dg):
+                continue
+            ln = orig["line"]
+            body, bang, comment = lines[ln].partition("!")
+            tok = body.split()
+            if dc:
+                c = sf.curvature
+                if src["curv_mode"]:
+                    tok[1] = f"{c * scale:.15g}"     # 1/mm -> 1/file unit
+                else:
+                    tok[1] = "0" if c == 0 else f"{1.0 / c / scale:.15g}"
+            if dg:
+                name, maker = catalog_name(db, sf.material)
+                q = "'" if len(tok) > 3 and tok[3].startswith("'") else ""
+                tok[3] = f"{q}{name}_{maker}{q}"
+            lines[ln] = " ".join(tok) + (f" !{comment}" if bang else "")
+    else:
+        raise PrescriptionError(f"unknown format {fmt!r}")
+    return "\n".join(lines) + "\n", fmt, src.get("encoding", "utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -374,14 +487,18 @@ def trace(rx: Prescription, n: list) -> dict:
     """y-nu marginal ray (y = 1 at the first surface) and the infinite-
     conjugate chief quantities: EFL, BFL, and the image distance for the
     prescription's object distance (from the last surface)."""
-    def run(u0):
+    heights = []
+
+    def run(u0, record=False):
         y, nu = 1.0, n[0] * u0
         for i, s in enumerate(rx.surfaces):
+            if record:
+                heights.append(y)
             nu = nu - y * s.curvature * (n[i + 1] - n[i])
             if i < len(rx.surfaces) - 1:
                 y = y + s.thickness * nu / n[i + 1]
         return y, nu / n[-1]
-    y_last, u_last = run(0.0)
+    y_last, u_last = run(0.0, record=True)
     if u_last == 0:
         efl = bfl = math.inf
     else:
@@ -393,7 +510,8 @@ def trace(rx: Prescription, n: list) -> dict:
         img = math.inf if u2 == 0 else -y2 / u2
     petz = sum(s.curvature * (n[i + 1] - n[i]) / (n[i] * n[i + 1])
                for i, s in enumerate(rx.surfaces))
-    return {"efl": efl, "bfl": bfl, "image_distance": img, "petzval_sum": petz}
+    return {"efl": efl, "bfl": bfl, "image_distance": img, "petzval_sum": petz,
+            "ray_heights": heights}
 
 
 def _scaled(db, rx: Prescription, t_c: float, mount_cte: float,
@@ -529,6 +647,117 @@ def thermal_shift(db, rx: Prescription, t_c: float, mount_cte: float = 23.6,
 # ---------------------------------------------------------------------------
 # Glass replacement
 
+REPLACE_MODES = ("element", "curvatures", "efl")
+
+
+def element_power(rx: Prescription, n: list, i: int) -> float:
+    """Paraxial power (1/mm) of the two surfaces that bound the medium after
+    surface i, with the media actually beside them (air, or the cemented
+    neighbour): phi1 + phi2 - (t / n) phi1 phi2."""
+    s1, s2 = rx.surfaces[i], rx.surfaces[i + 1]
+    p1 = s1.curvature * (n[i + 1] - n[i])
+    p2 = s2.curvature * (n[i + 2] - n[i + 1])
+    return p1 + p2 - s1.thickness / n[i + 1] * p1 * p2
+
+
+def _secant(f, x0: float, x1: float, tol: float = 1e-13):
+    e0, e1 = f(x0), f(x1)
+    for _ in range(40):
+        if e1 == e0:
+            return None
+        x0, x1, e0 = x1, x1 - e1 * (x1 - x0) / (e1 - e0), e1
+        e1 = f(x1)
+        if abs(e1) < tol:
+            return x1
+    return None
+
+
+def hold_element_power(db, old_rx: Prescription, new_rx: Prescription, i: int,
+                       line: str = "d") -> tuple:
+    """Re-shape the element in the medium after surface i so its own power
+    (element_power) is what it was with the old glass.
+
+    * Element in air on both sides: both curvatures are scaled by one factor,
+      which keeps its shape (bending) factor (c1 + c2) / (c1 - c2) exactly.
+    * Cemented on one side: the cemented surface is shared with the
+      neighbour, so it stays; the air-side curvature is re-solved.
+    * Cemented on both sides: nothing can change without changing a
+      neighbour - (None, reason).
+    -> (prescription, note) or (None, reason).
+    """
+    wl = LINES_NM[line]
+    n0, why = indices(db, old_rx, wl)
+    n1, why1 = indices(db, new_rx, wl)
+    if n0 is None or n1 is None:
+        return None, why or why1
+    if i + 1 >= len(new_rx.surfaces):
+        return None, "the element has no back surface"
+    target = element_power(old_rx, n0, i)
+    front_cem = i > 0 and new_rx.surfaces[i - 1].material is not None
+    back_cem = new_rx.surfaces[i + 1].material is not None
+    if front_cem and back_cem:
+        return None, (f"element after surface {i + 1} is cemented on both "
+                      "sides; its power cannot be held without changing a "
+                      "neighbour")
+    if not front_cem and not back_cem:
+        c1, c2 = new_rx.surfaces[i].curvature, new_rx.surfaces[i + 1].curvature
+
+        def err(k):
+            r = new_rx.with_curvature(i, c1 * k).with_curvature(i + 1, c2 * k)
+            return element_power(r, n1, i) - target
+        k = _secant(err, 1.0, 1.001)
+        if k is None:
+            return None, "the element's power could not be restored"
+        return (new_rx.with_curvature(i, c1 * k).with_curvature(i + 1, c2 * k),
+                f"element power held (both curvatures x {k:.6f}, shape kept)")
+    j = i + 1 if front_cem else i
+    cj = new_rx.surfaces[j].curvature
+
+    def err(c):
+        return element_power(new_rx.with_curvature(j, c), n1, i) - target
+    c = _secant(err, cj, cj * 1.001 if cj else 1e-4)
+    if c is None:
+        return None, "the element's power could not be restored"
+    return (new_rx.with_curvature(j, c),
+            f"element power held (surface {j + 1} re-solved; cemented side kept)")
+
+
+def replace_glass(db, rx: Prescription, old: str, new: str, mode: str = "element",
+                  media=None, resolve_surface: int | None = None,
+                  target_efl: float | None = None) -> tuple:
+    """rx with glass `old` replaced by `new` -> (prescription, note) or
+    (None, reason).
+
+    mode "element"    - each replaced element keeps its own power
+                        (hold_element_power), so ray heights on the
+                        elements after it barely move;
+         "curvatures" - every curvature kept;
+         "efl"        - curvatures kept, then `resolve_surface` re-solved so
+                        the system EFL is `target_efl`.
+    """
+    if mode not in REPLACE_MODES:
+        raise ValueError(f"mode must be one of {REPLACE_MODES}")
+    out = rx.with_material(old, new, media)
+    notes = []
+    if mode == "element":
+        for i, s in enumerate(rx.surfaces):
+            if s.material == old and (media is None or i in media):
+                r, note = hold_element_power(db, rx, out, i)
+                if r is None:
+                    notes.append(f"curvatures kept: {note}")
+                else:
+                    out = r
+                    notes.append(note)
+    elif mode == "efl":
+        if resolve_surface is None or target_efl is None:
+            raise ValueError("mode 'efl' needs resolve_surface and target_efl")
+        out, why = resolve_efl(db, out, resolve_surface, target_efl)
+        if out is None:
+            return None, why
+        notes.append(f"surface {resolve_surface + 1} re-solved for the EFL")
+    return out, "; ".join(dict.fromkeys(notes))
+
+
 def resolve_efl(db, rx: Prescription, surface: int, target_efl: float,
                 line: str = "d") -> tuple:
     """Re-solve one surface's curvature so the EFL is target_efl again.
@@ -560,16 +789,22 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                            t_c: float | None = None, mount_cte: float = 23.6,
                            max_results: int = 25, efl_tol_pct: float | None = 1.0,
                            allow_cte_extrapolation: bool = False,
-                           include_mirrors: bool = False):
+                           include_mirrors: bool = False, mode: str | None = None):
     """Rank available glasses as a replacement for `old` in the design.
 
-    Curvatures are kept (or one surface is re-solved for the original EFL).
-    Each candidate's figures are compared with the original design's:
-    EFL change, focus change at the primary line, and the change of the
-    chromatic focus spread (each line's focus minus the primary's, worst
-    of short / long / extra line) - the number the list is sorted by. With
-    t_c, the change in thermal focus shift too. First-order screening only.
+    mode (see replace_glass): "element" (default) keeps each replaced
+    element's own power, "curvatures" keeps every curvature, "efl" re-solves
+    `resolve_surface` for the original EFL (implied by resolve_surface).
+    Each candidate is compared with the original design: EFL change, focus
+    change at each line, the change of the chromatic focus spread (each
+    line's focus minus d, worst of F / C / g - the number the list is sorted
+    by), Petzval-sum change, and the largest change of the paraxial marginal
+    ray height on any surface (as % of the largest height) - a proxy for how
+    far the rest of the lens is disturbed. With t_c, the change in thermal
+    focus shift too. First-order screening only.
     """
+    if mode is None:
+        mode = "efl" if resolve_surface is not None else "element"
     import pandas as pd
 
     from glassmatch.importers.agf import AVAILABLE_STATUSES
@@ -598,26 +833,26 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
         p = f["d"]["image_distance"]
         return {k: f[k]["image_distance"] - p for k in f if k != "d"}
     sp0 = spread(base)
+    y0 = base["focus"]["d"]["ray_heights"]
+    ymax = max(abs(v) for v in y0) or 1.0
     from glassmatch.supply import supply_column
     supply = supply_column(cand)
     rows = []
     for r in cand.itertuples(index=False):
-        new = rx.with_material(old, r.glass_id, media)
-        note = ""
-        if resolve_surface is not None:
-            new, why = resolve_efl(db, new, resolve_surface, base["efl"])
-            if new is None:
-                continue
-            note = f"surface {resolve_surface + 1} re-solved"
+        new, note = replace_glass(db, rx, old, r.glass_id, mode, media,
+                                  resolve_surface, base["efl"])
+        if new is None:
+            continue
         a = analyse(db, new, t_c=t_c, mount_cte=mount_cte,
                     allow_cte_extrapolation=allow_cte_extrapolation)
         if a["reason"]:
             continue
         d_efl_pct = (a["efl"] - base["efl"]) / base["efl"] * 100.0
-        if resolve_surface is None and efl_tol_pct is not None \
+        if mode != "efl" and efl_tol_pct is not None \
                 and abs(d_efl_pct) > efl_tol_pct:
             continue
         sp = spread(a)
+        y1 = a["focus"]["d"]["ray_heights"]
         row = {"glass_id": r.glass_id, "supply": supply.get(r.glass_id, ""),
                "manufacturer": r.manufacturer
                if hasattr(r, "manufacturer") else "", "status": r.status,
@@ -625,8 +860,14 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                "colour_change_mm": max(abs(sp[k] - sp0[k]) for k in sp0),
                "efl_change_pct": d_efl_pct,
                "focus_change_mm": a["image_distance"] - base["image_distance"],
+               **{f"focus_change_{k}_mm": (a["focus"][k]["image_distance"]
+                                           - base["focus"][k]["image_distance"])
+                  for k in ("F", "C", "g")},
                "axial_colour_mm": a["axial_colour"],
                "secondary_spectrum_mm": a["secondary_spectrum"],
+               "petzval_change": a["petzval_sum"] - base["petzval_sum"],
+               "ray_height_change_pct": max(abs(p - q) for p, q in zip(y1, y0))
+               / ymax * 100.0,
                "note": note}
         if t_c is not None:
             th, th0 = a.get("thermal", {}), base.get("thermal", {})

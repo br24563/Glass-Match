@@ -202,6 +202,20 @@ forms, not against itself (`tests/test_lens.py`):
 * the same design read from JSON, Zemax .zmx (UTF-16) and CODE V .seq in
   radius and curvature modes gives identical results.
 
+Replacement (`tests/test_lens_replace.py`):
+
+* element-power mode holds the replaced element's own paraxial power to
+  1e-12 (relative); for an element in air its shape factor
+  (c₁ + c₂)/(c₁ − c₂) is unchanged to 1e-12, and for a cemented element the
+  shared surface is untouched; an element cemented on both sides is left
+  as it is and says why;
+* on the illustrative triplet, element mode disturbs the downstream ray
+  heights no more than keeping the curvatures for >90 % of candidates;
+* writing a modified design back into its .zmx (UTF-16) or .seq (radius and
+  curvature modes) changes exactly the glass line, the re-solved curvature
+  line and, for a new catalog, the GCAT line; reading it back gives the
+  same EFL, BFL and colour to 1e-12.
+
 It is a **first-order screen**: no aberrations beyond first order, no
 tolerancing. Replacement rankings say so wherever they are shown.
 

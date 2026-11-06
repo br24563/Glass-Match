@@ -6,6 +6,29 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Added (replacement tool, Phase 3)
+- **Element-power replacement (new default)**: the replaced element keeps
+  its own paraxial power - both curvatures scaled for an element in air
+  (shape kept), the air-side surface re-solved for a cemented element; an
+  element cemented on both sides is left unchanged, with the reason. Modes:
+  `element`, `curvatures`, `efl` (`--mode`, app radio).
+- Candidates also report the Petzval change, the focus change at F, C and
+  g, and the largest change of the paraxial ray height on any surface.
+- **Write the modified design back**: the original .zmx (encoding kept) or
+  .seq with only the changed surfaces' curvature and glass lines rewritten
+  (and a new catalog added to GCAT), or JSON - app download and
+  `glassmatch replace FILE GLASS --use NEW -o OUT`.
+- **CODE V private catalog export** (`glassmatch/export_codev.py`,
+  `glassmatch export-codev`, app button beside the .agf): a PRV block with
+  each glass's index at the t, C, d, e, F, g, h lines (or your own),
+  calculated inside its stated range; glasses that don't cover them are
+  skipped and reported.
+- **`glassmatch audit DIR`**: every obsolete glass in a folder of lens files,
+  with the best candidates for each (ranked one at a time, the others
+  kept), optionally to CSV.
+- `docs/examples/triplet.json`: an illustrative Cooke triplet in SK16 / F4,
+  both now obsolete.
+
 ## [0.8.0] - 2026-11-06 (data version 2026.11.06)
 
 ### Changed - check these when upgrading from 0.7.0

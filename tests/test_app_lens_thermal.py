@@ -22,6 +22,7 @@ def test_lens_tab_ranks_and_resolves(at):
     assert any(m.label == "EFL (d)" and m.value.startswith("99.90")
                for m in at.metric)
     at.selectbox(key="rx_old").set_value("SCHOTT-N-SF5")
+    at.radio(key="rx_mode").set_value("Re-solve one surface for the system EFL").run()
     at.selectbox(key="rx_res").set_value(2).run()
     assert not at.exception
     df = next(d.value for d in at.dataframe if "colour_change_mm" in d.value.columns)
@@ -52,3 +53,13 @@ def test_two_bands_in_app(at):
     # A band with no data never passes as if it had.
     assert df.loc[df["T 9-10 um (%)"].isna(), worst].isna().all()
     at.number_input(key="n_extra_bands").set_value(0).run()
+
+
+def test_lens_tab_writes_modified_design(at):
+    at.selectbox(key="rx_old").set_value("SCHOTT-N-SF5")
+    at.radio(key="rx_mode").set_value(
+        "Keep each replaced element's power (recommended)").run()
+    assert not at.exception
+    assert any(b.label.startswith("Download modified design")
+               for b in at.get("download_button"))
+    assert any("element power held" in c.value for c in at.caption)

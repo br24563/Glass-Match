@@ -333,6 +333,37 @@ def cmd_replace(args) -> int:
             print("no obsolete glass in this design; name one to replace")
             return 0
     from glassmatch.importers.agf import AVAILABLE_STATUSES
+    mode = "efl" if args.resolve_surface else args.mode
+    if args.use:
+        # Write the design with one chosen replacement, nothing else changed.
+        if len(old) != 1:
+            raise SystemExit("--use needs exactly one glass to replace "
+                             "(name it)")
+        try:
+            new_id = lens.resolve_glass(db, args.use, [args.use_maker]
+                                        if args.use_maker else ())
+            base = lens.analyse(db, rx)
+            new_rx, note = lens.replace_glass(
+                db, rx, old[0], new_id, mode,
+                resolve_surface=(args.resolve_surface - 1
+                                 if args.resolve_surface else None),
+                target_efl=base.get("efl"))
+            if new_rx is None:
+                raise SystemExit(f"cannot replace: {note}")
+            text, ext, enc = lens.export_prescription(
+                db, new_rx, "json" if args.output.lower().endswith(".json")
+                else None)
+        except lens.PrescriptionError as e:
+            raise SystemExit(str(e))
+        with open(args.output, "w", encoding=enc, newline="") as f:
+            f.write(text)
+        a = lens.analyse(db, new_rx)
+        print(f"wrote {args.output} ({ext}): {old[0]} -> {new_id}; {note or 'curvatures kept'}")
+        print(f"  EFL {base['efl']:.5f} -> {a['efl']:.5f} mm, F-C "
+              f"{_mm(base['axial_colour'])} -> {_mm(a['axial_colour'])}")
+        print("First-order (paraxial) screening only: verify the new design "
+              "in an optical design program.")
+        return 0
     for g in old:
         try:
             base, df = lens.replacement_candidates(
@@ -344,7 +375,7 @@ def cmd_replace(args) -> int:
                 t_c=args.temperature, mount_cte=args.mount_cte,
                 allow_cte_extrapolation=args.allow_cte_extrapolation,
                 max_results=args.top, efl_tol_pct=args.efl_tol,
-                include_mirrors=args.include_mirrors)
+                include_mirrors=args.include_mirrors, mode=mode)
         except lens.PrescriptionError as e:
             raise SystemExit(str(e))
         print(f"Replacing {g} [{status.get(g, '')}] - design EFL "
@@ -355,12 +386,81 @@ def cmd_replace(args) -> int:
         if args.csv:
             df.to_csv(sys.stdout, index=False, lineterminator="\n")
         else:
-            with pd.option_context("display.width", 200,
-                                   "display.max_columns", 20):
-                print(df.drop(columns=["manufacturer"]).round(5)
-                      .to_string(index=False))
+            show = [c for c in ("glass_id", "status", "nd", "vd",
+                                "colour_change_mm", "efl_change_pct",
+                                "petzval_change", "ray_height_change_pct",
+                                "thermal_shift_change_mm", "supply", "note")
+                    if c in df.columns]
+            with pd.option_context("display.width", 250,
+                                   "display.max_columns", 20,
+                                   "display.max_colwidth", 60):
+                print(df[show].round(5).to_string(index=False))
     print("First-order (paraxial) screening only: verify any replacement in "
           "an optical design program.")
+    return 0
+
+
+def cmd_audit(args) -> int:
+    """Every obsolete glass in a folder of lens files, with candidates."""
+    from pathlib import Path
+
+    from glassmatch import lens
+    db = _db()
+    status = dict(zip(db.glasses["glass_id"], db.glasses["status"]))
+    files = sorted(f for ext in ("zmx", "seq", "json", "csv")
+                   for f in Path(args.directory).rglob(f"*.{ext}"))
+    if not files:
+        raise SystemExit(f"no .zmx / .seq / .json / .csv files in {args.directory}")
+    rows, problems = [], 0
+    for f in files:
+        try:
+            rx = lens.read_prescription(db, f)
+        except (lens.PrescriptionError, ValueError, KeyError, OSError) as e:
+            print(f"{f}: not read - {e}")
+            problems += 1
+            continue
+        obs = [g for g in rx.glasses() if status.get(g) == "obsolete"]
+        print(f"{f}: {len(rx.surfaces)} surfaces, "
+              + (f"obsolete: {', '.join(obs)}" if obs else "no obsolete glass"))
+        for g in obs:
+            try:
+                _, df = lens.replacement_candidates(
+                    db, rx, g, tol_nd=args.tol_nd, tol_vd=args.tol_vd,
+                    max_results=args.top, mode=args.mode)
+            except lens.PrescriptionError as e:
+                print(f"   {g}: {e}")
+                problems += 1
+                continue
+            cands = (", ".join(f"{r.glass_id} ({r.colour_change_mm:.4f} mm)"
+                               for r in df.itertuples()) if not df.empty
+                     else "none within the tolerances")
+            print(f"   {g} -> {cands}")
+            for r in df.itertuples():
+                rows.append({"file": str(f), "obsolete": g,
+                             "candidate": r.glass_id,
+                             "colour_change_mm": r.colour_change_mm,
+                             "efl_change_pct": r.efl_change_pct,
+                             "ray_height_change_pct": r.ray_height_change_pct,
+                             "supply": r.supply})
+    if args.csv:
+        pd.DataFrame(rows).to_csv(args.csv, index=False)
+        print(f"wrote {len(rows)} rows to {args.csv}")
+    print("Each obsolete glass is ranked on its own with the others kept; "
+          "first-order (paraxial) screening only.")
+    return 1 if problems else 0
+
+
+def cmd_export_codev(args) -> int:
+    from glassmatch.export_codev import DEFAULT_WAVELENGTHS_NM, export_codev
+    db = _db()
+    ids = [_resolve(db, g) for g in args.glasses]
+    text, exported, skipped = export_codev(
+        db, ids, args.wavelengths or DEFAULT_WAVELENGTHS_NM)
+    with open(args.output, "w", encoding="utf-8", newline="") as f:
+        f.write(text)
+    print(f"wrote {len(exported)} private glass(es) to {args.output}")
+    for gid, why in skipped:
+        print(f"  skipped {gid}: {why}")
     return 0
 
 
@@ -498,7 +598,32 @@ def build_parser() -> argparse.ArgumentParser:
                    help="include obsolete glasses as candidates")
     p.add_argument("--top", type=int, default=15)
     p.add_argument("--csv", action="store_true")
+    p.add_argument("--mode", choices=("element", "curvatures"), default="element",
+                   help="element (default): each replaced element keeps its "
+                        "own power; curvatures: every curvature kept")
+    p.add_argument("--use", metavar="NEW_GLASS",
+                   help="write the design with this replacement (needs -o)")
+    p.add_argument("--use-maker")
+    p.add_argument("-o", "--output",
+                   help="with --use: the file to write (same format as the "
+                        "input, only changed lines touched; or .json)")
     p.set_defaults(func=cmd_replace)
+    p = sub.add_parser("audit", help="find obsolete glasses in a folder of "
+                       "lens files and rank replacements")
+    p.add_argument("directory")
+    p.add_argument("--mode", choices=("element", "curvatures"), default="element")
+    p.add_argument("--tol-nd", type=float, default=0.03)
+    p.add_argument("--tol-vd", type=float, default=8.0)
+    p.add_argument("--top", type=int, default=3)
+    p.add_argument("--csv", help="write every candidate to this CSV")
+    p.set_defaults(func=cmd_audit)
+    p = sub.add_parser("export-codev", help="write glasses as a CODE V "
+                       "private catalog (.seq)")
+    p.add_argument("glasses", nargs="+")
+    p.add_argument("-o", "--output", required=True)
+    p.add_argument("--wavelengths", type=float, nargs="+",
+                   help="nm (default: t C d e F g h lines)")
+    p.set_defaults(func=cmd_export_codev)
     p = sub.add_parser("export-agf", help="write glasses as a Zemax .agf")
     p.add_argument("glasses", nargs="+")
     p.add_argument("-o", "--output", required=True)

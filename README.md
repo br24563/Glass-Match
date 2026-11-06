@@ -55,7 +55,10 @@ materials, polymers, and moldables.
   maker's own measured dn/dT tables (116,639 values from five makers'
   workbooks), with the method shown and nothing extrapolated
   ([VALIDATION.md §8](docs/VALIDATION.md)).
-- **Lens glass replacement** (first-order screening): load a prescription
+- **Lens glass replacement** (first-order screening; each replaced element
+  keeps its own power by default, the modified design is written back into
+  the original .zmx / .seq, `glassmatch audit` scans a folder of designs for
+  obsolete glasses): load a prescription
   (JSON, CSV, Zemax .zmx, CODE V .seq), get EFL, BFL, axial colour,
   secondary spectrum and thermal focus shift for a mount CTE, and rank
   available glasses to replace an obsolete one - curvatures kept, or one
@@ -182,6 +185,9 @@ glassmatch dndt S-FPL51 1550 --t1 -20 --t2 0 --relative
 glassmatch lens design.zmx -T 60 --mount-cte 23.6   # EFL, BFL, colour, thermal focus
 glassmatch replace design.zmx           # rank replacements for its obsolete glasses
 glassmatch replace design.seq N-SF5 --maker SCHOTT --resolve-surface 3
+glassmatch replace design.zmx N-SF5 --use E-FD5 --use-maker HOYA -o new.zmx
+glassmatch audit designs/ --csv obsolete.csv    # obsolete glasses in a folder
+glassmatch export-codev N-BK7 E-FD5 -o private.seq   # CODE V private catalog
 glassmatch check                        # data matches its manifest
 ```
 

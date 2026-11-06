@@ -437,8 +437,24 @@ def _agf_export(glass_ids: tuple, data_key: str):
     return ex.to_bytes(), len(ex.exported), ex.skipped
 
 
+@st.cache_data(show_spinner=False)
+def _codev_export(glass_ids: tuple, data_key: str):
+    from glassmatch.export_codev import export_codev
+    text, exported, skipped = export_codev(db, glass_ids)
+    return text.encode(), len(exported), skipped
+
+
 def agf_download(glass_ids, key):
-    """Zemax .agf download for a selection, with what was left out."""
+    """Zemax .agf (and CODE V private catalog) download for a selection,
+    with what was left out."""
+    cv, n_cv, _cv_skip = _codev_export(tuple(glass_ids), _data_key())
+    st.download_button(f"Export CODE V private catalog (.seq, {n_cv} glasses)",
+                       cv, "glassmatch_private.seq", "text/plain",
+                       key=f"cv_{key}", disabled=not n_cv,
+                       help="PRV block with each glass's index at the t, C, d, "
+                            "e, F, g and h lines, calculated inside its "
+                            "stated range; glasses that do not cover them all "
+                            "are left out.")
     data, n_out, skipped = _agf_export(tuple(glass_ids), _data_key())
     st.download_button(f"Export Zemax catalog (.agf, {n_out} glasses)",
                        data, "glassmatch_selection.agf",

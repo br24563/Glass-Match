@@ -77,14 +77,29 @@ starting points for a lens-design program, not designs.
 **App:** *Lens Glass Replacement* → upload the prescription (JSON, CSV, Zemax
 .zmx, CODE V .seq). Read the first-order figures (EFL, BFL, axial colour,
 secondary spectrum, thermal focus shift for the mount CTE), pick the glass to
-replace and, if you want, a surface to re-solve so the focal length is kept.
+replace and how the design adapts:
+
+* **Keep each replaced element's power** (default) - the element is
+  re-shaped so its own focal length is unchanged: both curvatures scaled for
+  an element in air (its shape is kept), the air-side surface re-solved for
+  a cemented one. Ray heights on the elements after it barely move.
+* **Keep every curvature.**
+* **Re-solve one surface for the system EFL** - restores the focal length,
+  but every ray after that surface can move.
+
+The table adds the Petzval change and the largest change of the paraxial
+ray height on any surface (how far the rest of the lens is disturbed). Pick a
+candidate and download the modified design: the original .zmx or .seq with
+only the changed surfaces' curvature and glass lines rewritten, or JSON.
 
 **CLI:**
 
 ```text
-glassmatch lens docs/examples/doublet.zmx -T 60 --mount-cte 23.6
-glassmatch replace docs/examples/doublet.zmx               # its obsolete glasses
-glassmatch replace docs/examples/doublet.zmx N-SF5 --maker SCHOTT --resolve-surface 3 -T 60
+glassmatch lens docs/examples/triplet.json -T 60 --mount-cte 23.6
+glassmatch replace docs/examples/triplet.json              # its obsolete glasses
+glassmatch replace docs/examples/doublet.zmx N-SF5 --maker SCHOTT -T 60
+glassmatch replace docs/examples/doublet.zmx N-SF5 --maker SCHOTT --use E-FD5 --use-maker HOYA -o new.zmx
+glassmatch audit path/to/designs --csv obsolete.csv        # every obsolete glass in a folder
 ```
 
 This is paraxial screening: it sees focal length, colour and thermal focus,
@@ -96,6 +111,9 @@ measured over) no thermal shift is given unless you pass
 ## Exporting
 
 CSV and JSON from the *Matching Glasses* tab, a Zemax `.agf` of any selection
-(`glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf`). Every
+(`glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf`), or a
+CODE V private catalog (`glassmatch export-codev N-BK7 E-FD5 -o private.seq`;
+indices at the t, C, d, e, F, g, h lines, calculated inside each glass's
+range). Every
 export records the data version, so a design can cite exactly which numbers
 it used. `glassmatch check` confirms the installed data matches its manifest.
