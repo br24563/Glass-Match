@@ -111,6 +111,15 @@ entry (file name, source_id with the new date, `published`, `accessed`) and
 re-run the merge. HIKARI ships an Excel workbook rather than an `.agf`; it is
 read by `glassmatch/importers/hikari_xlsx.py`.
 
+**Replacing the HOYA mirror.** HOYA's data workbook currently comes from a
+third-party mirror (`HOYA-XLSX-2026-04-01-MIRROR`) because
+hoya-opticalworld.com refused connections when last tried (2026-11-06).
+With HOYA's own file: put it in `data/staging/official/hoya/`, point the HOYA
+entry of `PROPERTY_SOURCES` in `scripts/merge_agf.py` at it (new `sid`
+without `-MIRROR`, HOYA's URL, `published`, `accessed`, and drop the mirror
+`license` note), then run `python scripts/merge_agf.py --all` and
+`python scripts/merge_dndt.py`.
+
 **After any data change**, run `python scripts/validate_against_datasheets.py`
 (refreshes `docs/VALIDATION.md` and its CSV) and commit the regenerated
 `data/normalized/MANIFEST.json` - the merge scripts rebuild it, CI checks it.

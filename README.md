@@ -129,14 +129,22 @@ materials, polymers, and moldables.
 `.venv` and installs dependencies (uses `uv` if available, ~1 s, else pip);
 every run after that just opens the app at `http://localhost:8501`.
 
-**Manual:**
+**Manual** (Windows cmd, PowerShell, macOS or Linux):
 
 ```text
-git clone <repo-url> GlassMatch
+git clone https://github.com/br24563/Glass-Match.git GlassMatch
 cd GlassMatch
-pip install -r requirements.txt
-streamlit run app.py
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
 ```
+
+`python -m ...` runs pip and Streamlit through the Python you just used, so
+it works even when pip's Scripts folder is not on PATH (the usual cause of
+"'streamlit' is not recognized" on Windows). Python 3.10 or newer.
+
+**First time?** [docs/QUICKSTART.md](docs/QUICKSTART.md) walks through the
+common jobs: find a glass, search two bands at once, index at temperature,
+athermal pairs, and replacing an obsolete glass in a lens.
 
 **As a Python package** (library + `glassmatch` command + the bundled
 database; the web app is the `[app]` extra):
@@ -150,8 +158,8 @@ Works offline once installed; no servers, keys, or cloud services.
 The first start parses the CSV database and caches it (and the default
 results of the heavier pages) as Parquet in a per-user cache
 (`%LOCALAPPDATA%\glassmatch\cache`, or `~/.cache/glassmatch`); later starts
-read that. The cache is keyed to the data and package version, so it is
-never stale. `GLASSMATCH_CACHE=0` turns it off.
+read that. The cache is keyed to the data, the package version and the code,
+so it is never stale. `GLASSMATCH_CACHE=0` turns it off.
 
 ### Command line
 

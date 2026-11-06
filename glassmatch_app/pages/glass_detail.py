@@ -32,6 +32,14 @@ def render(ctx):
                f"{'missing' if _t is None else f'{_t:.1f}'}%"
                f" — {trans_basis.get(gid, 'missing')}")
     st.write(f"**Family:** {row['glass_family']} - {row['description']}")
+    from glassmatch.supply import supply_flags
+    _srow = ctx.summary.loc[ctx.summary["glass_id"] == gid]
+    _flags = supply_flags(_srow.iloc[0].to_dict()) if len(_srow) else []
+    for _lv, _txt in _flags:
+        (st.error if _lv == "high" else st.warning)(f"Supply: {_txt}")
+    if len(_srow) and not _flags:
+        st.caption("Supply: no catalog flags (status, production frequency, "
+                   "relative cost, data tier).")
     _axis = str(row.get("optic_axis", "") or "")
     if _axis in ("o", "e"):
         st.info(("Ordinary ray (o-ray): " if _axis == "o" else

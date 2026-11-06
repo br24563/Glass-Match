@@ -71,6 +71,11 @@ def cmd_info(args) -> int:
     row = db.get_glass_row(gid)
     print(f"{gid}  ({row['glass_name']}, {row['manufacturer_id']}, "
           f"status: {row.get('status', 'standard')})")
+    from glassmatch.supply import supply_flags
+    srow = db.summary_frame().set_index("glass_id").loc[gid].to_dict()
+    srow["glass_id"] = gid
+    for level, text in supply_flags(srow):
+        print(f"  supply ({level}): {text}")
     fit = db.sellmeier_for(gid, sellmeier_only=True)
     if fit is not None:
         lo, hi = db.dispersion_range(gid, fit)
@@ -178,6 +183,8 @@ def cmd_search(args) -> int:
     if args.preferred:
         keep = {"preferred"}
     out = out[out["status"].isin(keep)]
+    if not args.include_mirrors:
+        out = out[out["data_tier"] != "unverified_mirror"]
     if args.band:
         out = out.assign(transmission_pct=out["glass_id"].map(trans),
                          **{c: out["glass_id"].map(v) for c, v in per_band.items()})
@@ -336,7 +343,8 @@ def cmd_replace(args) -> int:
                                  if args.resolve_surface else None),
                 t_c=args.temperature, mount_cte=args.mount_cte,
                 allow_cte_extrapolation=args.allow_cte_extrapolation,
-                max_results=args.top, efl_tol_pct=args.efl_tol)
+                max_results=args.top, efl_tol_pct=args.efl_tol,
+                include_mirrors=args.include_mirrors)
         except lens.PrescriptionError as e:
             raise SystemExit(str(e))
         print(f"Replacing {g} [{status.get(g, '')}] - design EFL "
@@ -432,6 +440,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--preferred", action="store_true",
                    help="only the makers' preferred glasses")
     p.add_argument("--include-obsolete", action="store_true")
+    p.add_argument("--include-mirrors", action="store_true",
+                   help="include glasses known only from third-party mirrors "
+                        "of unknown date (hidden by default)")
     p.add_argument("--require-data", action="store_true")
     p.add_argument("--top", type=int, default=20)
     p.add_argument("--columns", help="extra columns, comma-separated "
@@ -480,6 +491,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--allow-cte-extrapolation", action="store_true",
                    help="outside -30/+70 C, extrapolate the catalog CTEs "
                         "linearly (labelled) instead of refusing")
+    p.add_argument("--include-mirrors", action="store_true",
+                   help="also consider glasses known only from third-party "
+                        "mirrors of unknown date")
     p.add_argument("--all-statuses", action="store_true",
                    help="include obsolete glasses as candidates")
     p.add_argument("--top", type=int, default=15)

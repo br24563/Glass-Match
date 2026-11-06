@@ -109,9 +109,12 @@ def render(ctx):
         pv = pairs_df.copy()
         pv["f1_mm"] = pf_f / pv["phi1"]
         pv["f2_mm"] = pf_f / pv["phi2"]
+        pv["crown_supply"] = pv["crown_id"].map(ctx.supply_map).fillna("")
+        pv["flint_supply"] = pv["flint_id"].map(ctx.supply_map).fillna("")
         pv_cols = ["crown", "crown_maker", "flint", "flint_maker", "V1", "V2",
                    "phi1", "phi2", "f1_mm", "f2_mm", "sum_abs_power",
-                   "P1", "P2", "dP", "secondary_spectrum"]
+                   "P1", "P2", "dP", "secondary_spectrum",
+                   "crown_supply", "flint_supply"]
         if pf_key == "athermal":
             pv_cols += ["gamma1", "gamma2", "focal_drift", "thermal_residual"]
         st.dataframe(pv[pv_cols].round(5), width="stretch", hide_index=True)

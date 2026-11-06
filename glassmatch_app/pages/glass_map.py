@@ -26,6 +26,9 @@ def render(ctx):
     gm_view = gtable[gtable["manufacturer"].isin(gm_makers)]
     if not gm_obsolete:
         gm_view = gm_view[gm_view["status"] != "obsolete"]
+    if not ctx.include_mirrors:
+        _tier = ctx.db.data_tiers()
+        gm_view = gm_view[gm_view["glass_id"].map(_tier) != "unverified_mirror"]
     gm_highlight = scoped["glass_id"].head(int(gm_top)).tolist()
     gm_kind = st.radio("View", ["n_d vs V_d (Abbe diagram)",
                                 "P_g,F vs V_d (partial dispersion)"],

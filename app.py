@@ -234,6 +234,12 @@ availability = st.sidebar.multiselect(
          "available on request (SCHOTT inquiry glasses, OHARA special order); "
          "obsolete = no longer produced. HIKARI and the mirror-only makers "
          "publish no preferred class, so they are 'standard' unless obsolete.")
+include_mirrors = st.sidebar.checkbox(
+    "Include unverified mirrors (unknown date)", value=False,
+    help="305 glasses (Corning, LZOS, RPO, the IR and polymer makers, some "
+         "legacy CDGM) come only from a third-party mirror of unknown date: "
+         "they may no longer be made, or made to these numbers. Hidden by "
+         "default; shown with their data tier when included.")
 require_data = st.sidebar.checkbox("Require available data (missing = fail)",
                                    value=False,
                                    help="If off, missing data is flagged, not failed.")
@@ -367,8 +373,21 @@ results = match_glasses(summary, requirements, w_in, transmissions=trans,
                         require_data=require_data, nd_override=nd_override)
 _n_before, _attrs = len(results), dict(results.attrs)
 results = results[results["status"].isin(availability)].reset_index(drop=True)     if availability else results.iloc[0:0]
-results.attrs.update(_attrs)
 n_unavailable = _n_before - len(results)
+_n_before = len(results)
+if not include_mirrors:
+    results = results[results["data_tier"] != "unverified_mirror"].reset_index(drop=True)
+results.attrs.update(_attrs)
+n_mirror_hidden = _n_before - len(results)
+
+
+@st.cache_data(show_spinner=False)
+def _supply_map(_key: str) -> dict:
+    from glassmatch.supply import supply_column
+    return supply_column(summary)
+
+
+supply_map = _supply_map(_data_key())
 n_excluded = int(results.attrs.get("excluded_count", 0))
 excluded_examples = results.attrs.get("excluded_examples", [])
 

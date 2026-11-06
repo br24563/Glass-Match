@@ -30,6 +30,10 @@ def render(ctx):
     where = ctx.where
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    if ctx.n_mirror_hidden:
+        st.caption(f"{ctx.n_mirror_hidden:,} glass(es) from third-party mirrors "
+                   "of unknown date hidden (sidebar: 'Include unverified "
+                   "mirrors').")
     if n_unavailable:
         st.caption(f"{n_unavailable:,} material(s) hidden by the Availability "
                    "filter (obsolete glasses are hidden by default).")
@@ -53,6 +57,7 @@ def render(ctx):
     n_pages = max(1, (len(scoped) + page_size - 1) // page_size)
     page = st.number_input("Page", min_value=1, max_value=n_pages, value=1)
     show = scoped.iloc[(page - 1) * page_size: page * page_size].copy()
+    show["supply"] = show["glass_id"].map(ctx.supply_map).fillna("")
     show["transmission_%"] = show["glass_id"].map(
         lambda g: None if trans.get(g) is None else round(trans[g], 1))
     # Several bands: each band's own figure beside the combined (worst-band)
@@ -80,8 +85,9 @@ def render(ctx):
     else:
         show["class"] = show["material_class"]
     _base = ["glass", "manufacturer", "compatibility", "nd", "vd", "density",
-             "cte", "dn_dt", "transmission_%", *band_cols, "status",
-             "completeness", "missing", "class"]
+             "cte", "dn_dt", "transmission_%", *band_cols, "status", "supply",
+             "completeness", "missing", "class",
+             *(["data_tier"] if ctx.include_mirrors else [])]
     _extra = [c for c in dict.fromkeys(extra_cols + list(where))
               if c not in _base]
     if _extra:
@@ -125,6 +131,7 @@ def render(ctx):
                f"Page {page} of {n_pages}.")
     st.download_button("Export results CSV (in-scope glasses)",
                        scoped.assign(transmission_pct=scoped["glass_id"].map(trans),
+                                     supply=scoped["glass_id"].map(ctx.supply_map),
                                      **{c: scoped["glass_id"].map(v)
                                         for c, v in band_cols.items()},
                                      transmission_basis=scoped["glass_id"].map(trans_basis)

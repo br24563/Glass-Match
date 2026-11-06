@@ -527,6 +527,44 @@ class GlassDatabase:
         from glassmatch import cache as _cache
         return _cache.frame(self.cache_dir(), "summary", self._build_summary)
 
+    def data_tiers(self) -> dict:
+        """glass_id -> where its core data comes from:
+
+        * "manufacturer" - a maker's own current catalog or workbook;
+        * "literature"   - a published measurement (refractiveindex.info);
+        * "unverified_mirror" - only a third-party mirror of unknown date
+          (license 'mirror-vintage-unknown'): the glass may no longer be
+          made, or made to these numbers, so searches hide it by default.
+
+        Judged by the source of the glass's catalog n_d, else of its
+        dispersion fit. A dated mirror of a maker's current file (HOYA's
+        2026-04-01 workbook) is not "unverified".
+        """
+        cached = self.__dict__.get("_data_tiers")
+        if cached is not None:
+            return cached
+        lic = {}
+        if not self.sources.empty:
+            lic = dict(zip(self.sources["source_id"].astype(str),
+                           self.sources["license"].fillna("").astype(str)))
+        src = {}
+        if not self.sellmeier.empty and "source_id" in self.sellmeier.columns:
+            for g, s in zip(self.sellmeier["glass_id"].astype(str),
+                            self.sellmeier["source_id"].astype(str)):
+                src.setdefault(g, s)
+        if not self.properties.empty:
+            nd = self.properties[self.properties["property"] == "refractive_index_nd"]
+            for g, s in zip(nd["glass_id"].astype(str), nd["source_id"].astype(str)):
+                src[g] = s                      # catalog n_d wins
+        out = {}
+        for g, mid in zip(self.glasses["glass_id"].astype(str),
+                          self.glasses["manufacturer_id"].astype(str)):
+            licence = lic.get(src.get(g, ""), "")
+            out[g] = ("unverified_mirror" if licence.startswith("mirror-vintage-unknown")
+                      else "literature" if mid == "RII" else "manufacturer")
+        self.__dict__["_data_tiers"] = out
+        return out
+
     def _build_summary(self) -> pd.DataFrame:
         """One row per glass with every sortable stored property.
 
@@ -545,6 +583,7 @@ class GlassDatabase:
                                  self.manufacturers["name"].astype(str)):
                 names.setdefault(mid, name)
         t_ids = self._transmission_ids()
+        tiers = self.data_tiers()
 
         def text(g, key, default=""):
             v = g.get(key)
@@ -578,6 +617,7 @@ class GlassDatabase:
                 "production_frequency": text(g, "production_frequency"),
                 "has_sellmeier": status == "sellmeier1",
                 "dispersion": status,
+                "data_tier": tiers.get(gid, "manufacturer"),
                 "has_transmission": gid in t_ids,
                 "description": text(g, "description"),
             })

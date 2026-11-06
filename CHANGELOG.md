@@ -6,6 +6,41 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-06 (data version 2026.11.06)
+
+### Changed - check these when upgrading from 0.7.0
+- `athermal_gamma` is replaced by `athermal_gamma_air` (relative dn/dT, the
+  right one for a lens in air) and `athermal_gamma_vacuum`.
+- Searches, the glass map, the explorer and replacement candidates **hide
+  glasses known only from third-party mirrors of unknown date** (305:
+  Corning, LZOS, RPO, the IR and polymer makers, some legacy CDGM). App:
+  *Include unverified mirrors*; CLI: `--include-mirrors`. New `data_tier`
+  column (manufacturer / literature / unverified_mirror).
+- A transmission band value needs >= 2 samples spanning >= 50 % of the band;
+  a reflection-only (Fresnel) estimate is an upper bound, never a value.
+- No thermal focus shift outside -30/+70 °C without
+  `--allow-cte-extrapolation`.
+- Range filters on maker-specific classes need the maker
+  (`--where acid_resistance@OHARA=1:2`).
+- Crystal names now lead with the material (`Si (Li, 100 K)`).
+
+### Added (release and trust)
+- **Supply-risk flags** (`glassmatch/supply.py`): catalog facts that make a
+  glass hard to buy - obsolete, unverified mirror, inquiry / special / melt
+  status, the maker's lowest production frequency (CDGM, HIKARI "D"),
+  relative cost >= 10x the maker's reference glass - as text in the
+  results, Glass Detail, Pair Finder, replacement candidates and
+  `glassmatch info`. Reasons, never a score.
+- [docs/QUICKSTART.md](docs/QUICKSTART.md): five common jobs in the app and on
+  the command line. README install uses the real repository URL and
+  `python -m streamlit` / `python -m pip`, which work without pip's Scripts
+  folder on PATH.
+
+### Not done
+- HOYA's own current workbook: hoya-opticalworld.com refused every
+  connection again on 2026-11-06, so HOYA's 2026-04-01 workbook still comes
+  from the opticalglass mirror (dated, labelled).
+
 ### Fixed (principle audit, VALIDATION.md §10)
 - **Athermal γ for a lens in air now uses relative dn/dT.** It used absolute
   dn/dT, ~2–3e-6/K off. New columns `athermal_gamma_air` (default) and

@@ -559,7 +559,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                            statuses=None, resolve_surface: int | None = None,
                            t_c: float | None = None, mount_cte: float = 23.6,
                            max_results: int = 25, efl_tol_pct: float | None = 1.0,
-                           allow_cte_extrapolation: bool = False):
+                           allow_cte_extrapolation: bool = False,
+                           include_mirrors: bool = False):
     """Rank available glasses as a replacement for `old` in the design.
 
     Curvatures are kept (or one surface is re-solved for the original EFL).
@@ -587,12 +588,18 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
              & s["status"].isin(statuses)
              & ((s["nd"] - nd0).abs() <= tol_nd)
              & ((s["vd"] - vd0).abs() <= tol_vd)]
+    if not include_mirrors and "data_tier" in cand.columns:
+        # A replacement must be buyable: a glass known only from a mirror of
+        # unknown date may no longer exist.
+        cand = cand[cand["data_tier"] != "unverified_mirror"]
 
     def spread(a):
         f = a["focus"]
         p = f["d"]["image_distance"]
         return {k: f[k]["image_distance"] - p for k in f if k != "d"}
     sp0 = spread(base)
+    from glassmatch.supply import supply_column
+    supply = supply_column(cand)
     rows = []
     for r in cand.itertuples(index=False):
         new = rx.with_material(old, r.glass_id, media)
@@ -611,7 +618,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                 and abs(d_efl_pct) > efl_tol_pct:
             continue
         sp = spread(a)
-        row = {"glass_id": r.glass_id, "manufacturer": r.manufacturer
+        row = {"glass_id": r.glass_id, "supply": supply.get(r.glass_id, ""),
+               "manufacturer": r.manufacturer
                if hasattr(r, "manufacturer") else "", "status": r.status,
                "nd": r.nd, "vd": r.vd,
                "colour_change_mm": max(abs(sp[k] - sp0[k]) for k in sp0),

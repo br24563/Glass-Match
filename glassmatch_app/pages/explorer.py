@@ -31,6 +31,8 @@ def render(ctx):
         view = view[view["has_sellmeier"]]
     if hide_obsolete and "status" in view.columns:
         view = view[view["status"] != "obsolete"]
+    if not ctx.include_mirrors and "data_tier" in view.columns:
+        view = view[view["data_tier"] != "unverified_mirror"]
     _derived = [c for c in col_table.columns if c not in view.columns]
     view = view.join(col_table[_derived], on="glass_id")
     st.dataframe(view, width="stretch", hide_index=True)

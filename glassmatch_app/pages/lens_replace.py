@@ -100,7 +100,7 @@ def render(ctx):
     base, df = lens.replacement_candidates(
         db, rx, old, tol_nd=tol_nd, tol_vd=tol_vd, resolve_surface=resolve,
         t_c=t_c, mount_cte=mount, max_results=25,
-        allow_cte_extrapolation=allow_x)
+        allow_cte_extrapolation=allow_x, include_mirrors=ctx.include_mirrors)
     if df.empty:
         st.info("No available glass within these windows"
                 + ("" if resolve is not None else
