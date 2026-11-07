@@ -6,6 +6,8 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-07 (data version 2026.11.06)
+
 ### Added / changed (Phase 5)
 - **Cryogenic index from measured temperature series**: crystals measured
   by one author at several temperatures (Si 10-750 K, Ge 100-550 K, CdTe
