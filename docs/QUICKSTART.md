@@ -65,6 +65,23 @@ The SCHOTT dn/dT model is used inside its stated range (−100 … +140 °C,
 the span. Nothing is extrapolated, and a note appears when the maker's own
 table disagrees with the model.
 
+## 3b. Infrared: dispersion in your band
+
+**App:** sidebar → *Dispersion band* → e.g. *LWIR (8 / 10 / 12 µm)*. The
+*Glass Map* then plots n vs V_band and P_band vs V_band, and the *Pair Finder*
+ranks doublets with that band's V and P. Set the sidebar wavelength band to
+the same band so materials are judged by their transmission there; IR bands
+are listed under *Bands that must have transmission data* by default, so
+glasses with no data (most oxide glasses past 2.5 µm) are removed.
+
+**CLI:**
+
+```text
+glassmatch band --preset LWIR
+glassmatch band --triad 3000 4000 5000
+glassmatch search --band 8:12 --tmin 50 --require-band-data
+```
+
 ## 4. Doublet and athermal glass pairs
 
 **App:** *Pair Finder* → rank by low element powers, low secondary spectrum,

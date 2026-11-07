@@ -6,6 +6,34 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Fixed (IR and UV, Phase 4)
+- **Transmission from tabulated k needs k precise enough to show it**: when
+  the printed precision of k could change the transmission over the chosen
+  thickness by more than 10 %, no value is given (KCl's Querry page, k
+  printed as 0.005, had made a 10 mm KCl blank look opaque at 10 µm).
+- The Al₂O₃ "Querry" page (an oxidised aluminium mirror) is a film, not
+  bulk sapphire.
+
+### Added (IR and UV, Phase 4)
+- **Dispersion for any band** (`glassmatch/band.py`): V and P from a triad,
+  presets Visible / NIR / SWIR / MWIR / LWIR or your own. Sidebar
+  *Dispersion band* switches the glass map and the pair finder to the band;
+  `glassmatch band --preset LWIR`. Thin films, absorption bands and tables
+  too coarse to resolve the band are left out (VALIDATION.md §11).
+- **CDGM HWS chalcogenide fits verified** against CDGM's own tabulated IR
+  indices (11 glasses, within 2e-4), valid 2–14 µm; they were archived for
+  lack of a catalog n_d. CDGM's ν10.6 is reproduced within 0.3–1 %.
+- **Per-band "must have data"**: sidebar *Bands that must have transmission
+  data* (IR bands by default) removes glasses with no value in that band
+  instead of listing them as missing; CLI `--require-band-data`.
+- **33 IR material pages** from refractiveindex.info (CC0): KBr, KCl, NaCl,
+  CsBr, CsI, AgCl, AgBr, diamond (diamond pages only), GaP, InP, As₂S₃
+  glass, MgO, Y₂O₃; `fetch_refractiveindex.py --only` and per-book page
+  filters.
+- Pair finder in band mode: no pairs of two pages of one crystal, no
+  birefringent ray pages, room-temperature measurements by default,
+  transmission filter on by default.
+
 ### Added (replacement tool, Phase 3)
 - **Element-power replacement (new default)**: the replaced element keeps
   its own paraxial power - both curvatures scaled for an element in air

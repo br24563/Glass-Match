@@ -10,32 +10,32 @@
       "sha256": "37c7b5b66694a184795612bf45c1805d8fc9d0ed3da977e72453184c2f31a79b"
     },
     "glasses.csv": {
-      "rows": 2920,
-      "sha256": "33573fbbe565c2124cc1a6e53a96de5fdb747daa743b289e44812a2e98d31957"
+      "rows": 2953,
+      "sha256": "0a13a05ff34217417593393f7a72660eaac71799bfc1d4d5798356fb0486cc10"
     },
     "manufacturers.csv": {
       "rows": 18,
       "sha256": "7d488df8a1ed7f8cffd883df33507d7f02a4f9e62821fea6aa687c732c7cf29d"
     },
     "nonlinear_n2.csv": {
-      "rows": 161,
-      "sha256": "ae3be536a69bcaaf17de67d471d32697c1e47488715665f9e8fdffcfb504b878"
+      "rows": 177,
+      "sha256": "27c70fb7066d0a388a6b7959676067f892e8b28ee48888960710c2bb687593e2"
     },
     "properties.csv": {
-      "rows": 60947,
-      "sha256": "67e47a15e36461b4fd0ad72fb6b72370199e64f49b5e6d832713fb5a31b47564"
+      "rows": 61271,
+      "sha256": "2c722e1966069f7da8a926571a67671e10bf0d3c016a029990342506c6693fb3"
     },
     "sellmeier.csv": {
-      "rows": 2789,
-      "sha256": "f2ab68c176163a5cc62a4a3f73d42ca34c11de1941650e28d9a58c7ea962b7e9"
+      "rows": 2805,
+      "sha256": "3529152516b59feb1f0e4aecd6bece41b5b145f5fdd79424ebdae6c336505f91"
     },
     "sources.csv": {
-      "rows": 315,
-      "sha256": "e527eeeeec37aed00380e2f1449c3af1176e388961febf4334fb9223482791dd"
+      "rows": 363,
+      "sha256": "2b8c74cee2f4d3ae9379315bbc6294d906899412616f271ae020b4dc5315b161"
     },
     "spectral_nk.csv": {
-      "rows": 135347,
-      "sha256": "0ac3c2a95d2046f003b0240bdaed7418f1e5976b13d9b73731baae08dc8724cf"
+      "rows": 143181,
+      "sha256": "39d59965c973d0a7948339aad0083e9be34c343423ef0eabb2938c2ff9329d4f"
     },
     "transmission.csv": {
       "rows": 70377,
@@ -50,12 +50,12 @@
       "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
     }
   },
-  "package_version": "0.7.0",
+  "package_version": "0.8.0",
   "summary": {
     "manufacturers": 18,
-    "materials": 2920,
+    "materials": 2953,
     "obsolete": 1202,
-    "sources": 315,
-    "verified_dispersion_fits": 2759
+    "sources": 363,
+    "verified_dispersion_fits": 2786
   }
 }

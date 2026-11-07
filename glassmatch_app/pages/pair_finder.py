@@ -7,7 +7,12 @@ import streamlit as st
 
 
 def render(ctx):
-    gtable = ctx.gtable
+    gtable = ctx.gtable_disp
+    band = ctx.disp_label
+    if band is not None:
+        st.info(f"Band {band} (sidebar: Dispersion band): V and P below are that "
+                "band's V_band and P_band, calculated. dn/dT is not known at IR "
+                "wavelengths for most materials, so the athermal ranking is off.")
     require_data = ctx.require_data
     results = ctx.results
     sample_thickness_mm = ctx.sample_thickness_mm
@@ -59,12 +64,13 @@ def render(ctx):
         fc1, fc2 = st.columns(2)
         pf_makers = fc1.multiselect("Makers", sorted(gtable["manufacturer"].unique()),
                                     default=sorted(gtable["manufacturer"].unique()),
-                                    key="pf_makers")
+                                    key=f"pf_makers_{band or 'visible'}")
         _classes = sorted(gtable["material_class"].unique())
         pf_classes = fc2.multiselect("Material classes", _classes,
-                                     default=[c for c in _classes
-                                              if c in ("oxide_glass", "moldable")]
-                                     or _classes, key="pf_classes")
+                                     default=([c for c in _classes
+                                               if c in ("oxide_glass", "moldable")]
+                                              or _classes) if band is None
+                                     else _classes, key=f"pf_classes_{band or 'visible'}")
         pf_obsolete = st.checkbox("Include obsolete glasses", value=False,
                                   key="pf_obsolete")
         pf_trans = st.checkbox(
@@ -73,7 +79,8 @@ def render(ctx):
             + (f"{wl_min:g}-{wl_max:g} {wl_unit}" if len(bands) == 1 else
                " and ".join(f"{lo:g}-{hi:g} um" for lo, hi in bands))
             + ", "
-            f"{sample_thickness_mm:g} mm)", value=False, key="pf_trans",
+            f"{sample_thickness_mm:g} mm)", value=band is not None,
+            key=f"pf_trans_{band or 'visible'}",
             help="Glasses with no transmission data are kept unless 'Require "
                  "available data' is on.")
         pf_min_score = st.slider("Minimum compatibility score (sidebar requirements)",
@@ -94,11 +101,42 @@ def render(ctx):
             v = trans.get(g)
             return (not require_data) if v is None else v >= t_min
         pool_t = pool_t[pool_t["glass_id"].map(_t_ok)]
-    pairs_df = gpairs.find_pairs(pool_t, sort_by=pf_key, top=int(pf_top),
+    if band is not None:
+        from glassmatch.band import at_room_temperature, material_keys
+        pf_other_t = st.checkbox(
+            "Include crystal measurements made away from room temperature",
+            value=False, key="pf_other_t",
+            help="Literature pages measured at e.g. 100 K or 450 °C describe the "
+                 "crystal at that temperature, not in a room-temperature lens.")
+        if not pf_other_t:
+            pool_t = pool_t[pool_t["glass"].map(at_room_temperature)]
+        # One ray of a birefringent crystal is not an isotropic lens material.
+        if "optic_axis" in ctx.db.glasses.columns:
+            _ax = ctx.db.glasses.set_index("glass_id")["optic_axis"]
+            pool_t = pool_t[~pool_t["glass_id"].map(_ax).isin(["o", "e"])]
+        st.caption("In band mode the pool also leaves out o-/e-ray pages of "
+                   "birefringent crystals, and by default keeps only materials "
+                   "meeting the sidebar transmission requirement - set the "
+                   "sidebar wavelength band to this band so they are judged "
+                   "where they will be used.")
+        _mat = material_keys(ctx.db)
+    if band is not None and pf_key == "athermal":
+        st.warning("Athermal ranking needs dn/dT at the band, which GlassMatch "
+                   "does not have for most IR materials; choose another ranking.")
+        return
+    pairs_df = gpairs.find_pairs(pool_t, sort_by=pf_key,
+                                 top=int(pf_top) * (5 if band is not None else 1),
                                  min_dv=pf_min_dv,
                                  mount_cte=pf_mount if pf_key == "athermal" else None,
                                  apo_dp_max=pf_apo_dp, apo_min_dv=pf_apo_dv,
                                  medium=pf_medium)
+    if band is not None and len(pairs_df):
+        # Two pages of one crystal (other author, temperature or ray) are not
+        # two materials: such a "pair" is no doublet.
+        _same = pairs_df["crown_id"].map(_mat) == pairs_df["flint_id"].map(_mat)
+        _attrs = dict(pairs_df.attrs)
+        pairs_df = pairs_df[~_same].head(int(pf_top)).reset_index(drop=True)
+        pairs_df.attrs.update(_attrs)
     st.caption(f"{len(pool_t):,} glasses in the pool → "
                f"{pairs_df.attrs.get('n_pairs', 0):,} pairs with V1 − V2 ≥ "
                f"{pf_min_dv:g}; {pairs_df.attrs.get('n_ranked', 0):,} have the data "
@@ -120,8 +158,11 @@ def render(ctx):
         st.dataframe(pv[pv_cols].round(5), width="stretch", hide_index=True)
         st.caption(
             "φ1, φ2 in units of the total power; f1, f2 = element focal "
-            "lengths for the focal length above. P = P_g,F calculated from the "
-            "verified fit; secondary_spectrum ≈ g-F focal shift / f. "
+            "lengths for the focal length above. "
+            + ("P = P_g,F calculated from the verified fit; secondary_spectrum "
+               "≈ g-F focal shift / f. " if band is None else
+               f"V, P = V_band, P_band for {band} (calculated); "
+               "secondary_spectrum ≈ (mid − long) focal shift / f. ")
             + (f"γ in 1e-6/K for a lens in {pf_medium}: "
                + ("relative dn/dT (converted from the absolute d-line "
                   "+20/+40 C value with the Edlén air index)" if pf_medium == "air"

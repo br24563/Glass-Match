@@ -2872,6 +2872,486 @@
       "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/Te/nk/Guo-e.yml",
       "sha256": "6c9e158accb93ba9b9b05ffe60578f4c21a1084a4acbfc4f1b167d5f4f263227",
       "bytes": 3650
+    },
+    {
+      "material": "KBr",
+      "glass_stem": "KBR",
+      "kind": "n2",
+      "page": "VanderLinden",
+      "file": "n2__VanderLinden.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KBr/n2/VanderLinden.yml",
+      "sha256": "97ea0312db5c235d15cc92543c30426c02fe766d17218c5bba8a7d7a1164601a",
+      "bytes": 621
+    },
+    {
+      "material": "KBr",
+      "glass_stem": "KBR",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KBr/n2/Polyanskiy.yml",
+      "sha256": "3e791cb23e105f7e1db5e36cf8ac412bdc9adfc54c3dca8934bfae63eec70240",
+      "bytes": 651
+    },
+    {
+      "material": "KBr",
+      "glass_stem": "KBR",
+      "kind": "n2",
+      "page": "DeSalvo",
+      "file": "n2__DeSalvo.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KBr/n2/DeSalvo.yml",
+      "sha256": "23483fe2841f361a1847db14edff5df810d7e103c3a591190939192a6248844d",
+      "bytes": 678
+    },
+    {
+      "material": "KBr",
+      "glass_stem": "KBR",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KBr/n2/Adair.yml",
+      "sha256": "1ba381dff59ce6891686461c1fac3b18810a5d2f6aebe7975e5044aa878988b7",
+      "bytes": 528
+    },
+    {
+      "material": "KBr",
+      "glass_stem": "KBR",
+      "kind": "nk",
+      "page": "Li",
+      "file": "nk__Li.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KBr/nk/Li.yml",
+      "sha256": "61e75a19ddda705c5393e561ce2d5035bf0a242371d9ea0577c20ba38c136aeb",
+      "bytes": 694
+    },
+    {
+      "material": "KCl",
+      "glass_stem": "KCL",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KCl/n2/Polyanskiy.yml",
+      "sha256": "013a2bb6853b784cb00f419969a4ec34e55d257650f90e943988f974488061c8",
+      "bytes": 627
+    },
+    {
+      "material": "KCl",
+      "glass_stem": "KCL",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KCl/n2/Adair.yml",
+      "sha256": "5d9edac87e3e66eaa75fc8731e5b9918db8f794291e807b60bc984e2d6288f47",
+      "bytes": 551
+    },
+    {
+      "material": "KCl",
+      "glass_stem": "KCL",
+      "kind": "nk",
+      "page": "Li",
+      "file": "nk__Li.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KCl/nk/Li.yml",
+      "sha256": "f7b927f60e17c0bd2bf63447bdee9a0de24de9f077090b47a9cb02660e0ea166",
+      "bytes": 679
+    },
+    {
+      "material": "KCl",
+      "glass_stem": "KCL",
+      "kind": "nk",
+      "page": "Querry",
+      "file": "nk__Querry.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/KCl/nk/Querry.yml",
+      "sha256": "56892005f5fb80e8c928f100779cffc0d63712cfc5819f2802f53cc5bc7d5391",
+      "bytes": 8905
+    },
+    {
+      "material": "NaCl",
+      "glass_stem": "NACL",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/NaCl/n2/Polyanskiy.yml",
+      "sha256": "ac511c6d1be5524eeb4a720dadadd61b44219668cd8aeb5e6d51edf565f115e2",
+      "bytes": 627
+    },
+    {
+      "material": "NaCl",
+      "glass_stem": "NACL",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/NaCl/n2/Adair.yml",
+      "sha256": "d36e8ef653203ab0b00c42c2d4315f0424f3dffc1bfd2d805879e6003198b8da",
+      "bytes": 540
+    },
+    {
+      "material": "NaCl",
+      "glass_stem": "NACL",
+      "kind": "nk",
+      "page": "Li",
+      "file": "nk__Li.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/NaCl/nk/Li.yml",
+      "sha256": "20e0b06e16a1abb3668487635430994c0046cef05cd68ee0878804ac5dceae89",
+      "bytes": 722
+    },
+    {
+      "material": "NaCl",
+      "glass_stem": "NACL",
+      "kind": "nk",
+      "page": "Querry",
+      "file": "nk__Querry.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/NaCl/nk/Querry.yml",
+      "sha256": "4d062a1523a2086d5d66fcdf37e6f8f6beeca4aef731621989cd388bcbdeb623",
+      "bytes": 8905
+    },
+    {
+      "material": "CsBr",
+      "glass_stem": "CSBR",
+      "kind": "nk",
+      "page": "Li",
+      "file": "nk__Li.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsBr/nk/Li.yml",
+      "sha256": "db447c45b51cbfce8596a4d96eb81ed043d26797eecd5b585060ae04e257f967",
+      "bytes": 709
+    },
+    {
+      "material": "CsBr",
+      "glass_stem": "CSBR",
+      "kind": "nk",
+      "page": "Querry",
+      "file": "nk__Querry.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsBr/nk/Querry.yml",
+      "sha256": "725e4d08bf364d5e6758683ced1de4ec4fc38fe8485ee27cc392819071674ef7",
+      "bytes": 8903
+    },
+    {
+      "material": "CsBr",
+      "glass_stem": "CSBR",
+      "kind": "nk",
+      "page": "Rodney",
+      "file": "nk__Rodney.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsBr/nk/Rodney.yml",
+      "sha256": "1c440172dce894081a8ff19ee8d46e47cba08fe9fe44f753617965b02379b13d",
+      "bytes": 562
+    },
+    {
+      "material": "CsI",
+      "glass_stem": "CSI",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsI/n2/Polyanskiy.yml",
+      "sha256": "0894aa011b83180b223c9886c0c9bdc297556a58b1141ca52f9a594dded14569",
+      "bytes": 651
+    },
+    {
+      "material": "CsI",
+      "glass_stem": "CSI",
+      "kind": "nk",
+      "page": "Li",
+      "file": "nk__Li.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsI/nk/Li.yml",
+      "sha256": "45fec27cccc5c80859f9023e4ed04781a464d29e74c2884e28093cf89e2c14e3",
+      "bytes": 724
+    },
+    {
+      "material": "CsI",
+      "glass_stem": "CSI",
+      "kind": "nk",
+      "page": "Querry",
+      "file": "nk__Querry.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsI/nk/Querry.yml",
+      "sha256": "8d2bc2b1bbacb7ac6432e1c37c96f5f68921bb1a63da52361d14fe8afaf670bd",
+      "bytes": 8905
+    },
+    {
+      "material": "CsI",
+      "glass_stem": "CSI",
+      "kind": "nk",
+      "page": "Rodney",
+      "file": "nk__Rodney.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/CsI/nk/Rodney.yml",
+      "sha256": "5b36bae839f3a384ad67dca8351de1b8927cc966d693a50188324fd2d7e8f34a",
+      "bytes": 531
+    },
+    {
+      "material": "AgCl",
+      "glass_stem": "AGCL",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgCl/n2/Polyanskiy.yml",
+      "sha256": "bd57d3204a5e0e0fcfb372176c22ee987026be427575eff743ffb715e29747b8",
+      "bytes": 650
+    },
+    {
+      "material": "AgCl",
+      "glass_stem": "AGCL",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgCl/n2/Adair.yml",
+      "sha256": "79f3e18cd1d35bd4e870c69eae8e29b3070a25681a900a9a63f0e7db8347f9f1",
+      "bytes": 550
+    },
+    {
+      "material": "AgCl",
+      "glass_stem": "AGCL",
+      "kind": "nk",
+      "page": "Tilton",
+      "file": "nk__Tilton.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgCl/nk/Tilton.yml",
+      "sha256": "3b9c22a4891829ab979c404078e672ad3a7fc11f40cff2955f36db2b94e5db9b",
+      "bytes": 581
+    },
+    {
+      "material": "AgBr",
+      "glass_stem": "AGBR",
+      "kind": "n2",
+      "page": "Polyanskiy",
+      "file": "n2__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgBr/n2/Polyanskiy.yml",
+      "sha256": "399cc5c17fcb0a25038407a8e51c8cc0634ef98472095e03d7fad6ccf305beba",
+      "bytes": 651
+    },
+    {
+      "material": "AgBr",
+      "glass_stem": "AGBR",
+      "kind": "nk",
+      "page": "Schr\u00f6ter",
+      "file": "nk__Schroter.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgBr/nk/Schroter.yml",
+      "sha256": "771f0797fa81fe88a1835c4b5cea176d4a7e84c29b4a53ebed2d273691e8bc8f",
+      "bytes": 688
+    },
+    {
+      "material": "AgBr",
+      "glass_stem": "AGBR",
+      "kind": "nk",
+      "page": "Polyanskiy",
+      "file": "nk__Polyanskiy.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/AgBr/nk/Polyanskiy.yml",
+      "sha256": "d2226fe31383eef6b2e6e6a4e6340eb366c6796b8826962f4dd8b7891a48a51e",
+      "bytes": 755
+    },
+    {
+      "material": "C",
+      "glass_stem": "DIAMOND",
+      "kind": "nk",
+      "page": "Phillip",
+      "file": "nk__Phillip.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/C/nk/Phillip.yml",
+      "sha256": "9629e1b3b8a2121675e0e76de89d70db8e9b8759944f3a4b3d7af9096beaa689",
+      "bytes": 7817
+    },
+    {
+      "material": "C",
+      "glass_stem": "DIAMOND",
+      "kind": "nk",
+      "page": "Peter",
+      "file": "nk__Peter.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/C/nk/Peter.yml",
+      "sha256": "89d282d9fc464dd9c25874d59777c515ac1d469b1a7d0fa391a0442c7c347997",
+      "bytes": 652
+    },
+    {
+      "material": "C",
+      "glass_stem": "DIAMOND",
+      "kind": "nk",
+      "page": "Dore",
+      "file": "nk__Dore.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/C/nk/Dore.yml",
+      "sha256": "907fce118620bc132f5073ca425da62127491d030f9565fa7bc4affac32b3cec",
+      "bytes": 7671
+    },
+    {
+      "material": "C",
+      "glass_stem": "DIAMOND",
+      "kind": "nk",
+      "page": "Taylor",
+      "file": "nk__Taylor.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/C/nk/Taylor.yml",
+      "sha256": "e5cb78aaa9b679239f2550ade6f2473b38e9e940e753e30d9f57ecdc2e658946",
+      "bytes": 51602
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Aspnes",
+      "file": "nk__Aspnes.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Aspnes.yml",
+      "sha256": "7450cc12a39db7ad3eed0e7b28eaef2e92a0087f1582cbc6493b05db134193c6",
+      "bytes": 1782
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Khmelevskaia",
+      "file": "nk__Khmelevskaia.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Khmelevskaia.yml",
+      "sha256": "200eaea1975303f774fc8ccb28c2f49086e17bd3b7c17afc6cd6079abe2863c8",
+      "bytes": 38602
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Jellison",
+      "file": "nk__Jellison.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Jellison.yml",
+      "sha256": "744c398970152401084976afcde0cc78baa84fa97ba7b2cd76ecfdeb69f76aa2",
+      "bytes": 5413
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Parsons",
+      "file": "nk__Parsons.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Parsons.yml",
+      "sha256": "a4d59cbcfd2ef6e867e676962a529f6875e2222f82ba008e6b78dc2cddd8c552",
+      "bytes": 818
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Bond",
+      "file": "nk__Bond.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Bond.yml",
+      "sha256": "8b8f5aaaa45d3ff741fe8c2dd44fa8153d91a62817546d067d2e03b10ff7cd2a",
+      "bytes": 845
+    },
+    {
+      "material": "GaP",
+      "glass_stem": "GAP",
+      "kind": "nk",
+      "page": "Adachi",
+      "file": "nk__Adachi.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/GaP/nk/Adachi.yml",
+      "sha256": "3e481bf71abc74eb35eff71a67048d77c84f8e32b16dec33f53870fdea2965e1",
+      "bytes": 8863
+    },
+    {
+      "material": "InP",
+      "glass_stem": "INP",
+      "kind": "n2",
+      "page": "Ensley",
+      "file": "n2__Ensley.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/InP/n2/Ensley.yml",
+      "sha256": "50e4023b7c8d09b27d23a716d519468efad68a412ec74f345e4943ee1bb73bb1",
+      "bytes": 590
+    },
+    {
+      "material": "InP",
+      "glass_stem": "INP",
+      "kind": "nk",
+      "page": "Aspnes",
+      "file": "nk__Aspnes.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/InP/nk/Aspnes.yml",
+      "sha256": "0c74f50c223eaf8d488da74d9292667c926c7566b15cf556e8f0ae11e6505540",
+      "bytes": 1782
+    },
+    {
+      "material": "InP",
+      "glass_stem": "INP",
+      "kind": "nk",
+      "page": "Panah",
+      "file": "nk__Panah.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/InP/nk/Panah.yml",
+      "sha256": "4c8d61b90c4ee144be4caf5c9bca34c94a8fae53a9c356ed241498b6610aaa27",
+      "bytes": 80140
+    },
+    {
+      "material": "InP",
+      "glass_stem": "INP",
+      "kind": "nk",
+      "page": "Pettit",
+      "file": "nk__Pettit.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/InP/nk/Pettit.yml",
+      "sha256": "257c1ee45938b002afd130ea5310eddae28827a237546d1f42fde822a61b01fd",
+      "bytes": 904
+    },
+    {
+      "material": "InP",
+      "glass_stem": "INP",
+      "kind": "nk",
+      "page": "Adachi",
+      "file": "nk__Adachi.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/InP/nk/Adachi.yml",
+      "sha256": "d20b6bf702aae5c29cb7b3f1c47f9624ab02f81a5ba8e9cfb02ebd59da2615df",
+      "bytes": 8863
+    },
+    {
+      "material": "As2S3",
+      "glass_stem": "AS2S3",
+      "kind": "nk",
+      "page": "Rodney",
+      "file": "nk__Rodney.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/As2S3/nk/Rodney.yml",
+      "sha256": "305b9a12a7b3ef46d057a74c457b55e9bd57833415cd2ec707eca244c61055cc",
+      "bytes": 580
+    },
+    {
+      "material": "As2S3",
+      "glass_stem": "AS2S3",
+      "kind": "nk",
+      "page": "Synowicki",
+      "file": "nk__Synowicki.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/As2S3/nk/Synowicki.yml",
+      "sha256": "b85c57b0587addda502aa65d054ac142d733f80c0099a3a8340becb645bbb677",
+      "bytes": 17328
+    },
+    {
+      "material": "MgO",
+      "glass_stem": "MGO",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/MgO/n2/Adair.yml",
+      "sha256": "4d88e1ef4eecb69d05194a5a5e9b04de2333d8c5be1fa3a16551dae744851da6",
+      "bytes": 538
+    },
+    {
+      "material": "MgO",
+      "glass_stem": "MGO",
+      "kind": "nk",
+      "page": "Stephens",
+      "file": "nk__Stephens.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/MgO/nk/Stephens.yml",
+      "sha256": "468127fb84d8f57d235bd6adad078a71b0346d5536a62e36e77b549edd71d8cb",
+      "bytes": 654
+    },
+    {
+      "material": "MgO",
+      "glass_stem": "MGO",
+      "kind": "nk",
+      "page": "Stephens-vis",
+      "file": "nk__Stephens-vis.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/MgO/nk/Stephens-vis.yml",
+      "sha256": "fcd5abf93dee26533870c9020387319ce80768c0185ac97ed5f735d4a7d083d4",
+      "bytes": 646
+    },
+    {
+      "material": "Y2O3",
+      "glass_stem": "Y2O3",
+      "kind": "n2",
+      "page": "Adair",
+      "file": "n2__Adair.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/Y2O3/n2/Adair.yml",
+      "sha256": "2a8de6d4d8ae02990db48726b43e0892741dff782f8041155f962bf84e58a915",
+      "bytes": 528
+    },
+    {
+      "material": "Y2O3",
+      "glass_stem": "Y2O3",
+      "kind": "nk",
+      "page": "Nigara",
+      "file": "nk__Nigara.yml",
+      "url": "https://raw.githubusercontent.com/polyanskiy/refractiveindex.info-database/main/database/data/main/Y2O3/nk/Nigara.yml",
+      "sha256": "150a9cb2aa26b976c6b8e36b5de4f74730c3e7a83a75ea88b048bb151f0e0a22",
+      "bytes": 456
     }
   ],
   "catalog_sha256": "42db48e7361281e863c9d1995081cf87ba945477ecdc6ab4aae090e4cee1ae92"

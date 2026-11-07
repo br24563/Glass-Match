@@ -41,7 +41,8 @@ def test_cli_two_bands(tmp_path):
     assert {"T_0.4-0.7um", "T_9-10um", "transmission_pct"} <= set(df.columns)
     assert (df["transmission_pct"]
             == df[["T_0.4-0.7um", "T_9-10um"]].min(axis=1)).all()
-    assert "RII-BAF2-QUERRY" in set(df["glass_id"])
+    # Every value shown rests on data that resolves the band at 10 mm.
+    assert df["transmission_pct"].notna().all()
 
 
 @pytest.mark.parametrize("band", ["0.7:0.4", "0.4"])

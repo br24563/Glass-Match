@@ -63,3 +63,23 @@ def test_lens_tab_writes_modified_design(at):
     assert any(b.label.startswith("Download modified design")
                for b in at.get("download_button"))
     assert any("element power held" in c.value for c in at.caption)
+
+
+def test_lwir_band_mode():
+    a = AppTest.from_file(APP_PATH, default_timeout=600)
+    a.run()
+    [s for s in a.selectbox if s.label == "Wavelength preset"][0].set_value(
+        "LWIR (8.00-12.00 um)").run()
+    a.selectbox(key="disp_band").set_value("LWIR (8 / 10 / 12 um)").run()
+    assert not a.exception
+    assert any("Glass map - 8/10/12 um" in h.value for h in a.header)
+    assert any("required band" in c.value for c in a.caption)
+    a.radio(key="pf_rank").set_value("Low secondary spectrum").run()
+    assert not a.exception
+    pairs = [d.value for d in a.dataframe if "crown" in d.value.columns]
+    if pairs and len(pairs[0]):
+        p = pairs[0]
+        mat = lambda s: s.str.split(" (", regex=False).str[0]  # noqa: E731
+        assert (mat(p["crown"]) != mat(p["flint"])).all()     # two materials
+        assert not p["crown"].str.contains("-ray").any()
+        assert not p["flint"].str.contains("-ray").any()

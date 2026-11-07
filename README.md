@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,920 materials · 18 source collections · 227 traceable sources** · data
+**2,953 materials · 18 source collections · 363 traceable sources** · data
 version pinned by [`MANIFEST.json`](data/normalized/MANIFEST.json) ·
 [how the data is validated](docs/VALIDATION.md) — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
@@ -50,6 +50,11 @@ materials, polymers, and moldables.
   coefficient, Knoop hardness, specific heat and powder-method chemical
   resistance from each maker's own Excel data workbook, for 1,057 glasses
   (table below).
+- **IR and other bands**: V and P for any wavelength triad (MWIR, LWIR ...),
+  a band glass map and band pair finder (e.g. LWIR achromats), CDGM's
+  chalcogenide fits verified against CDGM's own IR index tables, and bands
+  that must have transmission data so opaque glasses don't clutter an IR
+  search.
 - **Index at any temperature and pressure**: n(λ, T, p), relative or
   absolute, from the SCHOTT dn/dT model inside its stated validity or the
   maker's own measured dn/dT tables (116,639 values from five makers'
@@ -125,7 +130,7 @@ materials, polymers, and moldables.
   crystal fits only where a Zemax formula is the identical expression
   (the others are listed as skipped). Re-importing the file reproduces
   n(λ), n_d, V_d, CTE, TD and every transmission sample exactly; for the
-  whole database that is 2,727 of 2,920 materials.
+  whole database that is 2,746 of 2,953 materials.
 ## Installation
 
 **Easiest (Windows):** double-click `start.bat`. First run creates an isolated
@@ -187,6 +192,8 @@ glassmatch replace design.zmx           # rank replacements for its obsolete gla
 glassmatch replace design.seq N-SF5 --maker SCHOTT --resolve-surface 3
 glassmatch replace design.zmx N-SF5 --use E-FD5 --use-maker HOYA -o new.zmx
 glassmatch audit designs/ --csv obsolete.csv    # obsolete glasses in a folder
+glassmatch band --preset LWIR                   # V and P at 8/10/12 um
+glassmatch search --band 8:12 --tmin 50 --require-band-data
 glassmatch export-codev N-BK7 E-FD5 -o private.seq   # CODE V private catalog
 glassmatch check                        # data matches its manifest
 ```
@@ -357,7 +364,7 @@ add a manufacturer without writing any Python. Release history is in
 | LZOS / Corning | 150 | nzhagen/zemaxglass mirror, vintage unknown (no public catalog found) — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,920** | 2,759 verified dispersion curves · 30 archived non-dispersable · 131 with no curve · 199 CC0 crystal pages · 70k transmission rows · 135k tabulated n/k samples |
+| **Total** | **2,953** | 2,786 verified dispersion curves · 19 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 70k transmission rows · 143k tabulated n/k samples |
 
 1,202 glasses are marked obsolete, from each catalog's own status field (or,
 for HIKARI, absence from the current catalog); the Database explorer hides

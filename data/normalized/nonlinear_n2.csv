@@ -1,4 +1,7 @@
 material,material_name,wavelength_um,n2_m2_per_w,pulse_duration_s,method,comments,source_id
+AgBr,Silver bromide,9.2,6e-19,2e-12,SPA,2 ps. Spatial profile analysis.,RII-AGBR-POLYANSKIY-N2
+AgCl,Silver chloride,1.064,4.8e-19,3e-9,TWM,Polycrystalline AgCl. 3 ns. Three-wave mixing.,RII-AGCL-ADAIR-N2
+AgCl,Silver chloride,9.2,4.8e-19,2e-12,SPA,2 ps. Spatial profile analysis.,RII-AGCL-POLYANSKIY-N2
 Al2O3,Aluminium oxide (sapphire),0.266,5.97e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
 Al2O3,Aluminium oxide (sapphire),0.355,3.75e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
 Al2O3,Aluminium oxide (sapphire),0.532,3.33e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"Extraordinary ray (e). 15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-AL2O3-DESALVO-N2
@@ -30,6 +33,7 @@ CaF2,Calcium fluoride (fluorite),4.5,1.12e-20,100e-15,SRTBC,100 fs. Spectrally r
 CdTe,Cadmium telluride,1.064,-1.34e-18,40e-12,Z-scan,40 ps. Z-scan.,RII-CDTE-SHEIK-BAHAE-N2
 CdTe,Cadmium telluride,1.55,3.27e-17,110e-15,Z-scan,CdTe[100]. 110 fs. Z-scan.,RII-CDTE-TATSUURA-100-N2
 CdTe,Cadmium telluride,1.55,5.23e-17,110e-15,Z-scan,CdTe[111]. 110 fs. Z-scan.,RII-CDTE-TATSUURA-111-N2
+CsI,Caesium iodide,9.2,1.2e-19,2e-12,SPA,2 ps. Spatial profile analysis.,RII-CSI-POLYANSKIY-N2
 GaAs,Gallium arsenide,1.064,3.26e-17,40e-12,Z-scan,40 ps. Z-scan.,RII-GAAS-SHEIK-BAHAE-N2
 GaAs,Gallium arsenide,1.55,2.93e-17,110e-15,Z-scan,GaAs[100]. 110 fs. Z-scan.,RII-GAAS-TATSUURA-N2
 GaAs,Gallium arsenide,2.0,1.4e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-GAAS-ENSLEY-N2
@@ -45,6 +49,14 @@ Ge,Germanium,9.2,4e-17,2e-12,SPA,2 ps. Spatial profile analysis.,RII-GE-POLYANSK
 Ge,Germanium,10.6,2.5e-17,200e-12,FWM,n-Ge. 200 ps. Four-wave mixing.,RII-GE-MATTEO-200PS-N2
 Ge,Germanium,10.6,4e-17,220e-15,Z-scan,n-Ge. 220 fs. Z-scan.,RII-GE-MATTEO-220FS-N2
 Ge,Germanium,10.6,2.83e-17,300e-9,Z-scan,300 ns. Z-scan.,RII-GE-SHEIK-BAHAE-N2
+InP,Indium phosphide,3.9,2.4e-17,100e-15,Z-scan,100 fs. Z-scan.,RII-INP-ENSLEY-N2
+KBr,Potassium bromide,0.532,1.26e-19,22e-12 30e-12,Z-scan,"22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-KBR-DESALVO-N2
+KBr,Potassium bromide,0.804,8.98e-20,47e-15,CPI,47 fs. Common-path interferometry.,RII-KBR-VANDERLINDEN-N2
+KBr,Potassium bromide,1.064,8e-20,3e-9,TWM,3 ns. Three-wave mixing.,RII-KBR-ADAIR-N2
+KBr,Potassium bromide,1.064,7.87e-20,22e-12 30e-12,Z-scan,"22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-KBR-DESALVO-N2
+KBr,Potassium bromide,9.2,4.3e-20,2e-12,SPA,2 ps. Spatial profile analysis.,RII-KBR-POLYANSKIY-N2
+KCl,Potassium chloride,1.064,5.69e-20,3e-9,TWM,BaF2[100]. 3 ns. Three-wave mixing.,RII-KCL-ADAIR-N2
+KCl,Potassium chloride,9.2,3.4e-20,2e-12,SPA,2 ps. Spatial profile analysis.,RII-KCL-POLYANSKIY-N2
 LaF3,Lanthanum fluoride,1.064,3.67e-20,3e-9,TWM,Ordinary ray (o). 3 ns. Three-wave mixing.,RII-LAF3-ADAIR-N2
 LaF3,Lanthanum fluoride,1.064,3.95e-20,125e-12,TRI,Hexagonal LaF3 (tysonite). Ordinary ray (o). 125 ps. Time-resolved interferometry.,RII-LAF3-MILAM-N2
 LiF,Lithium fluoride,0.266,1.18e-20,15e-12 17e-12 22e-12 30e-12,Z-scan,"15 ps @ 266 nm, 17 ps @ 355 nm, 22 ps @ 532 nm, 30 ps @ 1064 nm. Z-scan.",RII-LIF-DESALVO-N2
@@ -69,6 +81,9 @@ MgF2,Magnesium fluoride (magnesite),2.0,1.1e-20,100e-15,Z-scan,100 fs. Z-scan.,R
 MgF2,Magnesium fluoride (magnesite),2.3,6.6e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
 MgF2,Magnesium fluoride (magnesite),3.5,7.4e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
 MgF2,Magnesium fluoride (magnesite),4.5,8.2e-21,100e-15,SRTBC,100 fs. Spectrally resolved two-beam coupling.,RII-MGF2-PATWARDHAN-N2
+MgO,Magnesium oxide (periclase),1.064,3.9e-20,3e-9,TWM,MgO[100]. 3 ns. Three-wave mixing.,RII-MGO-ADAIR-N2
+NaCl,Sodium chloride,1.064,4.35e-20,3e-9,TWM,NaCl[100]. 3 ns. Three-wave mixing.,RII-NACL-ADAIR-N2
+NaCl,Sodium chloride,9.2,3.5e-20,2e-12,SPA,2 ps. Spatial profile analysis.,RII-NACL-POLYANSKIY-N2
 Si,Silicon,1.03,2.71e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
 Si,Silicon,1.16,5.21e-18,200e-15,Z-scan,200 fs. Z-scan.,RII-SI-BRISTOW-N2
 Si,Silicon,1.2,1.23e-18,100e-15,Z-scan,100 fs. Z-scan.,RII-SI-LIN-N2
@@ -125,6 +140,7 @@ SrF2,Strontium fluoride,1.064,1.46e-20,3e-9,TWM,SrF>sub>2[100]. 3 ns. Three-wave
 SrF2,Strontium fluoride,1.064,1.76e-20,125e-12,TRI,125 ps. Time-resolved interferometry.,RII-SRF2-MILAM-N2
 Te,Tellurium,10.6,5.5e-16,220e-15,SB,Extraordinary ray (e). 220 fs. Spectral broadening.,RII-TE-MATTEO-E-N2
 Te,Tellurium,10.6,3e-16,220e-15,SB,Ordinary ray (o). 220 fs. Spectral broadening.,RII-TE-MATTEO-O-N2
+Y2O3,Yttrium oxide (yttria),1.064,1.2e-19,3e-9,TWM,3 ns. Three-wave mixing.,RII-Y2O3-ADAIR-N2
 Y3Al5O12,Yttrium aluminium garnet (YAG),1.03,6.13e-20,210e-15,SPMIPR,210 fs. SPM-induced phase regression.,RII-Y3AL5O12-KABACINSKI-N2
 Y3Al5O12,Yttrium aluminium garnet (YAG),1.064,6.23e-20,3e-9,TWM,3 ns. Three-wave mixing.,RII-Y3AL5O12-ADAIR-N2
 Y3Al5O12,Yttrium aluminium garnet (YAG),1.064,7.3e-20,150e-12,TRI,150 ps. Time-resolved interferometry.,RII-Y3AL5O12-BLISS-N2

@@ -64,8 +64,10 @@ def _groups():
     nk_groups = {
         # k small enough that a 10 mm blank attenuates rather than saturates:
         # the thickness assumption has to show up in the answer.
-        "G-NK": _nkdf([(0.40, 1.76, 0.0), (0.50, 1.77, 0.0), (0.60, 1.78, 1e-6),
-                       (0.70, 1.79, 2e-6)]),
+        # k printed to 1e-12, so its rounding cannot matter (see the
+        # k-resolution rule).
+        "G-NK": _nkdf([(0.40, 1.76, 1.000000000001e-9), (0.50, 1.77, 2.000000000001e-9),
+                       (0.60, 1.78, 1.000000000001e-6), (0.70, 1.79, 2.000000000001e-6)]),
         # tabulated but outside the band, with a verified Sellmeier row waiting:
         # reporting missing proves this branch cannot fall through to Fresnel
         "G-NKOUT": _nkdf([(1.00, 1.70, 1e-6), (1.10, 1.71, 1e-6)], gid="G-NKOUT"),

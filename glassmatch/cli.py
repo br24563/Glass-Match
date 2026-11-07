@@ -177,6 +177,10 @@ def cmd_search(args) -> int:
         if args.tmin is not None:
             req["transmission_min"] = args.tmin
             req["transmission_mode"] = args.mode
+        if args.require_band_data:
+            # No value in a band = removed, not "missing".
+            summary = summary[summary["glass_id"].map(
+                lambda g: trans.get(g) is not None)]
     out = match_glasses(summary, req, DEFAULT_WEIGHTS, transmissions=trans,
                         require_data=args.require_data)
     keep = set(AVAILABLE_STATUSES) | ({"obsolete"} if args.include_obsolete else set())
@@ -450,6 +454,43 @@ def cmd_audit(args) -> int:
     return 1 if problems else 0
 
 
+def cmd_band(args) -> int:
+    """n, V and P for a wavelength band, every material that can give them."""
+    from glassmatch import band
+    db = _db()
+    if args.triad:
+        triad = tuple(args.triad)
+    else:
+        key = next((k for k in band.PRESETS if k.upper().startswith(args.preset.upper())), None)
+        if key is None:
+            raise SystemExit(f"unknown preset {args.preset!r}: "
+                             + ", ".join(band.PRESETS))
+        triad = band.PRESETS[key]
+    try:
+        bt = band.band_table(db, triad)
+    except ValueError as e:
+        raise SystemExit(str(e))
+    s = db.summary_frame().set_index("glass_id")
+    bt = bt.join(s[["glass", "status", "data_tier"]], on="glass_id")
+    if not args.include_mirrors:
+        bt = bt[bt["data_tier"] != "unverified_mirror"]
+    if not args.include_obsolete:
+        bt = bt[bt["status"] != "obsolete"]
+    if not args.all_temperatures:
+        bt = bt[bt["glass"].map(band.at_room_temperature)]
+    bt = bt.sort_values("v_band", ascending=False).head(args.top)
+    print(f"{band.triad_label(triad)}: V = (n_mid - 1)/(n_short - n_long), "
+          "P = (n_mid - n_long)/(n_short - n_long) - calculated")
+    if args.csv:
+        bt.to_csv(args.csv, index=False)
+        print(f"wrote {len(bt)} rows to {args.csv}")
+    else:
+        with pd.option_context("display.width", 200, "display.max_columns", 12):
+            print(bt[["glass_id", "glass", "n_mid", "v_band", "p_band", "n_basis"]]
+                  .round(5).to_string(index=False))
+    return 0
+
+
 def cmd_export_codev(args) -> int:
     from glassmatch.export_codev import DEFAULT_WAVELENGTHS_NM, export_codev
     db = _db()
@@ -532,6 +573,9 @@ def build_parser() -> argparse.ArgumentParser:
                         "then the worst band)")
     p.add_argument("--tmin", type=float,
                    help="min transmission (%%), in every band")
+    p.add_argument("--require-band-data", action="store_true",
+                   help="remove glasses with no transmission value in a "
+                        "band, instead of listing them as missing")
     p.add_argument("--mode", default="Average",
                    choices=["Average", "Minimum", "Entire range"])
     p.add_argument("--thickness", type=float, default=10.0,
@@ -617,6 +661,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--top", type=int, default=3)
     p.add_argument("--csv", help="write every candidate to this CSV")
     p.set_defaults(func=cmd_audit)
+    p = sub.add_parser("band", help="n, V and P in any wavelength band "
+                       "(e.g. LWIR), from verified fits")
+    p.add_argument("--preset", default="LWIR",
+                   help="Visible, NIR, SWIR, MWIR or LWIR (default LWIR)")
+    p.add_argument("--triad", type=float, nargs=3, metavar=("SHORT", "MID", "LONG"),
+                   help="your own wavelengths, nm")
+    p.add_argument("--top", type=int, default=40)
+    p.add_argument("--include-mirrors", action="store_true")
+    p.add_argument("--include-obsolete", action="store_true")
+    p.add_argument("--all-temperatures", action="store_true",
+                   help="include crystal measurements away from room temperature")
+    p.add_argument("--csv")
+    p.set_defaults(func=cmd_band)
     p = sub.add_parser("export-codev", help="write glasses as a CODE V "
                        "private catalog (.seq)")
     p.add_argument("glasses", nargs="+")

@@ -1870,6 +1870,9 @@ OHARA-TIM11,OHARA,TIM11,TIM11,Optical glass,Imported from OHARA-AGF-2026-05-29. 
 OHARA-TPH55,OHARA,TPH55,TPH55,Optical glass,Imported from OHARA-AGF-2026-05-29. GC: discontinued,oxide_glass,obsolete,,
 OHARA-YGH51,OHARA,YGH51,YGH51,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0089 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete,,
 OHARA-YGH52,OHARA,YGH52,YGH52,Optical glass,"Imported from OHARA-AGF-2026-05-29. GC: discontinued ED dPgF 0 not stored: the fit gives dPgF -0.0092 on the catalog's own normal line, so the 0 reads as 'not given'.",oxide_glass,obsolete,,
+RII-AGBR-POLYANSKIY,RII,AgBr (Polyanskiy),Polyanskiy,Silver bromide,Silver bromide (AgBr). refractiveindex.info page 'Polyanskiy'.,crystal,standard,,
+RII-AGBR-SCHROTER,RII,AgBr (Schroter),Schroter,Silver bromide,Silver bromide (AgBr). refractiveindex.info page 'Schroter'.,crystal,standard,,
+RII-AGCL-TILTON,RII,AgCl (Tilton),Tilton,Silver chloride,Silver chloride (AgCl). refractiveindex.info page 'Tilton'.,crystal,standard,,
 RII-AL2O3-BOIDIN,RII,"Al2O3 (Boidin, thin film)",Boidin,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Boidin'.,crystal,standard,,
 RII-AL2O3-FRANTA,RII,"Al2O3 (Franta, thin film)",Franta,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Franta'.,crystal,standard,,
 RII-AL2O3-HAGEMANN,RII,Al2O3 (Hagemann),Hagemann,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Hagemann'.,crystal,standard,,
@@ -1877,11 +1880,13 @@ RII-AL2O3-KISCHKAT,RII,"Al2O3 (Kischkat, thin film)",Kischkat,Aluminium oxide (s
 RII-AL2O3-MALITSON,RII,Al2O3 (Malitson),Malitson,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Malitson'.,crystal,standard,,
 RII-AL2O3-MALITSON-E,RII,"Al2O3 (Malitson, e-ray)",Malitson-e,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Malitson-e'.,crystal,standard,,e
 RII-AL2O3-MALITSON-O,RII,"Al2O3 (Malitson, o-ray)",Malitson-o,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Malitson-o'.,crystal,standard,,o
-RII-AL2O3-QUERRY,RII,Al2O3 (Querry),Querry,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Querry'.,crystal,standard,,
+RII-AL2O3-QUERRY,RII,"Al2O3 (Querry, thin film)",Querry,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Querry'.,crystal,standard,,
 RII-AL2O3-QUERRY-E,RII,"Al2O3 (Querry, e-ray)",Querry-e,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Querry-e'.,crystal,standard,,e
 RII-AL2O3-QUERRY-O,RII,"Al2O3 (Querry, o-ray)",Querry-o,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Querry-o'.,crystal,standard,,o
 RII-AL2O3-RODRIGUEZDEMARCOS,RII,"Al2O3 (Rodriguez de Marcos, thin film)",Rodriguez de Marcos,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Rodriguez de Marcos'.,crystal,standard,,
 RII-AL2O3-ZHUKOVSKY,RII,"Al2O3 (Zhukovsky, thin film)",Zhukovsky,Aluminium oxide (sapphire),Aluminium oxide (sapphire) (Al2O3). refractiveindex.info page 'Zhukovsky'.,crystal,standard,,
+RII-AS2S3-RODNEY,RII,As2S3 (Rodney),Rodney,Arsenic trisulfide glass,Arsenic trisulfide glass (As2S3). refractiveindex.info page 'Rodney'.,chalcogenide,standard,,
+RII-AS2S3-SYNOWICKI,RII,As2S3 (Synowicki),Synowicki,Arsenic trisulfide glass,Arsenic trisulfide glass (As2S3). refractiveindex.info page 'Synowicki'.,chalcogenide,standard,,
 RII-BAF2-BOSOMWORTH-200K,RII,"BaF2 (Bosomworth, 200 K)",Bosomworth-200K,Barium fluoride,Barium fluoride (BaF2). refractiveindex.info page 'Bosomworth-200K'.,crystal,standard,,
 RII-BAF2-BOSOMWORTH-300K,RII,"BaF2 (Bosomworth, 300 K)",Bosomworth-300K,Barium fluoride,Barium fluoride (BaF2). refractiveindex.info page 'Bosomworth-300K'.,crystal,standard,,
 RII-BAF2-BOSOMWORTH-5K,RII,"BaF2 (Bosomworth, 5 K)",Bosomworth-5K,Barium fluoride,Barium fluoride (BaF2). refractiveindex.info page 'Bosomworth-5K'.,crystal,standard,,
@@ -1911,6 +1916,16 @@ RII-CDTE-DEBELL-300K,RII,"CdTe (DeBell, 300 K)",DeBell-300K,Cadmium telluride,Ca
 RII-CDTE-DEBELL-80K,RII,"CdTe (DeBell, 80 K)",DeBell-80K,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'DeBell-80K'.,crystal,standard,,
 RII-CDTE-MARPLE,RII,CdTe (Marple),Marple,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'Marple'.,crystal,standard,,
 RII-CDTE-TREHARNE,RII,"CdTe (Treharne, thin film)",Treharne,Cadmium telluride,Cadmium telluride (CdTe). refractiveindex.info page 'Treharne'.,crystal,standard,,
+RII-CSBR-LI,RII,CsBr (Li),Li,Caesium bromide,Caesium bromide (CsBr). refractiveindex.info page 'Li'.,crystal,standard,,
+RII-CSBR-QUERRY,RII,CsBr (Querry),Querry,Caesium bromide,Caesium bromide (CsBr). refractiveindex.info page 'Querry'.,crystal,standard,,
+RII-CSBR-RODNEY,RII,CsBr (Rodney),Rodney,Caesium bromide,Caesium bromide (CsBr). refractiveindex.info page 'Rodney'.,crystal,standard,,
+RII-CSI-LI,RII,CsI (Li),Li,Caesium iodide,Caesium iodide (CsI). refractiveindex.info page 'Li'.,crystal,standard,,
+RII-CSI-QUERRY,RII,CsI (Querry),Querry,Caesium iodide,Caesium iodide (CsI). refractiveindex.info page 'Querry'.,crystal,standard,,
+RII-CSI-RODNEY,RII,CsI (Rodney),Rodney,Caesium iodide,Caesium iodide (CsI). refractiveindex.info page 'Rodney'.,crystal,standard,,
+RII-DIAMOND-DORE,RII,Diamond (Dore),Dore,Diamond,Diamond (C). refractiveindex.info page 'Dore'.,crystal,standard,,
+RII-DIAMOND-PETER,RII,Diamond (Peter),Peter,Diamond,Diamond (C). refractiveindex.info page 'Peter'.,crystal,standard,,
+RII-DIAMOND-PHILLIP,RII,Diamond (Phillip),Phillip,Diamond,Diamond (C). refractiveindex.info page 'Phillip'.,crystal,standard,,
+RII-DIAMOND-TAYLOR,RII,Diamond (Taylor),Taylor,Diamond,Diamond (C). refractiveindex.info page 'Taylor'.,crystal,standard,,
 RII-GAAS-ADACHI,RII,GaAs (Adachi),Adachi,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Adachi'.,crystal,standard,,
 RII-GAAS-ASPNES,RII,GaAs (Aspnes),Aspnes,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Aspnes'.,crystal,standard,,
 RII-GAAS-FRANTA-300K,RII,"GaAs (Franta, 300 K)",Franta-300K,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Franta-300K'.,crystal,standard,,
@@ -1924,6 +1939,12 @@ RII-GAAS-PAPATRYFONOS,RII,GaAs (Papatryfonos),Papatryfonos,Gallium arsenide,Gall
 RII-GAAS-PERNER,RII,GaAs (Perner),Perner,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Perner'.,crystal,standard,,
 RII-GAAS-RAKIC,RII,GaAs (Rakic),Rakic,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Rakic'.,crystal,standard,,
 RII-GAAS-SKAULI,RII,GaAs (Skauli),Skauli,Gallium arsenide,Gallium arsenide (GaAs). refractiveindex.info page 'Skauli'.,crystal,standard,,
+RII-GAP-ADACHI,RII,GaP (Adachi),Adachi,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Adachi'.,crystal,standard,,
+RII-GAP-ASPNES,RII,GaP (Aspnes),Aspnes,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Aspnes'.,crystal,standard,,
+RII-GAP-BOND,RII,GaP (Bond),Bond,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Bond'.,crystal,standard,,
+RII-GAP-JELLISON,RII,GaP (Jellison),Jellison,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Jellison'.,crystal,standard,,
+RII-GAP-KHMELEVSKAIA,RII,GaP (Khmelevskaia),Khmelevskaia,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Khmelevskaia'.,crystal,standard,,
+RII-GAP-PARSONS,RII,GaP (Parsons),Parsons,Gallium phosphide,Gallium phosphide (GaP). refractiveindex.info page 'Parsons'.,crystal,standard,,
 RII-GE-AMOTCHKINA,RII,Ge (Amotchkina),Amotchkina,Germanium,Germanium (Ge). refractiveindex.info page 'Amotchkina'.,crystal,standard,,
 RII-GE-AMOTCHKINA-FILM,RII,"Ge (Amotchkina, thin film)",Amotchkina-film,Germanium,Germanium (Ge). refractiveindex.info page 'Amotchkina-film'.,crystal,standard,,
 RII-GE-ASPNES,RII,Ge (Aspnes),Aspnes,Germanium,Germanium (Ge). refractiveindex.info page 'Aspnes'.,crystal,standard,,
@@ -1943,6 +1964,13 @@ RII-GE-LI-450K,RII,"Ge (Li, 450 K)",Li-450K,Germanium,Germanium (Ge). refractive
 RII-GE-LI-500K,RII,"Ge (Li, 500 K)",Li-500K,Germanium,Germanium (Ge). refractiveindex.info page 'Li-500K'.,crystal,standard,,
 RII-GE-LI-550K,RII,"Ge (Li, 550 K)",Li-550K,Germanium,Germanium (Ge). refractiveindex.info page 'Li-550K'.,crystal,standard,,
 RII-GE-NUNLEY,RII,Ge (Nunley),Nunley,Germanium,Germanium (Ge). refractiveindex.info page 'Nunley'.,crystal,standard,,
+RII-INP-ADACHI,RII,InP (Adachi),Adachi,Indium phosphide,Indium phosphide (InP). refractiveindex.info page 'Adachi'.,crystal,standard,,
+RII-INP-ASPNES,RII,InP (Aspnes),Aspnes,Indium phosphide,Indium phosphide (InP). refractiveindex.info page 'Aspnes'.,crystal,standard,,
+RII-INP-PANAH,RII,InP (Panah),Panah,Indium phosphide,Indium phosphide (InP). refractiveindex.info page 'Panah'.,crystal,standard,,
+RII-INP-PETTIT,RII,InP (Pettit),Pettit,Indium phosphide,Indium phosphide (InP). refractiveindex.info page 'Pettit'.,crystal,standard,,
+RII-KBR-LI,RII,KBr (Li),Li,Potassium bromide,Potassium bromide (KBr). refractiveindex.info page 'Li'.,crystal,standard,,
+RII-KCL-LI,RII,KCl (Li),Li,Potassium chloride,Potassium chloride (KCl). refractiveindex.info page 'Li'.,crystal,standard,,
+RII-KCL-QUERRY,RII,KCl (Querry),Querry,Potassium chloride,Potassium chloride (KCl). refractiveindex.info page 'Querry'.,crystal,standard,,
 RII-LAF3-AMOTCHKINA,RII,"LaF3 (Amotchkina, thin film)",Amotchkina,Lanthanum fluoride,Lanthanum fluoride (LaF3). refractiveindex.info page 'Amotchkina'.,crystal,standard,,
 RII-LAF3-LAIHOA-E,RII,"LaF3 (Laihoa, e-ray)",Laihoa-e,Lanthanum fluoride,Lanthanum fluoride (LaF3). refractiveindex.info page 'Laihoa-e'.,crystal,standard,,e
 RII-LAF3-LAIHOA-O,RII,"LaF3 (Laihoa, o-ray)",Laihoa-o,Lanthanum fluoride,Lanthanum fluoride (LaF3). refractiveindex.info page 'Laihoa-o'.,crystal,standard,,o
@@ -1962,6 +1990,10 @@ RII-MGF2-ZHENG-E-368C,RII,"MgF2 (Zheng, e-ray, 368 °C)",Zheng-e-368C,Magnesium 
 RII-MGF2-ZHENG-O-186C,RII,"MgF2 (Zheng, o-ray, 186 °C)",Zheng-o-186C,Magnesium fluoride (magnesite),Magnesium fluoride (magnesite) (MgF2). refractiveindex.info page 'Zheng-o-186C'.,crystal,standard,,o
 RII-MGF2-ZHENG-O-21C,RII,"MgF2 (Zheng, o-ray, 21 °C)",Zheng-o-21C,Magnesium fluoride (magnesite),Magnesium fluoride (magnesite) (MgF2). refractiveindex.info page 'Zheng-o-21C'.,crystal,standard,,o
 RII-MGF2-ZHENG-O-368C,RII,"MgF2 (Zheng, o-ray, 368 °C)",Zheng-o-368C,Magnesium fluoride (magnesite),Magnesium fluoride (magnesite) (MgF2). refractiveindex.info page 'Zheng-o-368C'.,crystal,standard,,o
+RII-MGO-STEPHENS,RII,MgO (Stephens),Stephens,Magnesium oxide (periclase),Magnesium oxide (periclase) (MgO). refractiveindex.info page 'Stephens'.,crystal,standard,,
+RII-MGO-STEPHENS-VIS,RII,MgO (Stephens-vis),Stephens-vis,Magnesium oxide (periclase),Magnesium oxide (periclase) (MgO). refractiveindex.info page 'Stephens-vis'.,crystal,standard,,
+RII-NACL-LI,RII,NaCl (Li),Li,Sodium chloride,Sodium chloride (NaCl). refractiveindex.info page 'Li'.,crystal,standard,,
+RII-NACL-QUERRY,RII,NaCl (Querry),Querry,Sodium chloride,Sodium chloride (NaCl). refractiveindex.info page 'Querry'.,crystal,standard,,
 RII-SI-ASPNES,RII,Si (Aspnes),Aspnes,Silicon,Silicon (Si). refractiveindex.info page 'Aspnes'.,crystal,standard,,
 RII-SI-CHANDLER-HOROWITZ,RII,Si (Chandler-Horowitz),Chandler-Horowitz,Silicon,Silicon (Si). refractiveindex.info page 'Chandler-Horowitz'.,crystal,standard,,
 RII-SI-DAUB,RII,Si (Daub),Daub,Silicon,Silicon (Si). refractiveindex.info page 'Daub'.,crystal,standard,,
@@ -2055,6 +2087,7 @@ RII-TE-GUO-E,RII,"Te (Guo, e-ray)",Guo-e,Tellurium,Tellurium (Te). refractiveind
 RII-TE-GUO-O,RII,"Te (Guo, o-ray)",Guo-o,Tellurium,Tellurium (Te). refractiveindex.info page 'Guo-o'.,crystal,standard,,o
 RII-TE-SHERMAN-E,RII,"Te (Sherman, e-ray)",Sherman-e,Tellurium,Tellurium (Te). refractiveindex.info page 'Sherman-e'.,crystal,standard,,e
 RII-TE-SHERMAN-O,RII,"Te (Sherman, o-ray)",Sherman-o,Tellurium,Tellurium (Te). refractiveindex.info page 'Sherman-o'.,crystal,standard,,o
+RII-Y2O3-NIGARA,RII,Y2O3 (Nigara),Nigara,Yttrium oxide (yttria),Yttrium oxide (yttria) (Y2O3). refractiveindex.info page 'Nigara'.,crystal,standard,,
 RII-Y3AL5O12-BOND,RII,Y3Al5O12 (Bond),Bond,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Bond'.,crystal,standard,,
 RII-Y3AL5O12-FRANTA,RII,Y3Al5O12 (Franta),Franta,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Franta'.,crystal,standard,,
 RII-Y3AL5O12-HRABOVSKY,RII,Y3Al5O12 (Hrabovsky),Hrabovsky,Yttrium aluminium garnet (YAG),Yttrium aluminium garnet (YAG) (Y3Al5O12). refractiveindex.info page 'Hrabovsky'.,crystal,standard,,

@@ -175,7 +175,7 @@ def test_band_stats_nk_refuses_thin_film_measurements():
 def test_band_stats_nk_drops_film_rows_from_a_mixed_page():
     mixed = pd.DataFrame({
         "wavelength_um": [1.0, 2.0, 1.5, 4.0], "n": [1.46, 1.44, 1.42, 1.41],
-        "k": [1.23, 0.4, 0.0, 0.0],
+        "k": [1.23, 0.4, 1.000000000001e-9, 2.000000000001e-9],
         "measurement_form": ["film", "film", "bulk", "bulk"]})
     r = band_stats_nk(mixed, 1.0, 4.0, "Average", 10.0)
     assert r["value_pct"] is not None
@@ -417,3 +417,19 @@ def test_crystal_names_in_database():
     oe = r[r["glass_id"].str.contains(r"-[OE](?:-|$)", regex=True)]
     assert len(oe) >= 20 and (oe["optic_axis"] != "").all()
     assert (g.loc[g["manufacturer_id"] != "RII", "optic_axis"] == "").all()
+
+
+def test_coarse_k_cannot_claim_thick_transmission():
+    """KCl's Querry page prints k = 0.005 at 10 um (three decimals): its
+    rounding alone spans clear to opaque over 10 mm, so no value is given."""
+    import pandas as pd
+    from glassmatch.spectra import band_stats_nk
+    df = pd.DataFrame({"wavelength_um": [8.0, 9.0, 10.0, 11.0, 12.0],
+                       "n": [1.464, 1.462, 1.458, 1.453, 1.447],
+                       "k": [0.005, 0.005, 0.005, 0.004, 0.006],
+                       "measurement_form": ["bulk"] * 5})
+    r = band_stats_nk(df, 8.0, 12.0, "Average", 10.0)
+    assert r["value_pct"] is None and r["reason"] == "k-unresolved"
+    assert "cannot resolve" in r["label"]
+    # The same table over 1 um of path is resolved.
+    assert band_stats_nk(df, 8.0, 12.0, "Average", 0.001)["value_pct"] is not None

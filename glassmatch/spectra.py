@@ -332,6 +332,36 @@ def transmission_from_nk(n: float, k: float, wl_um: float,
     return max(0.0, min(100.0, (1.0 - R) ** 2 * absorb * 100.0))
 
 
+# How much the printed precision of a tabulated k may change the computed
+# transmission. KCl's Querry page prints k = 0.005 at 10 um (three
+# decimals): that is a reflectance measurement's floor, and half a step of
+# 0.001 already means ~6 /cm of absorption - the difference between clear and
+# opaque over 10 mm. A table that cannot resolve the absorption over the
+# chosen thickness gives no transmission value.
+K_RESOLUTION_MAX_EFFECT = 0.10
+
+
+def _k_unresolved(kvals, wl_um: float, thickness_mm: float) -> str | None:
+    """Why a table's k precision cannot resolve absorption over thickness_mm
+    at wavelength wl_um (the band's shortest), or None."""
+    import math
+    vals = [float(v) for v in kvals if v == v]
+    if not vals:
+        return None
+    step = 1e-12
+    for d in range(0, 13):
+        if all(abs(round(v, d) - v) < 1e-15 for v in vals):
+            step = 10.0 ** -d
+            break
+    alpha = 4.0 * math.pi * (0.5 * step) / (wl_um * 1e-6)        # 1/m
+    effect = 1.0 - math.exp(-alpha * thickness_mm * 1e-3)
+    if effect > K_RESOLUTION_MAX_EFFECT:
+        return (f"k is printed to {step:g}, so its rounding alone could change "
+                f"the transmission of {thickness_mm:g} mm by up to "
+                f"{effect:.0%} - the table cannot resolve the absorption")
+    return None
+
+
 def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                   thickness_mm: float = 10.0,
                   min_coverage: float = 0.90) -> dict | None:
@@ -386,6 +416,11 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "coverage": 0.0, "label": "n/k present but not computable"}
     span = hi_um - lo_um
     coverage = float((wl_b.max() - wl_b.min()) / span) if span > 0 else 0.0
+    why_k = _k_unresolved(kv[in_band][have_k], float(wl_b.min()), thickness_mm)
+    if why_k:
+        return {"value_pct": None, "reason": "k-unresolved",
+                "n_points": int(t.size), "coverage": coverage,
+                "label": f"tabulated n/k: {why_k}"}
     if mode == "Entire range" and coverage < min_coverage:
         # Same rule as the manufacturer branch: the claim cannot be checked.
         return {"value_pct": None, "reason": "insufficient-coverage",

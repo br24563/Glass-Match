@@ -30,6 +30,10 @@ def render(ctx):
     where = ctx.where
     st.header("Matching glasses")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
+    if ctx.n_band_data_removed:
+        st.caption(f"{ctx.n_band_data_removed:,} glass(es) removed for having no "
+                   "transmission data in a required band ("
+                   + ", ".join(ctx.bands_required) + "; sidebar).")
     if ctx.n_mirror_hidden:
         st.caption(f"{ctx.n_mirror_hidden:,} glass(es) from third-party mirrors "
                    "of unknown date hidden (sidebar: 'Include unverified "

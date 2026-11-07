@@ -120,6 +120,10 @@ def measurement_form(page_stem: str, comments: str) -> str:
         return "film"
     if "deposited" in text or "coated" in text or "coating" in text:
         return "film"
+    # A surface oxide on a metal (refractiveindex.info's Al2O3 "Querry" page
+    # is an "Oxidized Al mirror") is a layer, not the bulk crystal.
+    if "mirror" in text or "oxidized" in text or "oxidised" in text:
+        return "film"
     if "substrate" in text or "bulk" in text or "single crystal" in text:
         return "bulk"
     return "unknown"
@@ -199,6 +203,10 @@ def _interp(wl: float, rows: list, col: int = 1):
     if x1 == x0:
         return y0, rng
     return y0 + (y1 - y0) * (wl - x0) / (x1 - x0), rng
+
+
+# Where the book's formula is not what an optical engineer calls it.
+SHORT_NAMES = {"C": "Diamond"}
 
 
 def display_name(material: str, page: str, form: str | None = None) -> tuple:
@@ -396,7 +404,8 @@ def import_refractiveindex(root: Path, materials: dict,
                       + (f" DOI: {doi}" if doi else "")
                       + (f" | page note: {parsed['comments']}"
                          if parsed["comments"] else ""))})
-        name, axis = display_name(material, page, parsed.get("form"))
+        name, axis = display_name(SHORT_NAMES.get(material, material), page,
+                                  parsed.get("form"))
         glasses.append({
             "glass_id": gid, "manufacturer_id": "RII", "glass_name": name,
             "optic_axis": axis,

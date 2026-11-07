@@ -64,23 +64,32 @@ def _maker_traces(fig, table, y: str, hover_extra, highlight: set):
             text=hit["glass"], hoverinfo="text"))
 
 
-def glass_map_figure(table, highlight=(), height: int = 620) -> go.Figure:
+def glass_map_figure(table, highlight=(), height: int = 620,
+                     band: str | None = None) -> go.Figure:
     """n_d vs V_d (Abbe diagram), coloured by maker, V_d decreasing to the
-    right as on manufacturer glass maps. Catalog values (manufacturer)."""
+    right as on manufacturer glass maps. Catalog values (manufacturer).
+    With `band` (a triad label), the table's nd / vd are that band's n_mid
+    and V_band (glassmatch.band), CALCULATED."""
     t = table.dropna(subset=["nd", "vd"])
     fig = go.Figure()
+    what = "(manufacturer)" if band is None else "(calculated)"
     _maker_traces(fig, t, "nd",
-                  lambda g: [f"n_d {n:.5f} (manufacturer)" for n in g["nd"]],
+                  lambda g: [f"n {n:.5f} {what}" for n in g["nd"]],
                   set(highlight))
-    fig.update_layout(title="Glass map: n_d vs V_d (catalog values)",
-                      xaxis_title="Abbe number V_d", yaxis_title="Refractive index n_d",
+    title = ("Glass map: n_d vs V_d (catalog values)" if band is None else
+             f"Glass map for {band}: n_mid vs V_band (calculated)")
+    fig.update_layout(title=title,
+                      xaxis_title="Abbe number V_d" if band is None else
+                      f"V_band ({band})",
+                      yaxis_title="Refractive index n_d" if band is None else
+                      "n at the middle wavelength",
                       xaxis_autorange="reversed", template="plotly_white",
                       height=height, legend_title="Maker")
     return fig
 
 
 def partial_dispersion_figure(table, highlight=(), pair=None,
-                              height: int = 620) -> go.Figure:
+                              height: int = 620, band: str | None = None) -> go.Figure:
     """P_g,F vs V_d with the normal line. P_g,F is CALCULATED from each
     glass's verified dispersion fit; `pair` = (crown_id, flint_id) draws the
     chosen doublet's tie line."""
@@ -89,6 +98,8 @@ def partial_dispersion_figure(table, highlight=(), pair=None,
     fig = go.Figure()
 
     def _hover(g):
+        if band is not None:
+            return [f"P_band {p:.4f} (calculated)" for p in g["pgf"]]
         out = []
         for p, dc, dm in zip(g["pgf"], g["dpgf_calc"], g["dpgf_mfr"]):
             s = f"P_g,F {p:.4f} (calculated)<br>dPgF {dc:+.4f} vs normal line (calculated)"
@@ -98,7 +109,7 @@ def partial_dispersion_figure(table, highlight=(), pair=None,
         return out
 
     _maker_traces(fig, t, "pgf", _hover, set(highlight))
-    if len(t):
+    if len(t) and band is None:          # the normal line is a visible-glass fit
         xs = [float(t["vd"].min()) - 2, float(t["vd"].max()) + 2]
         fig.add_trace(go.Scatter(x=xs, y=list(normal_line_pgf(xs)), mode="lines",
                                  name=NORMAL_LINE_LABEL,
@@ -111,8 +122,13 @@ def partial_dispersion_figure(table, highlight=(), pair=None,
                                      marker=dict(size=12, color="red"),
                                      line=dict(color="red", width=2)))
     fig.update_layout(title="Partial dispersion: P_g,F vs V_d "
-                            "(P_g,F calculated from verified dispersion fits)",
-                      xaxis_title="Abbe number V_d", yaxis_title="P_g,F (calculated)",
+                            "(P_g,F calculated from verified dispersion fits)"
+                      if band is None else
+                      f"Partial dispersion for {band}: P_band vs V_band (calculated)",
+                      xaxis_title="Abbe number V_d" if band is None else
+                      f"V_band ({band})",
+                      yaxis_title="P_g,F (calculated)" if band is None else
+                      "P_band = (n_mid − n_long)/(n_short − n_long)",
                       xaxis_autorange="reversed", template="plotly_white",
                       height=height, legend_title="Maker")
     return fig

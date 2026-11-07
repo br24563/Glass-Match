@@ -219,6 +219,66 @@ Replacement (`tests/test_lens_replace.py`):
 It is a **first-order screen**: no aberrations beyond first order, no
 tolerancing. Replacement rankings say so wherever they are shown.
 
+## 11. IR bands: dispersion and the data behind it
+
+**V and P for any band** (`glassmatch/band.py`): for a triad (short, mid,
+long), V = (n_mid − 1)/(n_short − n_long) and P = (n_mid − n_long)/(n_short −
+n_long), from verified fits or tabulated n inside their stated range. The
+visible triad (F, d, C) reproduces catalog V_d to a median 4×10⁻⁷ over 2,683
+glasses. In the LWIR (8/10/12 µm): ZnSe 57.8, ZnS 22.9, GaAs 103–106, Ge
+785–1007 and Si ~1900, the usual published values. Left out rather than
+guessed:
+
+* thin-film pages (their constants are not the bulk material's);
+* n ≤ 1 or n not falling across the triad - an absorption band (sapphire's
+  reststrahlen band at 8–12 µm gave n = 0.89 and a negative V);
+* tabulated n too coarse for the band: the difference n_short − n_long must
+  span ≥ 100 steps of the table's printed precision and ≥ 1×10⁻⁴ - a silicon
+  page printed to four decimals gave P = 5/12 exactly, and one noisy page
+  V = 527,260.
+
+**Chalcogenide fits verified against the maker** (`scripts/verify_ir_dispersion.py`):
+CDGM's HWS glasses have no catalog n_d, so their Herzberger fits were archived.
+CDGM's data workbook tabulates their n at 2–14 µm (sheet "infrared glass",
+four decimals). All 11 fits reproduce every tabulated value within 2×10⁻⁴
+(worst 1.6×10⁻⁴) and are now verified, valid over the tabulated span only.
+Independently, CDGM's printed ν10.6 = (n10.6 − 1)/(n8 − n12.5) is reproduced
+by the band V over the same triad within 0.3–1 % (HWS2 86.65 vs 86.65, HWS6
+138.74 vs 138.77) - the spread a 2×10⁻⁴ index tolerance implies over a
+denominator of ~0.017.
+
+**Pairs in a band**: the pair finder in band mode never pairs two pages of
+one crystal (other author, temperature or ray), leaves out o-/e-ray pages,
+and by default keeps only room-temperature measurements and materials meeting
+the sidebar transmission requirement.
+
+**Absorption from literature k needs the precision to show it.** A
+transmission figure computed from tabulated k is given only when the table's
+printed precision resolves the absorption over the chosen thickness: half a
+step of the last printed digit may change the transmission by at most 10 %.
+KCl's Querry page prints k = 0.005 at 10 µm - a reflectance measurement's
+floor, implying an opaque 10 mm blank of a crystal that transmits to 20 µm;
+the rule refuses it (and NaCl / CsI / CsBr from the same report, whose
+"k = 0.000" cannot show transparency either). Model-generated k (oscillator
+fits, many digits) is not caught by a precision test and stays labelled as
+literature; in transparent windows such k is often far too high (BaF₂
+"Kaiser" gives 0.2 % at 8–12 µm), so manufacturer transmission curves remain
+the data to judge a window by.
+
+**Added 2026-11-06** (refractiveindex.info, CC0): KBr, KCl, NaCl, CsBr, CsI,
+AgCl, AgBr, diamond (CVD and natural pages only - the book's graphite,
+graphene and nanotube pages are excluded), GaP, InP, As₂S₃ glass (not the
+crystalline mineral), MgO, Y₂O₃ - 33 pages, mostly index data. Also fixed: the
+Al₂O₃ "Querry" page is an "oxidized Al mirror" (a surface layer), now
+classified as a film rather than as bulk sapphire.
+
+**Still missing**: resolvable absorption data at 8–12 µm for Ge, ZnSe, ZnS,
+CdTe and the alkali halides. Their index data are verified, but a transmission
+search in the LWIR shows them only from the unverified IR mirror
+(*Include unverified mirrors*), so with defaults it returns the CDGM
+chalcogenides (manufacturer curves), As₂S₃ glass, Si, GaAs and CVD diamond
+(literature k).
+
 ## 10. Principle audit (2026-11-06)
 
 Every computed value was swept for hidden extrapolation, mixed bases and

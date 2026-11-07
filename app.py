@@ -131,6 +131,42 @@ def _disk_obj(name, build):
 
 gtable = _glass_table(_data_key())
 
+# Dispersion band for the glass map and pair finder: visible (catalog V_d,
+# P_g,F) or any triad, e.g. LWIR 8/10/12 um (glassmatch.band, calculated).
+from glassmatch import band as gm_band  # noqa: E402
+
+with st.sidebar.expander("Dispersion band (glass map, pair finder)"):
+    _disp = st.selectbox("Band", list(gm_band.PRESETS) + ["Custom triad"],
+                         key="disp_band",
+                         help="V = (n_mid − 1)/(n_short − n_long), "
+                              "P = (n_mid − n_long)/(n_short − n_long), from "
+                              "verified fits or tabulated n inside their range.")
+    if _disp == "Custom triad":
+        _a, _b, _c = st.columns(3)
+        disp_triad = (_a.number_input("short (nm)", 200.0, 30000.0, 3000.0, key="dt_s"),
+                      _b.number_input("mid (nm)", 200.0, 30000.0, 4000.0, key="dt_m"),
+                      _c.number_input("long (nm)", 200.0, 30000.0, 5000.0, key="dt_l"))
+    else:
+        disp_triad = gm_band.PRESETS[_disp]
+disp_visible = _disp == "Visible (F, d, C)"
+disp_label = None if disp_visible else gm_band.triad_label(disp_triad)
+
+
+@st.cache_data(show_spinner="Computing band dispersion…")
+def _band_disp(_key: str, triad: tuple):
+    return gm_band.band_table(db, triad)
+
+
+if disp_visible:
+    gtable_disp = gtable
+elif not (disp_triad[0] < disp_triad[1] < disp_triad[2]):
+    st.sidebar.error("Dispersion band: short < mid < long is needed; "
+                     "showing the visible band.")
+    gtable_disp, disp_label = gtable, None
+else:
+    gtable_disp = gm_band.band_glass_table(gtable, _band_disp(_data_key(),
+                                                              tuple(disp_triad)))
+
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")
 st.caption("Traceable data \u2022 transparent scores \u2022 calculated values always labelled \u2014 "
@@ -184,6 +220,21 @@ with st.sidebar.expander("Additional wavelength bands (all must be met)"):
                    "'Require available data' to drop glasses with no data "
                    "in a band (most oxide glasses have none past 2.5 um).")
 bands = [(float(wl_min_um), float(wl_max_um))] + extra_bands
+from glassmatch.transmission import band_label as _band_label  # noqa: E402
+
+# Per band: must a glass have transmission data there? Past ~2.5 um most
+# oxide glasses have none, so an IR band left optional fills the results
+# with "missing" glasses that are in fact opaque. IR bands default to
+# required; the global "Require available data" still requires everything.
+_band_labels = [_band_label(lo, hi) for lo, hi in bands]
+bands_required = st.sidebar.multiselect(
+    "Bands that must have transmission data", _band_labels,
+    default=[lab for lab, (lo, hi) in zip(_band_labels, bands) if hi > 2.5],
+    key="bands_required_" + "|".join(_band_labels),
+    help="A glass with no transmission value in a band chosen here is "
+         "removed, instead of being shown as 'missing'. IR bands are chosen "
+         "by default: most glasses have no data past 2.5 um because they do "
+         "not transmit there.")
 
 nd_min, nd_max = st.sidebar.slider("Refractive index n_d range", 1.30, 2.10, (1.45, 1.85), 0.005)
 with st.sidebar.expander("Crystals & materials without n_d / V_d"):
@@ -379,6 +430,14 @@ if not include_mirrors:
     results = results[results["data_tier"] != "unverified_mirror"].reset_index(drop=True)
 results.attrs.update(_attrs)
 n_mirror_hidden = _n_before - len(results)
+n_band_data_removed = 0
+if bands_required:
+    _need = [band_results[_band_labels.index(lab)][0] for lab in bands_required]
+    _keep = results["glass_id"].map(
+        lambda g: all(v.get(g) is not None for v in _need))
+    n_band_data_removed = int((~_keep).sum())
+    results = results[_keep.to_numpy()].reset_index(drop=True)
+    results.attrs.update(_attrs)
 
 
 @st.cache_data(show_spinner=False)

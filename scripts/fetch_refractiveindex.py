@@ -52,6 +52,29 @@ MATERIALS = {
     "CdTe": ("CDTE", "Cadmium telluride", "crystal"),
     "GaAs": ("GAAS", "Gallium arsenide", "crystal"),
     "Te": ("TE", "Tellurium", "crystal"),
+    # IR window and lens materials (added 2026-11-06).
+    "KBr": ("KBR", "Potassium bromide", "crystal"),
+    "KCl": ("KCL", "Potassium chloride", "crystal"),
+    "NaCl": ("NACL", "Sodium chloride", "crystal"),
+    "CsBr": ("CSBR", "Caesium bromide", "crystal"),
+    "CsI": ("CSI", "Caesium iodide", "crystal"),
+    "AgCl": ("AGCL", "Silver chloride", "crystal"),
+    "AgBr": ("AGBR", "Silver bromide", "crystal"),
+    "C": ("DIAMOND", "Diamond", "crystal"),
+    "GaP": ("GAP", "Gallium phosphide", "crystal"),
+    "InP": ("INP", "Indium phosphide", "crystal"),
+    "As2S3": ("AS2S3", "Arsenic trisulfide glass", "chalcogenide"),
+    "MgO": ("MGO", "Magnesium oxide (periclase)", "crystal"),
+    "Y2O3": ("Y2O3", "Yttrium oxide (yttria)", "crystal"),
+}
+
+# Books that mix materials: only these pages (regex on the page name) are the
+# material named above. The "C" book also holds graphite, graphene, carbon
+# nanotubes and amorphous carbon; "As2S3" also the crystalline mineral
+# orpiment (Slavich), which is not the optical glass.
+PAGE_FILTER = {
+    "C": r"^(Phillip|Peter|Dore|Taylor)$",
+    "As2S3": r"^(Rodney|Synowicki)$",
 }
 
 UA = {"User-Agent": "GlassMatch/0.5 (optical materials database)"}
@@ -68,6 +91,13 @@ def _get_json(url: str):
 
 
 def main() -> int:
+    import argparse
+    import re
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--only", nargs="+", metavar="BOOK",
+                    help="fetch only these books and merge them into the "
+                         "existing manifest")
+    args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
 
     # The upstream catalog files enumerate every material page and its data
@@ -102,12 +132,21 @@ def main() -> int:
                 page = None
     print(f"catalog lists {len(pages)} page(s)")
 
-    wanted = {f: v for f, v in MATERIALS.items()}
+    wanted = {f: v for f, v in MATERIALS.items()
+              if not args.only or f in args.only}
+    if args.only:
+        old = OUT / "manifest.json"
+        if old.exists():
+            prev = json.loads(old.read_text(encoding="utf-8"))
+            manifest["files"] = [e for e in prev.get("files", [])
+                                 if e["material"] not in wanted]
     total = failed = 0
     for formula, (stem, _name, _cls) in wanted.items():
         got = 0
         for book, kind, page, path in pages:
             if book != formula:
+                continue
+            if formula in PAGE_FILTER and not re.match(PAGE_FILTER[formula], page):
                 continue
             dest = OUT / formula / f"{kind}__{Path(path).name}"
             dest.parent.mkdir(parents=True, exist_ok=True)

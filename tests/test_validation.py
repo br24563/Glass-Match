@@ -169,5 +169,8 @@ def test_shipped_spectral_nk_reports_only_the_known_conflicts():
         ("RII-AL2O3-QUERRY", "k", 3.7594),
         ("RII-AL2O3-QUERRY", "n", 2.9499),
         ("RII-AL2O3-QUERRY", "n", 3.7594),
+        # The KCl Querry page (added 2026-11-06) lists 1.16 um twice upstream.
+        ("RII-KCL-QUERRY", "k", 1.16),
+        ("RII-KCL-QUERRY", "n", 1.16),
     ], issues
 
