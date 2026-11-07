@@ -291,5 +291,8 @@ def export_agf(db, glass_ids, today: _dt.date | None = None) -> AgfExport:
         f"CC GlassMatch {__version__}, data version {_data_version(db)}.",
         "CC Source catalog per glass:",
     ] + prov
+    if result.skipped:
+        header.append(f"CC Not exported ({len(result.skipped)}):")
+        header += [f"CC   {gid}: {why}" for gid, why in result.skipped]
     result.text = "\r\n".join(header + blocks) + "\r\n"
     return result

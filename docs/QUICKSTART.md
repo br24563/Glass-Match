@@ -13,7 +13,7 @@ unless you tick *Require available data*.
 ## 1. Find a glass for a set of requirements
 
 **App:** sidebar → set the n_d and V_d ranges, the wavelength band and the
-minimum transmission, then read the *Matching Glasses* tab. The
+minimum transmission, then read the *Search & Compare* tab (Ranked matches). The
 *Compatibility Score* is a weighted match to your requirements (expand
 *Score breakdown* on *Glass Detail* to see each part); the *supply* column
 lists catalog facts that make a glass hard to buy (obsolete, made on request,
@@ -127,7 +127,7 @@ measured over) no thermal shift is given unless you pass
 
 ## Exporting
 
-CSV and JSON from the *Matching Glasses* tab, a Zemax `.agf` of any selection
+CSV and JSON from the *Search & Compare* tab, a Zemax `.agf` of any selection
 (`glassmatch export-agf SCHOTT-N-BK7 OHARA-S-BSL7 -o shortlist.agf`), or a
 CODE V private catalog (`glassmatch export-codev N-BK7 E-FD5 -o private.seq`;
 indices at the t, C, d, e, F, g, h lines, calculated inside each glass's

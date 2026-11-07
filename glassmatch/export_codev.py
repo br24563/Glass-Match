@@ -75,6 +75,9 @@ def export_codev(db, glass_ids, wavelengths_nm=DEFAULT_WAVELENGTHS_NM,
              "! only inside the wavelength range its source states.",
              "! Glass: source glass id"]
     lines += [f"!   {name}: {gid}" for name, _, gid, _ in rows]
+    if skipped:
+        lines.append(f"! Not exported ({len(skipped)}):")
+        lines += [f"!   {gid}: {why}" for gid, why in skipped]
     if rows:
         lines += ["PRV", "PWL " + " ".join(f"{w:.10g}" for w in wls)]
         lines += [f"'{name}' " + " ".join(f"{n:.6f}" for n in ns)

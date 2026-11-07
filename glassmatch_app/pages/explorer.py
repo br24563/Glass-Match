@@ -1,4 +1,6 @@
-"""Database Explorer tab - moved verbatim from app.py; shared state arrives in ctx."""
+"""Whole-database browse view of the Search & Compare tab: render() shows the
+filtered table and returns it; render_extras() the n2, coverage and
+equivalency sections below the comparison."""
 from __future__ import annotations
 
 import pandas as pd
@@ -7,14 +9,11 @@ import streamlit as st
 
 def render(ctx):
     _COL_LABELS = ctx._COL_LABELS
-    _candidate_pairs = ctx._candidate_pairs
-    _data_key = ctx._data_key
     col_table = ctx.col_table
-    db = ctx.db
     prop_wavelength_nm = ctx.prop_wavelength_nm
     sample_thickness_mm = ctx.sample_thickness_mm
     summary = ctx.summary
-    st.header("Database explorer")
+    st.subheader("Whole database")
     mf = st.selectbox("Manufacturer", ["(all)"] + sorted(summary["manufacturer"].unique()))
     fam = st.selectbox("Family", ["(all)"] + sorted(summary["family"].unique()))
     mcls = st.selectbox("Material class", ["(all)"] + sorted(summary["material_class"].unique()))
@@ -45,6 +44,14 @@ def render(ctx):
             [{"column": c, "meaning": lab, "unit": unit}
              for c, (lab, unit) in _COL_LABELS.items()]),
             width="stretch", hide_index=True)
+    return view
+
+
+def render_extras(ctx):
+    _candidate_pairs = ctx._candidate_pairs
+    _data_key = ctx._data_key
+    db = ctx.db
+    summary = ctx.summary
     if not db.nonlinear_n2.empty:
         st.subheader("Nonlinear refractive index n2 (crystals, literature)")
         st.caption("One row per published measurement, verbatim, with its "

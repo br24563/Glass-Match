@@ -382,27 +382,30 @@ class GlassDatabase:
                 k_source = f["k"] if has_k else None
                 dt_source = (f["data_type"] if "data_type" in cols
                              else pd.Series(["literature"] * len(f), index=f.index))
-                for gid, grp in f.groupby("glass_id", sort=False):
-                    merged: dict = {}
-                    for w, n, k, dt in zip(grp["wavelength_um"],
-                                          n_source.loc[grp.index] if has_n else [None] * len(grp),
-                                          k_source.loc[grp.index] if has_k else [None] * len(grp),
-                                          dt_source.loc[grp.index]):
-                        if not has_n or pd.isna(n):
-                            n = None
-                        if not has_k or pd.isna(k):
-                            k = None
-                        entry = merged.setdefault(float(w), {"n": None, "k": None,
-                                                             "labels": set()})
-                        if n is not None:
-                            if entry["n"] is None:      # first value wins; a
-                                entry["n"] = float(n)   # disagreement is data
-                                entry["labels"].add(str(dt))  # quality, not ours
-                        if k is not None:               # to resolve silently.
-                            if entry["k"] is None:
-                                entry["k"] = float(k)
-                                entry["labels"].add(str(dt))
-                    idx[str(gid)] = {
+                # One pass over plain lists (rows in file order, so "first
+                # value wins" is unchanged); per-group .loc indexing made
+                # this the slowest step of the detail page's first render.
+                gids = f["glass_id"].astype(str).tolist()
+                ws = f["wavelength_um"].astype(float).tolist()
+                ns = n_source.tolist() if has_n else [None] * len(f)
+                ks = k_source.tolist() if has_k else [None] * len(f)
+                dts = dt_source.astype(str).tolist()
+                tmp: dict = {}
+                for gid, w, n, k, dt in zip(gids, ws, ns, ks, dts):
+                    if n is not None and n != n:
+                        n = None
+                    if k is not None and k != k:
+                        k = None
+                    entry = tmp.setdefault(gid, {}).setdefault(
+                        w, {"n": None, "k": None, "labels": set()})
+                    if n is not None and entry["n"] is None:
+                        entry["n"] = float(n)   # first value wins; a disagreement
+                        entry["labels"].add(dt)  # is data quality, not ours to
+                    if k is not None and entry["k"] is None:  # resolve silently
+                        entry["k"] = float(k)
+                        entry["labels"].add(dt)
+                for gid, merged in tmp.items():
+                    idx[gid] = {
                         w: (v["n"], v["k"],
                             NK_BOTH_LABELS if (v["n"] is not None and v["k"] is not None
                                                and len(v["labels"]) > 1)

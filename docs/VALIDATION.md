@@ -186,6 +186,21 @@ reference temperature (their dn/dT, and so their thermal focus shift, is
 given).
 *Pinned by* `tests/test_thermal.py`, `tests/test_dndt_import.py`.
 
+### Crystals measured at several temperatures (cryogenic use)
+
+Some literature pages are one author's measurement of a crystal at several
+stated temperatures: Si (Franta 10-500 K, Li 100-750 K), Ge (Li 100-550 K),
+CdTe (DeBell 20-300 K), BaF2 / CaF2 / SrF2 (Bosomworth 5-300 K) and others. For
+a page of such a series, n(lambda, T) is the measured index at a measured
+temperature and linear in T between the two bracketing measurements - never
+beyond the coldest or warmest one, and never from thin-film series. The
+index is as the source publishes it (cryostat measurements are normally in
+vacuum; the basis is not converted). Checks (`tests/test_cryo.py`): Ge at
+10 um gives dn/dT ~4.06e-4/K near room temperature (literature ~3.96e-4/K);
+silicon's dn/dT falls on cooling, 1.30e-4/K at -100/-50 C against ~1.6e-4/K at
+room temperature. This is the only cryogenic data GlassMatch holds; catalog
+glasses still stop at -100 C (the dn/dT model's stated range).
+
 ## 9. Paraxial lens engine
 
 `glassmatch/lens.py` traces a y-nu marginal ray. It is checked against closed

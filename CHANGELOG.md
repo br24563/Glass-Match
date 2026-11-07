@@ -6,6 +6,19 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Added / changed (Phase 5)
+- **Cryogenic index from measured temperature series**: crystals measured
+  by one author at several temperatures (Si 10-750 K, Ge 100-550 K, CdTe
+  20-300 K, BaF2 / CaF2 / SrF2 5-300 K ...) answer n(lambda, T) and dn/dT from
+  those measurements, linear in T between them, never beyond them.
+- **One Search & Compare tab** replaces Matching Glasses, Database Explorer
+  and Comparison: ranked matches or the whole database, with a comparison of
+  2-5 glasses from whichever list is shown. The app has 8 tabs.
+- **Faster first load** (7.6 s warm, was 10.7 s; ~3 s of it is importing
+  Streamlit and pandas): the .agf and CODE V exports are built only when
+  their button is clicked (glasses left out are listed in the file), and the
+  tabulated n/k index builds 2.4x faster (identical result).
+
 ### Fixed (IR and UV, Phase 4)
 - **Transmission from tabulated k needs k precise enough to show it**: when
   the printed precision of k could change the transmission over the chosen

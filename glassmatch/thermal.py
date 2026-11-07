@@ -185,6 +185,74 @@ def _join(a: str, b: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Measured temperature series (crystals)
+
+def temperature_series(db, glass_id: str) -> list:
+    """[(T_c, glass_id), ...] sorted by temperature: the literature pages of
+    one author's measurement of one crystal (and one ray) at several stated
+    temperatures - e.g. Si (Li) at 100 ... 750 K, CaF2 (Bosomworth) at 5 ...
+    300 K. Empty when the glass is not a page of such a series, or the
+    series is a thin film. Pages are grouped by material family, author and
+    ray as their display names state them."""
+    import re
+
+    from glassmatch.band import _film_ids, measurement_temperature_c
+    cache = db.__dict__.get("_t_series")
+    if cache is None:
+        groups = {}
+        g = db.glasses[db.glasses["manufacturer_id"] == "RII"]
+        films = _film_ids(db)
+        for gid, name, fam in zip(g["glass_id"].astype(str), g["glass_name"].astype(str),
+                                  g["glass_family"].astype(str)):
+            t = measurement_temperature_c(name)
+            m = re.match(r".+? \((.+?)(?:, ([oe])-ray)?, [\d.]+ (?:K|°C)\)$", name)
+            if t is None or m is None or gid in films:
+                continue
+            groups.setdefault((fam, m.group(1), m.group(2)), []).append((t, gid))
+        cache = {}
+        for pages in groups.values():
+            if len(pages) >= 2:
+                pages = sorted(pages)
+                for _, gid in pages:
+                    cache[gid] = pages
+        db.__dict__["_t_series"] = cache
+    return cache.get(str(glass_id), [])
+
+
+def series_index(db, glass_id: str, wavelength_nm: float, t_c: float):
+    """n at (lambda, T) from a measured temperature series: linear in T
+    between the two bracketing measured temperatures, at a measured
+    temperature exactly. -> (n, note) or (None, reason). Never beyond the
+    coldest or warmest page."""
+    pages = temperature_series(db, glass_id)
+    if not pages:
+        return None, "not part of a measured temperature series"
+    ts = [t for t, _ in pages]
+    if not (ts[0] - 1e-9 <= t_c <= ts[-1] + 1e-9):
+        return None, (f"the measured series spans {ts[0]:g} ... {ts[-1]:g} C "
+                      "(not extrapolated)")
+    for i in range(len(pages) - 1):
+        if pages[i][0] - 1e-9 <= t_c <= pages[i + 1][0] + 1e-9:
+            (t1, g1), (t2, g2) = pages[i], pages[i + 1]
+            break
+    n1, _ = db.n_at(g1, wavelength_nm)
+    n2, _ = db.n_at(g2, wavelength_nm)
+    if n1 is None or n2 is None:
+        missing = g1 if n1 is None else g2
+        return None, f"{missing} gives no index at {wavelength_nm:g} nm"
+    f = 0.0 if t2 == t1 else (t_c - t1) / (t2 - t1)
+    n = n1 + f * (n2 - n1)
+    if abs(t_c - t1) < 1e-9 or abs(t_c - t2) < 1e-9:
+        how = f"measured at {t_c:g} C ({g1 if abs(t_c - t1) < 1e-9 else g2})"
+    else:
+        how = (f"interpolated linearly between the measurements at {t1:g} C "
+               f"({g1}) and {t2:g} C ({g2})")
+    return n, (f"measured temperature series, {how}; index as the source "
+               "publishes it (cryostat measurements are normally in vacuum - "
+               "the air/vacuum basis is not converted)")
+
+
+# ---------------------------------------------------------------------------
 # Public API
 
 def index_at(db, glass_id: str, wavelength_nm: float, t_c: float,
@@ -201,6 +269,21 @@ def index_at(db, glass_id: str, wavelength_nm: float, t_c: float,
                      f"relative to air at {t_c:g} C, {p_pa:g} Pa"),
            "n": None, "reason": None, "method": None, "t0_c": None,
            "n_catalog": None, "notes": []}
+    if temperature_series(db, gid):
+        # A crystal measured at several temperatures answers from its own
+        # measurements - the only data GlassMatch has for cryogenic use.
+        n, note = series_index(db, gid, float(wavelength_nm), t_c)
+        out["basis"] = "as published by the source (measured series)"
+        out["t0_c"] = None
+        if n is None:
+            out["reason"] = note
+            return out
+        out["n"], out["method"] = n, note
+        out["n_catalog"], _ = db.n_at(gid, float(wavelength_nm))
+        if p_pa != P0 or absolute:
+            out["notes"].append("pressure / absolute options do not apply to a "
+                                "published series; the index is as published")
+        return out
     n0, kind = db.n_at(gid, float(wavelength_nm))
     if n0 is None:
         out["reason"] = "no catalog index at this wavelength (not extrapolated)"
@@ -263,6 +346,17 @@ def dn_dt(db, glass_id: str, wavelength_nm: float, t1_c: float, t2_c: float,
            "method": None, "reason": None, "notes": []}
     if t2 == t1:
         out["reason"] = "t1 and t2 must differ"
+        return out
+    if temperature_series(db, gid):
+        a, why_a = series_index(db, gid, float(wavelength_nm), t1)
+        b, why_b = series_index(db, gid, float(wavelength_nm), t2)
+        if a is None or b is None:
+            out["reason"] = why_a if a is None else why_b
+            return out
+        out["dn_dt"] = (b - a) / (t2 - t1) * 1e6
+        out["method"] = ("measured temperature series (piecewise linear in T); "
+                         "index basis as published")
+        out["basis"] = "as published"
         return out
     n0, _ = db.n_at(gid, float(wavelength_nm))
     td = td_record(db, gid)

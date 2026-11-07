@@ -28,7 +28,7 @@ def render(ctx):
     band_results = ctx.band_results
     w_norm = ctx.w_norm
     where = ctx.where
-    st.header("Matching glasses")
+    st.subheader("Ranked by your requirements")
     st.caption("Compatibility Score = weighted requirement match (never 'best glass').")
     if ctx.n_band_data_removed:
         st.caption(f"{ctx.n_band_data_removed:,} glass(es) removed for having no "

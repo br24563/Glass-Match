@@ -203,7 +203,7 @@ glassmatch check                        # data matches its manifest
 
 ## Sortable properties
 
-The Database explorer shows every column below and sorts on any of them; the
+The *Search & Compare* tab (Browse the whole database) shows every column below and sorts on any of them; the
 matching sidebar's **More columns & filters** adds any as a results column or
 a range filter (missing values are kept unless "Require available data" is
 on); `glassmatch search --columns/--where/--sort` does the same.
@@ -367,7 +367,7 @@ add a manufacturer without writing any Python. Release history is in
 | **Total** | **2,953** | 2,786 verified dispersion curves · 19 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 70k transmission rows · 143k tabulated n/k samples |
 
 1,202 glasses are marked obsolete, from each catalog's own status field (or,
-for HIKARI, absence from the current catalog); the Database explorer hides
+for HIKARI, absence from the current catalog); the whole-database browse view hides
 them by default. HIKARI glasses are listed once, under HIKARI: Nikon's 2019
 file distributes the same line, and the old mirror had most of them twice.
 

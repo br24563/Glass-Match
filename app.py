@@ -504,33 +504,32 @@ def _codev_export(glass_ids: tuple, data_key: str):
 
 
 def agf_download(glass_ids, key):
-    """Zemax .agf (and CODE V private catalog) download for a selection,
-    with what was left out."""
-    cv, n_cv, _cv_skip = _codev_export(tuple(glass_ids), _data_key())
-    st.download_button(f"Export CODE V private catalog (.seq, {n_cv} glasses)",
-                       cv, "glassmatch_private.seq", "text/plain",
-                       key=f"cv_{key}", disabled=not n_cv,
+    """Zemax .agf and CODE V private catalog downloads for a selection. Both
+    files are built only when their button is clicked (they cost seconds for
+    a full result list); what could not be exported is listed at the top of
+    each file."""
+    ids, dkey = tuple(glass_ids), _data_key()
+    st.download_button(f"Export CODE V private catalog (.seq, {len(ids)} selected)",
+                       lambda: _codev_export(ids, dkey)[0],
+                       "glassmatch_private.seq", "text/plain",
+                       key=f"cv_{key}", disabled=not ids,
                        help="PRV block with each glass's index at the t, C, d, "
                             "e, F, g and h lines, calculated inside its "
                             "stated range; glasses that do not cover them all "
-                            "are left out.")
-    data, n_out, skipped = _agf_export(tuple(glass_ids), _data_key())
-    st.download_button(f"Export Zemax catalog (.agf, {n_out} glasses)",
-                       data, "glassmatch_selection.agf",
+                            "are left out and listed in the file.")
+    st.download_button(f"Export Zemax catalog (.agf, {len(ids)} selected)",
+                       lambda: _agf_export(ids, dkey)[0],
+                       "glassmatch_selection.agf",
                        "application/octet-stream", key=f"agf_{key}",
-                       disabled=not n_out)
+                       disabled=not ids)
     st.caption("The .agf contains manufacturer catalog data, written verbatim "
                "with its source and date in the header, for your own design "
-               "work. Only verified dispersion fits are included.")
-    if skipped:
-        with st.expander(f"{len(skipped)} glass(es) not in the .agf"):
-            st.dataframe(pd.DataFrame(skipped, columns=["glass_id", "reason"]),
-                         width="stretch", hide_index=True)
+               "work. Only verified dispersion fits are included; glasses "
+               "left out are listed, with the reason, at the top of the file.")
 
 
-tabs = st.tabs(["Matching Glasses", "Glass Map", "Pair Finder",
-                "Glass Detail", "Spectral Analysis",
-                "Comparison", "Lens Glass Replacement", "Database Explorer",
+tabs = st.tabs(["Search & Compare", "Glass Map", "Pair Finder",
+                "Glass Detail", "Spectral Analysis", "Lens Glass Replacement",
                 "Data Sources", "Import / Export"])
 
 # --- pages ----------------------------------------------------------------
@@ -539,15 +538,14 @@ tabs = st.tabs(["Matching Glasses", "Glass Map", "Pair Finder",
 # them when they were inline here.
 import types as _types  # noqa: E402
 from glassmatch_app import pages as _pages  # noqa: E402
-from glassmatch_app.pages import (comparison, data_sources, explorer,  # noqa: E402,F401
-                                  glass_detail, glass_map, import_export,
-                                  lens_replace, matching, pair_finder,
-                                  spectral)
+from glassmatch_app.pages import (data_sources, glass_detail,  # noqa: E402,F401
+                                  glass_map, import_export, lens_replace,
+                                  pair_finder, search, spectral)
 _ctx = _types.SimpleNamespace(**{k: v for k, v in globals().items()
                                  if not k.startswith('__')})
 
 with tabs[0]:
-    _ctx.__dict__.update(_pages.matching.render(_ctx))
+    _ctx.__dict__.update(_pages.search.render(_ctx))
 with tabs[1]:
     _pages.glass_map.render(_ctx)
 with tabs[2]:
@@ -557,12 +555,8 @@ with tabs[3]:
 with tabs[4]:
     _pages.spectral.render(_ctx)
 with tabs[5]:
-    _pages.comparison.render(_ctx)
-with tabs[6]:
     _pages.lens_replace.render(_ctx)
-with tabs[7]:
-    _pages.explorer.render(_ctx)
-with tabs[8]:
+with tabs[6]:
     _pages.data_sources.render(_ctx)
-with tabs[9]:
+with tabs[7]:
     _pages.import_export.render(_ctx)
