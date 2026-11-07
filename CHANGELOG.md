@@ -6,6 +6,16 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Added
+- **SCHOTT IRG 22-27 chalcogenide glasses** from SCHOTT's official
+  `SCHOTT_IRG_ZEMAX_July_2018.AGF`, with internal transmittance at 10 mm, so
+  LWIR transmission searches return them. Their fits are verified against
+  SCHOTT's IRG datasheets (IRG 22, 24, 25 within 2e-4; IRG 26 and 27 miss and
+  stay archived - IRG 27's datasheet is a newer edition than the .agf);
+  `scripts/extract_schott_irg.py` extracts the datasheet tables, and
+  `verify_ir_dispersion.py` checks fits against them. The TD constants match
+  the datasheets' dn/dT at 22 C.
+
 ## [0.9.0] - 2026-11-07 (data version 2026.11.06)
 
 ### Added / changed (Phase 5)

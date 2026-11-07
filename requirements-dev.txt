@@ -1,3 +1,6 @@
 -r requirements.txt
 pytest>=8.0
 ruff>=0.6.0
+# scripts/extract_schott_irg.py: reads SCHOTT IRG datasheet tables (data
+# rebuild only; the app and tests use the committed extract).
+pypdf>=5.1

@@ -128,7 +128,8 @@ section under the new version with its data version, and is tagged
 `vX.Y.Z`.
 
 **Rebuilding the whole database** from the staged sources is two commands,
-in this order: `python scripts/merge_agf.py --all`, then
+in this order: `python scripts/extract_schott_irg.py` (SCHOTT's IRG datasheet
+tables, only when those PDFs change; needs `pypdf`), `python scripts/merge_agf.py --all`, then
 `python scripts/merge_refractiveindex.py`, then `python scripts/merge_dndt.py`
 (the makers' measured dn/dT tables; check them with
 `python scripts/validate_dndt.py`). Each re-runs

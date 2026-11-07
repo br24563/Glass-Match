@@ -1,5 +1,5 @@
 {
-  "data_version": "2026.11.06",
+  "data_version": "2026.11.07",
   "files": {
     "dn_dt_measured.csv": {
       "rows": 116639,
@@ -10,8 +10,8 @@
       "sha256": "37c7b5b66694a184795612bf45c1805d8fc9d0ed3da977e72453184c2f31a79b"
     },
     "glasses.csv": {
-      "rows": 2953,
-      "sha256": "0a13a05ff34217417593393f7a72660eaac71799bfc1d4d5798356fb0486cc10"
+      "rows": 2959,
+      "sha256": "1ce29aaca7c7c5a8121ad394f0ac71d92d13905d18c1e8872b5ca918a19249a2"
     },
     "manufacturers.csv": {
       "rows": 18,
@@ -22,24 +22,24 @@
       "sha256": "27c70fb7066d0a388a6b7959676067f892e8b28ee48888960710c2bb687593e2"
     },
     "properties.csv": {
-      "rows": 61271,
-      "sha256": "2c722e1966069f7da8a926571a67671e10bf0d3c016a029990342506c6693fb3"
+      "rows": 61337,
+      "sha256": "3c1f370415bfd9c20032a400e12f389652ff60c896ad572adc6474974f61e82f"
     },
     "sellmeier.csv": {
-      "rows": 2805,
-      "sha256": "3529152516b59feb1f0e4aecd6bece41b5b145f5fdd79424ebdae6c336505f91"
+      "rows": 2811,
+      "sha256": "d34e5b97e74f4698547c7b9c090f87448090a9a0a1585c418832a1f8aa00dbdb"
     },
     "sources.csv": {
-      "rows": 363,
-      "sha256": "2b8c74cee2f4d3ae9379315bbc6294d906899412616f271ae020b4dc5315b161"
+      "rows": 364,
+      "sha256": "7d647d88cf062091378f3442e18051b5e83021ddfd029e726c0463be3a7b9d44"
     },
     "spectral_nk.csv": {
       "rows": 143181,
       "sha256": "39d59965c973d0a7948339aad0083e9be34c343423ef0eabb2938c2ff9329d4f"
     },
     "transmission.csv": {
-      "rows": 70377,
-      "sha256": "db96fb95239cae3639687faa952c8d8a24e06b1fa2cebdd958f07a7c9942a188"
+      "rows": 70555,
+      "sha256": "06a722057b6794cec72ed642d9c3ee62ee93f30255a6c6a6058923dc8cfeb08d"
     },
     "transmission_conflicts.csv": {
       "rows": 59,
@@ -50,12 +50,12 @@
       "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
     }
   },
-  "package_version": "0.8.0",
+  "package_version": "0.9.0",
   "summary": {
     "manufacturers": 18,
-    "materials": 2953,
+    "materials": 2959,
     "obsolete": 1202,
-    "sources": 363,
-    "verified_dispersion_fits": 2786
+    "sources": 364,
+    "verified_dispersion_fits": 2789
   }
 }

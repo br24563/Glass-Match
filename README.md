@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Open-source optical glass selection, comparison, and material database.
-**2,953 materials · 18 source collections · 363 traceable sources** · data
+**2,959 materials · 18 source collections · 364 traceable sources** · data
 version pinned by [`MANIFEST.json`](data/normalized/MANIFEST.json) ·
 [how the data is validated](docs/VALIDATION.md) — search,
 rank, compare, and inspect provenance for oxide glasses, crystals, IR
@@ -130,7 +130,7 @@ materials, polymers, and moldables.
   crystal fits only where a Zemax formula is the identical expression
   (the others are listed as skipped). Re-importing the file reproduces
   n(λ), n_d, V_d, CTE, TD and every transmission sample exactly; for the
-  whole database that is 2,746 of 2,953 materials.
+  whole database that is 2,749 of 2,959 materials.
 ## Installation
 
 **Easiest (Windows):** double-click `start.bat`. First run creates an isolated
@@ -355,7 +355,7 @@ add a manufacturer without writing any Python. Release history is in
 
 | Maker file | Glasses | Notes |
 |---|---|---|
-| SCHOTT June-2025 `.agf` | 366 | Manufacturer, current (re-checked 2026-10-20: unchanged) |
+| SCHOTT June-2025 `.agf` + IRG infrared `.agf` (July 2018) | 372 | Manufacturer, current (re-checked 2026-10-20: unchanged); 6 IRG chalcogenide glasses with 10 mm transmission, fits checked against SCHOTT's IRG datasheets |
 | OHARA May-2026 `.agf` | 433 | Manufacturer, current |
 | HOYA July-2026 `.agf` (incl. obsolete) | 436 | Manufacturer, current; 1 mirror-only legacy glass kept as obsolete |
 | CDGM Sept-2026 `.agf` | 375 | Manufacturer, current; 23 mirror-only legacy glasses kept as obsolete |
@@ -364,7 +364,7 @@ add a manufacturer without writing any Python. Release history is in
 | LZOS / Corning | 150 | nzhagen/zemaxglass mirror, vintage unknown (no public catalog found) — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,953** | 2,786 verified dispersion curves · 19 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 70k transmission rows · 143k tabulated n/k samples |
+| **Total** | **2,959** | 2,789 verified dispersion curves · 22 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 71k transmission rows · 143k tabulated n/k samples |
 
 1,202 glasses are marked obsolete, from each catalog's own status field (or,
 for HIKARI, absence from the current catalog); the whole-database browse view hides

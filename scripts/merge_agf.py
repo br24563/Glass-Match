@@ -53,6 +53,16 @@ CATALOGS = [
          published="2025-06", accessed="2026-09-21",
          note="SCHOTT June 2025 preferred/inquiry/AR catalog; parsed locally. "
               "Re-checked 2026-10-20: SCHOTT's current download is byte-identical."),
+    dict(sid="SCHOTT-IRG-AGF-2018-07", mfr="SCHOTT", kind="agf",
+         path=OFFICIAL / "schott_ir" / "SCHOTT_IRG_ZEMAX_July_2018.AGF",
+         url="https://www.schott.com/en-gb/products/infrared-glasses-and-"
+             "materials-p1000261/downloads",
+         published="2018-07", accessed="2026-11-07",
+         note="SCHOTT 'Data for ZEMAX, Infrared Chalcogenide Glass' "
+              "(SCHOTT_IRG_ZEMAX_July_2018.AGF), the file SCHOTT's IR downloads "
+              "page links: IRG 22-27 with internal transmittance at 10 mm. No "
+              "catalog n_d; the fits are verified against SCHOTT's IRG "
+              "datasheets (scripts/verify_ir_dispersion.py)."),
     dict(sid="OHARA-AGF-2026-05-29", mfr="OHARA", kind="agf",
          path=STAGING / "OHARA_260529.AGF",
          url="https://www.ohara-gmbh.com/fileadmin/Dialog_Downloads/Zemax/OHARA_260529.AGF",
@@ -170,7 +180,8 @@ SUPERSEDED_MIRRORS = {"hoya.agf": "HOYA", "cdgm.agf": "CDGM",
 
 # Catalog lines that are not oxide glass despite their maker's default:
 # CDGM's HWS series are chalcogenide IR glasses with no visible-band n_d.
-CLASS_OVERRIDES = [("CDGM", r"^HWS", "chalcogenide")]
+CLASS_OVERRIDES = [("CDGM", r"^HWS", "chalcogenide"),
+                   ("SCHOTT", r"^IRG", "chalcogenide")]
 
 MATERIAL_CLASS = {"ZEON": "polymer", "ARTON": "polymer", "TOPAS": "polymer",
                   "ARCHER": "polymer", "INFRARED": "chalcogenide",

@@ -28,7 +28,8 @@ dependencies = [
 
 [project.optional-dependencies]
 app = ["streamlit>=1.60", "plotly>=5.18", "pyarrow>=14"]
-dev = ["pytest>=8.0", "ruff>=0.6.0", "streamlit>=1.60", "plotly>=5.18", "pyarrow>=14"]
+dev = ["pytest>=8.0", "ruff>=0.6.0", "streamlit>=1.60", "plotly>=5.18", "pyarrow>=14",
+       "pypdf>=5.1"]   # pypdf: scripts/extract_schott_irg.py only
 
 [project.scripts]
 glassmatch = "glassmatch.cli:main"

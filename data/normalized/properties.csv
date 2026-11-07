@@ -46208,6 +46208,72 @@ SCHOTT-FN11,td_T0,20.0,C,,manufacturer,SCHOTT-AGF-2025-06,.agf TD record (therma
 SCHOTT-FN11,td_lambda_tk,0.267,um,,manufacturer,SCHOTT-AGF-2025-06,.agf TD record (thermal dn/dT model).
 SCHOTT-FN11,wl_max_um,2.325,um,,manufacturer,SCHOTT-AGF-2025-06,.agf LD upper wavelength limit.
 SCHOTT-FN11,wl_min_um,0.334,um,,manufacturer,SCHOTT-AGF-2025-06,.agf LD lower wavelength limit.
+SCHOTT-IRG22,cte,12.5,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG22,density,4.41,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG22,td_D0,6.41e-05,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_E0,1.68e-07,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,td_lambda_tk,0.996,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG22,wl_max_um,15.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG22,wl_min_um,0.8,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
+SCHOTT-IRG23,cte,13.4,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG23,density,4.84,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG23,td_D0,8.44e-05,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_E0,1.56e-05,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,td_lambda_tk,0.736,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG23,wl_max_um,15.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG23,wl_min_um,1.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
+SCHOTT-IRG24,cte,20.0,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG24,density,4.47,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG24,td_D0,1.8e-05,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_E0,2.1e-05,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,td_lambda_tk,0.00167,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG24,wl_max_um,15.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG24,wl_min_um,0.8,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
+SCHOTT-IRG25,cte,14.0,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG25,density,4.66,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG25,td_D0,5.5e-05,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_E0,1.21e-05,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,td_lambda_tk,7.59e-05,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG25,wl_max_um,15.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG25,wl_min_um,1.0,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
+SCHOTT-IRG26,cte,21.4,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG26,density,4.63,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG26,td_D0,2.63e-05,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_E0,2.93e-05,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,td_lambda_tk,0.315,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG26,wl_max_um,15.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG26,wl_min_um,1.0,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
+SCHOTT-IRG27,cte,21.0,1e-6/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (CTE -30/+70).
+SCHOTT-IRG27,density,3.2,g/cm3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf ED record (density).
+SCHOTT-IRG27,td_D0,-3.89e-06,1/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_D1,0.0,1/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_D2,0.0,1/K^3,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_E0,1.77e-05,um^2/K,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_E1,0.0,um^2/K^2,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_T0,22.0,C,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,td_lambda_tk,0.246,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf TD record (thermal dn/dT model).
+SCHOTT-IRG27,wl_max_um,12.5,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD upper wavelength limit.
+SCHOTT-IRG27,wl_min_um,0.6,um,,manufacturer,SCHOTT-IRG-AGF-2018-07,.agf LD lower wavelength limit.
 SCHOTT-K10,abbe_number_vd,56.41,,587.6,manufacturer,SCHOTT-AGF-2025-06,Vd from .agf NM record.
 SCHOTT-K10,acid_resistance,1.0,class,,manufacturer,SCHOTT-AGF-2025-06,.agf OD record; class scale is the maker's own.
 SCHOTT-K10,alkali_resistance,1.0,class,,manufacturer,SCHOTT-AGF-2025-06,.agf OD record; class scale is the maker's own.

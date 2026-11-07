@@ -11,9 +11,12 @@ archived row as a verified fit, recording the comparison in its notes. A fail
 leaves the row archived and says why. Re-running is idempotent.
 
 Second check, the maker's own numbers: CDGM's data workbook tabulates n at
-2-14 um for its HWS chalcogenide glasses (sheet "infrared glass", four
-decimals). A HWS fit that reproduces every tabulated value inside its .agf LD
-range within MAKER_TOL is verified, valid over the tabulated span only.
+2-14 um for its HWS chalcogenide glasses (sheet "infrared glass"), and
+SCHOTT's IRG datasheets n at 22 C over 0.6-12 um (extracted to
+data/validation/schott_irg_datasheets.csv by scripts/extract_schott_irg.py),
+both to four decimals. A fit that reproduces every tabulated value inside
+its .agf LD range within MAKER_TOL is verified, valid over the tabulated span
+only.
 """
 from __future__ import annotations
 
@@ -38,6 +41,23 @@ MARK = " Reference check:"
 MAKER_MARK = " Maker table check:"
 MAKER_TOL = 2e-4          # four printed decimals + fit residual
 MAKER_MIN_SAMPLES = 5
+
+
+SCHOTT_IRG = ROOT / "data" / "validation" / "schott_irg_datasheets.csv"
+
+
+def schott_irg_tables() -> dict:
+    """glass_id -> ([(wavelength_um, n)], source label) from SCHOTT's IRG
+    datasheets (committed extract; {} when absent)."""
+    if not SCHOTT_IRG.exists():
+        return {}
+    d = pd.read_csv(SCHOTT_IRG)
+    out = {}
+    for gid, g in d.groupby("glass_id"):
+        out[str(gid)] = (sorted(zip(g["wavelength_um"].astype(float),
+                                    g["n_22c"].astype(float))),
+                         f"{g['document'].iloc[0]}, n at 22 C")
+    return out
 
 
 def maker_ir_tables() -> dict:
@@ -73,16 +93,21 @@ def maker_ir_tables() -> dict:
 
 
 def verify_against_maker(sell, db) -> int:
-    """Verify archived CDGM HWS fits against CDGM's tabulated IR indices."""
+    """Verify archived IR fits against the makers' tabulated IR indices
+    (CDGM HWS workbook sheet, SCHOTT IRG datasheets)."""
     from glassmatch.spectra import coefficients_of, zemax_n
+    refs = {}
     got = maker_ir_tables()
-    if not got:
+    if got:
+        tables, sid = got
+        for name, pts in tables.items():
+            refs[f"CDGM-{name}".upper().replace(" ", "_")] = (
+                pts, f"{sid}, sheet 'infrared glass'")
+    else:
         print("  maker IR tables: CDGM workbook not staged - skipped")
-        return 0
-    tables, sid = got
+    refs.update(schott_irg_tables())
     changed = 0
-    for name, pts in tables.items():
-        gid = f"CDGM-{name}".upper().replace(" ", "_")
+    for gid, (pts, where) in refs.items():
         hit = sell.index[sell["glass_id"] == gid]
         if len(hit) != 1:
             continue
@@ -102,15 +127,15 @@ def verify_against_maker(sell, db) -> int:
         diffs = [abs(zemax_n(formula, coeffs, w) - n) for w, n in inside]
         notes = str(sell.at[i, "notes"]).split(MAKER_MARK)[0].split(MARK)[0]
         if len(inside) < MAKER_MIN_SAMPLES or not diffs or any(d != d for d in diffs):
-            detail = (f"{len(inside)} of CDGM's tabulated IR indices fall inside "
-                      f"the fit's LD range ({MAKER_MIN_SAMPLES} needed)")
+            detail = (f"{len(inside)} of the maker's tabulated IR indices fall "
+                      f"inside the fit's LD range ({MAKER_MIN_SAMPLES} needed)")
             ok = False
         else:
             mx = max(diffs)
             lo, hi = inside[0][0], inside[-1][0]
-            detail = (f"max |n - n_CDGM| = {mx:.5f} at {len(inside)} tabulated "
-                      f"wavelengths {lo:g}-{hi:g} um ({sid}, sheet 'infrared "
-                      f"glass'); tolerance {MAKER_TOL}")
+            detail = (f"max |n - n_maker| = {mx:.5f} at {len(inside)} tabulated "
+                      f"wavelengths {lo:g}-{hi:g} um ({where}); tolerance "
+                      f"{MAKER_TOL}")
             ok = mx <= MAKER_TOL
         if ok:
             label = verified_label(formula, None)

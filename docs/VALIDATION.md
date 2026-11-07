@@ -262,6 +262,19 @@ by the band V over the same triad within 0.3–1 % (HWS2 86.65 vs 86.65, HWS6
 138.74 vs 138.77) - the spread a 2×10⁻⁴ index tolerance implies over a
 denominator of ~0.017.
 
+**SCHOTT IRG glasses** (official `SCHOTT_IRG_ZEMAX_July_2018.AGF`, the file
+SCHOTT's IR downloads page links): IRG 22-27 with internal transmittance at
+10 mm (178 samples). The .agf gives no catalog n_d, so its fits are checked
+against the refractive-index tables of SCHOTT's IRG datasheets (n at 22 C,
+0.6-12 um, four decimals; extracted by `scripts/extract_schott_irg.py` to
+`data/validation/schott_irg_datasheets.csv`). IRG 22, 24 and 25 reproduce
+every tabulated value within 2e-4 (worst 1.9e-4) and are verified. IRG 26
+misses by 2.1e-4 and IRG 27 by 3e-3 - the IRG 27 datasheet is the September
+2018 edition, newer than the July 2018 .agf - so both stay archived; IRG 23
+has no datasheet. Their transmission data are used either way. The .agf's TD
+constants reproduce the datasheets' dn/dT at 22 C within 0.07e-6/K (IRG 22:
+0.63e-6/K).
+
 **Pairs in a band**: the pair finder in band mode never pairs two pages of
 one crystal (other author, temperature or ray), leaves out o-/e-ray pages,
 and by default keeps only room-temperature measurements and materials meeting
@@ -287,8 +300,9 @@ crystalline mineral), MgO, Y₂O₃ - 33 pages, mostly index data. Also fixed: t
 Al₂O₃ "Querry" page is an "oxidized Al mirror" (a surface layer), now
 classified as a film rather than as bulk sapphire.
 
-**Still missing**: resolvable absorption data at 8–12 µm for Ge, ZnSe, ZnS,
-CdTe and the alkali halides. Their index data are verified, but a transmission
+**Still missing**: resolvable absorption data at 8–12 µm for the crystals
+Ge, ZnSe, ZnS, CdTe and the alkali halides (the chalcogenide glasses now have
+manufacturer curves from CDGM and SCHOTT). Their index data are verified, but a transmission
 search in the LWIR shows them only from the unverified IR mirror
 (*Include unverified mirrors*), so with defaults it returns the CDGM
 chalcogenides (manufacturer curves), As₂S₃ glass, Si, GaAs and CVD diamond
