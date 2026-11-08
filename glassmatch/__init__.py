@@ -20,4 +20,4 @@ __all__ = [
     "EquivalencyCriteria",
     "data_version",
 ]
-__version__ = "0.9.0"
+__version__ = "0.9.1"

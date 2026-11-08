@@ -6,6 +6,8 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-08 (data version 2026.11.08)
+
 ### Added
 - **IR temperature behaviour**: CDGM's measured IR dn/dT for the HWS
   chalcogenides (-40...80 C at 4-14 um) gives them n(lambda, T), dn/dT and
