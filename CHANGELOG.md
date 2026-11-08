@@ -6,6 +6,14 @@ the patch version, schema/format changes bump the minor version.
 
 ## [Unreleased]
 
+### Fixed
+- **Placeholder transmission is no longer read as data.** Zemax catalogs
+  write an IT block of all-1.0 samples when a maker gives no transmittance;
+  GlassMatch imported them as 100 % internal transmittance (germanium at
+  0.4 um). They are now dropped at import and reported: 293 glasses (148
+  HOYA, 61 OHARA, 44 INFRARED mirror, 20 HIKARI, ...; 48 not obsolete,
+  among them SCHOTT B270) show transmission as missing.
+
 ## [0.9.1] - 2026-11-08 (data version 2026.11.08)
 
 ### Added

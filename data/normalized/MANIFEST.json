@@ -38,8 +38,8 @@
       "sha256": "39d59965c973d0a7948339aad0083e9be34c343423ef0eabb2938c2ff9329d4f"
     },
     "transmission.csv": {
-      "rows": 70555,
-      "sha256": "06a722057b6794cec72ed642d9c3ee62ee93f30255a6c6a6058923dc8cfeb08d"
+      "rows": 66636,
+      "sha256": "1fa63ce0b3bc311ebacc056db3be7e5dc047afab62837129df0db8a9f40e1cde"
     },
     "transmission_conflicts.csv": {
       "rows": 59,
@@ -50,7 +50,7 @@
       "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
     }
   },
-  "package_version": "0.9.0",
+  "package_version": "0.9.1",
   "summary": {
     "manufacturers": 18,
     "materials": 2959,

@@ -357,8 +357,34 @@ def parse_agf_text(text: str, manufacturer: str, source_id: str,
     flush()
     import pandas as pd
     props = _drop_filler_dpgf(glasses, props, sell, issues)
+    trans = _drop_placeholder_it(trans, issues)
     return (pd.DataFrame(glasses), pd.DataFrame(props),
             pd.DataFrame(sell), pd.DataFrame(trans), issues)
+
+
+def _drop_placeholder_it(trans: list, issues: list) -> list:
+    """Remove IT blocks that are a placeholder, not a measurement.
+
+    A catalog with no transmittance for a glass still writes an IT block in
+    which every sample is exactly 1.0 - Zemax's 14 default wavelengths from
+    0.334 to 1.06 um at 25 mm (HOYA, OHARA, SCHOTT B270, the INFRARED file)
+    or 0.29 um upwards at 10 mm (Nikon's HIKARI file). Read as data it
+    claimed 100 % internal transmittance at every wavelength - for
+    germanium and silicon at 0.4 um, where both are opaque. A glass whose
+    every IT sample is exactly 1.0 therefore has no transmittance data: its
+    block is dropped and reported, and the glass shows transmission as
+    missing.
+    """
+    by_glass: dict = {}
+    for r in trans:
+        by_glass.setdefault(r["glass_id"], []).append(r["transmission"])
+    placeholder = {g for g, ts in by_glass.items() if ts and all(t == 1.0 for t in ts)}
+    for g in sorted(placeholder):
+        issues.append({"line": "", "glass": g,
+                       "issue": (f"IT block is a placeholder ({len(by_glass[g])} "
+                                 "samples, every one exactly 1.0) - no "
+                                 "transmittance data, not imported")})
+    return [r for r in trans if r["glass_id"] not in placeholder]
 
 
 # Labels a verified row may start with. Anything else - notably the

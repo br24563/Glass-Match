@@ -27,7 +27,7 @@ materials, polymers, and moldables.
   density, CTE) with transparent Compatibility Scores and user-adjustable weights.
   Maker-scoped, paginated results scale to thousands of glasses.
 - **Transmission modes**: Average / Minimum / Entire range, evaluated against
-  manufacturer IT rows (70k samples), then transmission calculated from
+  manufacturer IT rows (67k samples), then transmission calculated from
   tabulated n and k; a glass with neither has only its uncoated Fresnel
   reflection loss, which ignores absorption, so that is shown as an upper
   bound and never meets a requirement. Entire range refuses to score when
@@ -365,7 +365,7 @@ add a manufacturer without writing any Python. Release history is in
 | LZOS / Corning | 150 | nzhagen/zemaxglass mirror, vintage unknown (no public catalog found) — verify before design |
 | IR (generic/LightPath/Umicore) | 61 | Chalcogenide + crystal entries; IR mode applies |
 | Polymers (Zeon/Arton/Topas/Archer) + RPO moldables | 70 | Polymer/moldable classes |
-| **Total** | **2,959** | 2,789 verified dispersion curves · 22 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 71k transmission rows · 143k tabulated n/k samples |
+| **Total** | **2,959** | 2,789 verified dispersion curves · 22 archived non-dispersable · 148 with no curve · 232 CC0 crystal pages · 67k transmission rows · 143k tabulated n/k samples |
 
 1,202 glasses are marked obsolete, from each catalog's own status field (or,
 for HIKARI, absence from the current catalog); the whole-database browse view hides

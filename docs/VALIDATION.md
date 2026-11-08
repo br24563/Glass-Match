@@ -98,6 +98,16 @@ Duplicate samples that disagree are quarantined in
 `data/normalized/transmission_conflicts.csv` with both values, never
 resolved by picking one.
 
+**Placeholder blocks are not data.** A Zemax catalog with no transmittance for
+a glass still writes an IT block whose every sample is exactly 1.0 (14 default
+wavelengths 0.334-1.06 um at 25 mm, or 0.29 um upwards at 10 mm in Nikon's
+file). Read as measurements they claimed 100 % internal transmittance - for
+germanium and silicon at 0.4 um. Such blocks are dropped at import and
+reported: 293 glasses (148 HOYA, 61 OHARA, 44 INFRARED mirror, 20 HIKARI,
+14 Corning, 3 LightPath, 2 RPO, SCHOTT B270), 48 of them not obsolete, now show
+transmission as missing. Blocks that mix 1.0 with other values are measured
+data and kept. *Pinned by* `tests/test_agf.py`.
+
 A glass with no measured transmittance and no tabulated n/k has only the
 uncoated Fresnel reflection loss from its dispersion fit. That ignores
 absorption, so it is an upper bound, not a transmittance - over 9-10 µm it

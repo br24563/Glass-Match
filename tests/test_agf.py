@@ -74,3 +74,29 @@ def test_agf_gc_freetext_never_property():
     g2, p2, s2, t2, _ = parse_agf_text(
         "NM G 1 1 517642.251 1.51680 64.17 0 1\nGC 517642.251\n", "M", "T")
     assert "glass_code" in set(p2["property"])
+
+
+def test_placeholder_it_block_is_not_data():
+    """A Zemax IT block in which every sample is exactly 1.0 is a placeholder
+    (no transmittance supplied): it claimed 100 % for silicon at 0.4 um."""
+    from glassmatch.importers.agf import parse_agf_text
+    agf = "\n".join([
+        "NM PLACE 2 0 1.5 60 0 1 0",
+        "CD 1.0 0.2 1.0 0.006 0.02 100 0 0 0 0",
+        "IT 0.334 1.0 25", "IT 0.400 1.0 25", "IT 1.060 1.0 25",
+        "NM REAL 2 0 1.5 60 0 1 0",
+        "CD 1.0 0.2 1.0 0.006 0.02 100 0 0 0 0",
+        "IT 0.400 0.98 10", "IT 0.700 1.0 10",
+    ])
+    _g, _p, _s, t, issues = parse_agf_text(agf, "TEST", "TEST-SRC")
+    assert set(t["glass_id"]) == {"TEST-REAL"}          # mixed block kept
+    assert len(t) == 2
+    assert any("placeholder" in i["issue"] and i["glass"] == "TEST-PLACE" for i in issues)
+
+
+def test_shipped_data_has_no_placeholder_transmission():
+    import pandas as pd
+    from glassmatch.database import DEFAULT_DATA_DIR
+    t = pd.read_csv(DEFAULT_DATA_DIR / "transmission.csv")
+    allone = t.groupby("glass_id")["transmission"].apply(lambda s: bool((s == 1.0).all()))
+    assert not allone.any(), list(allone[allone].index)[:5]
