@@ -164,8 +164,10 @@ elif not (disp_triad[0] < disp_triad[1] < disp_triad[2]):
                      "showing the visible band.")
     gtable_disp, disp_label = gtable, None
 else:
-    gtable_disp = gm_band.band_glass_table(gtable, _band_disp(_data_key(),
-                                                              tuple(disp_triad)))
+    @st.cache_data(show_spinner=False)
+    def _band_gtable(_key: str, triad: tuple):
+        return gm_band.band_glass_table(gtable, _band_disp(_key, triad), db, triad)
+    gtable_disp = _band_gtable(_data_key(), tuple(disp_triad))
 
 st.title("GlassMatch")
 st.subheader("Open-source optical glass selection, comparison, and material database")

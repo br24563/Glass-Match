@@ -10,9 +10,12 @@ def render(ctx):
     gtable = ctx.gtable_disp
     band = ctx.disp_label
     if band is not None:
+        n_gamma = int(gtable["thermo_optic_air"].notna().sum())
         st.info(f"Band {band} (sidebar: Dispersion band): V and P below are that "
-                "band's V_band and P_band, calculated. dn/dT is not known at IR "
-                "wavelengths for most materials, so the athermal ranking is off.")
+                "band's V_band and P_band, calculated. For the athermal ranking, "
+                f"γ at the middle wavelength is known for {n_gamma} material(s) - "
+                "those with measured dn/dT there (e.g. CDGM's HWS glasses) and a "
+                "catalog CTE; the others are left out of that ranking.")
     require_data = ctx.require_data
     results = ctx.results
     sample_thickness_mm = ctx.sample_thickness_mm
@@ -120,10 +123,6 @@ def render(ctx):
                    "sidebar wavelength band to this band so they are judged "
                    "where they will be used.")
         _mat = material_keys(ctx.db)
-    if band is not None and pf_key == "athermal":
-        st.warning("Athermal ranking needs dn/dT at the band, which GlassMatch "
-                   "does not have for most IR materials; choose another ranking.")
-        return
     pairs_df = gpairs.find_pairs(pool_t, sort_by=pf_key,
                                  top=int(pf_top) * (5 if band is not None else 1),
                                  min_dv=pf_min_dv,

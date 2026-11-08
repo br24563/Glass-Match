@@ -285,23 +285,57 @@ def _mm(v):
     return "n/a" if v is None or v != v else f"{v:+.5f} mm"
 
 
+def _design_band(args):
+    """(short, mid, long) nm from --design-band (a preset name such as LWIR,
+    or SHORT:MID:LONG in nm), or None for the visible F / d / C / g lines."""
+    v = getattr(args, "design_band", None)
+    if not v:
+        return None
+    from glassmatch import band
+    if ":" in v:
+        try:
+            t = tuple(float(x) for x in v.split(":"))
+        except ValueError:
+            raise SystemExit("--design-band SHORT:MID:LONG takes numbers in nm")
+        if len(t) != 3 or not (t[0] < t[1] < t[2]):
+            raise SystemExit("--design-band needs SHORT < MID < LONG (nm)")
+        return t
+    key = next((k for k in band.PRESETS if k.upper().startswith(v.upper())), None)
+    if key is None:
+        raise SystemExit(f"unknown band {v!r}: " + ", ".join(band.PRESETS))
+    return None if key.startswith("Visible") else band.PRESETS[key]
+
+
+def _lines_label(tri) -> tuple:
+    """Labels for the primary line, axial colour and secondary spectrum."""
+    if tri is None:
+        return "d line", "F-C", "d-(F+C)/2"
+    s, m, lo = (f"{w / 1000:g}" for w in tri)
+    return f"{m} um", f"{s}-{lo} um", f"{m}-({s}+{lo})/2 um"
+
+
 def cmd_lens(args) -> int:
     from glassmatch import lens
     db = _db()
     rx = _rx(db, args.file)
+    tri = _design_band(args)
     a = lens.analyse(db, rx, t_c=args.temperature, mount_cte=args.mount_cte,
-                     allow_cte_extrapolation=args.allow_cte_extrapolation)
+                     allow_cte_extrapolation=args.allow_cte_extrapolation,
+                     band=tri)
+    prim, ax, sec = _lines_label(tri)
     status = dict(zip(db.glasses["glass_id"], db.glasses["status"]))
     print(f"{rx.name or args.file}: {len(rx.surfaces)} surfaces, glasses "
           + ", ".join(f"{g} [{status.get(g, '')}]" for g in rx.glasses()))
     if a["reason"]:
-        print(f"cannot trace: {a['reason']}")
+        print(f"cannot trace: {a['reason']}"
+              + ("  (an IR design? try --design-band MWIR or LWIR)"
+                 if tri is None else ""))
         return 1
     print(f"  EFL {a['efl']:.5f} mm   BFL {a['bfl']:.5f} mm   "
-          f"Petzval sum {a['petzval_sum']:.6f} 1/mm  (d line)")
-    print(f"  primary axial colour F-C {_mm(a['axial_colour'])}   secondary "
-          f"spectrum d-(F+C)/2 {_mm(a['secondary_spectrum'])}   g-d "
-          f"{_mm(a['extra_line_focus'])}")
+          f"Petzval sum {a['petzval_sum']:.6f} 1/mm  ({prim})")
+    print(f"  primary axial colour {ax} {_mm(a['axial_colour'])}   secondary "
+          f"spectrum {sec} {_mm(a['secondary_spectrum'])}"
+          + (f"   g-d {_mm(a['extra_line_focus'])}" if tri is None else ""))
     th = a.get("thermal")
     if th:
         if th["reason"]:
@@ -338,6 +372,9 @@ def cmd_replace(args) -> int:
             return 0
     from glassmatch.importers.agf import AVAILABLE_STATUSES
     mode = "efl" if args.resolve_surface else args.mode
+    tri = _design_band(args)
+    line = tri[1] if tri else "d"
+    ax = _lines_label(tri)[1]
     if args.use:
         # Write the design with one chosen replacement, nothing else changed.
         if len(old) != 1:
@@ -346,12 +383,12 @@ def cmd_replace(args) -> int:
         try:
             new_id = lens.resolve_glass(db, args.use, [args.use_maker]
                                         if args.use_maker else ())
-            base = lens.analyse(db, rx)
+            base = lens.analyse(db, rx, band=tri)
             new_rx, note = lens.replace_glass(
                 db, rx, old[0], new_id, mode,
                 resolve_surface=(args.resolve_surface - 1
                                  if args.resolve_surface else None),
-                target_efl=base.get("efl"))
+                target_efl=base.get("efl"), line=line)
             if new_rx is None:
                 raise SystemExit(f"cannot replace: {note}")
             text, ext, enc = lens.export_prescription(
@@ -361,9 +398,9 @@ def cmd_replace(args) -> int:
             raise SystemExit(str(e))
         with open(args.output, "w", encoding=enc, newline="") as f:
             f.write(text)
-        a = lens.analyse(db, new_rx)
+        a = lens.analyse(db, new_rx, band=tri)
         print(f"wrote {args.output} ({ext}): {old[0]} -> {new_id}; {note or 'curvatures kept'}")
-        print(f"  EFL {base['efl']:.5f} -> {a['efl']:.5f} mm, F-C "
+        print(f"  EFL {base['efl']:.5f} -> {a['efl']:.5f} mm, {ax} "
               f"{_mm(base['axial_colour'])} -> {_mm(a['axial_colour'])}")
         print("First-order (paraxial) screening only: verify the new design "
               "in an optical design program.")
@@ -379,11 +416,12 @@ def cmd_replace(args) -> int:
                 t_c=args.temperature, mount_cte=args.mount_cte,
                 allow_cte_extrapolation=args.allow_cte_extrapolation,
                 max_results=args.top, efl_tol_pct=args.efl_tol,
-                include_mirrors=args.include_mirrors, mode=mode)
+                include_mirrors=args.include_mirrors, mode=mode, band=tri,
+                tol_v_pct=args.tol_v_pct)
         except lens.PrescriptionError as e:
             raise SystemExit(str(e))
         print(f"Replacing {g} [{status.get(g, '')}] - design EFL "
-              f"{base['efl']:.4f} mm, F-C {_mm(base['axial_colour'])}")
+              f"{base['efl']:.4f} mm, {ax} {_mm(base['axial_colour'])}")
         if df.empty:
             print("  no candidate within the tolerances")
             continue
@@ -430,7 +468,8 @@ def cmd_audit(args) -> int:
             try:
                 _, df = lens.replacement_candidates(
                     db, rx, g, tol_nd=args.tol_nd, tol_vd=args.tol_vd,
-                    max_results=args.top, mode=args.mode)
+                    max_results=args.top, mode=args.mode,
+                    band=_design_band(args), tol_v_pct=args.tol_v_pct)
             except lens.PrescriptionError as e:
                 print(f"   {g}: {e}")
                 problems += 1
@@ -616,6 +655,9 @@ def build_parser() -> argparse.ArgumentParser:
                         "linearly (labelled) instead of refusing")
     p.add_argument("--mount-cte", type=float, default=23.6,
                    help="mount CTE, 1e-6/K (default 23.6, aluminium 6061)")
+    p.add_argument("--design-band",
+                   help="trace at another band: a preset (NIR, SWIR, MWIR, "
+                        "LWIR) or SHORT:MID:LONG in nm; default visible F/d/C/g")
     p.set_defaults(func=cmd_lens)
     p = sub.add_parser("replace", help="rank replacements for a glass in a "
                        "lens design (default: its obsolete glasses)")
@@ -651,6 +693,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("-o", "--output",
                    help="with --use: the file to write (same format as the "
                         "input, only changed lines touched; or .json)")
+    p.add_argument("--design-band",
+                   help="trace at another band: a preset (NIR, SWIR, MWIR, "
+                        "LWIR) or SHORT:MID:LONG in nm; default visible F/d/C/g")
+    p.add_argument("--tol-v-pct", type=float, default=25.0,
+                   help="with --design-band: V_band window, %% of the "
+                        "replaced glass's value")
     p.set_defaults(func=cmd_replace)
     p = sub.add_parser("audit", help="find obsolete glasses in a folder of "
                        "lens files and rank replacements")
@@ -660,6 +708,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--tol-vd", type=float, default=8.0)
     p.add_argument("--top", type=int, default=3)
     p.add_argument("--csv", help="write every candidate to this CSV")
+    p.add_argument("--design-band",
+                   help="trace at another band: a preset (NIR, SWIR, MWIR, "
+                        "LWIR) or SHORT:MID:LONG in nm; default visible F/d/C/g")
+    p.add_argument("--tol-v-pct", type=float, default=25.0,
+                   help="with --design-band: V_band window, %% of the "
+                        "replaced glass's value")
     p.set_defaults(func=cmd_audit)
     p = sub.add_parser("band", help="n, V and P in any wavelength band "
                        "(e.g. LWIR), from verified fits")

@@ -7,6 +7,16 @@ the patch version, schema/format changes bump the minor version.
 ## [Unreleased]
 
 ### Added
+- **IR temperature behaviour**: CDGM's measured IR dn/dT for the HWS
+  chalcogenides (-40...80 C at 4-14 um) gives them n(lambda, T), dn/dT and
+  thermal focus shift at IR wavelengths; band-mode athermal pair ranking
+  uses it (gamma at the band centre).
+- **Lens analysis and glass replacement in any band**: `analyse`,
+  thermal focus, element power and replacement ranking trace at a design
+  band (e.g. LWIR 8/10/12 um); app *Design band* selector and
+  `glassmatch lens / replace / audit --design-band LWIR` (or SHORT:MID:LONG
+  nm). IR replacement windows use the band's n and V. Example:
+  `docs/examples/lwir_doublet.json`.
 - **SCHOTT IRG 22-27 chalcogenide glasses** from SCHOTT's official
   `SCHOTT_IRG_ZEMAX_July_2018.AGF`, with internal transmittance at 10 mm, so
   LWIR transmission searches return them. Their fits are verified against

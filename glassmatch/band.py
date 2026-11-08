@@ -129,12 +129,19 @@ def band_table(db, triad, ids=None) -> pd.DataFrame:
     return cache.frame(cdir, name, build)
 
 
-def band_glass_table(gtable: pd.DataFrame, bt: pd.DataFrame) -> pd.DataFrame:
+def band_glass_table(gtable: pd.DataFrame, bt: pd.DataFrame, db=None,
+                     triad=None) -> pd.DataFrame:
     """A glass_table (pairs.glass_table) with V_d / P_g,F replaced by the
     band's V and P, so the glass map and pair finder work in that band.
-    Only materials with band figures remain; their thermal columns are
-    dropped, because dn/dT is not known at IR wavelengths for most of
-    them."""
+    Only materials with band figures remain.
+
+    With db and triad, the thermo-optic coefficient is computed at the
+    band's middle wavelength: gamma = (dn/dT)/(n_mid - 1) - alpha, with mean
+    dn/dT over +20/+40 C from glassmatch.thermal.dn_dt (relative to air for
+    thermo_optic_air, absolute for thermo_optic_vacuum) - the maker's
+    measured IR table (CDGM HWS), a measured crystal temperature series, or
+    the TD model where it is valid - and the catalog CTE. Where any of those
+    is missing, gamma is missing; it is never borrowed from the visible."""
     import numpy as np
     t = gtable.drop(columns=[c for c in ("vd", "pgf", "nd", "dpgf_calc", "dpgf_mfr")
                              if c in gtable.columns])
@@ -142,6 +149,18 @@ def band_glass_table(gtable: pd.DataFrame, bt: pd.DataFrame) -> pd.DataFrame:
                 on="glass_id", how="inner")
     for c in ("thermo_optic", "thermo_optic_air", "thermo_optic_vacuum"):
         t[c] = np.nan
+    if db is not None and triad is not None:
+        from glassmatch.thermal import dn_dt
+        mid = float(triad[1])
+        cte = pd.to_numeric(t["cte"], errors="coerce") if "cte" in t else np.nan
+        for medium, absolute in (("air", False), ("vacuum", True)):
+            vals = []
+            for gid, n, a in zip(t["glass_id"], t["n_mid"], cte):
+                d = dn_dt(db, gid, mid, 20.0, 40.0, absolute=absolute)["dn_dt"]
+                vals.append(np.nan if d is None or a != a or n <= 1
+                            else d / (n - 1.0) - a)
+            t[f"thermo_optic_{medium}"] = vals
+        t["thermo_optic"] = t["thermo_optic_air"]
     t["dpgf_calc"] = np.nan
     t["dpgf_mfr"] = np.nan
     return t.rename(columns={"v_band": "vd", "p_band": "pgf", "n_mid": "nd"})

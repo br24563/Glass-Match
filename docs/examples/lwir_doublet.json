@@ -1,0 +1,8 @@
+{"name": "illustrative LWIR doublet in CDGM HWS6 / HWS2 (not a published design)",
+ "units": "mm",
+ "surfaces": [
+  {"radius": 80, "thickness": 6, "glass": "CDGM-HWS6", "semi_diameter": 15},
+  {"radius": 400, "thickness": 2, "glass": null, "semi_diameter": 15},
+  {"radius": 300, "thickness": 4, "glass": "CDGM-HWS2", "semi_diameter": 14},
+  {"radius": 140, "thickness": 90, "glass": null, "semi_diameter": 14}
+ ]}

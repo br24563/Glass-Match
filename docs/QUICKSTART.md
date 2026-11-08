@@ -82,6 +82,13 @@ glassmatch band --triad 3000 4000 5000
 glassmatch search --band 8:12 --tmin 50 --require-band-data
 ```
 
+For an infrared lens, analyse and replace in its own band:
+
+```text
+glassmatch lens docs/examples/lwir_doublet.json --design-band LWIR -T 60
+glassmatch replace docs/examples/lwir_doublet.json CDGM-HWS2 --design-band LWIR -T 60
+```
+
 ## 4. Doublet and athermal glass pairs
 
 **App:** *Pair Finder* → rank by low element powers, low secondary spectrum,

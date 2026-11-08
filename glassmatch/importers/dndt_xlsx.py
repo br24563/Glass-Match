@@ -82,9 +82,11 @@ def _line_um(cell: str, group: str):
     c = re.sub(r"\(.*$", "", cell).replace("-line", "").strip()
     if c in LINES_UM:
         return LINES_UM[c]
-    m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*(nm)?", c)
+    m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*(nm|μm|µm|um)?", c)
     if m:
         x = float(m.group(1))
+        if m.group(2) in ("μm", "µm", "um"):     # CDGM's IR sheet: "5μm"
+            return x
         return x / 1000.0 if (m.group(2) or x > 100) else x
     m = re.search(r"\bfor\s+(\S+)\s*$", group)
     if m and m.group(1) in LINES_UM:
@@ -205,7 +207,7 @@ def import_dndt_xlsx(path, maker: str, source_id: str, names: dict):
                 basis = basis or row_basis
                 if v is None or basis is None:
                     continue
-                if abs(v) > 100:            # not a dn/dT in 1e-6/K
+                if abs(v) > 1000:           # not a dn/dT in 1e-6/K (Ge ~400)
                     report["implausible"] += 1
                     continue
                 key = (gid, round(wl, 6), lo, hi, basis)

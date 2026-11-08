@@ -193,6 +193,7 @@ glassmatch replace design.seq N-SF5 --maker SCHOTT --resolve-surface 3
 glassmatch replace design.zmx N-SF5 --use E-FD5 --use-maker HOYA -o new.zmx
 glassmatch audit designs/ --csv obsolete.csv    # obsolete glasses in a folder
 glassmatch band --preset LWIR                   # V and P at 8/10/12 um
+glassmatch lens ir_design.zmx --design-band LWIR -T 60   # IR lens, thermal focus
 glassmatch search --band 8:12 --tmin 50 --require-band-data
 glassmatch export-codev N-BK7 E-FD5 -o private.seq   # CODE V private catalog
 glassmatch check                        # data matches its manifest

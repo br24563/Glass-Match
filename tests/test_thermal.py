@@ -106,7 +106,7 @@ def test_measured_table_sanity(db):
     assert len(m) > 100000
     assert set(m["basis"]) == {"relative", "absolute"}
     assert (m["t_lo_c"] < m["t_hi_c"]).all()
-    assert m["dn_dt"].abs().max() < 100
+    assert m["dn_dt"].abs().max() < 1000      # IR glasses reach ~170e-6/K
     assert set(m["glass_id"]) <= set(db.glasses["glass_id"])
     assert set(m["source_id"]) <= set(db.sources["source_id"])
     assert not m.duplicated(["glass_id", "wavelength_um", "t_lo_c", "t_hi_c",

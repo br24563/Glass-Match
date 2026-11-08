@@ -50,7 +50,21 @@ def render(ctx):
         if s.material else "", "stop": "yes" if rx.stop == i else ""}
         for i, s in enumerate(rx.surfaces)]), width="stretch", hide_index=True)
 
-    c1, c2 = st.columns(2)
+    from glassmatch import band as gm_band
+    c0, c1, c2 = st.columns(3)
+    band_name = c0.selectbox(
+        "Design band", list(gm_band.PRESETS), key="rx_band",
+        help="The wavelengths the lens is traced at. Visible: d (primary), "
+             "F, C and g. Another band: its middle wavelength is primary and "
+             "its short and long ends give the axial colour - pick MWIR or "
+             "LWIR for an infrared design.")
+    tri = None if band_name.startswith("Visible") else gm_band.PRESETS[band_name]
+    line = tri[1] if tri else "d"
+    if tri is None:
+        lab_p, lab_ax, lab_sec = "d", "F−C", "d−(F+C)/2"
+    else:
+        _s, _m, _l = (f"{w / 1000:g}" for w in tri)
+        lab_p, lab_ax, lab_sec = f"{_m} µm", f"{_s}−{_l} µm", f"{_m}−({_s}+{_l})/2 µm"
     t_c = c1.number_input("Thermal check: temperature (°C)", -100.0, 140.0,
                           60.0, 5.0, key="rx_t")
     mount = c2.number_input("Mount CTE (1e-6/K; 23.6 = Al 6061, 17.3 = "
@@ -64,15 +78,17 @@ def render(ctx):
                  "not linear far outside it, so by default no thermal shift "
                  "is given there.")
     a = lens.analyse(db, rx, t_c=t_c, mount_cte=mount,
-                     allow_cte_extrapolation=allow_x)
+                     allow_cte_extrapolation=allow_x, band=tri)
     if a["reason"]:
-        st.error(f"Cannot trace this design: {a['reason']}")
+        st.error(f"Cannot trace this design: {a['reason']}"
+                 + (" - for an infrared design choose MWIR or LWIR as the "
+                    "design band." if tri is None else ""))
         return
     m = st.columns(4)
-    m[0].metric("EFL (d)", f"{a['efl']:.4f} mm")
-    m[1].metric("BFL (d)", f"{a['bfl']:.4f} mm")
-    m[2].metric("Axial colour F−C", _fmt(a["axial_colour"]))
-    m[3].metric("Secondary spectrum d−(F+C)/2", _fmt(a["secondary_spectrum"]))
+    m[0].metric(f"EFL ({lab_p})", f"{a['efl']:.4f} mm")
+    m[1].metric(f"BFL ({lab_p})", f"{a['bfl']:.4f} mm")
+    m[2].metric(f"Axial colour {lab_ax}", _fmt(a["axial_colour"]))
+    m[3].metric(f"Secondary spectrum {lab_sec}", _fmt(a["secondary_spectrum"]))
     th = a["thermal"]
     if th["reason"]:
         st.warning(f"Thermal focus shift unavailable: {th['reason']}")
@@ -102,8 +118,17 @@ def render(ctx):
              "elements after it barely move. EFL re-solve restores the "
              "system focal length but can move every downstream ray.")]
     c1, c2, c3 = st.columns(3)
-    tol_nd = c1.number_input("± n_d window", 0.001, 0.2, 0.03, 0.005, key="rx_nd")
-    tol_vd = c2.number_input("± V_d window", 0.5, 30.0, 8.0, 0.5, key="rx_vd")
+    tol_nd = c1.number_input("± n window" if tri else "± n_d window", 0.001,
+                             0.5, 0.03, 0.005, key="rx_nd")
+    if tri is None:
+        tol_vd = c2.number_input("± V_d window", 0.5, 30.0, 8.0, 0.5, key="rx_vd")
+        tol_v_pct = 25.0
+    else:
+        tol_vd = 8.0
+        tol_v_pct = c2.number_input("± V_band window (%)", 1.0, 100.0, 25.0, 1.0,
+                                    key="rx_vpct",
+                                    help="V_band spans ~5 to ~2000 in the IR, so "
+                                         "the window is relative.")
     resolve = None
     if mode == "efl":
         resolve = c3.selectbox("Surface to re-solve",
@@ -114,7 +139,7 @@ def render(ctx):
         db, rx, old, tol_nd=tol_nd, tol_vd=tol_vd, resolve_surface=resolve,
         t_c=t_c, mount_cte=mount, max_results=25,
         allow_cte_extrapolation=allow_x, include_mirrors=ctx.include_mirrors,
-        mode=mode)
+        mode=mode, band=tri, tol_v_pct=tol_v_pct)
     if df.empty:
         st.info("No available glass within these windows"
                 + ("" if mode == "efl" else " keeps the EFL within 1 %")
@@ -122,8 +147,9 @@ def render(ctx):
         return
     st.dataframe(df, width="stretch", hide_index=True, column_config={
         "colour_change_mm": st.column_config.NumberColumn(
-            "colour change (mm)", help="Worst change, over F, C and g, of "
-            "that line's focus relative to the d-line focus", format="%.5f"),
+            "colour change (mm)", help="Worst change, over the other lines, "
+            "of each line's focus relative to the primary line's focus",
+            format="%.5f"),
         "efl_change_pct": st.column_config.NumberColumn("EFL change (%)",
                                                          format="%.4f"),
         "ray_height_change_pct": st.column_config.NumberColumn(
@@ -145,7 +171,7 @@ def render(ctx):
     pick = st.selectbox("Replacement", df["glass_id"].tolist(), key="rx_pick")
     new_rx, note = lens.replace_glass(db, rx, old, pick, mode,
                                       resolve_surface=resolve,
-                                      target_efl=base["efl"])
+                                      target_efl=base["efl"], line=line)
     if new_rx is None:
         st.warning(f"Cannot build the design with {pick}: {note}")
         return

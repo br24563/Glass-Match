@@ -1,9 +1,9 @@
 {
-  "data_version": "2026.11.07",
+  "data_version": "2026.11.08",
   "files": {
     "dn_dt_measured.csv": {
-      "rows": 116639,
-      "sha256": "b03a7d09e3a58bd495db78bd25b7505e4685a5f4e9de9abff968915fc8fb01dd"
+      "rows": 116668,
+      "sha256": "7a9d45afc38a13ea75b79817e91402191d35e16b57437c016ac0063978c4473e"
     },
     "equivalents.csv": {
       "rows": 365,

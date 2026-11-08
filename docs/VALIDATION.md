@@ -275,6 +275,24 @@ has no datasheet. Their transmission data are used either way. The .agf's TD
 constants reproduce the datasheets' dn/dT at 22 C within 0.07e-6/K (IRG 22:
 0.63e-6/K).
 
+**IR temperature behaviour.** CDGM's IR sheet tabulates relative dn/dT of the
+HWS glasses as means over -40...80 C (or -20...80 C) at 4/5, 8 and 12/14 um -
+29 values, now in `dn_dt_measured.csv` (the importer's sanity cap was raised
+from 100 to 1000e-6/K: HWS9 is 181, germanium ~400). They give the HWS glasses
+n(lambda, T), dn/dT and thermal focus shift at IR wavelengths, interpolated
+linearly between the tabulated lines and never outside the interval. SCHOTT's
+IRG datasheets give dn/dT only at 22 C - a point, not an interval - so the IRG
+glasses still give no n(T) at IR wavelengths rather than stretch it over a span.
+In band mode the pair finder's gamma uses that band-centre dn/dT and the
+catalog CTE; materials missing either are left out of the athermal ranking.
+
+**Lens analysis in any band.** The paraxial engine traces at a design band's
+wavelengths (e.g. 8 / 10 / 12 um: primary 10 um, axial colour 8-12 um) as well
+as at the visible F / d / C / g lines; `tests/test_ir_thermal.py` checks the
+band trace equals the explicit-wavelength trace. Replacement candidates in a
+band are windowed on that band's n and V (V relative, +-25 % by default) and
+leave out cryogenic crystal pages and single rays of birefringent crystals.
+
 **Pairs in a band**: the pair finder in band mode never pairs two pages of
 one crystal (other author, temperature or ray), leaves out o-/e-ray pages,
 and by default keeps only room-temperature measurements and materials meeting

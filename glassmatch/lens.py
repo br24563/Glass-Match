@@ -51,6 +51,16 @@ from pathlib import Path
 LINES_NM = {"g": 435.8343, "F": 486.1327, "e": 546.074, "d": 587.5618,
             "C": 656.2725}
 T_REF = 20.0
+
+
+def _wl(line) -> float:
+    """Wavelength (nm) of a line: a visible line name ('d', 'F' ...) or a
+    number in nm (e.g. 10000 for an LWIR design)."""
+    return LINES_NM[line] if isinstance(line, str) else float(line)
+
+
+def line_label(line) -> str:
+    return line if isinstance(line, str) else f"{float(line) / 1000:g}um"
 CTE_RANGE = (-30.0, 70.0)
 
 
@@ -548,15 +558,23 @@ def _scaled(db, rx: Prescription, t_c: float, mount_cte: float,
     return replace(rx, surfaces=surfs), notes
 
 
-def analyse(db, rx: Prescription, primary: str = "d", short: str = "F",
-            long: str = "C", extra: str = "g", t_c: float | None = None,
+def analyse(db, rx: Prescription, primary="d", short="F",
+            long="C", extra="g", t_c: float | None = None,
             mount_cte: float = 23.6, p_pa: float | None = None,
-            allow_cte_extrapolation: bool = False) -> dict:
+            allow_cte_extrapolation: bool = False, band=None) -> dict:
     """First-order figures of a prescription (mm). With t_c, also the
     thermal focus shift from 20 C to t_c with the given mount CTE (1e-6/K;
-    23.6 = aluminium 6061)."""
-    out = {"reason": None, "notes": [], "focus": {}}
-    wls = {k: LINES_NM[k] for k in (primary, short, long, extra)}
+    23.6 = aluminium 6061).
+
+    Lines are visible line names or wavelengths in nm. `band` = (short, mid,
+    long) in nm analyses another band instead (e.g. 8000/10000/12000 for an
+    LWIR lens): primary = mid, axial colour = short - long focus, secondary
+    spectrum = mid - (short + long)/2, no extra line."""
+    if band is not None:
+        short, primary, long = (float(w) for w in band)
+        extra = None
+    out = {"reason": None, "notes": [], "focus": {}, "primary": primary}
+    wls = {k: _wl(k) for k in (primary, short, long, extra) if k is not None}
     for k, wl in wls.items():
         n, why = indices(db, rx, wl)
         if n is None:
@@ -571,7 +589,8 @@ def analyse(db, rx: Prescription, primary: str = "d", short: str = "F",
         "axial_colour": f[short]["image_distance"] - f[long]["image_distance"],
         "secondary_spectrum": f[primary]["image_distance"]
         - (f[short]["image_distance"] + f[long]["image_distance"]) / 2,
-        "extra_line_focus": f[extra]["image_distance"] - f[primary]["image_distance"],
+        "extra_line_focus": (f[extra]["image_distance"] - f[primary]["image_distance"]
+                             if extra is not None else None),
         "lines": wls})
     if t_c is not None:
         out["thermal"] = thermal_shift(db, rx, t_c, mount_cte, primary, p_pa,
@@ -614,7 +633,7 @@ def thermal_shift(db, rx: Prescription, t_c: float, mount_cte: float = 23.6,
     """Focus and EFL change from 20 C to t_c (mm). The design is taken at
     20 C with catalog indices; each glass's index changes by its dn over
     20 ... t_c (see _index_changes)."""
-    wl = LINES_NM[line]
+    wl = _wl(line)
     res = {"t_c": t_c, "mount_cte": mount_cte, "reason": None, "notes": [],
            "methods": []}
     n0, why = indices(db, rx, wl)
@@ -685,7 +704,7 @@ def hold_element_power(db, old_rx: Prescription, new_rx: Prescription, i: int,
       neighbour - (None, reason).
     -> (prescription, note) or (None, reason).
     """
-    wl = LINES_NM[line]
+    wl = _wl(line)
     n0, why = indices(db, old_rx, wl)
     n1, why1 = indices(db, new_rx, wl)
     if n0 is None or n1 is None:
@@ -724,7 +743,7 @@ def hold_element_power(db, old_rx: Prescription, new_rx: Prescription, i: int,
 
 def replace_glass(db, rx: Prescription, old: str, new: str, mode: str = "element",
                   media=None, resolve_surface: int | None = None,
-                  target_efl: float | None = None) -> tuple:
+                  target_efl: float | None = None, line="d") -> tuple:
     """rx with glass `old` replaced by `new` -> (prescription, note) or
     (None, reason).
 
@@ -742,7 +761,7 @@ def replace_glass(db, rx: Prescription, old: str, new: str, mode: str = "element
     if mode == "element":
         for i, s in enumerate(rx.surfaces):
             if s.material == old and (media is None or i in media):
-                r, note = hold_element_power(db, rx, out, i)
+                r, note = hold_element_power(db, rx, out, i, line)
                 if r is None:
                     notes.append(f"curvatures kept: {note}")
                 else:
@@ -751,7 +770,7 @@ def replace_glass(db, rx: Prescription, old: str, new: str, mode: str = "element
     elif mode == "efl":
         if resolve_surface is None or target_efl is None:
             raise ValueError("mode 'efl' needs resolve_surface and target_efl")
-        out, why = resolve_efl(db, out, resolve_surface, target_efl)
+        out, why = resolve_efl(db, out, resolve_surface, target_efl, line)
         if out is None:
             return None, why
         notes.append(f"surface {resolve_surface + 1} re-solved for the EFL")
@@ -764,7 +783,7 @@ def resolve_efl(db, rx: Prescription, surface: int, target_efl: float,
     -> (prescription, None) or (None, reason). Secant iteration on the
     curvature; paraxial power is linear in each curvature, so it converges
     in a few steps when a solution exists."""
-    n, why = indices(db, rx, LINES_NM[line])
+    n, why = indices(db, rx, _wl(line))
     if n is None:
         return None, why
 
@@ -789,7 +808,8 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                            t_c: float | None = None, mount_cte: float = 23.6,
                            max_results: int = 25, efl_tol_pct: float | None = 1.0,
                            allow_cte_extrapolation: bool = False,
-                           include_mirrors: bool = False, mode: str | None = None):
+                           include_mirrors: bool = False, mode: str | None = None,
+                           band=None, tol_v_pct: float = 25.0):
     """Rank available glasses as a replacement for `old` in the design.
 
     mode (see replace_glass): "element" (default) keeps each replaced
@@ -805,12 +825,16 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
     """
     if mode is None:
         mode = "efl" if resolve_surface is not None else "element"
+    # band=(short, mid, long) nm screens a design for another band (e.g.
+    # LWIR): the window uses that band's n and V (tol_nd, tol_v_pct), and
+    # every figure is traced at the band's wavelengths.
     import pandas as pd
 
     from glassmatch.importers.agf import AVAILABLE_STATUSES
     statuses = statuses or AVAILABLE_STATUSES
     base = analyse(db, rx, t_c=t_c, mount_cte=mount_cte,
-                   allow_cte_extrapolation=allow_cte_extrapolation)
+                   allow_cte_extrapolation=allow_cte_extrapolation, band=band)
+    line = base["primary"]
     if base["reason"]:
         raise PrescriptionError(f"the original design cannot be traced: "
                                 f"{base['reason']}")
@@ -818,11 +842,35 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
     o = s[s["glass_id"] == old]
     if o.empty:
         raise PrescriptionError(f"{old} is not in the database")
-    nd0, vd0 = float(o["nd"].iloc[0]), float(o["vd"].iloc[0])
-    cand = s[(s["glass_id"] != old)
-             & s["status"].isin(statuses)
-             & ((s["nd"] - nd0).abs() <= tol_nd)
-             & ((s["vd"] - vd0).abs() <= tol_vd)]
+    if band is None:
+        nd0, vd0 = float(o["nd"].iloc[0]), float(o["vd"].iloc[0])
+        cand = s[(s["glass_id"] != old)
+                 & s["status"].isin(statuses)
+                 & ((s["nd"] - nd0).abs() <= tol_nd)
+                 & ((s["vd"] - vd0).abs() <= tol_vd)]
+    else:
+        # In another band the window is on that band's n_mid and V_band
+        # (glassmatch.band); V_band spans ~5 to ~2000 in the IR, so its
+        # window is relative: tol_v_pct of the replaced glass's value.
+        from glassmatch.band import band_table
+        bt = band_table(db, band).set_index("glass_id")
+        if old not in bt.index:
+            raise PrescriptionError(f"{old} has no verified dispersion in this "
+                                    "band, so no window can be set")
+        n0, v0 = bt.at[old, "n_mid"], bt.at[old, "v_band"]
+        ok = bt[((bt["n_mid"] - n0).abs() <= tol_nd)
+                & ((bt["v_band"] - v0).abs() <= abs(v0) * tol_v_pct / 100.0)].index
+        cand = s[(s["glass_id"] != old) & s["status"].isin(statuses)
+                 & s["glass_id"].isin(ok)].copy()
+        # Literature pages measured far from room temperature (CdTe at 20 K)
+        # and single rays of birefringent crystals are not lens materials.
+        from glassmatch.band import at_room_temperature
+        cand = cand[cand["glass"].map(at_room_temperature)]
+        if "optic_axis" in db.glasses.columns:
+            ax = db.glasses.set_index("glass_id")["optic_axis"]
+            cand = cand[~cand["glass_id"].map(ax).isin(["o", "e"])]
+        cand["nd"] = cand["glass_id"].map(bt["n_mid"])      # shown as the
+        cand["vd"] = cand["glass_id"].map(bt["v_band"])     # band's n and V
     if not include_mirrors and "data_tier" in cand.columns:
         # A replacement must be buyable: a glass known only from a mirror of
         # unknown date may no longer exist.
@@ -830,21 +878,21 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
 
     def spread(a):
         f = a["focus"]
-        p = f["d"]["image_distance"]
-        return {k: f[k]["image_distance"] - p for k in f if k != "d"}
+        p = f[line]["image_distance"]
+        return {k: f[k]["image_distance"] - p for k in f if k != line}
     sp0 = spread(base)
-    y0 = base["focus"]["d"]["ray_heights"]
+    y0 = base["focus"][line]["ray_heights"]
     ymax = max(abs(v) for v in y0) or 1.0
     from glassmatch.supply import supply_column
     supply = supply_column(cand)
     rows = []
     for r in cand.itertuples(index=False):
         new, note = replace_glass(db, rx, old, r.glass_id, mode, media,
-                                  resolve_surface, base["efl"])
+                                  resolve_surface, base["efl"], line)
         if new is None:
             continue
         a = analyse(db, new, t_c=t_c, mount_cte=mount_cte,
-                    allow_cte_extrapolation=allow_cte_extrapolation)
+                    allow_cte_extrapolation=allow_cte_extrapolation, band=band)
         if a["reason"]:
             continue
         d_efl_pct = (a["efl"] - base["efl"]) / base["efl"] * 100.0
@@ -852,7 +900,7 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                 and abs(d_efl_pct) > efl_tol_pct:
             continue
         sp = spread(a)
-        y1 = a["focus"]["d"]["ray_heights"]
+        y1 = a["focus"][line]["ray_heights"]
         row = {"glass_id": r.glass_id, "supply": supply.get(r.glass_id, ""),
                "manufacturer": r.manufacturer
                if hasattr(r, "manufacturer") else "", "status": r.status,
@@ -860,9 +908,9 @@ def replacement_candidates(db, rx: Prescription, old: str, media=None,
                "colour_change_mm": max(abs(sp[k] - sp0[k]) for k in sp0),
                "efl_change_pct": d_efl_pct,
                "focus_change_mm": a["image_distance"] - base["image_distance"],
-               **{f"focus_change_{k}_mm": (a["focus"][k]["image_distance"]
-                                           - base["focus"][k]["image_distance"])
-                  for k in ("F", "C", "g")},
+               **{f"focus_change_{line_label(k)}_mm": (a["focus"][k]["image_distance"]
+                                                       - base["focus"][k]["image_distance"])
+                  for k in base["focus"] if k != line},
                "axial_colour_mm": a["axial_colour"],
                "secondary_spectrum_mm": a["secondary_spectrum"],
                "petzval_change": a["petzval_sum"] - base["petzval_sum"],
