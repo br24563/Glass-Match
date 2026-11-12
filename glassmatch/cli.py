@@ -168,7 +168,8 @@ def cmd_search(args) -> int:
         for gid in summary["glass_id"]:
             v, _, per = multi_band_transmission(
                 db, gid, bands, args.mode, t_groups=t_groups,
-                nk_groups=nk_groups, thickness_mm=args.thickness)
+                nk_groups=nk_groups, thickness_mm=args.thickness,
+                basis=args.basis)
             trans[gid] = v
             if len(bands) > 1:
                 for lo, hi, bv, _b in per:
@@ -189,6 +190,15 @@ def cmd_search(args) -> int:
     out = out[out["status"].isin(keep)]
     if not args.include_mirrors:
         out = out[out["data_tier"] != "unverified_mirror"]
+    if not args.all_temperatures:
+        # One crystal measured at 15 temperatures is one material, not 15.
+        from glassmatch.band import at_room_temperature
+        room = out["glass"].map(at_room_temperature)
+        if (~room).any():
+            print(f"{int((~room).sum())} crystal measurement(s) made away from "
+                  "room temperature hidden (--all-temperatures to include)",
+                  file=sys.stderr)
+        out = out[room]
     if args.band:
         out = out.assign(transmission_pct=out["glass_id"].map(trans),
                          **{c: out["glass_id"].map(v) for c, v in per_band.items()})
@@ -619,6 +629,12 @@ def build_parser() -> argparse.ArgumentParser:
                    choices=["Average", "Minimum", "Entire range"])
     p.add_argument("--thickness", type=float, default=10.0,
                    help="sample thickness for transmission (mm)")
+    p.add_argument("--basis", default="internal",
+                   choices=["internal", "external"],
+                   help="what transmission means, for every glass alike: "
+                        "internal (bulk only, as makers list it; default) or "
+                        "external (an uncoated blank: reflection at both "
+                        "surfaces included, calculated)")
     p.add_argument("--maker", nargs="*")
     p.add_argument("--preferred", action="store_true",
                    help="only the makers' preferred glasses")
@@ -626,6 +642,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--include-mirrors", action="store_true",
                    help="include glasses known only from third-party mirrors "
                         "of unknown date (hidden by default)")
+    p.add_argument("--all-temperatures", action="store_true",
+                   help="include crystal measurements made away from room "
+                        "temperature (15-30 C); hidden by default")
     p.add_argument("--require-data", action="store_true")
     p.add_argument("--top", type=int, default=20)
     p.add_argument("--columns", help="extra columns, comma-separated "

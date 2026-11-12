@@ -30,7 +30,12 @@ materials, polymers, and moldables.
   manufacturer IT rows (67k samples), then transmission calculated from
   tabulated n and k; a glass with neither has only its uncoated Fresnel
   reflection loss, which ignores absorption, so that is shown as an upper
-  bound and never meets a requirement. Entire range refuses to score when
+  bound and never meets a requirement.
+  **One basis per search**: *internal* transmittance (bulk only - what
+  makers list; the default) or an *uncoated blank* (reflection at both
+  surfaces included, calculated), so a chalcogenide's internal figure is
+  never ranked against silicon's uncoated one. Tables computed from a
+  dispersion model rather than measured give no transmission. Entire range refuses to score when
   band coverage < 90%.
   Catalogs list internal transmittance at different thicknesses (SCHOTT
   25 mm, most others 10 mm, some 1-3 mm); every sample is converted to one
@@ -148,7 +153,7 @@ python -m streamlit run app.py
 
 `python -m ...` runs pip and Streamlit through the Python you just used, so
 it works even when pip's Scripts folder is not on PATH (the usual cause of
-"'streamlit' is not recognized" on Windows). Python 3.10 or newer.
+"'streamlit' is not recognized" on Windows). Python 3.11 or newer.
 
 **First time?** [docs/QUICKSTART.md](docs/QUICKSTART.md) walks through the
 common jobs: find a glass, search two bands at once, index at temperature,
@@ -195,6 +200,7 @@ glassmatch audit designs/ --csv obsolete.csv    # obsolete glasses in a folder
 glassmatch band --preset LWIR                   # V and P at 8/10/12 um
 glassmatch lens ir_design.zmx --design-band LWIR -T 60   # IR lens, thermal focus
 glassmatch search --band 8:12 --tmin 50 --require-band-data
+glassmatch search --band 3:5 --tmin 50 --basis external   # uncoated blanks
 glassmatch export-codev N-BK7 E-FD5 -o private.seq   # CODE V private catalog
 glassmatch check                        # data matches its manifest
 ```
@@ -297,7 +303,10 @@ Transmission requirement modes: **Average** = mean of manufacturer samples in
 band; **Minimum** = worst sample; **Entire range** = worst sample but only
 when samples span ≥90% of the band (otherwise reported missing, not guessed).
 Manufacturer IT rows are preferred, then transmission calculated from
-tabulated n and k. For a glass with neither, the uncoated Fresnel reflection
+tabulated n and k (measured tables only). Both answer on the chosen basis:
+**internal** transmittance τ, or the **external** transmittance of an
+uncoated plane-parallel blank, T = (1−R)²τ / (1−R²τ²) with R the
+normal-incidence reflectance of one surface - 2n/(n²+1) for a clear blank. For a glass with neither, the uncoated Fresnel reflection
 loss is stated as an upper bound only: it ignores absorption (it put LiF at
 99 % over 9-10 um, where LiF is opaque), so the glass counts as missing and
 never meets a transmission requirement on it.

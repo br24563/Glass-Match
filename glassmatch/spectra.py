@@ -279,57 +279,113 @@ def dispersion_curve(coeffs: dict, wl_um: list, lo_um: float | None = None,
 
 
 # ---------------------------------------------------------------------------
-# Uncoated single-surface-loss estimate: a pure function of n, no data and no
-# thickness assumption - which is exactly why it is the last fallback.
+# Transmission bases. Two different quantities are both called "transmission":
+#
+#   internal  tau: what the bulk passes, exp(-alpha d). This is what makers'
+#             catalogs list (.agf IT records) and what an AR-coated part
+#             approaches. It says nothing about the surfaces.
+#   external  what an UNCOATED plane-parallel blank passes at normal
+#             incidence: tau and the reflection at both surfaces, with the
+#             light reflected back and forth between them added up
+#             (incoherently - no interference fringes):
+#                 T = (1 - R)^2 tau / (1 - R^2 tau^2)
+#             For a clear blank (tau = 1) this is (1 - R) / (1 + R)
+#             = 2n / (n^2 + 1), the "reflection factor" P of maker catalogs.
+#
+# They must never be ranked against each other: uncoated silicon passes 54 %
+# of what reaches it and absorbs nothing. Every band figure is in one basis,
+# chosen by the caller and named in its label.
+
+TRANSMISSION_BASES = ("internal", "external")
+INTERNAL_NOTE = "internal transmittance"
+EXTERNAL_NOTE = ("external transmittance of an uncoated blank, reflection at "
+                 "both surfaces included")
+
+
+def _check_basis(basis: str) -> str:
+    if basis not in TRANSMISSION_BASES:
+        raise ValueError(f"basis must be one of {TRANSMISSION_BASES}")
+    return basis
+
+
+def surface_reflectance(n, k=0.0):
+    """Normal-incidence reflectance of one uncoated surface in air, from the
+    complex index n - ik. Scalars or arrays."""
+    import numpy as np
+    n = np.asarray(n, dtype=float)
+    k = np.asarray(k, dtype=float)
+    out = ((n - 1.0) ** 2 + k ** 2) / ((n + 1.0) ** 2 + k ** 2)
+    return out if out.ndim else float(out)
+
+
+def external_transmittance(tau, r):
+    """Uncoated-blank transmittance (fraction) from internal transmittance
+    tau (fraction) and single-surface reflectance r, multiple reflections
+    summed incoherently: (1 - r)^2 tau / (1 - r^2 tau^2). Scalars or arrays."""
+    import numpy as np
+    tau = np.asarray(tau, dtype=float)
+    r = np.asarray(r, dtype=float)
+    out = (1.0 - r) ** 2 * tau / (1.0 - (r * tau) ** 2)
+    return out if out.ndim else float(out)
+
 
 def fresnel_transmission(n: float) -> float:
-    """Uncoated two-surface transmittance estimate T=(1-R)^2, R=((n-1)/(n+1))^2."""
-    if n is None or n <= 1.0:
+    """Transmittance (fraction) of an uncoated, non-absorbing blank:
+    (1 - R) / (1 + R) = 2n / (n^2 + 1), R = ((n-1)/(n+1))^2.
+
+    Reflection only - the most an uncoated blank of this index can pass. It
+    includes the light re-reflected between the two surfaces; the simpler
+    (1 - R)^2 leaves that out and is too low (0.41 for germanium, which
+    passes 0.47), so it is not an upper bound."""
+    if n is None or n != n or n <= 1.0:
         return float("nan")
-    R = ((n - 1.0) / (n + 1.0)) ** 2
-    return (1.0 - R) ** 2
+    return external_transmittance(1.0, surface_reflectance(n))
 
 
 # ---------------------------------------------------------------------------
-# Calculated transmission from tabulated n/k (spectral_nk.csv): complex-index
-# Fresnel reflection plus Beer-Lambert bulk absorption, and the band statistics
-# derived from them. Every figure depends on the assumed blank thickness and
-# says so in its label. Pure functions: no db.
+# Calculated transmission from tabulated n/k (spectral_nk.csv): Beer-Lambert
+# bulk absorption from k and, for the external basis, complex-index Fresnel
+# reflection. Every figure depends on the assumed blank thickness and says so
+# in its label. Pure functions: no db.
 
 def transmission_from_nk(n: float, k: float, wl_um: float,
-                        thickness_mm: float = 10.0) -> float:
-    """Internal transmittance (%) of a blank at normal incidence, 0-100.
+                        thickness_mm: float = 10.0,
+                        basis: str = "internal") -> float:
+    """Transmittance (%) of a blank at normal incidence, 0-100.
 
-    Combines the two physical losses a plane-parallel blank actually has:
+    basis "internal": bulk absorption only, exp(-4 pi k d / lambda) - needs
+    k alone, and is comparable with makers' internal transmittance.
+    basis "external": that, and the reflection at both uncoated surfaces
+    (external_transmittance), with R from the complex index n - ik so an
+    absorbing material is not credited with a transparent one's reflectance.
+    n and k must come from the same source at the same wavelength.
 
-      * Fresnel reflection at each of the two surfaces, using the complex index
-        n - ik, so an absorbing material is not credited with a transparent
-        material's reflectance;
-      * Beer-Lambert absorption through the bulk, exp(-4*pi*k*t/lambda).
-
-    The multiple-reflection interference between the faces is deliberately
-    ignored: it depends on surface flatness, parallelism and AR coating, none of
-    which the database knows. n and k must come from the same source at the same
-    wavelength for this to mean anything.
+    Interference between the faces is ignored: it depends on flatness,
+    parallelism and coherence, none of which the database knows.
 
     CALCULATED, not measured - callers must label it as such, and must state
-    the assumed thickness, because that number changes the answer.
+    the assumed thickness and the basis, because both change the answer.
     """
     import math
-    if n is None or k is None or wl_um is None or wl_um <= 0:
+    _check_basis(basis)
+    if k is None or wl_um is None or wl_um <= 0:
         return float("nan")
-    n, k = float(n), float(k)
-    if not (math.isfinite(n) and math.isfinite(k)) or n <= 0 or k < 0:
+    k = float(k)
+    if not math.isfinite(k) or k < 0:
         return float("nan")
-    if k == 0.0:
-        R = ((n - 1.0) / (n + 1.0)) ** 2
-    else:
-        R = ((n - 1.0) ** 2 + k ** 2) / ((n + 1.0) ** 2 + k ** 2)
     # 1 um = 0.001 mm; getting this backwards divides the absorption path by
     # 1000 and silently reports a strongly absorbing crystal as transparent.
     wl_mm = wl_um / 1000.0
-    absorb = math.exp(-4.0 * math.pi * k * float(thickness_mm) / wl_mm)
-    return max(0.0, min(100.0, (1.0 - R) ** 2 * absorb * 100.0))
+    tau = math.exp(-4.0 * math.pi * k * float(thickness_mm) / wl_mm)
+    if basis == "internal":
+        return max(0.0, min(100.0, tau * 100.0))
+    if n is None:
+        return float("nan")
+    n = float(n)
+    if not math.isfinite(n) or n <= 0:
+        return float("nan")
+    t = external_transmittance(tau, surface_reflectance(n, k))
+    return max(0.0, min(100.0, t * 100.0))
 
 
 # How much the printed precision of a tabulated k may change the computed
@@ -364,7 +420,8 @@ def _k_unresolved(kvals, wl_um: float, thickness_mm: float) -> str | None:
 
 def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                   thickness_mm: float = 10.0,
-                  min_coverage: float = 0.90) -> dict | None:
+                  min_coverage: float = 0.90,
+                  basis: str = "internal") -> dict | None:
     """Band transmission (%) for a material that has tabulated n/k, not IT rows.
 
     Crystals published in refractiveindex.info usually ship a measured n and k
@@ -375,10 +432,26 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
     reflection-only figure that silently ignores absorption, which is the whole
     reason a crystal is chosen or rejected. Samples whose k is missing are
     dropped and the shortfall is disclosed in the label.
+
+    basis: "internal" (bulk absorption only; needs k) or "external" (uncoated
+    blank; needs n and k) - see TRANSMISSION_BASES. Named in the label.
+
+    A page whose table was computed from a parametric model (measurement_form
+    "model") gives no value: its k outside the absorbing region the model was
+    fitted to is not an absorption measurement.
     """
+    _check_basis(basis)
     if nkdf is None or len(nkdf) == 0 or hi_um <= lo_um:
         return None
     if "measurement_form" in nkdf.columns:
+        if (nkdf["measurement_form"].astype(str) == "model").all():
+            return {"value_pct": None, "reason": "model-k",
+                    "n_points": 0, "coverage": 0.0,
+                    "label": ("the source's table is computed from a "
+                              "dispersion model, not measured - its k is not "
+                              "an absorption measurement, so no transmission "
+                              "is calculated from it")}
+        nkdf = nkdf[nkdf["measurement_form"].astype(str) != "model"]
         forms = set(nkdf["measurement_form"].dropna().astype(str))
         if forms == {"film"} or (forms and forms <= {"film", "unknown"} and "film" in forms):
             return {"value_pct": None, "reason": "film-measurement",
@@ -401,14 +474,16 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "label": f"tabulated n/k exist but none inside the band "
                          f"({thickness_mm:g} mm)"}
     wl_b = wl[in_band]
-    have_k = np.isfinite(kv[in_band]) & np.isfinite(nv[in_band])
+    have_k = np.isfinite(kv[in_band])
+    if basis == "external":
+        have_k &= np.isfinite(nv[in_band])
     if not have_k.any():
         return {"value_pct": None, "reason": "no-absorption-data", "n_points": 0,
                 "coverage": 0.0,
                 "label": "tabulated n only - no measured k, absorption unknown"}
     dropped = int((~have_k).sum())
     t = np.array([transmission_from_nk(nv[in_band][i], kv[in_band][i], wl_b[i],
-                                      thickness_mm)
+                                      thickness_mm, basis)
                   for i in np.nonzero(have_k)[0]], dtype=float)
     t = t[np.isfinite(t)]
     if t.size == 0:
@@ -433,12 +508,16 @@ def band_stats_nk(nkdf, lo_um: float, hi_um: float, mode: str = "Average",
                 "n_points": int(t.size), "coverage": coverage,
                 "label": f"tabulated n/k: {why}"}
     value = float(t.min()) if mode in ("Minimum", "Entire range") else float(t.mean())
-    label = (f"calculated from tabulated n/k at {thickness_mm:g} mm, "
+    label = (f"calculated from tabulated "
+             f"{'k' if basis == 'internal' else 'n/k'} at {thickness_mm:g} mm, "
+             f"{INTERNAL_NOTE if basis == 'internal' else EXTERNAL_NOTE}; "
              f"{t.size} samples spanning {coverage:.0%} of the band")
     if dropped:
-        label += f"; {dropped} sample(s) dropped for missing k"
+        label += (f"; {dropped} sample(s) dropped for missing "
+                  f"{'k' if basis == 'internal' else 'n or k'}")
     return {"value_pct": value, "label": label, "n_points": int(t.size),
-            "coverage": coverage, "thickness_mm": float(thickness_mm)}
+            "coverage": coverage, "thickness_mm": float(thickness_mm),
+            "basis": basis}
 
 
 # ---------------------------------------------------------------------------
@@ -483,7 +562,8 @@ def _sparse(n: int, coverage: float) -> str | None:
 
 def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                min_coverage: float = 0.90,
-               thickness_mm: float | None = None) -> dict | None:
+               thickness_mm: float | None = None,
+               basis: str = "internal", n_at=None) -> dict | None:
     """Summarize manufacturer transmission samples inside [lo_um, hi_um].
 
     mode:
@@ -502,6 +582,15 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     than they are. Samples with no usable thickness are excluded and the
     exclusion disclosed. None keeps every sample at its listed thickness.
 
+    basis: "internal" - the samples as the maker lists them (internal
+    transmittance). "external" - each sample with the reflection at both
+    uncoated surfaces applied (external_transmittance), which needs the
+    index at that wavelength: n_at(wavelength_um) -> n or None. If any
+    in-band sample has no index (the dispersion fit is never extrapolated),
+    no value is given - a statistic over only the samples that have one
+    would describe a different band. The result is then CALCULATED from the
+    maker's data, and its label says so.
+
     Returns dict with value_pct (0-100), label, n_points, coverage — or None
     when there is no usable manufacturer data for this mode. Never fabricates.
 
@@ -509,6 +598,7 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
     files) are excluded wholesale — no winner is picked — and the exclusion
     is disclosed in the label.
     """
+    _check_basis(basis)
     if tdf is None or len(tdf) == 0 or hi_um <= lo_um:
         return None
     import numpy as np
@@ -557,6 +647,19 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
                     "label": "manufacturer samples in band list no usable "
                              "sample thickness, so they cannot be converted "
                              f"to {thickness_mm:g} mm"}
+    if basis == "external":
+        ns = [None if n_at is None else n_at(float(w)) for w in wl_b]
+        bad = sum(1 for v in ns if v is None or v != v or v <= 1.0)
+        if bad:
+            return {"value_pct": None, "reason": "no-index-for-reflection",
+                    "n_points": int(len(wl_b)), "coverage": 0.0,
+                    "label": ("manufacturer internal transmittance exists, "
+                              "but the uncoated reflection loss needs the "
+                              f"index at every sample and {bad} of {len(wl_b)} "
+                              "in the band have none (no verified dispersion "
+                              "fit covers them; never extrapolated)")}
+        tv_b = np.asarray(external_transmittance(
+            tv_b, surface_reflectance(np.array(ns, dtype=float))))
     coverage = float((wl_b.max() - wl_b.min()) / span) if len(wl_b) > 1 else 0.0
     if mode == "Entire range" and coverage < min_coverage:
         # cannot honestly claim the entire band meets t_min
@@ -580,14 +683,18 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
         how = "mean of samples in band"
     listed = sorted({float(x) for x in th_b if x == x})
     listed_s = "/".join(f"{x:g}" for x in listed)
-    label = (f"manufacturer ({how}; {len(wl_b)} samples spanning "
+    lead = ("manufacturer (" if basis == "internal" else
+            "calculated from manufacturer internal transmittance and the "
+            "reflection at both uncoated surfaces (")
+    label = (f"{lead}{how}; {len(wl_b)} samples spanning "
              f"{coverage:.0%} of the band")
     if thickness_mm is not None and listed and listed != [float(thickness_mm)]:
         label += (f"; scaled from {listed_s} mm as listed to {thickness_mm:g} mm "
                   "by Beer-Lambert")
     elif listed:
         label += f"; {listed_s} mm as listed"
-    label += "; internal transmittance)"
+    label += ("; internal transmittance)" if basis == "internal"
+              else f"; {EXTERNAL_NOTE})")
     if conflict_n:
         label += (f"; {conflict_n} conflicting duplicate sample(s) excluded "
                   "from the statistic (see Data Quality)")
@@ -595,7 +702,7 @@ def band_stats(tdf, lo_um: float, hi_um: float, mode: str = "Average",
         label += (f"; {no_thickness} sample(s) excluded - the catalog lists no "
                   "usable thickness for them")
     out = {"value_pct": val * 100.0, "label": label,
-           "n_points": int(len(wl_b)), "coverage": coverage}
+           "n_points": int(len(wl_b)), "coverage": coverage, "basis": basis}
     if thickness_mm is not None:
         out["thickness_mm"] = float(thickness_mm)
     return out

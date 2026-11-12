@@ -16,6 +16,7 @@ see the coverage case below.
 """
 import numpy as np
 import pandas as pd
+import pytest
 
 from glassmatch.database import GlassDatabase
 from glassmatch.spectra import fresnel_transmission, sellmeier_n
@@ -122,7 +123,8 @@ def test_tabulated_nk_answers_when_there_are_no_manufacturer_rows():
     expected = band_stats_nk(nk_groups["G-NK"], LO, HI, "Average", 10.0)
     val, basis = _bt("G-NK")
     assert val == round(float(expected["value_pct"]), 1)
-    assert basis == "calculated from tabulated n/k at 10 mm, 4 samples spanning 100% of the band"
+    assert basis == ("calculated from tabulated k at 10 mm, internal "
+                     "transmittance; 4 samples spanning 100% of the band")
     assert basis.startswith("calculated")
 
 
@@ -130,7 +132,8 @@ def test_assumed_thickness_changes_value_and_is_stated():
     """A calculated figure without its thickness assumption is not a fact."""
     val10, basis10 = _bt("G-NK", thickness_mm=10.0)
     val35, basis35 = _bt("G-NK", thickness_mm=3.5)
-    assert basis35 == "calculated from tabulated n/k at 3.5 mm, 4 samples spanning 100% of the band"
+    assert basis35 == ("calculated from tabulated k at 3.5 mm, internal "
+                       "transmittance; 4 samples spanning 100% of the band")
     assert basis10 != basis35
     assert val35 > val10
 
@@ -161,6 +164,86 @@ def test_fresnel_is_only_an_upper_bound_never_a_value():
             for w in np.linspace(LO, HI, 12)]
     assert upper_bound(basis) == round(float(sum(vals) / len(vals) * 100.0), 1)
     assert "calculated (Fresnel, uncoated)" in basis
+
+
+def test_one_basis_for_every_source():
+    """Internal: maker rows as listed, n/k from k alone. External: both
+    with the reflection at the two uncoated surfaces - the maker figure
+    becomes a calculated one and is labelled so."""
+    from glassmatch.spectra import (band_stats, external_transmittance,
+                                    sellmeier_n, surface_reflectance)
+    t_groups, nk_groups = _groups()
+    db = _db()
+    db.sellmeier = pd.concat([db.sellmeier,
+                              pd.DataFrame([dict(SELLMEIER, glass_id="G-MFR")])],
+                             ignore_index=True)
+
+    def bt(gid, basis):
+        return band_transmission(db, gid, LO, HI, "Average", t_groups=t_groups,
+                                 nk_groups=nk_groups, thickness_mm=10.0,
+                                 basis=basis)
+    vi, bi = bt("G-MFR", "internal")
+    ve, be = bt("G-MFR", "external")
+    assert bi.startswith("manufacturer") and "internal transmittance" in bi
+    assert be.startswith("calculated from manufacturer internal transmittance")
+    assert "uncoated" in be
+    B = (SELLMEIER["B1"], SELLMEIER["B2"], SELLMEIER["B3"])
+    C = (SELLMEIER["C1_um2"], SELLMEIER["C2_um2"], SELLMEIER["C3_um2"])
+    tdf = t_groups["G-MFR"]
+    expect = float(np.mean([
+        external_transmittance(t, surface_reflectance(sellmeier_n(float(w), B, C)))
+        for w, t in zip(tdf["wavelength_um"], tdf["transmission"])])) * 100.0
+    assert ve == round(expect, 1)
+    assert ve < vi
+    assert vi == round(band_stats(tdf, LO, HI, "Average")["value_pct"], 1)
+    ni, _ = bt("G-NK", "internal")
+    ne, lab = bt("G-NK", "external")
+    assert ne < ni and "uncoated" in lab
+
+
+def test_external_basis_needs_an_index_at_every_sample():
+    """Maker rows but no verified fit: the reflection cannot be applied, and
+    it is not applied to only some samples - the value is missing."""
+    val, basis = band_transmission(
+        _db(), "G-MFR", LO, HI, "Average", t_groups=_groups()[0],
+        nk_groups={}, thickness_mm=10.0, basis="external")
+    assert val is None
+    assert basis.startswith("missing") and "index" in basis
+
+
+def test_plotted_curve_is_on_the_same_basis_as_the_table():
+    """The Spectral Analysis plot draws manufacturer_curve; its mean over
+    the band is the table's band value, on either basis."""
+    from glassmatch.transmission import manufacturer_curve
+    t_groups, nk_groups = _groups()
+    db = _db()
+    db.sellmeier = pd.concat([db.sellmeier,
+                              pd.DataFrame([dict(SELLMEIER, glass_id="G-MFR")])],
+                             ignore_index=True)
+    for basis in ("internal", "external"):
+        curve, label, dropped = manufacturer_curve(
+            db, "G-MFR", t_groups["G-MFR"], 10.0, basis)
+        val, _ = band_transmission(db, "G-MFR", LO, HI, "Average",
+                                   t_groups=t_groups, nk_groups=nk_groups,
+                                   thickness_mm=10.0, basis=basis)
+        assert dropped == 0 and len(curve) == 4
+        assert round(float(curve["transmission_pct"].mean()), 1) == val
+        assert label.startswith("calculated") == (basis == "external")
+    with pytest.raises(ValueError):
+        manufacturer_curve(db, "G-MFR", t_groups["G-MFR"], 10.0, "coated")
+
+
+def test_uncoated_curve_leaves_out_samples_without_an_index():
+    """No verified fit: the reflection cannot be applied, so nothing is
+    drawn - and the caller is told how many samples went."""
+    from glassmatch.transmission import manufacturer_curve
+    t_groups, _ = _groups()
+    curve, _, dropped = manufacturer_curve(_db(), "G-MFR", t_groups["G-MFR"],
+                                           10.0, "external")
+    assert len(curve) == 0 and dropped == 4
+    curve, _, dropped = manufacturer_curve(_db(), "G-MFR", t_groups["G-MFR"],
+                                           10.0, "internal")
+    assert len(curve) == 4 and dropped == 0
 
 
 def test_no_data_at_all_invents_nothing():

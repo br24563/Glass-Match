@@ -46,6 +46,9 @@ glassmatch search --band 0.4:0.7 --band 9:10 --tmin 80 --require-data
 
 A band value needs at least two samples spanning half the band, and a
 reflection-only (Fresnel) estimate is never counted as transmission.
+Values are internal transmittance (bulk only) unless you pick *Uncoated
+blank* in the sidebar or `--basis external`, which adds the reflection at
+both surfaces for every material alike.
 
 ## 3. Index at another temperature or in vacuum
 

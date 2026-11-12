@@ -22,6 +22,7 @@ def render(ctx):
     requirements = ctx.requirements
     results = ctx.results
     t_mode = ctx.t_mode
+    t_basis = getattr(ctx, "t_basis", "internal")
     trans = ctx.trans
     trans_basis = ctx.trans_basis
     bands = ctx.bands
@@ -45,6 +46,10 @@ def render(ctx):
     if n_dndt:
         st.info(f"**{n_dndt:,} material(s) removed** by the |dn/dT| limit of "
                 f"{dndt_max:g}e-6/K.")
+    if getattr(ctx, "n_temp_hidden", 0):
+        st.caption(f"{ctx.n_temp_hidden:,} crystal measurement(s) made away "
+                   "from room temperature are hidden (sidebar: 'Include "
+                   "crystal measurements away from room temperature').")
     if n_excluded:
         detail = ", ".join(f"{r['glass_id']} (no {r['blocking_missing']})"
                            for r in excluded_examples[:3])
@@ -118,8 +123,13 @@ def render(ctx):
             f"results, and n at {n_ref_nm:g} nm for {n_ov} material(s) that have "
             f"no d-line entry (crystals). V_d is shown blank for those because "
             f"the Abbe number is not defined for them.")
-    n_mfr = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("manufacturer"))
-    n_calc = sum(1 for g in scoped["glass_id"] if str(trans_basis.get(g, "")).startswith("calculated"))
+    # On the uncoated basis a maker's samples carry a calculated reflection
+    # loss, so their label starts "calculated from manufacturer ...".
+    _labels = [str(trans_basis.get(g, "")) for g in scoped["glass_id"]]
+    n_mfr = sum(1 for b in _labels
+                if b.startswith(("manufacturer", "calculated from manufacturer")))
+    n_calc = sum(1 for b in _labels if b.startswith("calculated")) - sum(
+        1 for b in _labels if b.startswith("calculated from manufacturer"))
     n_ub = sum(1 for g in scoped["glass_id"]
                if "reflection-only upper bound" in str(trans_basis.get(g, "")))
     n_miss = len(scoped) - n_mfr - n_calc - n_ub
@@ -128,8 +138,11 @@ def render(ctx):
                    + ", ".join(band_label(lo, hi) for lo, hi in bands)
                    + ". Basis counts below are for each glass's limiting band; "
                    "a glass with no value in any band is counted missing.")
-    st.caption(f"Transmission basis ({t_mode} of band): {n_mfr} manufacturer IT rows · "
-               f"{n_calc} calculated from n/k · {n_ub} upper bound only "
+    _what = ("internal transmittance" if t_basis == "internal" else
+             "uncoated blank, reflection at both surfaces included")
+    st.caption(f"Transmission ({t_mode} of band; {_what}): {n_mfr} from "
+               f"manufacturer IT rows · "
+               f"{n_calc} calculated from tabulated n/k · {n_ub} upper bound only "
                f"(reflection loss, absorption unknown) · {n_miss} missing — "
                f"full labels in the CSV export. "
                f"Page {page} of {n_pages}.")
@@ -168,8 +181,13 @@ def render(ctx):
             "band; *Minimum* = worst sample; *Entire range* = worst sample but only "
             "when manufacturer samples span >=90% of the band — otherwise the value "
             "is reported missing, never guessed.\n"
+            "- Every value is on the sidebar's **transmission basis**: internal "
+            "(bulk only - what makers list) or an uncoated blank (reflection at "
+            "both surfaces included, calculated). The two are never mixed in "
+            "one ranking.\n"
             "- Transmission values prefer manufacturer IT rows (transmission.csv), "
-            "then transmission calculated from tabulated n and k. A glass with "
+            "then transmission calculated from tabulated k (measured tables "
+            "only - never a table computed from a dispersion model). A glass with "
             "neither has only the uncoated Fresnel reflection loss, which ignores "
             "absorption: it is stated as an upper bound and the glass counts as "
             "missing, so it never meets a transmission requirement on it.")

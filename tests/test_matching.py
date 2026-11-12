@@ -73,6 +73,28 @@ def test_match_sorts_descending():
     assert out.iloc[0]["glass_id"] == "A"
 
 
+def test_equal_scores_have_a_meaningful_stable_order():
+    """Glasses that meet every requirement all score the same. Inside a tie:
+    higher transmission, then the easier glass to buy, then the id."""
+    import pandas as pd
+    from glassmatch.matching import DEFAULT_WEIGHTS, match_glasses
+    rows = [{"glass_id": g, "glass": g, "manufacturer": "M",
+             "manufacturer_id": "M", "family": "", "material_class": "oxide_glass",
+             "status": s, "nd": 1.5, "vd": 60.0, "density": 2.5, "cte": 7.0}
+            for g, s in (("B", "standard"), ("D", "obsolete"), ("A", "standard"),
+                         ("C", "preferred"), ("E", "standard"))]
+    req = {"nd_min": 1.4, "nd_max": 1.6, "transmission_min": 80.0}
+    trans = {"A": 90.0, "B": 90.0, "C": 90.0, "D": 90.0, "E": 99.0}
+    for frame in (pd.DataFrame(rows), pd.DataFrame(rows[::-1])):
+        out = match_glasses(frame, req, DEFAULT_WEIGHTS, transmissions=trans)
+        assert out["compatibility"].nunique() == 1
+        assert list(out["glass_id"]) == ["E", "C", "A", "B", "D"]
+    # Without a transmission band the availability class and id decide.
+    out = match_glasses(pd.DataFrame(rows), {"nd_min": 1.4, "nd_max": 1.6},
+                        DEFAULT_WEIGHTS)
+    assert list(out["glass_id"]) == ["C", "A", "B", "E", "D"]
+
+
 def test_sellmeier_nbK7_nd():
     n = sellmeier_n(0.5876, (1.03961212, 0.231792344, 1.01046945),
                     (0.00600069867, 0.0200179144, 103.560653))

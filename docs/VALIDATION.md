@@ -108,6 +108,32 @@ reported: 293 glasses (148 HOYA, 61 OHARA, 44 INFRARED mirror, 20 HIKARI,
 transmission as missing. Blocks that mix 1.0 with other values are measured
 data and kept. *Pinned by* `tests/test_agf.py`.
 
+**One basis per question.** Makers list *internal* transmittance; a figure
+from tabulated n and k can be internal (exp(−4πkd/λ)) or that of an
+*uncoated blank*. Until 0.9.2 the n/k figure included the reflection at both
+surfaces and was ranked against makers' internal values: over 3-5 µm at
+10 mm, SCHOTT IRG26 read 98.2 % and silicon 48.9 %, though silicon absorbs
+nothing there. Every value is now in the basis asked for (internal by
+default). The uncoated figure is T = (1−R)²τ / (1−R²τ²), the incoherent sum
+of the reflections between the faces: 2n/(n²+1) for a clear blank, which
+reproduces the makers' reflection factor (N-BK7, d line: 0.919) and the
+familiar 54 % of uncoated silicon and 47 % of germanium. The earlier
+(1−R)² gave germanium 41 % - below what it passes, so not the upper bound it
+was shown as. For a maker's samples the reflection is applied with the index
+from the verified fit at every sample, or not at all.
+*Pinned by* `tests/test_refractiveindex.py`,
+`tests/test_transmission_precedence.py`.
+
+**A model's k is not a measured absorption.** 14 refractiveindex.info pages
+are tables calculated from a published parametric model (the page links its
+calculation script): dielectric-function models fitted above the band gap
+(Adachi, Rakić, Ozaki) or to the phonon bands (Kaiser). In the transparent
+window their k is the fit's tail - 1e-3 for GaAs at 4 µm, some four orders
+above bulk GaAs - and turned into transmission it made 10 mm of GaAs and InP
+opaque over 3-5 µm. These pages carry `measurement_form = model` and give no
+transmission value; n is unaffected. *Pinned by*
+`tests/test_refractiveindex.py`.
+
 A glass with no measured transmittance and no tabulated n/k has only the
 uncoated Fresnel reflection loss from its dispersion fit. That ignores
 absorption, so it is an upper bound, not a transmittance - over 9-10 µm it

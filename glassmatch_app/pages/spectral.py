@@ -5,7 +5,7 @@ from glassmatch.plotting import dispersion_figure
 from glassmatch.plotting import transmission_figure
 from glassmatch.spectra import dispersion_curve
 from glassmatch.spectra import fresnel_transmission
-from glassmatch.spectra import scale_internal_transmittance
+from glassmatch.transmission import manufacturer_curve
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -15,6 +15,7 @@ def render(ctx):
     db = ctx.db
     results = ctx.results
     sample_thickness_mm = ctx.sample_thickness_mm
+    t_basis = getattr(ctx, "t_basis", "internal")
     scoped = ctx.scoped
     t_groups = ctx.t_groups
     wl_max_um = ctx.wl_max_um
@@ -27,25 +28,18 @@ def render(ctx):
     wls = np.linspace(max(wl_min_um, 0.30), min(max(wl_max_um, 0.31), 2.5), 60)
     dcurves, tcurves = {}, {}
     non_sell, t_manufacturer, t_calculated, t_missing = [], [], [], []
-    tabulated = []
+    tabulated, t_partial = [], []
     for g in sel:
         # --- transmission: manufacturer rows preferred, Fresnel fallback ---
         tdf = t_groups.get(str(g))
         if tdf is not None and len(tdf) >= 2:
-            # Converted to the sidebar's sample thickness, like the matching
-            # table; samples with no usable listed thickness are left out.
-            scaled = scale_internal_transmittance(
-                tdf["transmission"], tdf["thickness_mm"], sample_thickness_mm)
-            listed = sorted({float(x) for x in tdf["thickness_mm"].dropna()
-                             if x > 0})
-            listed_s = "/".join(f"{x:g}" for x in listed)
-            basis = (f"manufacturer IT, {listed_s} mm as listed"
-                     if listed == [float(sample_thickness_mm)] else
-                     f"manufacturer IT, scaled from {listed_s} mm to "
-                     f"{sample_thickness_mm:g} mm")
-            curve = pd.DataFrame({"wavelength_um": tdf["wavelength_um"],
-                                  "transmission_pct": scaled * 100.0,
-                                  "data_type": basis}).dropna()
+            # Converted to the sidebar's sample thickness and transmission
+            # basis, like the matching table; samples with no usable listed
+            # thickness (or, uncoated, no index) are left out.
+            curve, _, dropped = manufacturer_curve(
+                db, g, tdf, sample_thickness_mm, t_basis)
+            if dropped:
+                t_partial.append(f"{g} ({dropped})")
             if len(curve):
                 tcurves[g] = curve
                 t_manufacturer.append(g)
@@ -96,6 +90,10 @@ def render(ctx):
                    + ", ".join(non_sell))
     if t_missing:
         st.info("No transmission data for: " + ", ".join(t_missing))
+    if t_partial:
+        st.info("Uncoated basis: samples left off the plot because no "
+                "verified dispersion fit gives an index there (never "
+                "extrapolated) - " + ", ".join(t_partial))
     if dcurves:
         st.plotly_chart(dispersion_figure(dcurves, "nm" if wl_unit == "nm" else "um"),
                         width="stretch")
@@ -118,11 +116,19 @@ def render(ctx):
         st.plotly_chart(transmission_figure(tcurves, "nm" if wl_unit == "nm" else "um",
                                             band=(wl_min_um, wl_max_um)),
                         width="stretch")
+        _what = ("internal transmittance (bulk only)" if t_basis == "internal"
+                 else "uncoated blank - internal transmittance with the "
+                 "reflection at both surfaces, calculated")
         st.caption(
-            f"Manufacturer IT rows: {len(t_manufacturer)} glass(es); "
+            f"Manufacturer IT rows, shown as {_what}: {len(t_manufacturer)} "
+            f"glass(es); "
             f"reflection-loss upper bound only (uncoated Fresnel, absorption "
             f"not included - real transmission is lower wherever the material "
             f"absorbs): {len(t_calculated)} glass(es) — "
             "each trace is labelled by basis. Manufacturer internal "
             f"transmittance is converted to {sample_thickness_mm:g} mm "
-            "(Beer-Lambert) from the thickness each catalog lists.")
+            "(Beer-Lambert) from the thickness each catalog lists."
+            + (" An upper-bound trace is always an uncoated figure, so on "
+               "the internal basis it is not comparable with the "
+               "manufacturer traces." if t_calculated and t_basis == "internal"
+               else ""))

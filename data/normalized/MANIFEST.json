@@ -1,5 +1,5 @@
 {
-  "data_version": "2026.11.08",
+  "data_version": "2026.11.12",
   "files": {
     "dn_dt_measured.csv": {
       "rows": 116668,
@@ -35,7 +35,7 @@
     },
     "spectral_nk.csv": {
       "rows": 143181,
-      "sha256": "39d59965c973d0a7948339aad0083e9be34c343423ef0eabb2938c2ff9329d4f"
+      "sha256": "26118990a2df9ee4fc19455eeba5995273abf0d9e42353520afc1fba11747bba"
     },
     "transmission.csv": {
       "rows": 66636,
@@ -50,7 +50,7 @@
       "sha256": "0fc92b0e419144016e6592d6f61b6230a61320af9ce1875db9adffa510abed55"
     }
   },
-  "package_version": "0.9.1",
+  "package_version": "0.9.2",
   "summary": {
     "manufacturers": 18,
     "materials": 2959,
