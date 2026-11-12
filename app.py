@@ -307,6 +307,13 @@ include_mirrors = st.sidebar.checkbox(
          "legacy CDGM) come only from a third-party mirror of unknown date: "
          "they may no longer be made, or made to these numbers. Hidden by "
          "default; shown with their data tier when included.")
+include_all_temps = st.sidebar.checkbox(
+    "Include crystal measurements away from room temperature", value=False,
+    help="Literature pages measured at a stated temperature outside 15-30 C "
+         "(silicon at 10 K ... 750 K, CaF2 at 5 K ...) are the crystal at that "
+         "temperature, not another material: one crystal otherwise fills the "
+         "results with a row per temperature. Hidden by default; n(T) for a "
+         "crystal is in Glass Detail.")
 require_data = st.sidebar.checkbox("Require available data (missing = fail)",
                                    value=False,
                                    help="If off, missing data is flagged, not failed.")
@@ -445,8 +452,13 @@ n_unavailable = _n_before - len(results)
 _n_before = len(results)
 if not include_mirrors:
     results = results[results["data_tier"] != "unverified_mirror"].reset_index(drop=True)
-results.attrs.update(_attrs)
 n_mirror_hidden = _n_before - len(results)
+_n_before = len(results)
+if not include_all_temps:
+    results = results[results["glass"].map(gm_band.at_room_temperature)
+                      ].reset_index(drop=True)
+n_temp_hidden = _n_before - len(results)
+results.attrs.update(_attrs)
 n_band_data_removed = 0
 if bands_required:
     _need = [band_results[_band_labels.index(lab)][0] for lab in bands_required]

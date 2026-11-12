@@ -25,6 +25,13 @@ the patch version, schema/format changes bump the minor version.
   bound; the bounds shown rise slightly.
 - Labels of calculated figures name the basis, e.g. `calculated from
   tabulated k at 10 mm, internal transmittance; ...`.
+- **Searches list a crystal's room-temperature measurements only.** A
+  literature page measured at a stated temperature outside 15-30 C (silicon
+  at 10 K ... 750 K) is that crystal at that temperature; listed as
+  materials, silicon took 15 rows of a 3-5 um search. They are hidden by
+  default and counted - app: *Include crystal measurements away from room
+  temperature*; CLI: `--all-temperatures` (as `glassmatch band` already
+  had). n(T) for a crystal is unchanged.
 
 ### Fixed
 - **A table computed from a dispersion model is not an absorption
@@ -37,6 +44,11 @@ the patch version, schema/format changes bump the minor version.
   clear. These pages are now marked `measurement_form = model`
   (spectral_nk.csv, 7,705 rows) and give no transmission value, with the
   reason; their index is unchanged.
+- **The Spectral Analysis plot follows the transmission basis.** Maker
+  curves are drawn as internal transmittance or, on the uncoated basis, with
+  the reflection at both surfaces applied (`manufacturer_curve`), so the
+  plot shows what the results table summarises; samples with no index for
+  the reflection are left off and counted.
 - **Equal scores have a meaningful, repeatable order**: higher transmission
   first when a band was asked for, then the catalog's availability class,
   then the id (14 glasses tied at 79.0 in the 3-5 um search, in file order).

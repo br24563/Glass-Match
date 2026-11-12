@@ -16,6 +16,7 @@ see the coverage case below.
 """
 import numpy as np
 import pandas as pd
+import pytest
 
 from glassmatch.database import GlassDatabase
 from glassmatch.spectra import fresnel_transmission, sellmeier_n
@@ -208,6 +209,41 @@ def test_external_basis_needs_an_index_at_every_sample():
         nk_groups={}, thickness_mm=10.0, basis="external")
     assert val is None
     assert basis.startswith("missing") and "index" in basis
+
+
+def test_plotted_curve_is_on_the_same_basis_as_the_table():
+    """The Spectral Analysis plot draws manufacturer_curve; its mean over
+    the band is the table's band value, on either basis."""
+    from glassmatch.transmission import manufacturer_curve
+    t_groups, nk_groups = _groups()
+    db = _db()
+    db.sellmeier = pd.concat([db.sellmeier,
+                              pd.DataFrame([dict(SELLMEIER, glass_id="G-MFR")])],
+                             ignore_index=True)
+    for basis in ("internal", "external"):
+        curve, label, dropped = manufacturer_curve(
+            db, "G-MFR", t_groups["G-MFR"], 10.0, basis)
+        val, _ = band_transmission(db, "G-MFR", LO, HI, "Average",
+                                   t_groups=t_groups, nk_groups=nk_groups,
+                                   thickness_mm=10.0, basis=basis)
+        assert dropped == 0 and len(curve) == 4
+        assert round(float(curve["transmission_pct"].mean()), 1) == val
+        assert label.startswith("calculated") == (basis == "external")
+    with pytest.raises(ValueError):
+        manufacturer_curve(db, "G-MFR", t_groups["G-MFR"], 10.0, "coated")
+
+
+def test_uncoated_curve_leaves_out_samples_without_an_index():
+    """No verified fit: the reflection cannot be applied, so nothing is
+    drawn - and the caller is told how many samples went."""
+    from glassmatch.transmission import manufacturer_curve
+    t_groups, _ = _groups()
+    curve, _, dropped = manufacturer_curve(_db(), "G-MFR", t_groups["G-MFR"],
+                                           10.0, "external")
+    assert len(curve) == 0 and dropped == 4
+    curve, _, dropped = manufacturer_curve(_db(), "G-MFR", t_groups["G-MFR"],
+                                           10.0, "internal")
+    assert len(curve) == 4 and dropped == 0
 
 
 def test_no_data_at_all_invents_nothing():

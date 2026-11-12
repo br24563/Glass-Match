@@ -46,6 +46,10 @@ def render(ctx):
     if n_dndt:
         st.info(f"**{n_dndt:,} material(s) removed** by the |dn/dT| limit of "
                 f"{dndt_max:g}e-6/K.")
+    if getattr(ctx, "n_temp_hidden", 0):
+        st.caption(f"{ctx.n_temp_hidden:,} crystal measurement(s) made away "
+                   "from room temperature are hidden (sidebar: 'Include "
+                   "crystal measurements away from room temperature').")
     if n_excluded:
         detail = ", ".join(f"{r['glass_id']} (no {r['blocking_missing']})"
                            for r in excluded_examples[:3])

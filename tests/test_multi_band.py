@@ -53,6 +53,24 @@ def test_cli_bad_band(band):
     assert out.returncode != 0
 
 
+def test_search_hides_off_room_temperature_crystal_pages_by_default():
+    """Silicon measured at 10 K ... 500 K is one material: the search lists
+    its room-temperature measurements, says how many it hid, and shows the
+    rest on request."""
+    root = Path(__file__).resolve().parents[1]
+    base = [sys.executable, "-m", "glassmatch.cli", "search", "--band", "3:5",
+            "--require-band-data", "--top", "400"]
+    room = subprocess.run(base, capture_output=True, text=True, cwd=root)
+    every = subprocess.run(base + ["--all-temperatures"], capture_output=True,
+                           text=True, cwd=root)
+    assert room.returncode == 0 and every.returncode == 0
+    assert "RII-SI-FRANTA-300K" in room.stdout
+    assert "RII-SI-FRANTA-10K" not in room.stdout
+    assert "RII-SI-FRANTA-10K" in every.stdout
+    assert "away from room temperature hidden" in room.stderr
+    assert "hidden" not in every.stderr
+
+
 def test_reflection_only_estimate_never_passes():
     """LiF is opaque over 9-10 um; its only figure there is the uncoated
     Fresnel reflection loss (~99 %), which must stay an upper bound."""

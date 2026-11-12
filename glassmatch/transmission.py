@@ -31,7 +31,10 @@ from __future__ import annotations
 
 import numpy as np
 
-from glassmatch.spectra import band_stats, band_stats_nk, fresnel_transmission
+from glassmatch.spectra import (band_stats, band_stats_nk,
+                                external_transmittance, fresnel_transmission,
+                                scale_internal_transmittance,
+                                surface_reflectance)
 
 
 def n_at(db, gid, wl_um):
@@ -75,6 +78,41 @@ def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
         label = (f"calculated (Fresnel, uncoated; dispersion fit valid for "
                  f"{len(vals)}/{len(wls)} band samples)")
     return round(float(sum(vals) / len(vals) * 100.0), 1), label
+
+
+def manufacturer_curve(db, gid, tdf, thickness_mm, basis="internal"):
+    """A maker's transmission samples as a curve on `basis`, at thickness_mm
+    -> (DataFrame[wavelength_um, transmission_pct], label, n_dropped).
+
+    The same conversion band_transmission applies, sample by sample, so a
+    plot shows what the results table summarises. Internal: each sample
+    scaled to thickness_mm by Beer-Lambert. External: that, with the
+    reflection at both uncoated surfaces applied using the index of the
+    verified fit at the sample's wavelength; a sample the fit does not cover
+    is left out (n_dropped) rather than given an extrapolated index.
+    """
+    import pandas as pd
+    wl = tdf["wavelength_um"].to_numpy(dtype=float)
+    vals = np.asarray(scale_internal_transmittance(
+        tdf["transmission"], tdf["thickness_mm"], thickness_mm), dtype=float)
+    listed = sorted({float(x) for x in tdf["thickness_mm"].dropna() if x > 0})
+    listed_s = "/".join(f"{x:g}" for x in listed)
+    label = (f"manufacturer IT, {listed_s} mm as listed"
+             if listed == [float(thickness_mm)] else
+             f"manufacturer IT, scaled from {listed_s} mm to {thickness_mm:g} mm")
+    dropped = 0
+    if basis == "external":
+        ns = np.array([n_at(db, gid, float(w)) or np.nan for w in wl], dtype=float)
+        ns[~(ns > 1.0)] = np.nan
+        dropped = int((np.isfinite(vals) & ~np.isfinite(ns)).sum())
+        vals = np.asarray(external_transmittance(vals, surface_reflectance(ns)))
+        label = (f"calculated: {label}, with the reflection at both uncoated "
+                 "surfaces")
+    elif basis != "internal":
+        raise ValueError("basis must be 'internal' or 'external'")
+    curve = pd.DataFrame({"wavelength_um": wl, "transmission_pct": vals * 100.0,
+                          "data_type": label}).dropna()
+    return curve.reset_index(drop=True), label, dropped
 
 
 def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
