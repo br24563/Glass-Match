@@ -4,9 +4,46 @@ All notable changes to GlassMatch. This project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html); data-only releases bump
 the patch version, schema/format changes bump the minor version.
 
-## [Unreleased]
+## [0.9.2] - 2026-11-12 (data version 2026.11.12)
+
+### Changed - check these when upgrading from 0.9.1
+- **Transmission has one basis per search, internal by default.** Maker
+  rows are internal transmittance; the figure calculated from tabulated n/k
+  included the reflection at both uncoated surfaces, and the two were ranked
+  together (3-5 um, 10 mm: SCHOTT IRG26 98 % internal above silicon 49 %
+  uncoated, which absorbs nothing there). Every value is now in the basis
+  asked for: *internal* (bulk only; from k alone for tabulated materials) or
+  *external* (an uncoated blank, calculated: the maker's internal figure or
+  the n/k figure with the reflection at both surfaces). App: sidebar
+  *Transmission basis*; CLI: `glassmatch search --basis internal|external`;
+  library: `band_transmission(..., basis=)`. Values for crystals in the
+  default search therefore rise (silicon 3-5 um: 48.9 % -> 100.0 %).
+- **Uncoated reflection counts the light reflected between the faces**:
+  T = (1-R)^2 t / (1 - R^2 t^2), which is 2n/(n^2+1) for a clear blank
+  (N-BK7 0.919, silicon 0.54, germanium 0.47). The old (1-R)^2 was too low
+  (germanium 0.41), so the "reflection-only upper bound" was not an upper
+  bound; the bounds shown rise slightly.
+- Labels of calculated figures name the basis, e.g. `calculated from
+  tabulated k at 10 mm, internal transmittance; ...`.
 
 ### Fixed
+- **A table computed from a dispersion model is not an absorption
+  measurement.** 14 refractiveindex.info pages are tables it calculated from
+  a published parametric model (Adachi's and Rakic's GaAs, Adachi's InP,
+  GaP, CdTe and ZnSe, Ozaki's GaAs and ZnS, Kaiser's BaF2 / CaF2 / SrF2,
+  Synowicki's As2S3, Chernova's spinel, Popova's SiO2). Their k in the
+  transparent window is the tail of a fit - GaAs "k = 1e-3" at 4 um - and
+  gave **GaAs and InP 0.0 % transmission over 3-5 um**, where both are
+  clear. These pages are now marked `measurement_form = model`
+  (spectral_nk.csv, 7,705 rows) and give no transmission value, with the
+  reason; their index is unchanged.
+- **Equal scores have a meaningful, repeatable order**: higher transmission
+  first when a band was asked for, then the catalog's availability class,
+  then the id (14 glasses tied at 79.0 in the 3-5 um search, in file order).
+- CI: the "no manufacturer workbooks committed" check never ran (its first
+  line was joined to the previous `echo`); the app smoke test printed the
+  number of exceptions without failing on them; tests now also run on
+  Windows.
 - **Placeholder transmission is no longer read as data.** Zemax catalogs
   write an IT block of all-1.0 samples when a maker gives no transmittance;
   GlassMatch imported them as 100 % internal transmittance (germanium at

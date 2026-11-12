@@ -168,7 +168,8 @@ def cmd_search(args) -> int:
         for gid in summary["glass_id"]:
             v, _, per = multi_band_transmission(
                 db, gid, bands, args.mode, t_groups=t_groups,
-                nk_groups=nk_groups, thickness_mm=args.thickness)
+                nk_groups=nk_groups, thickness_mm=args.thickness,
+                basis=args.basis)
             trans[gid] = v
             if len(bands) > 1:
                 for lo, hi, bv, _b in per:
@@ -619,6 +620,12 @@ def build_parser() -> argparse.ArgumentParser:
                    choices=["Average", "Minimum", "Entire range"])
     p.add_argument("--thickness", type=float, default=10.0,
                    help="sample thickness for transmission (mm)")
+    p.add_argument("--basis", default="internal",
+                   choices=["internal", "external"],
+                   help="what transmission means, for every glass alike: "
+                        "internal (bulk only, as makers list it; default) or "
+                        "external (an uncoated blank: reflection at both "
+                        "surfaces included, calculated)")
     p.add_argument("--maker", nargs="*")
     p.add_argument("--preferred", action="store_true",
                    help="only the makers' preferred glasses")

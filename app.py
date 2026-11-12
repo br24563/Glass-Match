@@ -261,13 +261,27 @@ sample_thickness_mm = st.sidebar.number_input(
          "10 mm, some 1-3 mm); each sample is converted to this one by "
          "Beer-Lambert, T_d = T_listed ** (d / d_listed), and labelled as "
          "scaled.")
+_BASIS_LABELS = {"internal": "Internal (bulk only)",
+                 "external": "Uncoated blank (with reflection)"}
+t_basis = st.sidebar.radio(
+    "Transmission basis", list(_BASIS_LABELS), format_func=_BASIS_LABELS.get,
+    horizontal=True,
+    help="Every material is judged on the same quantity. Internal: what the "
+         "bulk passes - what makers' catalogs list and an AR-coated part "
+         "approaches. Uncoated blank: internal transmittance and the "
+         "reflection at both surfaces, T = (1-R)^2 t / (1 - R^2 t^2); "
+         "calculated, with R from the verified dispersion fit or tabulated "
+         "n/k. A high-index material (Si, Ge, chalcogenides) loses 30-50 % "
+         "to reflection uncoated while absorbing nothing.")
 with st.sidebar.expander("Crystal / n-k based transmission"):
     st.caption(
         "Crystals and semiconductors publish measured n and k rather than a "
         "manufacturer transmittance curve. For those, GlassMatch computes "
-        "transmission from Fresnel reflection plus Beer-Lambert absorption at "
-        "the sample thickness above. It is **calculated**, and it depends on "
-        "that thickness.")
+        "transmission from Beer-Lambert absorption (k) at the sample "
+        "thickness above - and, on the uncoated basis, Fresnel reflection "
+        "(n, k). It is **calculated**, and it depends on that thickness. "
+        "Tables that refractiveindex.info computed from a dispersion model "
+        "give no transmission: their k is not an absorption measurement.")
 d_lo2, d_hi2 = st.sidebar.slider("Density range (g/cm^3, optional filter)", 1.5, 6.0, (1.5, 6.0), 0.05)
 use_density = st.sidebar.checkbox("Filter by density", value=False)
 cte_max = st.sidebar.slider("Max CTE (1e-6/K, optional filter)", 0.0, 20.0, 20.0, 0.1)
@@ -372,29 +386,30 @@ def band_transmission(gid, lo_um, hi_um, mode):
     """
     return _band_transmission(db, gid, lo_um, hi_um, mode,
                               t_groups=t_groups, nk_groups=nk_groups,
-                              thickness_mm=sample_thickness_mm)
+                              thickness_mm=sample_thickness_mm, basis=t_basis)
 
 
 @st.cache_data(show_spinner=False)
 def _band_all(_key: str, lo_um: float, hi_um: float, mode: str,
-              thickness_mm: float):
-    """Band transmission for every glass; recomputed only when the band, mode
-    or thickness changes, not on every widget interaction."""
+              thickness_mm: float, t_basis: str = "internal"):
+    """Band transmission for every glass; recomputed only when the band, mode,
+    thickness or basis changes, not on every widget interaction."""
     def build():
         vals, basis = {}, {}
         for g in summary["glass_id"]:
             vals[g], basis[g] = _band_transmission(
                 db, g, lo_um, hi_um, mode, t_groups=t_groups,
-                nk_groups=nk_groups, thickness_mm=thickness_mm)
+                nk_groups=nk_groups, thickness_mm=thickness_mm, basis=t_basis)
         return {"v": vals, "b": basis}
     got = _disk_obj(f"band_{lo_um:g}_{hi_um:g}_{mode.replace(' ', '')}_"
-                    f"{thickness_mm:g}", build)
+                    f"{thickness_mm:g}_{t_basis}", build)
     out_v, out_b = got["v"], got["b"]
     return out_v, out_b
 
 
 band_results = [_band_all(_data_key(), lo, hi, str(t_mode),
-                           float(sample_thickness_mm)) for lo, hi in bands]
+                           float(sample_thickness_mm), str(t_basis))
+                for lo, hi in bands]
 if len(bands) == 1:
     trans, trans_basis = band_results[0]
 else:

@@ -15,6 +15,11 @@ DEFAULT_WEIGHTS = {"nd": 30.0, "vd": 20.0, "transmission": 30.0, "density": 10.0
 IR_MATERIAL_CLASSES = {"chalcogenide", "crystal_ir", "crystal"}
 IR_MANUFACTURERS = {"INFRARED", "LIGHTPATH", "UMICORE", "RII"}
 
+# Tie-break between equal scores: the catalog's own availability class,
+# easiest to buy first. Never part of the score.
+STATUS_RANK = {"preferred": 0, "standard": 1, "inquiry": 2, "special": 3,
+               "melt": 4, "obsolete": 5}
+
 
 def normalize_weights(weights: dict) -> dict:
     total = sum(max(0.0, float(weights.get(k, 0.0))) for k in WEIGHT_KEYS)
@@ -193,7 +198,18 @@ def match_glasses(summary: pd.DataFrame, requirements: dict, weights: dict,
                      **{f"score_{k}": (None if sc[k] is None else round(float(sc[k]) * 100, 1))
                         for k in WEIGHT_KEYS}})
     out = pd.DataFrame(rows)
-    out = out.sort_values("compatibility", ascending=False).reset_index(drop=True)
+    if not out.empty:
+        # Equal scores are common (every glass that meets every requirement
+        # scores the same), so the order inside a tie must mean something and
+        # be the same on every run: higher transmission first when a band was
+        # asked for, then the easier glass to buy, then the id.
+        out["_t"] = pd.to_numeric(out["glass_id"].map(transmissions),
+                                  errors="coerce").fillna(-1.0)
+        out["_s"] = out["status"].map(STATUS_RANK).fillna(len(STATUS_RANK))
+        out = out.sort_values(["compatibility", "_t", "_s", "glass_id"],
+                              ascending=[False, False, True, True],
+                              kind="stable").drop(columns=["_t", "_s"])
+    out = out.reset_index(drop=True)
     # Drop the rows "require data" rejected, and record how many went so the UI
     # can say so rather than silently shrinking the result set.
     excluded = out[out["excluded"]] if "excluded" in out else out.iloc[0:0]

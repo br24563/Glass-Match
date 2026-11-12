@@ -11,12 +11,17 @@ permissions:
 
 jobs:
   test:
-    name: Tests (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    name: Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version: ["3.11", "3.12"]
+        include:
+          # Most users run GlassMatch on Windows (start.bat).
+          - os: windows-latest
+            python-version: "3.12"
     steps:
       - uses: actions/checkout@v4
 
@@ -53,7 +58,7 @@ jobs:
         run: |
           python -c "import ast, pathlib; ast.parse(pathlib.Path('app.py').read_text(encoding='utf-8')); print('app.py parses')"
           python -c "from glassmatch.database import load_default_database as l; db=l(); print('glasses:', len(db.glasses))"
-          python -c "from streamlit.testing.v1 import AppTest; at=AppTest.from_file('app.py', default_timeout=300).run(); print('exceptions:', len(at.exception))"
+          python -c "from streamlit.testing.v1 import AppTest; at=AppTest.from_file('app.py', default_timeout=300).run(); print('exceptions:', len(at.exception)); [print(e.value) for e in at.exception]; raise SystemExit(1 if at.exception else 0)"
 
       - name: Enforce data policy (no manufacturer catalogs committed)
         run: |
@@ -63,12 +68,14 @@ jobs:
             echo "$offenders"
             exit 1
           fi
-          echo "no manufacturer catalogs tracked (fixtures only)"          offenders=$(git ls-files '*.xlsx' '*.XLSX' || true)
+          echo "no manufacturer catalogs tracked (fixtures only)"
+          offenders=$(git ls-files '*.xlsx' '*.XLSX' '*.xls' '*.XLS' || true)
           if [ -n "$offenders" ]; then
             echo "Manufacturer data workbooks must not be committed:"
             echo "$offenders"
             exit 1
           fi
+          echo "no manufacturer workbooks tracked"
 
       - name: Data manifest matches the data
         run: python scripts/build_data_manifest.py --check

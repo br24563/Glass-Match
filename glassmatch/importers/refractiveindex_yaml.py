@@ -98,8 +98,8 @@ def _tabulated(block: dict) -> list:
     return rows
 
 
-def measurement_form(page_stem: str, comments: str) -> str:
-    """Classify a page as 'bulk', 'film' or 'unknown'.
+def measurement_form(page_stem: str, comments: str, references: str = "") -> str:
+    """Classify a page as 'bulk', 'film', 'model' or 'unknown'.
 
     refractiveindex.info catalogues deposited/coated films alongside bulk
     material, and a film's optical constants are NOT the material's. The
@@ -108,9 +108,11 @@ def measurement_form(page_stem: str, comments: str) -> str:
     as bulk data it yields nonsense both for n(lambda) and for any absorption
     or transmission figure derived from k.
 
-    The signal is textual - the page name and the COMMENTS block - because
-    there is no reliable numerical one: a film of the right thickness and
-    index looks exactly like a bulk sample in a single tabulated column.
+    The signal is textual - the page name, the COMMENTS block and, for
+    'model', the REFERENCES block - because there is no reliable numerical
+    one: a film of the right thickness and index looks exactly like a bulk
+    sample in a single tabulated column. A film stays a film even when its
+    table was computed from a model.
     """
     text = f"{page_stem} {comments}".lower()
     # "2nm", "20nm-thick", "nanometre", "thin film", "deposited on"
@@ -124,6 +126,16 @@ def measurement_form(page_stem: str, comments: str) -> str:
     # is an "Oxidized Al mirror") is a layer, not the bulk crystal.
     if "mirror" in text or "oxidized" in text or "oxidised" in text:
         return "film"
+    # A table refractiveindex.info computed from a published parametric model
+    # (it links its "Calculation script") is not a measurement. Such models
+    # (Adachi's and Rakic's dielectric functions of GaAs, InP ...) are fitted
+    # to the absorbing region above the band gap or to the phonon bands;
+    # their k in the transparent window is the fit's tail, orders of magnitude
+    # above the material's real absorption - GaAs "k = 1e-3" at 4 um, where
+    # bulk GaAs is clear. n is the model's and stays usable; k must never be
+    # turned into a transmission figure.
+    if "calculation script" in str(references).lower():
+        return "model"
     if "substrate" in text or "bulk" in text or "single crystal" in text:
         return "bulk"
     return "unknown"
@@ -162,9 +174,10 @@ def parse_ri_page(path: Path) -> dict | None:
             blocks["skipped"].append(
                 (kind, UNSUPPORTED.get(kind, "unrecognised data type")))
     comments = str(doc.get("COMMENTS") or "").strip()
-    return {"references": str(doc.get("REFERENCES") or "").strip(),
+    references = str(doc.get("REFERENCES") or "").strip()
+    return {"references": references,
             "comments": comments,
-            "form": measurement_form(Path(path).stem, comments),
+            "form": measurement_form(Path(path).stem, comments, references),
             "conditions": doc.get("CONDITIONS") or {},
             "blocks": blocks}
 

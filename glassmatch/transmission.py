@@ -14,11 +14,17 @@ Precedence, highest first:
      is a different claim.
   2. **Calculated from tabulated n/k** for crystals and semiconductors, which
      publish optical constants rather than a transmittance curve.  Depends on
-     the assumed blank thickness, which is why that is in the label.
+     the assumed blank thickness, which is why that is in the label.  Only
+     measured tables: one computed from a dispersion model gives no value.
   3. **Uncoated Fresnel estimate** from verified Sellmeier coefficients, only
      when the glass has no manufacturer rows *and* no tabulated n/k.
 
 Every branch labels itself, so nothing calculated can be mistaken for data.
+
+One basis per question (``basis``): "internal" transmittance - bulk only, what
+makers list - or "external", an uncoated blank with the reflection at both
+surfaces.  Branches 1 and 2 answer in whichever was asked, so a maker's
+internal figure is never ranked against a crystal's uncoated one.
 """
 
 from __future__ import annotations
@@ -52,7 +58,8 @@ def n_at(db, gid, wl_um):
 
 
 def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
-    """Mean uncoated Fresnel transmittance. CALCULATED, labelled."""
+    """Mean transmittance of an uncoated, non-absorbing blank of this index
+    (reflection at both surfaces only). CALCULATED, labelled."""
     c = db.sellmeier_for(gid)
     if c is None:
         return None, "missing (no Sellmeier data)"
@@ -71,7 +78,7 @@ def transmission_estimate(db, gid, wl_lo_um, wl_hi_um, n=12):
 
 
 def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
-                      thickness_mm):
+                      thickness_mm, basis="internal"):
     """(value_pct | None, basis label) for the selected requirement mode.
 
     Manufacturer transmission.csv rows are preferred. If the glass HAS
@@ -80,6 +87,14 @@ def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
     rather than silently substituting a calculated estimate. Fresnel is
     only the fallback when the glass has no manufacturer rows at all.
 
+    `basis` picks the one quantity every glass is judged on, so that they
+    are comparable: "internal" (the default - bulk absorption only, what
+    makers list and an AR-coated part approaches) or "external" (an uncoated
+    blank: reflection at both surfaces included). See
+    glassmatch.spectra.TRANSMISSION_BASES. Manufacturer samples are internal;
+    for "external" the reflection is applied with the index from the
+    verified fit, and the result is labelled calculated.
+
     `db`, `t_groups`, `nk_groups` and `thickness_mm` are passed in rather than
     read from module globals so the chain can be tested on a synthetic
     database; they are exactly the state `app.py` holds.
@@ -87,7 +102,8 @@ def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
     # Manufacturer samples are converted to the same thickness as the n/k
     # branch, so every glass is judged on one path length.
     s = band_stats(t_groups.get(str(gid)), lo_um, hi_um, mode,
-                   thickness_mm=thickness_mm)
+                   thickness_mm=thickness_mm, basis=basis,
+                   n_at=lambda w: n_at(db, gid, w))
     if s is not None:
         if s.get("value_pct") is not None:
             # Round here so every consumer (table, caption, export) shows the
@@ -99,7 +115,8 @@ def band_transmission(db, gid, lo_um, hi_um, mode, *, t_groups, nk_groups,
     # manufacturer transmittance curve, which left 195 materials unsearchable.
     # Derive it from the optical constants instead - clearly labelled, and only
     # from bulk measurements.
-    nk = band_stats_nk(nk_groups.get(str(gid)), lo_um, hi_um, mode, thickness_mm)
+    nk = band_stats_nk(nk_groups.get(str(gid)), lo_um, hi_um, mode, thickness_mm,
+                       basis=basis)
     if nk is not None:
         if nk.get("value_pct") is not None:
             return round(nk["value_pct"], 1), nk["label"]
@@ -160,13 +177,14 @@ def combine_bands(per_band: list) -> tuple:
 
 
 def multi_band_transmission(db, gid, bands, mode, *, t_groups, nk_groups,
-                            thickness_mm) -> tuple:
+                            thickness_mm, basis="internal") -> tuple:
     """band_transmission for every (lo_um, hi_um) in bands, combined with
     combine_bands -> (value_pct | None, basis, per_band)."""
     per = []
     for lo, hi in bands:
         v, b = band_transmission(db, gid, lo, hi, mode, t_groups=t_groups,
-                                 nk_groups=nk_groups, thickness_mm=thickness_mm)
+                                 nk_groups=nk_groups, thickness_mm=thickness_mm,
+                                 basis=basis)
         per.append((float(lo), float(hi), v, b))
     v, b = combine_bands(per)
     return v, b, per

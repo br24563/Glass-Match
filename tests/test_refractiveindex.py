@@ -115,11 +115,107 @@ def test_reference_lines_include_d_and_ir():
 # Crystals ship measured n and k rather than a manufacturer IT curve, which
 # left 195 materials outside the search entirely.
 def test_transmission_with_zero_absorption_is_exact_fresnel():
-    """k = 0 must reduce to the textbook two-surface Fresnel figure."""
+    """k = 0, uncoated: the textbook figure for a clear plane-parallel blank
+    with the reflections between its faces summed, 2n / (n^2 + 1) - the
+    makers' "reflection factor". Internal transmittance is then 100 %."""
     for n in (1.434, 1.5168, 1.62, 2.0, 4.0):
-        expected = (1.0 - ((n - 1.0) / (n + 1.0)) ** 2) ** 2 * 100.0
-        got = transmission_from_nk(n, 0.0, 0.5876, 10.0)
+        expected = 2.0 * n / (n * n + 1.0) * 100.0
+        got = transmission_from_nk(n, 0.0, 0.5876, 10.0, "external")
         assert got == pytest.approx(expected, abs=1e-9)
+        assert transmission_from_nk(n, 0.0, 0.5876, 10.0) == 100.0
+
+
+def test_uncoated_blank_counts_the_reflections_between_its_faces():
+    """(1 - R)^2 alone leaves out the light reflected back and forth: it gives
+    germanium (n = 4) 41 % where an uncoated germanium window passes 47 %,
+    so it is not the upper bound it was used as."""
+    from glassmatch.spectra import (external_transmittance,
+                                    fresnel_transmission, surface_reflectance)
+    r = surface_reflectance(4.0)
+    assert r == pytest.approx(0.36)
+    assert fresnel_transmission(4.0) == pytest.approx(8.0 / 17.0)
+    assert fresnel_transmission(4.0) > (1.0 - r) ** 2
+    # SCHOTT's reflection factor for N-BK7 at the d line: 0.9189.
+    assert fresnel_transmission(1.5168) == pytest.approx(0.9190, abs=2e-4)
+    # An absorbing blank: every extra pass is attenuated too.
+    assert external_transmittance(0.5, r) == pytest.approx(
+        (1 - r) ** 2 * 0.5 / (1 - (r * 0.5) ** 2))
+    assert external_transmittance(0.0, r) == 0.0
+
+
+def test_internal_and_external_bases_differ_only_by_reflection():
+    """One table, two questions. Silicon in the MWIR absorbs nothing
+    (internal ~100 %) and reflects almost half uncoated (external ~54 %)."""
+    import pandas as pd
+    df = pd.DataFrame({"wavelength_um": [3.0, 3.5, 4.0, 4.5, 5.0],
+                       "n": [3.434, 3.430, 3.427, 3.425, 3.424],
+                       "k": [2e-11, 3e-11, 4e-11, 6e-11, 6e-9],
+                       "measurement_form": ["bulk"] * 5})
+    inner = band_stats_nk(df, 3.0, 5.0, "Average", 10.0)
+    outer = band_stats_nk(df, 3.0, 5.0, "Average", 10.0, basis="external")
+    assert inner["value_pct"] == pytest.approx(100.0, abs=0.05)
+    assert outer["value_pct"] == pytest.approx(53.8, abs=0.3)
+    assert "internal transmittance" in inner["label"]
+    assert "uncoated" in outer["label"] and "reflection" in outer["label"]
+    assert inner["label"].startswith("calculated")
+    assert outer["label"].startswith("calculated")
+    with pytest.raises(ValueError):
+        band_stats_nk(df, 3.0, 5.0, "Average", 10.0, basis="coated")
+
+
+def test_internal_basis_needs_only_k():
+    """A k-only table answers the internal question; the uncoated one needs
+    n as well and says what is missing."""
+    import pandas as pd
+    df = pd.DataFrame({"wavelength_um": [3.0, 4.0, 5.0],
+                       "n": [float("nan")] * 3, "k": [1e-8, 1e-8, 1e-8],
+                       "measurement_form": ["bulk"] * 3})
+    assert band_stats_nk(df, 3.0, 5.0, "Average", 10.0)["value_pct"] is not None
+    r = band_stats_nk(df, 3.0, 5.0, "Average", 10.0, basis="external")
+    assert r["value_pct"] is None and r["reason"] == "no-absorption-data"
+
+
+def test_band_stats_nk_refuses_a_table_computed_from_a_model():
+    """Adachi's dielectric-function model of GaAs has k ~ 1e-3 at 4 um - the
+    tail of a fit to the absorbing region, not an absorption measurement.
+    Used as one it made 10 mm of GaAs opaque where GaAs is clear."""
+    import pandas as pd
+    model = pd.DataFrame({"wavelength_um": [3.1, 3.7, 4.5, 5.0],
+                          "n": [3.338, 3.334, 3.331, 3.329],
+                          "k": [0.0045, 0.0038, 0.0031, 0.0028],
+                          "measurement_form": ["model"] * 4})
+    for basis in ("internal", "external"):
+        r = band_stats_nk(model, 3.0, 5.0, "Average", 10.0, basis=basis)
+        assert r["value_pct"] is None and r["reason"] == "model-k"
+        assert "model" in r["label"] and "not measured" in r["label"]
+
+
+def test_measurement_form_detects_model_pages():
+    from glassmatch.importers.refractiveindex_yaml import measurement_form
+    refs = ('S. Adachi. Optical dispersion relations for GaP, GaAs ... '
+            '[<a href="https://github.com/polyanskiy/refractiveindex.info-'
+            'scripts/blob/main/scripts/Adachi%201989%20-%20GaAs.py">'
+            'Calculation script (Python)</a>]')
+    assert measurement_form("nk__Adachi", "", refs) == "model"
+    # A measurement stays what it was; a film stays a film.
+    assert measurement_form("nk__Li-293K", "single crystal", "H. H. Li 1980") == "bulk"
+    assert measurement_form("nk__Foo-film", "", refs) == "film"
+    assert measurement_form("nk__Malitson", "") == "unknown"
+
+
+def test_shipped_model_pages_give_no_transmission():
+    """The shipped GaAs and InP model pages no longer report 0 % at 3-5 um,
+    and their index is still there."""
+    from glassmatch.transmission import band_transmission
+    db = GlassDatabase.load()
+    nk = {str(g): x for g, x in db.spectral_nk.groupby("glass_id")}
+    for gid in ("RII-GAAS-ADACHI", "RII-GAAS-RAKIC", "RII-INP-ADACHI"):
+        assert set(nk[gid]["measurement_form"]) == {"model"}
+        v, b = band_transmission(db, gid, 3.0, 5.0, "Average", t_groups={},
+                                 nk_groups=nk, thickness_mm=10.0)
+        assert v is None and b.startswith("missing") and "model" in b
+        n, _ = db.n_at(gid, 4000.0)
+        assert n is not None and 3.0 < n < 3.4
 
 
 def test_absorption_uses_micrometres_converted_to_millimetres():
